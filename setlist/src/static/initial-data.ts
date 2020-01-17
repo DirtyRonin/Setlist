@@ -1,23 +1,4 @@
-
-export interface HashTable<T> {
-    [key:string]: T;
-}
-
-export type task = {
-    id: string
-    content: string
-}
-export type column = {
-    id: string
-    title: string
-    taskIds: string[]
-}
-
-export interface dndList {
-    tasks: HashTable<task>
-    columns: HashTable<column>
-    columnOrder: string[]
-}
+import { dndList } from "../models/DndListModels";
 
 export const initialData: dndList = {
     tasks: {
@@ -32,7 +13,6 @@ export const initialData: dndList = {
             title: 'To do',
             taskIds: ['task-1', 'task-2', 'task-3', 'task-4']
         }
-
     },
     columnOrder: ['column-1']
 };
