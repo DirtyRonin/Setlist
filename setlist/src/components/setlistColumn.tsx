@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Droppable } from "react-beautiful-dnd";
 
@@ -24,29 +24,20 @@ const TaskList = styled.div`
     padding: 8px;
 `;
 
-export default class SetlistColumn extends React.Component<ISetlistColumnProps> {
-    constructor(props: ISetlistColumnProps) {
-        super(props);
-    }
+const SetlistColumn = (props: ISetlistColumnProps): JSX.Element => (
+    <Container>
+        <Title>{props.column.title}</Title>
+        <Droppable droppableId={props.column.id}>
+            {provided => (
+                <TaskList ref={provided.innerRef} {...provided.droppableProps}>
+                    {props.tasks.map((task, index) => (
+                        <SetlistTask key={task.id} task={task} index={index} />
+                    ))}
+                    {provided.placeholder}
+                </TaskList>
+            )}
+        </Droppable>
+    </Container>
+);
 
-    render() {
-        return (
-            <Container>
-                <Title>{this.props.column.title}</Title>
-                <Droppable droppableId={this.props.column.id}>
-                    {(provided) => (
-                       <TaskList
-                       ref = {provided.innerRef}
-                           {...provided.droppableProps}
-                       >
-                           {this.props.tasks.map((task, index) => (
-                               <SetlistTask key={task.id} task={task} index={index} />
-                           ))}
-                           {provided.placeholder}
-                       </TaskList>
-                    )}
-                </Droppable>
-            </Container>
-        );
-    }
-}
+export default SetlistColumn;

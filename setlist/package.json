@@ -11,18 +11,21 @@
     "@types/react": "^16.9.17",
     "@types/react-beautiful-dnd": "^11.0.4",
     "@types/react-dom": "^16.9.4",
+    "jest": "^24.9.0",
     "react": "^16.12.0",
     "react-beautiful-dnd": "^12.2.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
     "reset-css": "^5.0.1",
     "styled-components": "^5.0.0",
+    "ts-jest": "^24.3.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

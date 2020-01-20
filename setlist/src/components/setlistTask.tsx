@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
@@ -18,20 +18,16 @@ const Container = styled.div`
     background-color: white;
 `;
 
-export default class SetlistTask extends React.Component<ISetlistTaskProps, {}> {
-    constructor(props: ISetlistTaskProps) {
-        super(props);
-    }
+const SetlistTask = (props: ISetlistTaskProps): JSX.Element => {
+    return (
+        <Draggable draggableId={props.task.id} index={props.index}>
+            {provided => (
+                <Container {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                    {props.task.content}
+                </Container>
+            )}
+        </Draggable>
+    );
+};
 
-    render() {
-        return (
-            <Draggable draggableId={this.props.task.id} index={this.props.index}>
-                {provided => (
-                    <Container {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                        {this.props.task.content}
-                    </Container>
-                )}
-            </Draggable>
-        );
-    }
-}
+export default SetlistTask
