@@ -1,24 +1,52 @@
-import React from "react";
 
-import { render, fireEvent, waitForElement } from "@testing-library/react";
+import {fizzBuzz, greetings} from "../../components/example"
+import {mocked} from 'ts-jest/utils'
+import { greetingsWrapper } from "../../components/differentExample";
 
-import Setlist, { ISetlistProps } from "../../components/setlist";
+describe("mock greetings Function Test", () => {
 
-// import {} from "../../../build/js/2.55af7ef1.chunk.js"
-
-describe("Setlist Tests", () => {
-    const path = "../../../build/js/2.55af7ef1.chunk.js";
-    console.log(path);
-
-    const rw = rewire("../../../build/js/2.55af7ef1.chunk.js");
-    const ShouldBePeter = rw.__get__("ShouldBePeter");
-
-    const result = ShouldBePeter("pEter");
+beforeEach( () => {
+    jest.mock("../../components/example")
+})
 
     it("should just work", () => {
-        return expect(result).toBe(true);
+        mocked(greetings).mockImplementation((name:string)=> 'peter');
+
+        const result = greetingsWrapper('peter');
+        expect(greetings).toBeCalled();
     });
 });
+
+
+describe("fizzBuzz Function Test", () => {
+
+    
+    const result = fizzBuzz(2);
+
+    it("should just work", () => {
+        return expect(result).toBe('1 2 ');
+    });
+});
+
+describe("greetings Function Test", () => {
+
+    const result = greetings('peter');
+
+    it("should just work", () => { 
+        return expect(result).toBe('Hi peter');
+    });
+});
+
+describe("greetingsWrapper Function Test", () => {
+
+    const result = greetingsWrapper('peter');
+
+    it("should just work", () => {
+        return expect(result).toBe('Hi peter');
+    });
+});
+
+
 
 // const renderSetlist = (props: Partial<ISetlistProps> = {}) => {
 //     const defaultProps: ISetlistProps = {
