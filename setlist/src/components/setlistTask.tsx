@@ -23,7 +23,7 @@ const SetlistTask = (props: ISetlistTaskProps): JSX.Element => {
         <Draggable draggableId={props.task.id} index={props.index}>
             {provided => (
                 <Container {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                    {props.task.content}
+                   <div data-testid="task-content" >{props.task.content}</div> 
                 </Container>
             )}
         </Draggable>

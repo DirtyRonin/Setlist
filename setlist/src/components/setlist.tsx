@@ -42,17 +42,11 @@ const Setlist = (props: ISetlistProps): JSX.Element => {
         columnOrder.map(columnId => {
             const column = columns[columnId];
             const columnTasks = column.taskIds.map(taskId => tasks[taskId]);
-            console.log(columnId);
-            console.log(column);
-            console.log(columnTasks);
+
             return <SetlistColumn key={columnId} column={column} tasks={columnTasks} />;
         });
 
-    return (
-        <div data-testid="setlist-div">
-            <DragDropContext onDragEnd={onDragEnd}>{renderSetlistColumns()}</DragDropContext>
-        </div>
-    );
+    return <div data-testid="DragDropContext"><DragDropContext onDragEnd={onDragEnd}>{renderSetlistColumns()}</DragDropContext></div>;
 };
 
 export default Setlist;

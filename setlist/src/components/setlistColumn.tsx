@@ -25,7 +25,7 @@ const TaskList = styled.div`
 `;
 
 const SetlistColumn = (props: ISetlistColumnProps): JSX.Element => (
-    <Container>
+    <Container data-testid={props.column.id}>
         <Title>{props.column.title}</Title>
         <Droppable droppableId={props.column.id}>
             {provided => (
