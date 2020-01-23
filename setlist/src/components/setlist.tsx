@@ -35,8 +35,6 @@ const Setlist = (props: ISetlistProps): JSX.Element => {
         }
     };
 
-    const ShouldBePeter = (name: string) => (name.toLocaleLowerCase() === "peter" ? true : false);
-
     const hasDestinationChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.droppableId === source.droppableId && destination.index === source.index ? false : true;
 
@@ -44,7 +42,9 @@ const Setlist = (props: ISetlistProps): JSX.Element => {
         columnOrder.map(columnId => {
             const column = columns[columnId];
             const columnTasks = column.taskIds.map(taskId => tasks[taskId]);
-
+            console.log(columnId);
+            console.log(column);
+            console.log(columnTasks);
             return <SetlistColumn key={columnId} column={column} tasks={columnTasks} />;
         });
 
