@@ -1,10 +1,10 @@
 import React from "react";
-import ReactTestUtils from "react-dom/test-utils";
-import { render, within, RenderResult } from "@testing-library/react";
+import { render, within } from "@testing-library/react";
 
 import Setlist, { ISetlistProps } from "../../components/setlist";
 
 import { dndList } from "../../models/DndListModels";
+import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN, DND_DIRECTION_UP } from "./react-beautiful-dndTestUtilz";
 
 const dummyInitialData: dndList = {
     tasks: {
@@ -35,6 +35,26 @@ const dummyInitialData: dndList = {
     columnOrder: ["column-1", "column-2", "column-3"]
 };
 
+const defaultProps: ISetlistProps = {
+    ...dummyInitialData
+};
+
+const renderSetlist = (defaultProps: ISetlistProps, props: Partial<ISetlistProps> = {}) => {
+    return render(<Setlist {...defaultProps} {...props} />);
+};
+
+const renderSetlistForMoving = () => {
+    const renderResult = renderSetlist(defaultProps);
+
+    mockDndElSpacing(renderResult);
+
+    const makeGetDragEl = (text: string) => () => renderResult.getByText(text).closest(DND_DRAGGABLE_DATA_ATTR) as HTMLElement;
+    
+
+    
+    return { makeGetDragEl, ...renderResult };
+};
+
 //fetch all elements with the given testIds, get the textContent as a string[] from html and compare them with the expectedTexts
 const createTestTextOrderByTestIdHelper = (
     getAllByTestId: (
@@ -48,18 +68,10 @@ const createTestTextOrderByTestIdHelper = (
 };
 
 describe("Setlist Function Test", () => {
-    it("should render 6 tasks in the expected order", async () => {
-        const renderSetlist = (props: Partial<ISetlistProps> = {}) => {
-            const defaultProps: ISetlistProps = {
-                ...dummyInitialData
-            };
+    /* it("should render 6 tasks in the expected order", async () => {
+        const { getByTestId } = renderSetlist(defaultProps);
 
-            return render(<Setlist {...defaultProps} {...props} />);
-        };
-
-        const { getByTestId } = renderSetlist();
-
-        // get column by testId
+        // get function for querying all tasks from with column
         const { getAllByTestId: getAllByTestIdWithinColumn } = within(getByTestId("column-1"));
 
         // define expected order
@@ -69,32 +81,35 @@ describe("Setlist Function Test", () => {
         testTextOrderByTestId("task-content", expectedOrder);
 
         const dndContext = getByTestId("DragDropContext");
-        expect(dndContext.childElementCount).toBe(3)
+        expect(dndContext.childElementCount).toBe(3);
     });
 
     it("div with data-testid should have no children", async () => {
-        const renderSetlist = (props: Partial<ISetlistProps> = {}) => {
-            const defaultProps: ISetlistProps = {
-                ...dummyInitialData,
-                columnOrder: []
-            };
-            return render(<Setlist {...defaultProps} {...props} />);
-        };
-
-        const { getByTestId } = renderSetlist();
+        const { getByTestId } = renderSetlist({ ...{ ...defaultProps, columnOrder: [] } });
 
         const dndContext = getByTestId("DragDropContext");
-        expect(dndContext.childElementCount).toBe(0)
-    });
+        expect(dndContext.childElementCount).toBe(0);
+    }); */
 
     it("should change the columnOrder when items have been moved", async () => {
-        // create dummy
-        const renderSetlist = (props: Partial<ISetlistProps> = {}) => {
-            const defaultProps: ISetlistProps = {
-                ...dummyInitialData
-            };
+        //trigger function
 
-            return render(<Setlist {...defaultProps} {...props} />);
-        };
+        const taskTextContent = "Take out the garbage";
+        const columnTextContent = "column-1";
+
+        const { getByText, getByTestId, makeGetDragEl } = renderSetlistForMoving();
+
+        await makeDnd({
+            getByText,
+            getDragEl: makeGetDragEl(taskTextContent),
+            direction: DND_DIRECTION_UP,
+            positions: 3
+        });
+
+        const expectedOrder = ["Watch my favorite show", "charge my phone", "Take out the garbage", "Cook dinner", "Eaten", "Sleeping"];
+
+        const { getAllByTestId: getAllByTestIdWithinColumn } = within(getByTestId(columnTextContent));
+        const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
+        testTextOrderByTestId("task-content", expectedOrder);
     });
 });
