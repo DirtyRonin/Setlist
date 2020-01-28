@@ -47,14 +47,12 @@ const mockGetBoundingClientRect = (el: Element) =>
 /*
   promise util
 */
+
 const executeAsyncFnsSerially = (fns: (() => Promise<void>)[]) =>
-    fns.reduce(
-        (promise, fn) =>
-            promise.then(result => {
-                fn().then(Array.prototype.concat.bind(result));
-            }),
-        new Promise<void>((resolve, reject) => resolve())
-    );
+    fns.reduce(async (promise, fn) => {
+        await promise;
+        return fn();
+    }, Promise.resolve());
 
 /*
   react-beautiful-dnd utils
@@ -88,11 +86,12 @@ export interface makeDndProps {
 
 export const makeDnd = async (props: makeDndProps) => {
     const spaceKey = { keyCode: 32 };
-    const tab = {keyCode: 9 }
+    const tab = { keyCode: 9 };
     const arrowLeftKey = { keyCode: 37 };
     const arrowUpKey = { keyCode: 38 };
     const arrowRightKey = { keyCode: 39 };
     const arrowDownKey = { keyCode: 40 };
+
     const getKeyForDirection = () => {
         switch (props.direction) {
             case DND_DIRECTION_LEFT:
@@ -107,28 +106,24 @@ export const makeDnd = async (props: makeDndProps) => {
                 throw new Error("Unhandled `direction`!");
         }
     };
+
     const handleMovementInDirection = async () => {
-        console.log("run promise")
-        fireEvent.keyDown(props.getDragEl()!,tab);
-        // enable keyboard dragging
         fireEvent.keyDown(props.getDragEl()!, spaceKey);
         await waitForElement(() => props.getByText(/You have lifted an item/i));
-        // move drag element based on direction
         fireEvent.keyDown(props.getDragEl()!, getKeyForDirection());
         await waitForElement(() => props.getByText(/You have moved the item/i));
-        // disable keyboard dragging
         fireEvent.keyDown(props.getDragEl()!, spaceKey);
         await waitForElement(() => props.getByText(/You have dropped the item/i));
     };
 
     const movements: Array<() => Promise<void>> = [];
+
     if (props.getDragEl()) {
         // focus drag element
-        (props.getDragEl()as HTMLElement).focus();
+        (props.getDragEl() as HTMLElement).focus();
         expect(props.getDragEl()).toHaveFocus();
 
         // move drag element based on direction and positions
-
         for (let i = 0; i < props.positions; i += 1) {
             movements.push(handleMovementInDirection);
         }

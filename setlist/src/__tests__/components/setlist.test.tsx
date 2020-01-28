@@ -4,7 +4,7 @@ import { render, within } from "@testing-library/react";
 import Setlist, { ISetlistProps } from "../../components/setlist";
 
 import { dndList } from "../../models/DndListModels";
-import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN, DND_DIRECTION_UP } from "./react-beautiful-dndTestUtilz";
+import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN } from "../../util/react-beautiful-dndTestUtilz";
 
 const dummyInitialData: dndList = {
     tasks: {
@@ -49,9 +49,7 @@ const renderSetlistForMoving = () => {
     mockDndElSpacing(renderResult);
 
     const makeGetDragEl = (text: string) => () => renderResult.getByText(text).closest(DND_DRAGGABLE_DATA_ATTR) as HTMLElement;
-    
 
-    
     return { makeGetDragEl, ...renderResult };
 };
 
@@ -68,7 +66,7 @@ const createTestTextOrderByTestIdHelper = (
 };
 
 describe("Setlist Function Test", () => {
-    /* it("should render 6 tasks in the expected order", async () => {
+    it("should render 6 tasks in the expected order", async () => {
         const { getByTestId } = renderSetlist(defaultProps);
 
         // get function for querying all tasks from with column
@@ -89,11 +87,9 @@ describe("Setlist Function Test", () => {
 
         const dndContext = getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(0);
-    }); */
+    });
 
     it("should change the columnOrder when items have been moved", async () => {
-        //trigger function
-
         const taskTextContent = "Take out the garbage";
         const columnTextContent = "column-1";
 
@@ -102,8 +98,8 @@ describe("Setlist Function Test", () => {
         await makeDnd({
             getByText,
             getDragEl: makeGetDragEl(taskTextContent),
-            direction: DND_DIRECTION_UP,
-            positions: 3
+            direction: DND_DIRECTION_DOWN,
+            positions: 2
         });
 
         const expectedOrder = ["Watch my favorite show", "charge my phone", "Take out the garbage", "Cook dinner", "Eaten", "Sleeping"];

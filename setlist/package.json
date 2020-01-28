@@ -27,6 +27,7 @@
     "build": "react-scripts build",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
