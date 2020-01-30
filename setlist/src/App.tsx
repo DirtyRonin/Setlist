@@ -1,8 +1,8 @@
 import React from "react";
+import Setlist, { ISetlistProps } from "./components/setlist";
 
-import { initialData } from "./static/initial-data";
-import Setlist from "./components/setlist";
+export interface IAppProps extends ISetlistProps {}
 
-const App = () => <Setlist {...initialData} />;
+const App = (props: IAppProps) => <Setlist {...props} />;
 
-export default App
+export default App;

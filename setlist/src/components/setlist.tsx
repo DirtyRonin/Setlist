@@ -66,7 +66,7 @@ const Setlist = (props: ISetlistProps): JSX.Element => {
                 };
 
                 setcolumns(newStateColumns);
-            }else{
+            } else {
                 // no change
             }
         }
@@ -78,13 +78,14 @@ const Setlist = (props: ISetlistProps): JSX.Element => {
     const hasPositionInColumnChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.index !== source.index;
 
-    const renderSetlistColumns = (): JSX.Element[] =>
-        columnOrder.map(columnId => {
+    const renderSetlistColumns = (): JSX.Element[] => {
+        return columnOrder.map(columnId => {
             const column = columns[columnId];
             const columnTasks = column.taskIds.map(taskId => tasks[taskId]);
 
             return <SetlistColumn key={columnId} column={column} tasks={columnTasks} />;
         });
+    };
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
