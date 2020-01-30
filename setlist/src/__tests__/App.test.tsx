@@ -1,19 +1,19 @@
 import React from "react";
 import { render, within } from "@testing-library/react";
 
-import Setlist, { ISetlistProps } from "../../components/setlist";
+import App, { IAppProps } from "../App";
 
-import { dndList } from "../../models/DndListModels";
-import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN } from "../../util/react-beautiful-dndTestUtilz";
+import { dndList } from "../models/DndListModels";
+import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN } from "../testHelper/react-beautiful-dndTestUtilz";
 
 const dummyInitialData: dndList = {
     tasks: {
-        "task-1": { id: "task-1", content: "Take out the garbage" },
-        "task-2": { id: "task-2", content: "Watch my favorite show" },
-        "task-3": { id: "task-3", content: "charge my phone" },
-        "task-4": { id: "task-4", content: "Cook dinner" },
-        "task-5": { id: "task-5", content: "Eaten" },
-        "task-6": { id: "task-6", content: "Sleeping" }
+        "task-1": { id: "task-1", title: "Take out the garbage", artist: "ArtistName", mode: "C" },
+        "task-2": { id: "task-2", title: "Watch my favorite show", artist: "ArtistName", mode: "C" },
+        "task-3": { id: "task-3", title: "charge my phone", artist: "ArtistName", mode: "C" },
+        "task-4": { id: "task-4", title: "Cook dinner", artist: "ArtistName", mode: "C" },
+        "task-5": { id: "task-5", title: "Eaten", artist: "ArtistName", mode: "C" },
+        "task-6": { id: "task-6", title: "Sleeping", artist: "ArtistName", mode: "C" }
     },
     columns: {
         "column-1": {
@@ -35,12 +35,12 @@ const dummyInitialData: dndList = {
     columnOrder: ["column-1", "column-2", "column-3"]
 };
 
-const defaultProps: ISetlistProps = {
+const defaultProps: IAppProps = {
     ...dummyInitialData
 };
 
-const renderSetlist = (defaultProps: ISetlistProps, props: Partial<ISetlistProps> = {}) => {
-    return render(<Setlist {...defaultProps} {...props} />);
+const renderSetlist = (defaultProps: IAppProps, props: Partial<IAppProps> = {}) => {
+    return render(<App {...defaultProps} {...props} />);
 };
 
 const renderSetlistForMoving = () => {

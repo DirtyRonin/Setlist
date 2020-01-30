@@ -2,10 +2,10 @@ import { dndList } from "../models/DndListModels";
 
 export const initialData: dndList = {
     tasks: {
-        "task-1": { id: "task-1", content: "Take out the garbage" },
-        "task-2": { id: "task-2", content: "Watch my favorite show" },
-        "task-3": { id: "task-3", content: "charge my phone" },
-        "task-4": { id: "task-4", content: "Cook dinner" }
+        "task-1": { id: "task-1", title: "Take out the garbage" , artist: "ArtistName", mode: "C"},
+        "task-2": { id: "task-2", title: "Watch my favorite show", artist: "ArtistName", mode: "C" },
+        "task-3": { id: "task-3", title: "charge my phone", artist: "ArtistName", mode: "C" },
+        "task-4": { id: "task-4", title: "Cook dinner", artist: "ArtistName", mode: "C" }
     },
     columns: {
         "column-1": {
@@ -21,3 +21,4 @@ export const initialData: dndList = {
     },
     columnOrder: ["column-1", "column-2"]
 };
+

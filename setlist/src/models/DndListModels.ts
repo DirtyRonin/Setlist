@@ -2,9 +2,11 @@ export interface HashTable<T> {
     [key:string]: T;
 }
 
-export type task = {
+export type Song = {
     id: string
-    content: string
+    title: string
+    artist: string;
+    mode: string;
 }
 export type column = {
     id: string
@@ -13,7 +15,7 @@ export type column = {
 }
 
 export interface dndList {
-    tasks: HashTable<task>
+    tasks: HashTable<Song>
     columns: HashTable<column>
     columnOrder: string[]
 }

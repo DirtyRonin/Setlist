@@ -3,10 +3,10 @@ import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 
-import { task } from "../models/DndListModels";
+import { Song } from "../models/DndListModels";
 
-export interface ISetlistTaskProps {
-    task: task;
+export interface ISongProps {
+    task: Song;
     index: number;
 }
 
@@ -18,12 +18,12 @@ const Container = styled.div`
     background-color: white;
 `;
 
-const SetlistTask = (props: ISetlistTaskProps): JSX.Element => {
+const SetlistTask = (props: ISongProps): JSX.Element => {
     return (
         <Draggable draggableId={props.task.id} index={props.index}>
             {provided => (
                 <Container {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                   <div data-testid="task-content" >{props.task.content}</div> 
+                   <div data-testid="task-content" >{props.task.title}</div> 
                 </Container>
             )}
         </Draggable>
