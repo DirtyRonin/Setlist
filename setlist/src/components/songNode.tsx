@@ -5,7 +5,7 @@ import { Draggable } from "react-beautiful-dnd";
 
 import { Song } from "../models/DndListModels";
 
-export interface ISongProps {
+export interface ISongNodeProps {
     task: Song;
     index: number;
 }
@@ -18,7 +18,7 @@ const Container = styled.div`
     background-color: white;
 `;
 
-const SetlistTask = (props: ISongProps): JSX.Element => {
+const SongNode = (props: ISongNodeProps): JSX.Element => {
     return (
         <Draggable draggableId={props.task.id} index={props.index}>
             {provided => (
@@ -30,4 +30,4 @@ const SetlistTask = (props: ISongProps): JSX.Element => {
     );
 };
 
-export default SetlistTask
+export default SongNode

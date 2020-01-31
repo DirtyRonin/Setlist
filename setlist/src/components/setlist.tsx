@@ -4,7 +4,7 @@ import { Droppable } from "react-beautiful-dnd";
 
 import { column, Song } from "../models/DndListModels";
 import styled from "styled-components";
-import SetlistTask from "./song";
+import SongNode from "./songNode";
 
 export interface ISetlistProps {
     column: column;
@@ -32,7 +32,7 @@ const Setlist = (props: ISetlistProps): JSX.Element => (
             {provided => (
                 <TaskList ref={provided.innerRef} {...provided.droppableProps}>
                     {props.tasks.map((task, index) => (
-                        <SetlistTask key={task.id} task={task} index={index} />
+                        <SongNode key={task.id} task={task} index={index} />
                     ))}
                     {provided.placeholder}
                 </TaskList>
