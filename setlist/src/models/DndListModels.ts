@@ -15,7 +15,7 @@ export type column = {
 }
 
 export interface dndList {
-    tasks: HashTable<Song>
+    songs: HashTable<Song>
     columns: HashTable<column>
     columnOrder: string[]
 }

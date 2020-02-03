@@ -1,24 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { DragDropContext, DropResult, DraggableLocation } from "react-beautiful-dnd";
 
+import InitialStateRequest from "./api/InitialStateRequest";
 import Setlist from "./components/setlist";
-import { dndList } from "./models/DndListModels";
+import { dndList, HashTable, Song, column } from "./models/DndListModels";
 import styled from "styled-components";
+import { Container, Row, Col } from "react-bootstrap";
+import { Endpoints } from "./static/config";
 
-export interface IAppProps extends dndList {}
+export interface IAppProps /* extends dndList */ {
+    InitialStateRequest(): Promise<dndList>;
+}
 
-const Container = styled.div`
+export interface IAppState {
+    songs: HashTable<Song>
+    columns: HashTable<column>
+    columnOrder: string[]
+}
+
+const AppContainer = styled.div`
     display: flex;
 `;
 
 const App = (props: IAppProps): JSX.Element => {
-    const [tasks, setTasks] = useState(props.tasks);
-    const [columns, setcolumns] = useState(props.columns);
-    const [columnOrder, setcolumnOrder] = useState(props.columnOrder);
+
+    const [state,setState] = useState({ columns: {}, songs: {}, columnOrder: [] } as IAppState )
+
+    // const [songs, setsongs] = useState({} as HashTable<Song>);
+    // const [columns, setcolumns] = useState({} as HashTable<column>);
+    // const [columnOrder, setcolumnOrder] = useState([] as string[]);
+
+    useEffect(() => {
+        props.InitialStateRequest().then(result => {
+
+            setState(result);
+
+            // setsongs(result.songs);
+            // setcolumns(result.columns);
+            // setcolumnOrder(result.columnOrder);
+        });
+    }, []);
+
+    const handleNewSong = (newSong: Song) => {
+
+        const {songs, columns} = state;
+
+        const newSongs = {
+            ...songs,
+            [newSong.id]: newSong
+        };
+
+        const currentColumn = columns[Endpoints.Songs];
+        const currentTaskIds = Array.from(currentColumn.taskIds);
+        const newTaskIds = currentTaskIds.concat(newSong.id);
+
+        const updatedColumn = {
+            ...currentColumn,
+            taskIds: newTaskIds
+        };
+
+        const newColumns = {
+            ...columns,
+            [Endpoints.Songs]: updatedColumn
+        };
+
+        const newState : IAppState = {
+            ...state,
+            songs:newSongs,
+            columns: newColumns
+        }
+
+        setState(newState);
+    };
+
+    const handleRemoveSong = () => {};
+    const handleEditSong = () => {};
 
     const onDragEnd = (result: DropResult): void => {
         const { destination, source, draggableId } = result;
+        const {columns} = state
 
         if (destination) {
             if (hasColumnChanged(destination, source)) {
@@ -47,7 +108,13 @@ const App = (props: IAppProps): JSX.Element => {
                     [newFinishColumn.id]: newFinishColumn
                 };
 
-                setcolumns(newStateColumns);
+                const newState: IAppState = {
+                    ...state,
+                    columns : newStateColumns
+                }
+
+                setState(newState);
+                
             } else if (hasPositionInColumnChanged(destination, source)) {
                 const column = columns[source.droppableId];
 
@@ -65,7 +132,14 @@ const App = (props: IAppProps): JSX.Element => {
                     [newColumn.id]: newColumn
                 };
 
-                setcolumns(newStateColumns);
+                const newState: IAppState = {
+                    ...state,
+                    columns : newStateColumns
+                }
+
+                setState(newState);
+
+                // setcolumns(newStateColumns);
             } else {
                 // no change
             }
@@ -79,18 +153,27 @@ const App = (props: IAppProps): JSX.Element => {
         destination.index !== source.index;
 
     const renderSetlistColumns = (): JSX.Element[] => {
+        const {columnOrder,columns,songs} = state;
         return columnOrder.map(columnId => {
             const column = columns[columnId];
-            const columnTasks = column.taskIds.map(taskId => tasks[taskId]);
+            const columnTasks = column.taskIds.map(taskId => songs[taskId]);
 
-            return <Setlist key={columnId} column={column} tasks={columnTasks} />;
+            return <Setlist handleNewSong={handleNewSong} key={columnId} setlist={column} songs={columnTasks} />;
         });
     };
 
     return (
-        <DragDropContext onDragEnd={onDragEnd}>
-            <Container data-testid="DragDropContext">{renderSetlistColumns()}</Container>
-        </DragDropContext>
+        <Container>
+            <Row>
+                <Col>{/* <SelectSetlist /> */}</Col>
+                <Col />
+            </Row>
+            <Row>
+                <AppContainer data-testid="DragDropContext">
+                    <DragDropContext onDragEnd={onDragEnd}>{renderSetlistColumns()}</DragDropContext>
+                </AppContainer>
+            </Row>
+        </Container>
     );
 };
 

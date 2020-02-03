@@ -1,7 +1,7 @@
 import { dndList } from "../models/DndListModels";
 
 export const initialData: dndList = {
-    tasks: {
+    songs: {
         "task-1": { id: "task-1", title: "Take out the garbage" , artist: "ArtistName", mode: "C"},
         "task-2": { id: "task-2", title: "Watch my favorite show", artist: "ArtistName", mode: "C" },
         "task-3": { id: "task-3", title: "charge my phone", artist: "ArtistName", mode: "C" },

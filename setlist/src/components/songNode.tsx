@@ -8,6 +8,7 @@ import { Song } from "../models/DndListModels";
 export interface ISongNodeProps {
     task: Song;
     index: number;
+    
 }
 
 const Container = styled.div`

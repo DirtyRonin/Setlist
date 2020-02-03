@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, waitForElement, RenderResult, GetByText, Matcher, SelectorMatcherOptions } from "@testing-library/react";
+import { fireEvent, waitForElement, RenderResult, Matcher, SelectorMatcherOptions } from "@testing-library/react";
 
 const noSpacing = {
     top: 0,
@@ -86,7 +86,6 @@ export interface makeDndProps {
 
 export const makeDnd = async (props: makeDndProps) => {
     const spaceKey = { keyCode: 32 };
-    const tab = { keyCode: 9 };
     const arrowLeftKey = { keyCode: 37 };
     const arrowUpKey = { keyCode: 38 };
     const arrowRightKey = { keyCode: 39 };

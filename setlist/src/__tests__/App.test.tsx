@@ -1,5 +1,5 @@
 import React from "react";
-import { render, within } from "@testing-library/react";
+import { render, within, act, waitForElement, fireEvent } from "@testing-library/react";
 
 import App, { IAppProps } from "../App";
 
@@ -7,7 +7,7 @@ import { dndList } from "../models/DndListModels";
 import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN } from "../testHelper/react-beautiful-dndTestUtilz";
 
 const dummyInitialData: dndList = {
-    tasks: {
+    songs: {
         "task-1": { id: "task-1", title: "Take out the garbage", artist: "ArtistName", mode: "C" },
         "task-2": { id: "task-2", title: "Watch my favorite show", artist: "ArtistName", mode: "C" },
         "task-3": { id: "task-3", title: "charge my phone", artist: "ArtistName", mode: "C" },
@@ -36,15 +36,23 @@ const dummyInitialData: dndList = {
 };
 
 const defaultProps: IAppProps = {
-    ...dummyInitialData
+    InitialStateRequest: async () => Promise.resolve().then(result => dummyInitialData)
+};
+const defaultEmptyProps: IAppProps = {
+    InitialStateRequest: async () =>
+        Promise.resolve().then(result => {
+            return { ...dummyInitialData, columnOrder: [] };
+        })
 };
 
-const renderSetlist = (defaultProps: IAppProps, props: Partial<IAppProps> = {}) => {
-    return render(<App {...defaultProps} {...props} />);
+const renderSetlist = async (defaultProps: IAppProps, props: Partial<IAppProps> = {}) => {
+    const app = render(<App {...defaultProps} {...props} />);
+    const waitForUseEffect = await waitForElement(() => app.getByTestId("DragDropContext"));
+    return app;
 };
 
-const renderSetlistForMoving = () => {
-    const renderResult = renderSetlist(defaultProps);
+const renderSetlistForMoving = async () => {
+    const renderResult = await renderSetlist(defaultProps);
 
     mockDndElSpacing(renderResult);
 
@@ -67,7 +75,7 @@ const createTestTextOrderByTestIdHelper = (
 
 describe("Setlist Function Test", () => {
     it("should render 6 tasks in the expected order", async () => {
-        const { getByTestId } = renderSetlist(defaultProps);
+        const { getByTestId } = await renderSetlist(defaultProps);
 
         // get function for querying all tasks from with column
         const { getAllByTestId: getAllByTestIdWithinColumn } = within(getByTestId("column-1"));
@@ -83,7 +91,7 @@ describe("Setlist Function Test", () => {
     });
 
     it("div with data-testid should have no children", async () => {
-        const { getByTestId } = renderSetlist({ ...{ ...defaultProps, columnOrder: [] } });
+        const { getByTestId } = await renderSetlist(defaultEmptyProps);
 
         const dndContext = getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(0);
@@ -93,7 +101,7 @@ describe("Setlist Function Test", () => {
         const taskTextContent = "Take out the garbage";
         const columnTextContent = "column-1";
 
-        const { getByText, getByTestId, makeGetDragEl } = renderSetlistForMoving();
+        const { getByText, getByTestId, makeGetDragEl } = await renderSetlistForMoving();
 
         await makeDnd({
             getByText,
@@ -107,5 +115,35 @@ describe("Setlist Function Test", () => {
         const { getAllByTestId: getAllByTestIdWithinColumn } = within(getByTestId(columnTextContent));
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
         testTextOrderByTestId("task-content", expectedOrder);
+    });
+
+    it("should add new song when button for song creating is clicked", async () => {
+        const { getByTestId, getByText } = await renderSetlist(defaultProps);
+
+        const firstColumn = getByTestId("column-1");
+
+        const btn_AddNewSong = within(firstColumn).getByText("Add Song");
+        fireEvent.click(btn_AddNewSong, { button: 0 });
+        await waitForElement(() => getByText("Ehrenlos"));
+
+        // get function for querying all tasks from with column
+        const { getAllByTestId: getAllByTestIdWithinColumn } = within(firstColumn);
+
+        // define expected order
+        const expectedOrder = [
+            "Take out the garbage",
+            "Watch my favorite show",
+            "charge my phone",
+            "Cook dinner",
+            "Eaten",
+            "Sleeping",
+            "Ehrenlos"
+        ];
+
+        const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
+        testTextOrderByTestId("task-content", expectedOrder);
+
+        const dndContext = getByTestId("DragDropContext");
+        expect(dndContext.childElementCount).toBe(3);
     });
 });
