@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import { DragDropContext, DropResult, DraggableLocation } from "react-beautiful-dnd";
 
-import InitialStateRequest from "./api/InitialStateRequest";
 import Setlist from "./components/setlist";
-import { dndList, HashTable, Song, column } from "./models/DndListModels";
+import { dndList, HashTable, Song, setlist } from "./models/DndListModels";
 import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
-import { Endpoints } from "./static/config";
 
 export interface IAppProps /* extends dndList */ {
     InitialStateRequest(): Promise<dndList>;
@@ -15,8 +13,8 @@ export interface IAppProps /* extends dndList */ {
 
 export interface IAppState {
     songs: HashTable<Song>
-    columns: HashTable<column>
-    columnOrder: string[]
+    setlists: HashTable<setlist>
+    setlistOrder: string[]
 }
 
 const AppContainer = styled.div`
@@ -24,122 +22,97 @@ const AppContainer = styled.div`
 `;
 
 const App = (props: IAppProps): JSX.Element => {
-
-    const [state,setState] = useState({ columns: {}, songs: {}, columnOrder: [] } as IAppState )
-
-    // const [songs, setsongs] = useState({} as HashTable<Song>);
-    // const [columns, setcolumns] = useState({} as HashTable<column>);
-    // const [columnOrder, setcolumnOrder] = useState([] as string[]);
+    const [songs, setSongs] = useState({} as HashTable<Song>);
+    const [setlists, setSetlists] = useState({} as HashTable<setlist>);
+    const [setlistOrder, setSetlistOrder] = useState([] as string[]);
 
     useEffect(() => {
         props.InitialStateRequest().then(result => {
-
-            setState(result);
-
-            // setsongs(result.songs);
-            // setcolumns(result.columns);
-            // setcolumnOrder(result.columnOrder);
+            setSongs(result.songs);
+            setSetlists(result.setlists);
+            setSetlistOrder(result.setlistOrder);
         });
     }, []);
 
-    const handleNewSong = (newSong: Song) => {
-
-        const {songs, columns} = state;
-
+    const handleNewSong = (setlist: setlist, newSong: Song) => {
         const newSongs = {
             ...songs,
             [newSong.id]: newSong
         };
 
-        const currentColumn = columns[Endpoints.Songs];
-        const currentTaskIds = Array.from(currentColumn.taskIds);
-        const newTaskIds = currentTaskIds.concat(newSong.id);
+        setSongs(newSongs);
 
-        const updatedColumn = {
-            ...currentColumn,
-            taskIds: newTaskIds
+        const currentSetlist = setlists[setlist.id];
+        const currentSongIds = Array.from(currentSetlist.songIds);
+        const newSongIds = currentSongIds.concat(newSong.id);
+
+        const updatedSetlist = {
+            ...currentSetlist,
+            songIds: newSongIds
         };
 
-        const newColumns = {
-            ...columns,
-            [Endpoints.Songs]: updatedColumn
+        const newSetlists = {
+            ...setlists,
+            [setlist.id]: updatedSetlist
         };
 
-        const newState : IAppState = {
-            ...state,
-            songs:newSongs,
-            columns: newColumns
-        }
-
-        setState(newState);
+        setSetlists(newSetlists);
     };
 
-    const handleRemoveSong = () => {};
-    const handleEditSong = () => {};
+    const handleRemoveSong = () => { };
+    const handleEditSong = () => { };
 
     const onDragEnd = (result: DropResult): void => {
         const { destination, source, draggableId } = result;
-        const {columns} = state
 
         if (destination) {
             if (hasColumnChanged(destination, source)) {
-                const start = columns[source.droppableId];
-                const finsih = columns[destination.droppableId];
+                const start = setlists[source.droppableId];
+                const finsih = setlists[destination.droppableId];
 
-                const newStartTasksIds = Array.from(start.taskIds);
-                newStartTasksIds.splice(source.index, 1);
+                const newStartSongIds = Array.from(start.songIds);
+                newStartSongIds.splice(source.index, 1);
 
-                const newFinishTasksIds = Array.from(finsih.taskIds);
-                newFinishTasksIds.splice(destination.index, 0, draggableId);
+                const newFinishSongIds = Array.from(finsih.songIds);
+                newFinishSongIds.splice(destination.index, 0, draggableId);
 
-                const newStartColumn = {
+                const newStartSetlist = {
                     ...start,
-                    taskIds: newStartTasksIds
+                    songIds: newStartSongIds
                 };
 
-                const newFinishColumn = {
+                const newFinishSetlist = {
                     ...finsih,
-                    taskIds: newFinishTasksIds
+                    songIds: newFinishSongIds
                 };
 
-                const newStateColumns = {
-                    ...columns,
-                    [newStartColumn.id]: newStartColumn,
-                    [newFinishColumn.id]: newFinishColumn
+                const newStateSetlists = {
+                    ...setlists,
+                    [newStartSetlist.id]: newStartSetlist,
+                    [newFinishSetlist.id]: newFinishSetlist
                 };
 
-                const newState: IAppState = {
-                    ...state,
-                    columns : newStateColumns
-                }
+                setSetlists(newStateSetlists);
 
-                setState(newState);
-                
             } else if (hasPositionInColumnChanged(destination, source)) {
-                const column = columns[source.droppableId];
+                const column = setlists[source.droppableId];
 
-                const newTasksIds = Array.from(column.taskIds);
-                newTasksIds.splice(source.index, 1);
-                newTasksIds.splice(destination.index, 0, draggableId);
+                const newSongIds = Array.from(column.songIds);
+                newSongIds.splice(source.index, 1);
+                newSongIds.splice(destination.index, 0, draggableId);
 
-                const newColumn = {
+                const newSetlist = {
                     ...column,
-                    taskIds: newTasksIds
+                    songIds: newSongIds
                 };
 
-                const newStateColumns = {
-                    ...columns,
-                    [newColumn.id]: newColumn
+                const newStateSetlists = {
+                    ...setlists,
+                    [newSetlist.id]: newSetlist
                 };
 
-                const newState: IAppState = {
-                    ...state,
-                    columns : newStateColumns
-                }
+                setSetlists(newStateSetlists);
 
-                setState(newState);
-
-                // setcolumns(newStateColumns);
             } else {
                 // no change
             }
@@ -152,13 +125,12 @@ const App = (props: IAppProps): JSX.Element => {
     const hasPositionInColumnChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.index !== source.index;
 
-    const renderSetlistColumns = (): JSX.Element[] => {
-        const {columnOrder,columns,songs} = state;
-        return columnOrder.map(columnId => {
-            const column = columns[columnId];
-            const columnTasks = column.taskIds.map(taskId => songs[taskId]);
+    const renderSetlists = (): JSX.Element[] => {
+        return setlistOrder.map(setlistId => {
+            const setlist = setlists[setlistId];
+            const setlistSongs = setlist.songIds.map(songId => songs[songId]);
 
-            return <Setlist handleNewSong={handleNewSong} key={columnId} setlist={column} songs={columnTasks} />;
+            return <Setlist handleNewSong={handleNewSong} key={setlistId} setlist={setlist} songs={setlistSongs} />;
         });
     };
 
@@ -170,7 +142,7 @@ const App = (props: IAppProps): JSX.Element => {
             </Row>
             <Row>
                 <AppContainer data-testid="DragDropContext">
-                    <DragDropContext onDragEnd={onDragEnd}>{renderSetlistColumns()}</DragDropContext>
+                    <DragDropContext onDragEnd={onDragEnd}>{renderSetlists()}</DragDropContext>
                 </AppContainer>
             </Row>
         </Container>

@@ -8,14 +8,14 @@ export type Song = {
     artist: string;
     mode: string;
 }
-export type column = {
+export type setlist = {
     id: string
     title: string
-    taskIds: string[]
+    songIds: string[]
 }
 
 export interface dndList {
     songs: HashTable<Song>
-    columns: HashTable<column>
-    columnOrder: string[]
+    setlists: HashTable<setlist>
+    setlistOrder: string[]
 }

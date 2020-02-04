@@ -15,24 +15,24 @@ const dummyInitialData: dndList = {
         "task-5": { id: "task-5", title: "Eaten", artist: "ArtistName", mode: "C" },
         "task-6": { id: "task-6", title: "Sleeping", artist: "ArtistName", mode: "C" }
     },
-    columns: {
+    setlists: {
         "column-1": {
             id: "column-1",
             title: "To do first",
-            taskIds: ["task-1", "task-2", "task-3", "task-4", "task-5", "task-6"]
+            songIds: ["task-1", "task-2", "task-3", "task-4", "task-5", "task-6"]
         },
         "column-2": {
             id: "column-2",
             title: "To do second",
-            taskIds: []
+            songIds: []
         },
         "column-3": {
             id: "column-3",
             title: "To do last",
-            taskIds: []
+            songIds: []
         }
     },
-    columnOrder: ["column-1", "column-2", "column-3"]
+    setlistOrder: ["column-1", "column-2", "column-3"]
 };
 
 const defaultProps: IAppProps = {
@@ -41,7 +41,7 @@ const defaultProps: IAppProps = {
 const defaultEmptyProps: IAppProps = {
     InitialStateRequest: async () =>
         Promise.resolve().then(result => {
-            return { ...dummyInitialData, columnOrder: [] };
+            return { ...dummyInitialData, setlistOrder: [] } as dndList;
         })
 };
 

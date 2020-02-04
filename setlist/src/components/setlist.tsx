@@ -2,15 +2,17 @@ import React from "react";
 
 import { Droppable } from "react-beautiful-dnd";
 
-import { column, Song } from "../models/DndListModels";
+import { setlist, Song } from "../models/DndListModels";
 import styled from "styled-components";
 import SongNode from "./songNode";
 import Button from "react-bootstrap/Button";
+import { Form, FormControlProps, Col } from "react-bootstrap";
+
 
 export interface ISetlistProps {
-    setlist: column;
+    setlist: setlist;
     songs: Song[];
-    handleNewSong: (newSong: Song) => void;
+    handleNewSong: (setlist: setlist, newSong: Song) => void;
 }
 
 const Container = styled.div`
@@ -27,13 +29,16 @@ const NodeList = styled.div`
 `;
 
 const Setlist = (props: ISetlistProps): JSX.Element => {
-    const { handleNewSong } = props;
+    const { handleNewSong, setlist } = props;
 
-    const hanldeOnAddSongClick = (event: React.MouseEvent) => {
+    const hanldeOnAddSongClick = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
 
-        const song: Song = { title: "Ehrenlos", artist: "K.I.Z.", mode: "Brutal", id : "Ehrenlos - K.I.Z." };
-        handleNewSong(song);
+        const elements: any = (event.target as any).elements
+
+        // const song: Song = { title: "Ehrenlos", artist: "K.I.Z.", mode: "Brutal", id: "Ehrenlos - K.I.Z." };
+        const song: Song = { title: elements["title"].value, artist: elements["artist"].value, mode: elements["mode"].value, id: "Ehrenlos - K.I.Z." };
+        handleNewSong(setlist, song);
     };
 
     return (
@@ -42,16 +47,34 @@ const Setlist = (props: ISetlistProps): JSX.Element => {
             <Droppable droppableId={props.setlist.id}>
                 {provided => (
                     <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                        {props.songs.map((task, index) => (
-                            <SongNode key={task.id} task={task} index={index} />
+                        {props.songs.map((song, index) => (
+                            <SongNode key={song.id} task={song} index={index} />
                         ))}
                         {provided.placeholder}
                     </NodeList>
                 )}
             </Droppable>
-            <Button type="button" className="btn_AddNewSong" onClick={hanldeOnAddSongClick}>
-                Add Song
-            </Button>
+            <Form onSubmit={hanldeOnAddSongClick} method="GET">
+                <Form.Row>
+                    <Form.Group as={Col} md="4" controlId="title">
+                        <Form.Label >Title</Form.Label>
+                        <Form.Control type="text" placeholder="Enter Title"></Form.Control>
+                    </Form.Group >
+                    <Form.Group as={Col} md="4" controlId="artist">
+                        <Form.Label >Artist</Form.Label>
+                        <Form.Control type="text" placeholder="Enter Artist"></Form.Control>
+                    </Form.Group>
+                    <Form.Group as={Col} md="4" controlId="mode">
+                        <Form.Label >Mode</Form.Label>
+                        <Form.Control type="text" placeholder="Enter Mode"></Form.Control>
+                    </Form.Group>
+                </Form.Row>
+
+                <Button variant="primary" type="submit">
+                    Add Song
+                </Button>
+
+            </Form>
         </Container>
     );
 };
