@@ -7,23 +7,9 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 import InitialStateRequest from "./api/InitialStateRequest";
+import { AddSong } from "./api/songApi";
 
-// const runApp = async () => {
-// let props = { columns: {}, songs: {}, columnOrder: [] } as IAppProps;
+const DeleteSong = (a:string,b:string):Promise<void> => Promise.resolve()
 
-// try {
-//     const fetchedData = await InitialStateRequest();
-//     props = {
-//         ...fetchedData
-//     } as IAppProps;
-// } catch (error) {
-//     console.log(error);
-// } finally {
-ReactDOM.render(<App InitialStateRequest={InitialStateRequest} />, document.getElementById("root"));
+ReactDOM.render(<App InitialStateRequest={InitialStateRequest} AddSong={AddSong} DeleteSong={DeleteSong}/>, document.getElementById("root"));
 serviceWorker.unregister();
-// }
-// };
-
-// runApp()
-//     .then(() => console.log("App startet"))
-//     .catch(error => console.log(error));

@@ -3,8 +3,11 @@ import { render, within, act, waitForElement, fireEvent } from "@testing-library
 
 import App, { IAppProps } from "../App";
 
-import { dndList } from "../models/DndListModels";
+import { dndList, song } from "../models/DndListModels";
 import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN } from "../testHelper/react-beautiful-dndTestUtilz";
+import Configuration from "../Configuration/config";
+
+const songDef = Configuration.SongTypeDefinition;
 
 const dummyInitialData: dndList = {
     songs: {
@@ -36,12 +39,22 @@ const dummyInitialData: dndList = {
 };
 
 const defaultProps: IAppProps = {
-    InitialStateRequest: async () => Promise.resolve().then(result => dummyInitialData)
+    InitialStateRequest: async () => Promise.resolve().then(result => dummyInitialData),
+    AddSong: async (song: song) =>
+        Promise.resolve(song).then(success => {
+            success.id = "DB-ID";
+            return success;
+        })
 };
 const defaultEmptyProps: IAppProps = {
     InitialStateRequest: async () =>
         Promise.resolve().then(result => {
             return { ...dummyInitialData, setlistOrder: [] } as dndList;
+        }),
+    AddSong: async (song: song) =>
+        Promise.resolve(song).then(success => {
+            success.id = "DB-ID";
+            return success;
         })
 };
 
@@ -84,7 +97,7 @@ describe("Setlist Function Test", () => {
         const expectedOrder = ["Take out the garbage", "Watch my favorite show", "charge my phone", "Cook dinner", "Eaten", "Sleeping"];
 
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
-        testTextOrderByTestId("task-content", expectedOrder);
+        testTextOrderByTestId(songDef.Title.Data_TestId, expectedOrder);
 
         const dndContext = getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(3);
@@ -114,13 +127,17 @@ describe("Setlist Function Test", () => {
 
         const { getAllByTestId: getAllByTestIdWithinColumn } = within(getByTestId(columnTextContent));
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
-        testTextOrderByTestId("task-content", expectedOrder);
+        testTextOrderByTestId(songDef.Title.Data_TestId, expectedOrder);
     });
 
     it("should add new song when button for song creating is clicked", async () => {
         const { getByTestId, getByText } = await renderSetlist(defaultProps);
 
         const firstColumn = getByTestId("column-1");
+
+        const stuff = within(firstColumn).getByPlaceholderText("Enter Title");
+        fireEvent.change(stuff, { target: { value: "Ehrenlos" } });
+        await waitForElement(() => within(firstColumn).getByPlaceholderText("Enter Title"));
 
         const btn_AddNewSong = within(firstColumn).getByText("Add Song");
         fireEvent.click(btn_AddNewSong, { button: 0 });
@@ -141,7 +158,7 @@ describe("Setlist Function Test", () => {
         ];
 
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
-        testTextOrderByTestId("task-content", expectedOrder);
+        testTextOrderByTestId(songDef.Title.Data_TestId, expectedOrder);
 
         const dndContext = getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(3);

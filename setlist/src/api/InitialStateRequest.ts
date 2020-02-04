@@ -1,20 +1,19 @@
-import { dndList, HashTable, setlist } from "../models/DndListModels";
+import { setlist } from "../models/DndListModels";
 import { GetAllSongs } from "./songApi";
-import { Endpoints } from "../static/config";
+import Configuration from "../Configuration/config";
 import { IAppState } from "../App";
-
-
+import { HashTable } from "../Util/HashTable";
 
 const InitialStateRequest = async (): Promise<IAppState> => {
-
+    const endpointName = Configuration.EndpointTypeDefinition.Songs.Name;
     const songsResult = await GetAllSongs();
 
     const songs = songsResult;
 
     const setlists = {} as HashTable<setlist>;
-    setlists[Endpoints.Songs] = { id: Endpoints.Songs, title: "All Songs", songIds: Object.keys(songs) }
+    setlists[endpointName] = { id: endpointName, title: "All Songs", songIds: Object.keys(songs) };
 
-    const setlistOrder: string[] = [Endpoints.Songs];
+    const setlistOrder: string[] = [endpointName];
     return { songs, setlists, setlistOrder };
 };
 

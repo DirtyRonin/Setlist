@@ -2,19 +2,22 @@ import React, { useState, useEffect } from "react";
 
 import { DragDropContext, DropResult, DraggableLocation } from "react-beautiful-dnd";
 
-import Setlist from "./components/setlist";
-import { dndList, HashTable, Song, setlist } from "./models/DndListModels";
+import SetlistComponent from "./components/setlist";
+import { dndList, song, setlist } from "./models/DndListModels";
 import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
+import { HashTable } from "./Util/HashTable";
 
 export interface IAppProps /* extends dndList */ {
     InitialStateRequest(): Promise<dndList>;
+    AddSong(song: song): Promise<song>;
+    DeleteSong(setlistId: string, songId: string): Promise<void>;
 }
 
 export interface IAppState {
-    songs: HashTable<Song>
-    setlists: HashTable<setlist>
-    setlistOrder: string[]
+    songs: HashTable<song>;
+    setlists: HashTable<setlist>;
+    setlistOrder: string[];
 }
 
 const AppContainer = styled.div`
@@ -22,9 +25,11 @@ const AppContainer = styled.div`
 `;
 
 const App = (props: IAppProps): JSX.Element => {
-    const [songs, setSongs] = useState({} as HashTable<Song>);
+    const [songs, setSongs] = useState({} as HashTable<song>);
     const [setlists, setSetlists] = useState({} as HashTable<setlist>);
     const [setlistOrder, setSetlistOrder] = useState([] as string[]);
+
+    const { AddSong, DeleteSong } = props;
 
     useEffect(() => {
         props.InitialStateRequest().then(result => {
@@ -34,7 +39,7 @@ const App = (props: IAppProps): JSX.Element => {
         });
     }, []);
 
-    const handleNewSong = (setlist: setlist, newSong: Song) => {
+    const handleNewSong = (setlist: setlist, newSong: song) => {
         const newSongs = {
             ...songs,
             [newSong.id]: newSong
@@ -59,8 +64,38 @@ const App = (props: IAppProps): JSX.Element => {
         setSetlists(newSetlists);
     };
 
-    const handleRemoveSong = () => { };
-    const handleEditSong = () => { };
+    const handleDeleteSong = (setlistId: string, songId: string): void => {
+        const currentSetlist = setlists[setlistId];
+
+        const newSongIds = Array.from(currentSetlist.songIds);
+        const songIndex = newSongIds.indexOf(songId);
+        newSongIds.splice(songIndex, 1);
+
+        const newSetlist = {
+            ...currentSetlist,
+            songIds: newSongIds
+        };
+
+        const newStateSetlists = {
+            ...setlists,
+            [newSetlist.id]: newSetlist
+        };
+
+        setSetlists(newStateSetlists);
+
+        const newSongsKeys = Object.keys(songs)
+        const removalSongID = newSongsKeys.indexOf(songId)
+        newSongsKeys.splice(removalSongID,1);
+
+        const newSongs = newSongsKeys.reduce((newSongs: HashTable<any>, currentId: string) => {
+            newSongs[currentId] = songs[currentId];
+            return newSongs;
+        }, {} as HashTable<any>);
+
+        setSongs(newSongs);
+    };
+
+    const handleEditSong = () => {};
 
     const onDragEnd = (result: DropResult): void => {
         const { destination, source, draggableId } = result;
@@ -93,7 +128,6 @@ const App = (props: IAppProps): JSX.Element => {
                 };
 
                 setSetlists(newStateSetlists);
-
             } else if (hasPositionInColumnChanged(destination, source)) {
                 const column = setlists[source.droppableId];
 
@@ -112,7 +146,6 @@ const App = (props: IAppProps): JSX.Element => {
                 };
 
                 setSetlists(newStateSetlists);
-
             } else {
                 // no change
             }
@@ -130,7 +163,17 @@ const App = (props: IAppProps): JSX.Element => {
             const setlist = setlists[setlistId];
             const setlistSongs = setlist.songIds.map(songId => songs[songId]);
 
-            return <Setlist handleNewSong={handleNewSong} key={setlistId} setlist={setlist} songs={setlistSongs} />;
+            return (
+                <SetlistComponent
+                    AddSong={AddSong}
+                    DeleteSong={DeleteSong}
+                    handleDeleteSong={handleDeleteSong}
+                    handleNewSong={handleNewSong}
+                    key={setlistId}
+                    setlist={setlist}
+                    songs={setlistSongs}
+                />
+            );
         });
     };
 
