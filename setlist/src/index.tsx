@@ -7,9 +7,9 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 import InitialStateRequest from "./api/InitialStateRequest";
-import { AddSong } from "./api/songApi";
+import { AddSong, AddSetlist, UpdateSetlist } from "./api";
 
 const DeleteSong = (a:string,b:string):Promise<void> => Promise.resolve()
 
-ReactDOM.render(<App InitialStateRequest={InitialStateRequest} AddSong={AddSong} DeleteSong={DeleteSong}/>, document.getElementById("root"));
+ReactDOM.render(<App CreateSetlistAsync={AddSetlist} UpdateSetlist={UpdateSetlist} InitialStateRequest={InitialStateRequest} AddSong={AddSong} DeleteSong={DeleteSong}/>, document.getElementById("root"));
 serviceWorker.unregister();

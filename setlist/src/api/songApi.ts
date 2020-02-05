@@ -1,9 +1,9 @@
 import Axios from "axios";
-import Configuration, { ACCESS_CONTROL_ALLOW_ORIGIN_HEADER } from "../Configuration/config";
 import { song } from "../models/DndListModels";
 import { HashTable } from "../Util/HashTable";
+import {EndpointConfiguration, ACCESS_CONTROL_ALLOW_ORIGIN_HEADER } from "../Configuration";
 
-const songsEndpoint = Configuration.EndpointTypeDefinition.Songs;
+const songsEndpoint = EndpointConfiguration.Songs;
 
 export const GetAllSongs = async (): Promise<HashTable<song>> => {
     const songsResult = await Axios.get<song[]>(songsEndpoint.GetEndpointUrl!(), {
@@ -19,9 +19,20 @@ export const GetAllSongs = async (): Promise<HashTable<song>> => {
 export const AddSong = async (song: song): Promise<song> => {
     const newsong = { ...song, id: "" };
 
-    const songResult = await Axios.post<song>(songsEndpoint.GetEndpointUrl!(), newsong, {
+    const addResult = await Axios.post<song>(songsEndpoint.GetEndpointUrl!(), newsong, {
         headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" }
     });
 
-    return songResult.data;
+
+
+    return addResult.data;
 };
+// export const DeleteSong = async (setlistId: string,songId: string): Promise<void> => {
+//     // const UpdateSetlist
+    
+//     const deleteResult = await Axios.post<song>(songsEndpoint.GetEndpointUrl!(), newsong, {
+//         headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" }
+//     });
+
+    
+// };

@@ -10,7 +10,14 @@ export type song = {
 export type setlist = {
     id: string;
     title: string;
-    songIds: string[];
+    songs: string[];
+    isLibrary: boolean;
+    isMajorLibrary: boolean;
+};
+
+export type setlistSong = {
+    id: string;
+    songId: string;
 };
 
 export interface dndList {

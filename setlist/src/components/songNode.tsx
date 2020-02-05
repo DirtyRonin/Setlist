@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 
 import { song } from "../models/DndListModels";
-import Configuration from "../Configuration/config";
-import { Container, Row, Col, Button, ButtonProps } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import {SongNodeHtmlAttributesConfiguration} from "../Configuration";
 
 export interface ISongNodeProps {
     song: song;
@@ -25,7 +25,7 @@ const SongNodeContainer = styled.div`
 
 const SongNode = (props: ISongNodeProps): JSX.Element => {
     const { song, index,setlistId, handleDeleteSong } = props;
-    const songDef = Configuration.SongTypeDefinition;
+    const songDef = SongNodeHtmlAttributesConfiguration;
 
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         handleDeleteSong(setlistId,song.id);

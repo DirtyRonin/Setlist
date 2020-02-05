@@ -3,11 +3,11 @@ import { render, within, act, waitForElement, fireEvent } from "@testing-library
 
 import App, { IAppProps } from "../App";
 
-import { dndList, song } from "../models/DndListModels";
+import { dndList, song, setlist } from "../models/DndListModels";
 import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN } from "../testHelper/react-beautiful-dndTestUtilz";
-import Configuration from "../Configuration/config";
+import { SongNodeHtmlAttributesConfiguration } from "../Configuration";
 
-const songDef = Configuration.SongTypeDefinition;
+const songNodeConfig = SongNodeHtmlAttributesConfiguration;
 
 const dummyInitialData: dndList = {
     songs: {
@@ -22,17 +22,23 @@ const dummyInitialData: dndList = {
         "column-1": {
             id: "column-1",
             title: "To do first",
-            songIds: ["task-1", "task-2", "task-3", "task-4", "task-5", "task-6"]
+            songs: ["task-1", "task-2", "task-3", "task-4", "task-5", "task-6"],
+            isLibrary: false,
+            isMajorLibrary: false
         },
         "column-2": {
             id: "column-2",
             title: "To do second",
-            songIds: []
+            songs: [],
+            isLibrary: false,
+            isMajorLibrary: false
         },
         "column-3": {
             id: "column-3",
             title: "To do last",
-            songIds: []
+            songs: [],
+            isLibrary: false,
+            isMajorLibrary: false
         }
     },
     setlistOrder: ["column-1", "column-2", "column-3"]
@@ -44,7 +50,9 @@ const defaultProps: IAppProps = {
         Promise.resolve(song).then(success => {
             success.id = "DB-ID";
             return success;
-        })
+        }),
+    DeleteSong: (a: string, b: string): Promise<void> => Promise.resolve(),
+    CreateSetlistAsync: (setlist: setlist): Promise<string> => Promise.resolve("success")
 };
 const defaultEmptyProps: IAppProps = {
     InitialStateRequest: async () =>
@@ -55,7 +63,9 @@ const defaultEmptyProps: IAppProps = {
         Promise.resolve(song).then(success => {
             success.id = "DB-ID";
             return success;
-        })
+        }),
+    DeleteSong: (a: string, b: string): Promise<void> => Promise.resolve(),
+    CreateSetlistAsync: (setlist: setlist): Promise<string> => Promise.resolve("success")
 };
 
 const renderSetlist = async (defaultProps: IAppProps, props: Partial<IAppProps> = {}) => {
@@ -97,7 +107,7 @@ describe("Setlist Function Test", () => {
         const expectedOrder = ["Take out the garbage", "Watch my favorite show", "charge my phone", "Cook dinner", "Eaten", "Sleeping"];
 
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
-        testTextOrderByTestId(songDef.Title.Data_TestId, expectedOrder);
+        testTextOrderByTestId(songNodeConfig.Title.Data_TestId, expectedOrder);
 
         const dndContext = getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(3);
@@ -127,7 +137,7 @@ describe("Setlist Function Test", () => {
 
         const { getAllByTestId: getAllByTestIdWithinColumn } = within(getByTestId(columnTextContent));
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
-        testTextOrderByTestId(songDef.Title.Data_TestId, expectedOrder);
+        testTextOrderByTestId(songNodeConfig.Title.Data_TestId, expectedOrder);
     });
 
     it("should add new song when button for song creating is clicked", async () => {
@@ -158,7 +168,7 @@ describe("Setlist Function Test", () => {
         ];
 
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
-        testTextOrderByTestId(songDef.Title.Data_TestId, expectedOrder);
+        testTextOrderByTestId(songNodeConfig.Title.Data_TestId, expectedOrder);
 
         const dndContext = getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(3);

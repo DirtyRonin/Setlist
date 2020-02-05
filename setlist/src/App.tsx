@@ -7,11 +7,17 @@ import { dndList, song, setlist } from "./models/DndListModels";
 import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
 import { HashTable } from "./Util/HashTable";
+import CreateSetlist from "./components/createSetlistForm";
 
 export interface IAppProps /* extends dndList */ {
     InitialStateRequest(): Promise<dndList>;
+
     AddSong(song: song): Promise<song>;
+    UpdateSetlist(setlist: setlist): Promise<setlist>;
+
     DeleteSong(setlistId: string, songId: string): Promise<void>;
+    
+    CreateSetlistAsync: (setlist: setlist) => Promise<setlist>;
 }
 
 export interface IAppState {
@@ -28,16 +34,31 @@ const App = (props: IAppProps): JSX.Element => {
     const [songs, setSongs] = useState({} as HashTable<song>);
     const [setlists, setSetlists] = useState({} as HashTable<setlist>);
     const [setlistOrder, setSetlistOrder] = useState([] as string[]);
+    const [] = useState(true);
 
-    const { AddSong, DeleteSong } = props;
+    const { AddSong, DeleteSong ,CreateSetlistAsync,InitialStateRequest,UpdateSetlist} = props;
 
     useEffect(() => {
-        props.InitialStateRequest().then(result => {
+        InitialStateRequest().then(result => {
             setSongs(result.songs);
             setSetlists(result.setlists);
             setSetlistOrder(result.setlistOrder);
         });
     }, []);
+
+    const AddSetlistToState = (setlist:setlist)=> {
+        const newSetlistState = {
+            ...setlists,
+            [setlist.id] : setlist
+        }
+
+        setSetlists(newSetlistState);
+
+        const newSetlistOrder = Array.from(setlistOrder);
+        newSetlistOrder.push(setlist.id);
+
+        setSetlistOrder(newSetlistOrder);
+    }
 
     const handleNewSong = (setlist: setlist, newSong: song) => {
         const newSongs = {
@@ -48,12 +69,12 @@ const App = (props: IAppProps): JSX.Element => {
         setSongs(newSongs);
 
         const currentSetlist = setlists[setlist.id];
-        const currentSongIds = Array.from(currentSetlist.songIds);
-        const newSongIds = currentSongIds.concat(newSong.id);
+         const newRefSongs = Array.from(currentSetlist.songs);
+         newRefSongs.concat(newSong.id);
 
         const updatedSetlist = {
             ...currentSetlist,
-            songIds: newSongIds
+            songIds: newRefSongs
         };
 
         const newSetlists = {
@@ -67,7 +88,7 @@ const App = (props: IAppProps): JSX.Element => {
     const handleDeleteSong = (setlistId: string, songId: string): void => {
         const currentSetlist = setlists[setlistId];
 
-        const newSongIds = Array.from(currentSetlist.songIds);
+        const newSongIds = Array.from(currentSetlist.songs);
         const songIndex = newSongIds.indexOf(songId);
         newSongIds.splice(songIndex, 1);
 
@@ -83,9 +104,9 @@ const App = (props: IAppProps): JSX.Element => {
 
         setSetlists(newStateSetlists);
 
-        const newSongsKeys = Object.keys(songs)
-        const removalSongID = newSongsKeys.indexOf(songId)
-        newSongsKeys.splice(removalSongID,1);
+        const newSongsKeys = Object.keys(songs);
+        const removalSongID = newSongsKeys.indexOf(songId);
+        newSongsKeys.splice(removalSongID, 1);
 
         const newSongs = newSongsKeys.reduce((newSongs: HashTable<any>, currentId: string) => {
             newSongs[currentId] = songs[currentId];
@@ -95,7 +116,6 @@ const App = (props: IAppProps): JSX.Element => {
         setSongs(newSongs);
     };
 
-    const handleEditSong = () => {};
 
     const onDragEnd = (result: DropResult): void => {
         const { destination, source, draggableId } = result;
@@ -105,10 +125,10 @@ const App = (props: IAppProps): JSX.Element => {
                 const start = setlists[source.droppableId];
                 const finsih = setlists[destination.droppableId];
 
-                const newStartSongIds = Array.from(start.songIds);
+                const newStartSongIds = Array.from(start.songs);
                 newStartSongIds.splice(source.index, 1);
 
-                const newFinishSongIds = Array.from(finsih.songIds);
+                const newFinishSongIds = Array.from(finsih.songs);
                 newFinishSongIds.splice(destination.index, 0, draggableId);
 
                 const newStartSetlist = {
@@ -131,7 +151,7 @@ const App = (props: IAppProps): JSX.Element => {
             } else if (hasPositionInColumnChanged(destination, source)) {
                 const column = setlists[source.droppableId];
 
-                const newSongIds = Array.from(column.songIds);
+                const newSongIds = Array.from(column.songs);
                 newSongIds.splice(source.index, 1);
                 newSongIds.splice(destination.index, 0, draggableId);
 
@@ -161,11 +181,12 @@ const App = (props: IAppProps): JSX.Element => {
     const renderSetlists = (): JSX.Element[] => {
         return setlistOrder.map(setlistId => {
             const setlist = setlists[setlistId];
-            const setlistSongs = setlist.songIds.map(songId => songs[songId]);
+            const setlistSongs = setlist.songs.map(songId => songs[songId]);
 
             return (
                 <SetlistComponent
                     AddSong={AddSong}
+                    UpdateSetlist={UpdateSetlist}
                     DeleteSong={DeleteSong}
                     handleDeleteSong={handleDeleteSong}
                     handleNewSong={handleNewSong}
@@ -177,11 +198,18 @@ const App = (props: IAppProps): JSX.Element => {
         });
     };
 
+    const IsMajorLibraryNeeded = () => Object.keys(setlists).length === 0
+
     return (
         <Container>
             <Row>
-                <Col>{/* <SelectSetlist /> */}</Col>
-                <Col />
+                <Col md="8">
+                    <CreateSetlist CreateSetlistAsync={CreateSetlistAsync} IsMajorLibrary={IsMajorLibraryNeeded()} AddSetlistToState={AddSetlistToState} />
+                </Col>
+                <Col md="2" />
+                <Col md="2">
+                    <input type="text"></input>
+                </Col>
             </Row>
             <Row>
                 <AppContainer data-testid="DragDropContext">
