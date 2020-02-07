@@ -11,5 +11,5 @@ import { AddSong, AddSetlist, UpdateSetlist } from "./api";
 
 const DeleteSong = (a:string,b:string):Promise<void> => Promise.resolve()
 
-ReactDOM.render(<App CreateSetlistAsync={AddSetlist} UpdateSetlist={UpdateSetlist} InitialStateRequest={InitialStateRequest} AddSong={AddSong} DeleteSong={DeleteSong}/>, document.getElementById("root"));
+ReactDOM.render(<App CreateSetlistAsync={AddSetlist} UpdateSetlistAsync={UpdateSetlist} InitialStateRequest={InitialStateRequest} CreateSongAsync={AddSong} DeleteSongAsync={DeleteSong}/>, document.getElementById("root"));
 serviceWorker.unregister();

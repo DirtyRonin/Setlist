@@ -10,9 +10,12 @@ export interface ICreateSetlistProps {
 }
 
 const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
+    const { IsMajorLibrary, CreateSetlistAsync, AddSetlistToState } = props;
+
     const htmlConfig = CreateSetlistHtmlAttributesConfiguration;
 
-    const { IsMajorLibrary, CreateSetlistAsync: AsyncCreateSetlist, AddSetlistToState } = props;
+    const NameInput = IsMajorLibrary ? htmlConfig.MajorLibraryNameInput : htmlConfig.SetlistNameInput;
+    const CreateButton = IsMajorLibrary ? htmlConfig.CreateMajorLibraryButton : htmlConfig.CreateSetlistButton;
 
     const hanldeCreateSetlist = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
@@ -21,34 +24,36 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
 
         const setlist: setlist = {
             id: "",
-            title: elements[htmlConfig.SetlistName.ControlId].value,
-            isLibrary: elements[htmlConfig.IsLibrary.ControlId].checked,
-            isMajorLibrary: elements[htmlConfig.IsMajorLibrary.ControlId].checked,
+            title: elements[NameInput.ControlId].value,
+            isLibrary: IsMajorLibrary ? IsMajorLibrary : elements[htmlConfig.IsLibraryCheckbox.ControlId].checked,
+            isMajorLibrary: IsMajorLibrary,
             songs: []
         };
 
-        AsyncCreateSetlist(setlist)
+        CreateSetlistAsync(setlist)
             .then(newSetlist => AddSetlistToState(newSetlist))
             .catch(error => console.timeLog(error));
     };
+
+    
+
     return (
         <Form onSubmit={hanldeCreateSetlist} method="GET">
-            <Form.Group as={Col} md="4" controlId={htmlConfig.SetlistName.ControlId}>
-                <Form.Label>{htmlConfig.SetlistName.label}</Form.Label>
-                <Form.Control type="text" placeholder={htmlConfig.SetlistName.Placeholder}></Form.Control>
+            <Form.Group as={Col} md="6" controlId={NameInput.ControlId}>
+                <Form.Label>{NameInput.label}</Form.Label>
+                <Form.Control type="text" placeholder={NameInput.Placeholder}></Form.Control>
             </Form.Group>
-            <Form.Group as={Col} md="4" hidden={IsMajorLibrary} controlId={htmlConfig.IsLibrary.ControlId}>
-                <Form.Check type="checkbox" defaultChecked={IsMajorLibrary} label={htmlConfig.IsLibrary.label} />
-            </Form.Group>
-            <Form.Group as={Col} md="4" hidden={true} controlId={htmlConfig.IsMajorLibrary.ControlId}>
-                <Form.Check type="checkbox" defaultChecked={IsMajorLibrary} label={htmlConfig.IsMajorLibrary.ControlId} />
-            </Form.Group>
+            {!IsMajorLibrary && <Form.Group as={Col} md="6" controlId={htmlConfig.IsLibraryCheckbox.ControlId}>
+                <Form.Check type="checkbox" defaultChecked={IsMajorLibrary} label={htmlConfig.IsLibraryCheckbox.label} />
+            </Form.Group>}
 
             <Button variant="primary" type="submit">
-                {`Create Setlist ${IsMajorLibrary ? "as Major Library" : ""}`}
+                {CreateButton.label}
             </Button>
         </Form>
     );
 };
+
+
 
 export default CreateSetlist;

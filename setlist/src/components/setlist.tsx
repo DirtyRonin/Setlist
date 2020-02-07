@@ -13,12 +13,12 @@ export interface ISetlistProps {
     setlist: setlist;
     songs: song[];
 
-    AddSong(song: song): Promise<song>;
-    UpdateSetlist(setlist: setlist): Promise<setlist>;
-    handleNewSong: (setlist: setlist, newSong: song) => void;
-
-    DeleteSong(setlistId: string, songId: string): Promise<void>;
-    handleDeleteSong(setlistId: string, songId: string): void;
+    CreateSongAsync(song: song): Promise<song>;
+    DeleteSongAsync(setlistId: string, songId: string): Promise<void>;
+    UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
+    
+    AddSongToState: (setlist: setlist, newSong: song) => void;
+    RemoveSongFromState(setlistId: string, songId: string): void;
 }
 
 const Container = styled.div`
@@ -35,18 +35,15 @@ const NodeList = styled.div`
 `;
 
 const SetlistComponent = (props: ISetlistProps): JSX.Element => {
-    const { AddSong, handleNewSong, setlist, songs, handleDeleteSong, DeleteSong, UpdateSetlist } = props;
+    const { CreateSongAsync, AddSongToState, setlist, songs, RemoveSongFromState, DeleteSongAsync, UpdateSetlistAsync } = props;
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
-
-    // const getUniqueControlId = (propName: string) => `${props.setlist.id}_${propName}`;
 
     const hanldeOnAddSongClick = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
 
         const elements: any = (event.target as any).elements;
 
-        // const song: Song = { title: "Ehrenlos", artist: "K.I.Z.", mode: "Brutal", id: "Ehrenlos - K.I.Z." };
         const song: song = {
             title: elements[songDef.Title.ControlId].value,
             artist: elements[songDef.Artist.ControlId].value,
@@ -54,19 +51,23 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
             id: ""
         };
 
-        AddSong(song)
+        CreateSongAsync(song)
             .then(newsongResult => {
                 const newSetlistSongs = Array.from(setlist.songs);
-                newSetlistSongs.push( newsongResult.id );
+                newSetlistSongs.push(newsongResult.id);
 
                 const newSetlist = {
                     ...setlist,
                     songs: newSetlistSongs
                 };
 
-                UpdateSetlist(newSetlist)
-                    .then(newSetlistResult => handleNewSong(newSetlistResult, newsongResult))
-                    .catch(error => console.log(error));
+                UpdateSetlistAsync(newSetlist)
+                    .then(newSetlistResult =>{
+                        AddSongToState(newSetlist, newsongResult)
+                    })
+                    .catch(error =>
+                        console.log(error)
+                    );
             })
             .catch(error => console.log(error));
     };
@@ -79,8 +80,8 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
                     <NodeList ref={provided.innerRef} {...provided.droppableProps}>
                         {songs.map((song, index) => (
                             <SongNode
-                                handleDeleteSong={handleDeleteSong}
-                                DeleteSong={DeleteSong}
+                                RemoveSongFromState={RemoveSongFromState}
+                                DeleteSongAsync={DeleteSongAsync}
                                 setlistId={setlist.id}
                                 key={song.id}
                                 song={song}

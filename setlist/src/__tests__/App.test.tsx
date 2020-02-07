@@ -1,11 +1,13 @@
 import React from "react";
-import { render, within, act, waitForElement, fireEvent } from "@testing-library/react";
+import { render, within, waitForElement, fireEvent, RenderResult } from "@testing-library/react";
+import queries from "../../node_modules/@types/testing-library__dom/queries";
 
 import App, { IAppProps } from "../App";
 
 import { dndList, song, setlist } from "../models/DndListModels";
 import { mockDndElSpacing, DND_DRAGGABLE_DATA_ATTR, makeDnd, DND_DIRECTION_DOWN } from "../testHelper/react-beautiful-dndTestUtilz";
 import { SongNodeHtmlAttributesConfiguration } from "../Configuration";
+import { act } from "react-dom/test-utils";
 
 const songNodeConfig = SongNodeHtmlAttributesConfiguration;
 
@@ -45,37 +47,42 @@ const dummyInitialData: dndList = {
 };
 
 const defaultProps: IAppProps = {
-    InitialStateRequest: async () => Promise.resolve().then(result => dummyInitialData),
-    AddSong: async (song: song) =>
+    InitialStateRequest: async () => Promise.resolve().then(() => dummyInitialData),
+    CreateSongAsync: async (song: song): Promise<song> =>
         Promise.resolve(song).then(success => {
             success.id = "DB-ID";
             return success;
         }),
-    DeleteSong: (a: string, b: string): Promise<void> => Promise.resolve(),
-    CreateSetlistAsync: (setlist: setlist): Promise<string> => Promise.resolve("success")
+    DeleteSongAsync: (): Promise<void> => Promise.resolve(),
+    CreateSetlistAsync: (setlist: setlist): Promise<setlist> => Promise.resolve(setlist),
+    UpdateSetlistAsync: (setlist: setlist): Promise<setlist> => Promise.resolve(setlist),
 };
 const defaultEmptyProps: IAppProps = {
     InitialStateRequest: async () =>
-        Promise.resolve().then(result => {
+        Promise.resolve().then(() => {
             return { ...dummyInitialData, setlistOrder: [] } as dndList;
         }),
-    AddSong: async (song: song) =>
+    CreateSongAsync: async (song: song) =>
         Promise.resolve(song).then(success => {
             success.id = "DB-ID";
             return success;
         }),
-    DeleteSong: (a: string, b: string): Promise<void> => Promise.resolve(),
-    CreateSetlistAsync: (setlist: setlist): Promise<string> => Promise.resolve("success")
+    DeleteSongAsync: (): Promise<void> => Promise.resolve(),
+    CreateSetlistAsync: (setlist: setlist): Promise<setlist> => Promise.resolve(setlist),
+    UpdateSetlistAsync: (setlist: setlist): Promise<setlist> => Promise.resolve(setlist),
 };
 
 const renderSetlist = async (defaultProps: IAppProps, props: Partial<IAppProps> = {}) => {
     const app = render(<App {...defaultProps} {...props} />);
-    const waitForUseEffect = await waitForElement(() => app.getByTestId("DragDropContext"));
     return app;
 };
 
 const renderSetlistForMoving = async () => {
-    const renderResult = await renderSetlist(defaultProps);
+    let renderResult = {} as RenderResult<typeof queries>;
+
+    await act(async () => {
+        renderResult = await renderSetlist(defaultProps);
+    });
 
     mockDndElSpacing(renderResult);
 
@@ -98,10 +105,16 @@ const createTestTextOrderByTestIdHelper = (
 
 describe("Setlist Function Test", () => {
     it("should render 6 tasks in the expected order", async () => {
-        const { getByTestId } = await renderSetlist(defaultProps);
+
+        let renderResult = {} as RenderResult<typeof queries>;
+
+        await act(async () => {
+            renderResult = await renderSetlist(defaultProps);
+        });
+
 
         // get function for querying all tasks from with column
-        const { getAllByTestId: getAllByTestIdWithinColumn } = within(getByTestId("column-1"));
+        const { getAllByTestId: getAllByTestIdWithinColumn } = within(renderResult.getByTestId("column-1"));
 
         // define expected order
         const expectedOrder = ["Take out the garbage", "Watch my favorite show", "charge my phone", "Cook dinner", "Eaten", "Sleeping"];
@@ -109,14 +122,18 @@ describe("Setlist Function Test", () => {
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
         testTextOrderByTestId(songNodeConfig.Title.Data_TestId, expectedOrder);
 
-        const dndContext = getByTestId("DragDropContext");
+        const dndContext = renderResult.getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(3);
     });
 
     it("div with data-testid should have no children", async () => {
-        const { getByTestId } = await renderSetlist(defaultEmptyProps);
+        let renderResult = {} as RenderResult<typeof queries>;
 
-        const dndContext = getByTestId("DragDropContext");
+        await act(async () => {
+            renderResult = await renderSetlist(defaultEmptyProps);
+        });
+
+        const dndContext = renderResult.getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(0);
     });
 
@@ -141,17 +158,24 @@ describe("Setlist Function Test", () => {
     });
 
     it("should add new song when button for song creating is clicked", async () => {
-        const { getByTestId, getByText } = await renderSetlist(defaultProps);
 
-        const firstColumn = getByTestId("column-1");
+        let renderResult = {} as RenderResult<typeof queries>;
+
+        await act(async () => {
+            renderResult = await renderSetlist(defaultProps);
+        });
+
+        // const { getByTestId, getByText } = await renderSetlist(defaultProps);
+
+        const firstColumn = renderResult.getByTestId("column-1");
 
         const stuff = within(firstColumn).getByPlaceholderText("Enter Title");
-        fireEvent.change(stuff, { target: { value: "Ehrenlos" } });
+        act(() => { fireEvent.change(stuff, { target: { value: "Ehrenlos" } }); })
         await waitForElement(() => within(firstColumn).getByPlaceholderText("Enter Title"));
 
         const btn_AddNewSong = within(firstColumn).getByText("Add Song");
-        fireEvent.click(btn_AddNewSong, { button: 0 });
-        await waitForElement(() => getByText("Ehrenlos"));
+        act(() => { fireEvent.click(btn_AddNewSong, { button: 0 });});
+        await waitForElement(() => renderResult.getByText("Ehrenlos"));
 
         // get function for querying all tasks from with column
         const { getAllByTestId: getAllByTestIdWithinColumn } = within(firstColumn);
@@ -170,7 +194,7 @@ describe("Setlist Function Test", () => {
         const testTextOrderByTestId = createTestTextOrderByTestIdHelper(getAllByTestIdWithinColumn);
         testTextOrderByTestId(songNodeConfig.Title.Data_TestId, expectedOrder);
 
-        const dndContext = getByTestId("DragDropContext");
+        const dndContext = renderResult.getByTestId("DragDropContext");
         expect(dndContext.childElementCount).toBe(3);
     });
 });

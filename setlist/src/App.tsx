@@ -12,12 +12,10 @@ import CreateSetlist from "./components/createSetlistForm";
 export interface IAppProps /* extends dndList */ {
     InitialStateRequest(): Promise<dndList>;
 
-    AddSong(song: song): Promise<song>;
-    UpdateSetlist(setlist: setlist): Promise<setlist>;
-
-    DeleteSong(setlistId: string, songId: string): Promise<void>;
-    
+    CreateSongAsync(song: song): Promise<song>;
+    DeleteSongAsync(setlistId: string, songId: string): Promise<void>;
     CreateSetlistAsync: (setlist: setlist) => Promise<setlist>;
+    UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
 }
 
 export interface IAppState {
@@ -36,7 +34,7 @@ const App = (props: IAppProps): JSX.Element => {
     const [setlistOrder, setSetlistOrder] = useState([] as string[]);
     const [] = useState(true);
 
-    const { AddSong, DeleteSong ,CreateSetlistAsync,InitialStateRequest,UpdateSetlist} = props;
+    const { CreateSongAsync, DeleteSongAsync ,CreateSetlistAsync,InitialStateRequest,UpdateSetlistAsync} = props;
 
     useEffect(() => {
         InitialStateRequest().then(result => {
@@ -60,7 +58,7 @@ const App = (props: IAppProps): JSX.Element => {
         setSetlistOrder(newSetlistOrder);
     }
 
-    const handleNewSong = (setlist: setlist, newSong: song) => {
+    const AddSongToState = (setlist: setlist, newSong: song) => {
         const newSongs = {
             ...songs,
             [newSong.id]: newSong
@@ -70,11 +68,11 @@ const App = (props: IAppProps): JSX.Element => {
 
         const currentSetlist = setlists[setlist.id];
          const newRefSongs = Array.from(currentSetlist.songs);
-         newRefSongs.concat(newSong.id);
+         newRefSongs.push(newSong.id);
 
         const updatedSetlist = {
             ...currentSetlist,
-            songIds: newRefSongs
+            songs: newRefSongs
         };
 
         const newSetlists = {
@@ -85,7 +83,7 @@ const App = (props: IAppProps): JSX.Element => {
         setSetlists(newSetlists);
     };
 
-    const handleDeleteSong = (setlistId: string, songId: string): void => {
+    const RemoveSongFromState = (setlistId: string, songId: string): void => {
         const currentSetlist = setlists[setlistId];
 
         const newSongIds = Array.from(currentSetlist.songs);
@@ -94,7 +92,7 @@ const App = (props: IAppProps): JSX.Element => {
 
         const newSetlist = {
             ...currentSetlist,
-            songIds: newSongIds
+            songs: newSongIds
         };
 
         const newStateSetlists = {
@@ -133,12 +131,12 @@ const App = (props: IAppProps): JSX.Element => {
 
                 const newStartSetlist = {
                     ...start,
-                    songIds: newStartSongIds
+                    songs: newStartSongIds
                 };
 
                 const newFinishSetlist = {
                     ...finsih,
-                    songIds: newFinishSongIds
+                    songs: newFinishSongIds
                 };
 
                 const newStateSetlists = {
@@ -157,7 +155,7 @@ const App = (props: IAppProps): JSX.Element => {
 
                 const newSetlist = {
                     ...column,
-                    songIds: newSongIds
+                    songs: newSongIds
                 };
 
                 const newStateSetlists = {
@@ -185,11 +183,11 @@ const App = (props: IAppProps): JSX.Element => {
 
             return (
                 <SetlistComponent
-                    AddSong={AddSong}
-                    UpdateSetlist={UpdateSetlist}
-                    DeleteSong={DeleteSong}
-                    handleDeleteSong={handleDeleteSong}
-                    handleNewSong={handleNewSong}
+                    CreateSongAsync={CreateSongAsync}
+                    UpdateSetlistAsync={UpdateSetlistAsync}
+                    DeleteSongAsync={DeleteSongAsync}
+                    RemoveSongFromState={RemoveSongFromState}
+                    AddSongToState={AddSongToState}
                     key={setlistId}
                     setlist={setlist}
                     songs={setlistSongs}

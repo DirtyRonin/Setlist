@@ -26,10 +26,10 @@ export const AddSetlist = async (setlist: setlist): Promise<setlist> => {
 };
 export const UpdateSetlist = async (setlist: setlist): Promise<setlist> => {
 
-    const putSetlist = {id:setlist.id, setlist:setlist}
+    
 
-    const addResult = await Axios.put<setlist>(endpoint.GetEndpointUrl!(), putSetlist, {
-        headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" }
+    const addResult = await Axios.put<setlist>(`${endpoint.GetEndpointUrl!()}/${setlist.id}`, setlist, {
+        headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" }
     });
 
     return addResult.data;

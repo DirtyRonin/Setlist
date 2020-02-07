@@ -11,8 +11,9 @@ export interface ISongNodeProps {
     song: song;
     index: number;
     setlistId: string;
-    handleDeleteSong(setlistId: string, songId: string): void;
-    DeleteSong(setlistId: string, songId: string): Promise<void>;
+    DeleteSongAsync(setlistId: string, songId: string): Promise<void>;
+
+    RemoveSongFromState(setlistId: string, songId: string): void;
 }
 
 const SongNodeContainer = styled.div`
@@ -24,11 +25,11 @@ const SongNodeContainer = styled.div`
 `;
 
 const SongNode = (props: ISongNodeProps): JSX.Element => {
-    const { song, index,setlistId, handleDeleteSong } = props;
+    const { song, index,setlistId, RemoveSongFromState } = props;
     const songDef = SongNodeHtmlAttributesConfiguration;
 
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        handleDeleteSong(setlistId,song.id);
+        RemoveSongFromState(setlistId,song.id);
     };
 
     return (
