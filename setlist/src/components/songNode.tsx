@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 
-import { song } from "../models/DndListModels";
+import { song } from "../models";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import {SongNodeHtmlAttributesConfiguration} from "../Configuration";
 

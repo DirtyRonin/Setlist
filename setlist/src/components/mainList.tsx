@@ -6,18 +6,17 @@ import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
 import SongNode from "./songNode";
-import { songlist, song, setlistSong } from "../models";
+import { songlist, song } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 
-export interface ISetlistProps {
+export interface IMainListProps {
     songlist: songlist;
 
     CreateSongAsync(song: song): Promise<song>;
-    DeleteSongAsync(setlistId: string, songId: string): Promise<void>;
-    // UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
+    DeleteSongAsync(songId: string): Promise<void>;
 
-    AddSongToState: (setlist: songlist, newSong: song) => void;
-    RemoveSongFromState(setlistId: string, songId: string): void;
+    AddSongToMainListState: (songListId: string, newSong: song) => void;
+    RemoveSongFromMainListState(songListId: string, songId: string): void;
 }
 
 const Container = styled.div`
@@ -33,8 +32,8 @@ const NodeList = styled.div`
     padding: 8px;
 `;
 
-const SetlistComponent = (props: ISetlistProps): JSX.Element => {
-    const { CreateSongAsync, AddSongToState, songlist, RemoveSongFromState, DeleteSongAsync } = props;
+const MainListComponent = (props: IMainListProps): JSX.Element => {
+    const { CreateSongAsync, AddSongToMainListState, songlist, RemoveSongFromMainListState, DeleteSongAsync } = props;
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
 
@@ -51,48 +50,31 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
         };
 
         CreateSongAsync(song)
-            .then(newsongResult => {
-                const newSetlistSongs = Array.from(songlist.songs);
-                newSetlistSongs.push(newsongResult);
-
-                const newSetlist = {
-                    ...songlist,
-                    songs: newSetlistSongs
-                };
-
-                // UpdateSetlistAsync(newSetlist)
-                //     .then(newSetlistResult =>{
-                //         AddSongToState(newSetlist, newsongResult)
-                //     })
-                //     .catch(error =>
-                //         console.log(error)
-                //     );
-            })
+            .then(newSongResult => AddSongToMainListState(songlist.id, newSongResult))
             .catch(error => console.log(error));
     };
 
     return (
         <Container data-testid={songlist.id}>
             <Title>{songlist.title}</Title>
-            {songlist.songs && (
-                <Droppable droppableId={songlist.id}>
-                    {provided => (
-                        <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                            {songlist.songs.map((song, index) => (
-                                <SongNode
-                                    RemoveSongFromState={RemoveSongFromState}
-                                    DeleteSongAsync={DeleteSongAsync}
-                                    setlistId={songlist.id}
-                                    key={song.id}
-                                    song={song}
-                                    index={index}
-                                />
-                            ))}
-                            {provided.placeholder}
-                        </NodeList>
-                    )}
-                </Droppable>
-            )}
+            <Droppable droppableId={songlist.id}>
+                {provided => (
+                    <NodeList ref={provided.innerRef} {...provided.droppableProps}>
+                        {songlist.songs.map((song, index) => (
+                            <SongNode
+                                RemoveSongFromState={RemoveSongFromMainListState}
+                                DeleteSongAsync={DeleteSongAsync}
+                                setlistId={songlist.id}
+                                key={song.id}
+                                song={song}
+                                index={index}
+                            />
+                        ))}
+                        {provided.placeholder}
+                    </NodeList>
+                )}
+            </Droppable>
+
             <Form onSubmit={hanldeOnAddSongClick} method="GET">
                 <Form.Row>
                     <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
@@ -110,11 +92,11 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
                 </Form.Row>
 
                 <Button variant="primary" type="submit">
-                    Add Song
+                    Add Song to Main List
                 </Button>
             </Form>
         </Container>
     );
 };
 
-export default SetlistComponent;
+export default MainListComponent;

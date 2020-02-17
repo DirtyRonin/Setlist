@@ -1,19 +1,21 @@
 import Axios from "axios";
-import { song } from "../models/DndListModels";
+import { song } from "../models";
 import { HashTable } from "../Util/HashTable";
 import {EndpointConfiguration, ACCESS_CONTROL_ALLOW_ORIGIN_HEADER } from "../Configuration";
 
 const songsEndpoint = EndpointConfiguration.Songs;
 
-export const GetAllSongs = async (): Promise<HashTable<song>> => {
+export const GetAllSongs = async (): Promise<Array<song>> => {
     const songsResult = await Axios.get<song[]>(songsEndpoint.GetEndpointUrl!(), {
         headers: ACCESS_CONTROL_ALLOW_ORIGIN_HEADER
     });
 
-    return songsResult.data.reduce((prev: HashTable<any>, current: song) => {
-        prev[current.id] = current;
-        return prev;
-    }, {} as HashTable<any>);
+    return songsResult.data;
+
+    // return songsResult.data.reduce((prev: HashTable<any>, current: song) => {
+    //     prev[current.id] = current;
+    //     return prev;
+    // }, {} as HashTable<any>);
 };
 
 export const AddSong = async (song: song): Promise<song> => {

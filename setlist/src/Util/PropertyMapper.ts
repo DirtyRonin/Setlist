@@ -1,4 +1,4 @@
-import { song } from "../models/DndListModels";
+import { song } from "../models";
 
 export const property = <Song>(name: keyof Song) => name;
 

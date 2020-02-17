@@ -1,12 +1,12 @@
 import React from "react";
 import { Form, Button, FormControlProps, Col } from "react-bootstrap";
-import { setlist } from "../models/DndListModels";
+import { songlist } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 
 export interface ICreateSetlistProps {
     IsMajorLibrary: boolean;
-    CreateSetlistAsync: (setlist: setlist) => Promise<setlist>;
-    AddSetlistToState: (setlist: setlist) => void;
+    CreateSetlistAsync: (setlist: songlist) => Promise<songlist>;
+    AddSetlistToState: (setlist: songlist) => void;
 }
 
 const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
@@ -22,7 +22,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const setlist: setlist = {
+        const setlist: songlist = {
             id: "",
             title: elements[NameInput.ControlId].value,
             isLibrary: IsMajorLibrary ? IsMajorLibrary : elements[htmlConfig.IsLibraryCheckbox.ControlId].checked,
