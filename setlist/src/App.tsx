@@ -6,16 +6,19 @@ import SetlistComponent from "./components/setlist";
 import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
 import { HashTable } from "./Util/HashTable";
-import { song, songlist } from "./models";
+import { song, songlist, bandlist } from "./models";
 import MainListComponent from "./components/mainList";
 import BandListComponent from "./components/bandList";
+import CreateSetlist from "./components/createSetlistForm";
+import { finished } from "stream";
 
 export interface IAppProps /* extends dndList */ {
     InitialStateRequest(): Promise<IAppState>;
 
     CreateSongAsync(song: song): Promise<song>;
     DeleteSongAsync(songId: string): Promise<void>;
-    // CreateSetlistAsync: (setlist: setlist) => Promise<setlist>;
+    CreateBandAsync: (band: bandlist) => Promise<bandlist>;
+    DeleteBandAsync(bandId: string): Promise<void>;
     // UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
 }
 
@@ -32,7 +35,7 @@ const App = (props: IAppProps): JSX.Element => {
     const [songLists, setSongLists] = useState({} as HashTable<songlist>);
     const [songListOrder, setSongListOrder] = useState([] as string[]);
 
-    const { CreateSongAsync, DeleteSongAsync, InitialStateRequest } = props;
+    const { CreateSongAsync, DeleteSongAsync, InitialStateRequest, CreateBandAsync, DeleteBandAsync } = props;
 
     useEffect(() => {
         InitialStateRequest().then(result => {
@@ -80,60 +83,115 @@ const App = (props: IAppProps): JSX.Element => {
         setSongLists(newStateSetlists);
     };
 
-    const AddSetlistToState = (setlist: songlist) => {
-        const newSetlistState = {
-            ...songLists,
-            [setlist.id]: setlist
-        };
+    const AddBandToState = (bandlist: bandlist): void => {
+        if (!songLists[bandlist.id]) {
+            const newSonglist = {
+                ...bandlist,
+                isMainList: false,
+                songs:bandlist.bandsongs
+            } as songlist;
 
-        setSongLists(newSetlistState);
+            const newSongLists = {
+                ...songLists,
+                [newSonglist.id]: newSonglist
+            };
 
-        const newSetlistOrder = Array.from(songListOrder);
-        newSetlistOrder.push(setlist.id);
+            setSongLists(newSongLists);
 
-        setSongListOrder(newSetlistOrder);
+            AddToSonglistOrder(newSonglist.id);
+        } else {
+            console.log("Band Already Exists In State");
+        }
+    };
+
+    const RemoveBandFromState = (bandId: string) => {
+        if (songLists[bandId]) {
+            RemoveFromSonglistOrder(bandId);
+
+            const songListIds = Object.keys(songLists);
+            const index = songListIds.indexOf(bandId);
+            songListIds.splice(index, 1);
+
+            const newSonglists: HashTable<songlist> = songListIds.reduce((prev: HashTable<any>, current: string) => {
+                prev[current] = songLists[current];
+                return prev;
+            }, {} as HashTable<any>);
+
+            setSongLists(newSonglists);
+        } else {
+            console.log("Band Is Not In State");
+        }
+    };
+
+    const AddToSonglistOrder = (songlistId: string) => {
+        const newSonglistOrder = Array.from(songListOrder);
+        newSonglistOrder.push(songlistId);
+
+        setSongListOrder(newSonglistOrder);
+    };
+
+    const RemoveFromSonglistOrder = (songlistId: string) => {
+        const newSonglistOrder = Array.from(songListOrder);
+        const index = newSonglistOrder.indexOf(songlistId);
+
+        newSonglistOrder.splice(index, 1);
+
+        setSongListOrder(newSonglistOrder);
     };
 
     const onDragEnd = (result: DropResult): void => {
-        /* const { destination, source, draggableId } = result;
+        const { destination, source, draggableId } = result;
 
         if (destination) {
-            if (hasColumnChanged(destination, source)) {
+            if (hasSonglistChanged(destination, source)) {
                 const start = songLists[source.droppableId];
-                const finsih = songLists[destination.droppableId];
+                const finish = songLists[destination.droppableId];
 
-                const newStartSongIds = Array.from(start.songs);
-                const draggable = newStartSongIds.splice(source.index, 1);
+                if (finish.isMainList) {
+                    //nothing happens
+                } else {
+                    const newStartSongIds = Array.from(start.songs);
+                    const draggable = newStartSongIds[source.index];
 
-                const newFinishSongIds = Array.from(finsih.songs);
-                newFinishSongIds.splice(destination.index, 0, draggable[0]);
+                    if (start.isMainList === false) {
+                        newStartSongIds.splice(source.index, 1);
+                    }
 
-                const newStartSetlist = {
-                    ...start,
-                    songs: newStartSongIds
-                };
+                    const newFinishSongIds = Array.from(finish.songs);
 
-                const newFinishSetlist = {
-                    ...finsih,
-                    songs: newFinishSongIds
-                };
+                    if (doesBandlistContainsSongId(finish, draggable.id) === false) {
 
-                const newStateSetlists = {
-                    ...songLists,
-                    [newStartSetlist.id]: newStartSetlist,
-                    [newFinishSetlist.id]: newFinishSetlist
-                };
 
-                setSongLists(newStateSetlists);
-            } else if (hasPositionInColumnChanged(destination, source)) {
-                const column = songLists[source.droppableId];
+                        newFinishSongIds.splice(destination.index, 0, draggable);
+                    }
 
-                const newSongIds = Array.from(column.songs);
+                    const newStartSonglist = {
+                        ...start,
+                        songs: newStartSongIds
+                    };
+
+                    const newFinishSonglist = {
+                        ...finish,
+                        songs: newFinishSongIds
+                    };
+
+                    const newStateSonglists = {
+                        ...songLists,
+                        [newStartSonglist.id]: newStartSonglist,
+                        [newFinishSonglist.id]: newFinishSonglist
+                    };
+
+                    setSongLists(newStateSonglists);
+                }
+            } else if (hasPositionInSonglistChanged(destination, source)) {
+                const songlist = songLists[source.droppableId];
+
+                const newSongIds = Array.from(songlist.songs);
                 const draggable = newSongIds.splice(source.index, 1);
                 newSongIds.splice(destination.index, 0, draggable[0]);
 
                 const newSetlist = {
-                    ...column,
+                    ...songlist,
                     songs: newSongIds
                 };
 
@@ -146,23 +204,25 @@ const App = (props: IAppProps): JSX.Element => {
             } else {
                 // no change
             }
-        } */
+        }
     };
 
-    /* const hasColumnChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
+    const doesBandlistContainsSongId = (songlist: songlist, songId: string): boolean =>
+        songlist.isBandList && songlist.songs.filter(song => song.id === songId).length > 0;
+
+    const hasSonglistChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.droppableId !== source.droppableId;
 
-    const hasPositionInColumnChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
+    const hasPositionInSonglistChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.index !== source.index;
- */
+
     const renderSetlists = (): JSX.Element[] => {
         return songListOrder.map(songListId => {
             const songList = songLists[songListId];
-            if (songList.isMajorLibrary) {
+            if (songList.isMainList) {
                 return (
                     <MainListComponent
                         CreateSongAsync={CreateSongAsync}
-                        // UpdateSetlistAsync={UpdateSetlistAsync}
                         DeleteSongAsync={DeleteSongAsync}
                         RemoveSongFromMainListState={RemoveSongFromMainListState}
                         AddSongToMainListState={AddSongToMainListState}
@@ -170,43 +230,43 @@ const App = (props: IAppProps): JSX.Element => {
                         songlist={songList}
                     />
                 );
-            } else if (songList.isLibrary) {
+            } else if (songList.isBandList) {
                 return (
                     <BandListComponent
                         key={songList.id}
                         songlist={songList}
+                        DeleteBandAsync={DeleteBandAsync}
+                        RemoveBandFromState={RemoveBandFromState}
                     />
-                )
-            }
-            else {
+                );
+            } else {
                 return (
                     <SetlistComponent
                         CreateSongAsync={CreateSongAsync}
                         // UpdateSetlistAsync={UpdateSetlistAsync}
                         DeleteSongAsync={DeleteSongAsync}
                         RemoveSongFromState={RemoveSongFromMainListState}
-                        AddSongToState={(songList: songlist, newSong: song) => { }}
+                        AddSongToState={(songList: songlist, newSong: song) => {}}
                         key={songList.id}
                         songlist={songList}
                     />
-                )
+                );
             }
         });
     };
 
-    // const IsMajorLibraryNeeded = () => Object.keys(songLists).length === 0;
+    const IsBandListNeeded = () =>
+        Object.values(songLists).filter(songList => songList.isMainList === false && songList.isBandList === true).length === 0;
 
     return (
         <Container>
-            {/* <Row>
+            <Row>
                 <Col md="8">
-                    <CreateSetlist CreateSetlistAsync={CreateSetlistAsync} IsMajorLibrary={IsMajorLibraryNeeded()} AddSetlistToState={AddSetlistToState} />
+                    <CreateSetlist IsBandList={IsBandListNeeded()} CreateBandAsync={CreateBandAsync} AddBandToState={AddBandToState} />
                 </Col>
                 <Col md="2" />
-                <Col md="2">
-                    <input type="text"></input>
-                </Col>
-            </Row> */}
+                <Col md="2" />
+            </Row>
             <Row>
                 <AppContainer data-testid="DragDropContext">
                     <DragDropContext onDragEnd={onDragEnd}>{renderSetlists()}</DragDropContext>

@@ -11,7 +11,7 @@ const mockCreateSetlistAsync = jest.fn().mockResolvedValue({})
 const mockAddSetlistToState = jest.fn()
 
 const props: ICreateSetlistProps = {
-    IsMajorLibrary: true,
+    IsBandList: true,
     CreateSetlistAsync: (setlist: setlist): Promise<setlist> => Promise.resolve({ ...setlist, id: "newId" }),
     AddSetlistToState: (setlist: setlist): void => { }
 }
@@ -94,7 +94,7 @@ describe("Test create setlist form", () => {
     it("Should show the setlistname input and the libraray checkbox when ismajorLibrary is false", async () => {
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsMajorLibrary: false
+            IsBandList: false
         }
 
         const { asFragment } = await renderCreateSetlistForm(newProps);
@@ -105,7 +105,7 @@ describe("Test create setlist form", () => {
 
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsMajorLibrary: false,
+            IsBandList: false,
             CreateSetlistAsync: mockCreateSetlistAsync
         }
 
@@ -134,7 +134,7 @@ describe("Test create setlist form", () => {
 
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsMajorLibrary: false,
+            IsBandList: false,
             CreateSetlistAsync: mockCreateSetlistAsync
         }
 
@@ -168,7 +168,7 @@ describe("Test create setlist form", () => {
     it("Should call the add setlist to state function with expectedParams when ismajorlibrary is false", async () => {
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsMajorLibrary: false,
+            IsBandList: false,
             AddSetlistToState: mockAddSetlistToState
         }
 
@@ -197,7 +197,7 @@ describe("Test create setlist form", () => {
     it("Should call the add setlist to state function as a library with expectedParams when ismajorlibrary is false", async () => {
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsMajorLibrary: false,
+            IsBandList: false,
             AddSetlistToState: mockAddSetlistToState
         }
 

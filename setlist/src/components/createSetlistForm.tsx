@@ -1,41 +1,41 @@
 import React from "react";
 import { Form, Button, FormControlProps, Col } from "react-bootstrap";
-import { songlist } from "../models";
+import { bandlist,songlist } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 
 export interface ICreateSetlistProps {
-    IsMajorLibrary: boolean;
-    CreateSetlistAsync: (setlist: songlist) => Promise<songlist>;
-    AddSetlistToState: (setlist: songlist) => void;
+    IsBandList: boolean;
+    CreateBandAsync: (bandlist: bandlist) => Promise<bandlist>;
+    AddBandToState: (bandlist: bandlist) => void;
 }
 
 const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
-    const { IsMajorLibrary, CreateSetlistAsync, AddSetlistToState } = props;
+    const { IsBandList, CreateBandAsync,AddBandToState } = props;
 
     const htmlConfig = CreateSetlistHtmlAttributesConfiguration;
 
-    const NameInput = IsMajorLibrary ? htmlConfig.MajorLibraryNameInput : htmlConfig.SetlistNameInput;
-    const CreateButton = IsMajorLibrary ? htmlConfig.CreateMajorLibraryButton : htmlConfig.CreateSetlistButton;
+    const NameInput = htmlConfig.SetlistNameInput;
+    const CreateButton = htmlConfig.CreateSetlistButton;
 
     const hanldeCreateSetlist = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
 
         const elements: any = (event.target as any).elements;
 
-        const setlist: songlist = {
-            id: "",
-            title: elements[NameInput.ControlId].value,
-            isLibrary: IsMajorLibrary ? IsMajorLibrary : elements[htmlConfig.IsLibraryCheckbox.ControlId].checked,
-            isMajorLibrary: IsMajorLibrary,
-            songs: []
-        };
+        const isBandList: boolean = elements[htmlConfig.IsLibraryCheckbox.ControlId].checked;
+        if (isBandList) {
+            const bandList: bandlist = {
+                id: "",
+                title: elements[NameInput.ControlId].value,
+                isBandList: isBandList,
+                bandsongs: []
+            };
 
-        CreateSetlistAsync(setlist)
-            .then(newSetlist => AddSetlistToState(newSetlist))
-            .catch(error => console.timeLog(error));
+            CreateBandAsync(bandList)
+                .then(newSetlist => AddBandToState(bandList))
+                .catch(error => console.timeLog(error));
+        }
     };
-
-    
 
     return (
         <Form onSubmit={hanldeCreateSetlist} method="GET">
@@ -43,9 +43,9 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                 <Form.Label>{NameInput.label}</Form.Label>
                 <Form.Control type="text" placeholder={NameInput.Placeholder}></Form.Control>
             </Form.Group>
-            {!IsMajorLibrary && <Form.Group as={Col} md="6" controlId={htmlConfig.IsLibraryCheckbox.ControlId}>
-                <Form.Check type="checkbox" defaultChecked={IsMajorLibrary} label={htmlConfig.IsLibraryCheckbox.label} />
-            </Form.Group>}
+            <Form.Group as={Col} md="6" controlId={htmlConfig.IsLibraryCheckbox.ControlId}>
+                <Form.Check type="checkbox" defaultChecked={IsBandList} label={htmlConfig.IsLibraryCheckbox.label} />
+            </Form.Group>
 
             <Button variant="primary" type="submit">
                 {CreateButton.label}
@@ -53,7 +53,5 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
         </Form>
     );
 };
-
-
 
 export default CreateSetlist;

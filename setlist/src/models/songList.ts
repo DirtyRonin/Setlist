@@ -4,6 +4,8 @@ export type songlist = {
     id: string;
     title: string;
     songs: song[];
-    isLibrary: boolean;
-    isMajorLibrary: boolean;
+    isBandList: boolean;
+    isMainList: boolean;
 };
+
+export type bandlist = { id: string; title: string; bandsongs: song[]; isBandList: boolean };

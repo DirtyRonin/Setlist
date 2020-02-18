@@ -13,10 +13,10 @@ export interface IBandListProps {
     songlist: songlist;
 
     // CreateSongAsync(song: song): Promise<song>;
-    // DeleteSongAsync(songId: string): Promise<void>;
+    DeleteBandAsync(bandId: string): Promise<void>;
 
     // AddSongToMainListState: (songListId: string, newSong: song) => void;
-    // RemoveSongFromMainListState(songListId: string, songId: string): void;
+    RemoveBandFromState(bandId: string): void;
 }
 
 const Container = styled.div`
@@ -33,7 +33,7 @@ const NodeList = styled.div`
 `;
 
 const BandListComponent = (props: IBandListProps): JSX.Element => {
-    const { songlist } = props;
+    const { songlist, DeleteBandAsync,RemoveBandFromState } = props;
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
 
@@ -50,20 +50,24 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
         };
     };
 
+    const handleOnDeleteBandClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        
+        DeleteBandAsync(songlist.id)
+            .then(result => RemoveBandFromState(songlist.id))
+            .catch(error => console.log(error));
+    };
+
     return (
         <Container data-testid={songlist.id}>
             <Title>{songlist.title}</Title>
             <Droppable droppableId={songlist.id}>
                 {provided => (
                     <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                        {songlist.songs.map((song, index) => (
-                            <BandSongNodeComponent
-                                songListId={songlist.id}
-                                key={song.id}
-                                song={song}
-                                index={index}
-                            />
-                        ))}
+                        {songlist.songs &&
+                            songlist.songs.map((song, index) => (
+                                <BandSongNodeComponent songListId={songlist.id} key={song.id} song={song} index={index} />
+                            ))}
                         {provided.placeholder}
                     </NodeList>
                 )}
@@ -89,6 +93,9 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
                     Add Song to Band Songs
                 </Button>
             </Form>
+            <Button variant="primary" type="button" onClick={handleOnDeleteBandClick}>
+                Delete Band
+            </Button>
         </Container>
     );
 };
