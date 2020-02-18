@@ -8,12 +8,13 @@ import { Container, Row, Col } from "react-bootstrap";
 import { HashTable } from "./Util/HashTable";
 import { song, songlist } from "./models";
 import MainListComponent from "./components/mainList";
+import BandListComponent from "./components/bandList";
 
 export interface IAppProps /* extends dndList */ {
     InitialStateRequest(): Promise<IAppState>;
 
     CreateSongAsync(song: song): Promise<song>;
-    DeleteSongAsync(setlistId: string, songId: string): Promise<void>;
+    DeleteSongAsync(songId: string): Promise<void>;
     // CreateSetlistAsync: (setlist: setlist) => Promise<setlist>;
     // UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
 }
@@ -29,7 +30,6 @@ const AppContainer = styled.div`
 
 const App = (props: IAppProps): JSX.Element => {
     const [songLists, setSongLists] = useState({} as HashTable<songlist>);
-
     const [songListOrder, setSongListOrder] = useState([] as string[]);
 
     const { CreateSongAsync, DeleteSongAsync, InitialStateRequest } = props;
@@ -40,6 +40,45 @@ const App = (props: IAppProps): JSX.Element => {
             setSongListOrder(result.songListOrder);
         });
     }, []);
+
+    const AddSongToMainListState = (songListId: string, newSong: song) => {
+        const currentSongList = songLists[songListId];
+        const newSongs = Array.from(currentSongList.songs);
+        newSongs.push(newSong);
+
+        const newSongList = {
+            ...currentSongList,
+            songs: newSongs
+        };
+
+        const newSetlists = {
+            ...songLists,
+            [songListId]: newSongList
+        };
+
+        setSongLists(newSetlists);
+    };
+
+    const RemoveSongFromMainListState = (songListId: string, songId: string): void => {
+        const currentSongList = songLists[songListId];
+
+        const newSongs = Array.from(currentSongList.songs);
+        const newSongIds = newSongs.map(song => song.id);
+        const songIndex = newSongIds.indexOf(songId);
+        newSongs.splice(songIndex, 1);
+
+        const newSonglist = {
+            ...currentSongList,
+            songs: newSongs
+        };
+
+        const newStateSetlists = {
+            ...songLists,
+            [songListId]: newSonglist
+        };
+
+        setSongLists(newStateSetlists);
+    };
 
     const AddSetlistToState = (setlist: songlist) => {
         const newSetlistState = {
@@ -55,64 +94,8 @@ const App = (props: IAppProps): JSX.Element => {
         setSongListOrder(newSetlistOrder);
     };
 
-    const AddSongToState = (setlist: songlist, newSong: song) => {
-        /* const newSongs = {
-            ...songs,
-            [newSong.id]: newSong
-        };
-
-        setSongs(newSongs);
-
-        const currentSetlist = setlists[setlist.id];
-        const newRefSongs = Array.from(currentSetlist.songs);
-        newRefSongs.push(newSong.id);
-
-        const updatedSetlist = {
-            ...currentSetlist,
-            songs: newRefSongs
-        };
-
-        const newSetlists = {
-            ...setlists,
-            [setlist.id]: updatedSetlist
-        };
-
-        setSetlists(newSetlists); */
-    };
-
-    const RemoveSongFromState = (setlistId: string, songId: string): void => {
-        /*  const currentSetlist = setlists[setlistId];
-
-        const newSongIds = Array.from(currentSetlist.songs);
-        const songIndex = newSongIds.indexOf(songId);
-        newSongIds.splice(songIndex, 1);
-
-        const newSetlist = {
-            ...currentSetlist,
-            songs: newSongIds
-        };
-
-        const newStateSetlists = {
-            ...setlists,
-            [newSetlist.id]: newSetlist
-        };
-
-        setSetlists(newStateSetlists);
-
-        const newSongsKeys = Object.keys(songs);
-        const removalSongID = newSongsKeys.indexOf(songId);
-        newSongsKeys.splice(removalSongID, 1);
-
-        const newSongs = newSongsKeys.reduce((newSongs: HashTable<any>, currentId: string) => {
-            newSongs[currentId] = songs[currentId];
-            return newSongs;
-        }, {} as HashTable<any>);
-
-        setSongs(newSongs); */
-    };
-
     const onDragEnd = (result: DropResult): void => {
-        const { destination, source, draggableId } = result;
+        /* const { destination, source, draggableId } = result;
 
         if (destination) {
             if (hasColumnChanged(destination, source)) {
@@ -163,15 +146,15 @@ const App = (props: IAppProps): JSX.Element => {
             } else {
                 // no change
             }
-        }
+        } */
     };
 
-    const hasColumnChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
+    /* const hasColumnChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.droppableId !== source.droppableId;
 
     const hasPositionInColumnChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.index !== source.index;
-
+ */
     const renderSetlists = (): JSX.Element[] => {
         return songListOrder.map(songListId => {
             const songList = songLists[songListId];
@@ -180,45 +163,38 @@ const App = (props: IAppProps): JSX.Element => {
                     <MainListComponent
                         CreateSongAsync={CreateSongAsync}
                         // UpdateSetlistAsync={UpdateSetlistAsync}
-                        DeleteSongAsync={songId => Promise.resolve()}
-                        RemoveSongFromMainListState={(songListId: string, songId: string) => {}}
-                        AddSongToMainListState={(songListId: string, newSong: song) => {}}
+                        DeleteSongAsync={DeleteSongAsync}
+                        RemoveSongFromMainListState={RemoveSongFromMainListState}
+                        AddSongToMainListState={AddSongToMainListState}
                         key={songList.id}
                         songlist={songList}
                     />
                 );
-            } else {
+            } else if (songList.isLibrary) {
+                return (
+                    <BandListComponent
+                        key={songList.id}
+                        songlist={songList}
+                    />
+                )
+            }
+            else {
                 return (
                     <SetlistComponent
                         CreateSongAsync={CreateSongAsync}
                         // UpdateSetlistAsync={UpdateSetlistAsync}
                         DeleteSongAsync={DeleteSongAsync}
-                        RemoveSongFromState={RemoveSongFromState}
-                        AddSongToState={AddSongToState}
+                        RemoveSongFromState={RemoveSongFromMainListState}
+                        AddSongToState={(songList: songlist, newSong: song) => { }}
                         key={songList.id}
                         songlist={songList}
                     />
-                );
+                )
             }
-            // return (
-            //        {songList.isMajorLibrary && getSetlist(songList)}
-            // );
         });
     };
 
-    const getSetlist = (songList: songlist): JSX.Element => (
-        <SetlistComponent
-            CreateSongAsync={CreateSongAsync}
-            // UpdateSetlistAsync={UpdateSetlistAsync}
-            DeleteSongAsync={DeleteSongAsync}
-            RemoveSongFromState={RemoveSongFromState}
-            AddSongToState={AddSongToState}
-            key={songList.id}
-            songlist={songList}
-        />
-    );
-
-    const IsMajorLibraryNeeded = () => Object.keys(songLists).length === 0;
+    // const IsMajorLibraryNeeded = () => Object.keys(songLists).length === 0;
 
     return (
         <Container>

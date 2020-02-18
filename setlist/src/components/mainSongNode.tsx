@@ -5,15 +5,15 @@ import { Draggable } from "react-beautiful-dnd";
 
 import { song } from "../models";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import {SongNodeHtmlAttributesConfiguration} from "../Configuration";
+import { SongNodeHtmlAttributesConfiguration } from "../Configuration";
 
 export interface ISongNodeProps {
     song: song;
     index: number;
-    setlistId: string;
-    DeleteSongAsync(setlistId: string, songId: string): Promise<void>;
+    songListId: string;
+    DeleteSongAsync(songId: string): Promise<void>;
 
-    RemoveSongFromState(setlistId: string, songId: string): void;
+    RemoveSongFromState(songListId: string, songId: string): void;
 }
 
 const SongNodeContainer = styled.div`
@@ -24,12 +24,17 @@ const SongNodeContainer = styled.div`
     background-color: white;
 `;
 
-const SongNode = (props: ISongNodeProps): JSX.Element => {
-    const { song, index,setlistId, RemoveSongFromState } = props;
+const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
+    const { song, index, songListId, DeleteSongAsync, RemoveSongFromState } = props;
     const songDef = SongNodeHtmlAttributesConfiguration;
 
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        RemoveSongFromState(setlistId,song.id);
+        event.preventDefault();
+
+        DeleteSongAsync(song.id)
+            .then(result => RemoveSongFromState(songListId, song.id))
+            .catch(error => console.log(error))
+
     };
 
     return (
@@ -75,4 +80,4 @@ const SongNode = (props: ISongNodeProps): JSX.Element => {
     );
 };
 
-export default SongNode;
+export default MainSongNodeComponent;

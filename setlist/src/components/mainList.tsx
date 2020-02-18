@@ -5,7 +5,7 @@ import { Form, FormControlProps, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
-import SongNode from "./songNode";
+import MainSongNodeComponent from "./mainSongNode";
 import { songlist, song } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 
@@ -61,10 +61,10 @@ const MainListComponent = (props: IMainListProps): JSX.Element => {
                 {provided => (
                     <NodeList ref={provided.innerRef} {...provided.droppableProps}>
                         {songlist.songs.map((song, index) => (
-                            <SongNode
+                            <MainSongNodeComponent
                                 RemoveSongFromState={RemoveSongFromMainListState}
                                 DeleteSongAsync={DeleteSongAsync}
-                                setlistId={songlist.id}
+                                songListId={songlist.id}
                                 key={song.id}
                                 song={song}
                                 index={index}

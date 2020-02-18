@@ -6,10 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import InitialStateRequest from "./api/InitialStateRequest";
-import { AddSong } from "./api";
+import { InitialStateRequest,CreateSongAsync, DeleteSongAsync } from "./api";
 
-const DeleteSong = (a:string,b:string):Promise<void> => Promise.resolve()
-
-ReactDOM.render(<App InitialStateRequest={InitialStateRequest} CreateSongAsync={AddSong} DeleteSongAsync={DeleteSong}/>, document.getElementById("root"));
+ReactDOM.render(<App InitialStateRequest={InitialStateRequest} CreateSongAsync={CreateSongAsync} DeleteSongAsync={DeleteSongAsync}/>, document.getElementById("root"));
 serviceWorker.unregister();

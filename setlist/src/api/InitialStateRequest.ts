@@ -1,12 +1,12 @@
 import { IAppState } from "../App";
 import { EndpointConfiguration } from "../Configuration";
-import { GetAllSongs } from "./";
+import { ReadSongsAsync } from "./";
 import { songlist } from "../models";
 import { HashTable } from "../Util/HashTable";
 
-const InitialStateRequest = async (): Promise<IAppState> => {
+export const InitialStateRequest = async (): Promise<IAppState> => {
     const endpointName = EndpointConfiguration.Songs.Name;
-    const songs = await GetAllSongs();
+    const songs = await ReadSongsAsync();
 
     const mainList = {
         id: "mainList_id",
@@ -27,4 +27,3 @@ const InitialStateRequest = async (): Promise<IAppState> => {
     return { songLists, songListOrder };
 };
 
-export default InitialStateRequest;
