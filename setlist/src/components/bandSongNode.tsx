@@ -25,7 +25,7 @@ const SongNodeContainer = styled.div`
 `;
 
 const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
-    const { song, index } = props;
+    const { song, index, songListId } = props;
     const songDef = SongNodeHtmlAttributesConfiguration;
 
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -37,8 +37,10 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
 
     };
 
+    const uniqueNodeId = `${songListId}-${song.id}-${index}`
+
     return (
-        <Draggable draggableId={song.id} index={index}>
+        <Draggable draggableId={uniqueNodeId} index={index}>
             {provided => (
                 <Container>
                     <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>

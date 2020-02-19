@@ -1,15 +1,29 @@
-import { EndpointConfiguration, ACCESS_CONTROL_ALLOW_ORIGIN_HEADER } from "../Configuration";
+import { EndpointConfiguration, defaultHeader } from "../Configuration";
 import Axios from "axios";
 import { songlist, bandlist } from "../models";
 import { ToSonglist } from "../Util";
+import { ReadSongsFromBand } from ".";
 
 const bandsEndpoint = EndpointConfiguration.Bands;
 
+const endPointWithId = (id: string): string => `${bandsEndpoint.GetEndpointUrl!()}/${id}`;
+
 export const ReadBandsAsync = async (): Promise<Array<songlist>> => {
     const bandsResult = await Axios.get<bandlist[]>(bandsEndpoint.GetEndpointUrl!(), {
-        headers: ACCESS_CONTROL_ALLOW_ORIGIN_HEADER
+        headers: defaultHeader
     });
-    const songlists = bandsResult.data.map(band => ToSonglist(band))
+
+    const songlist = bandsResult.data.map(async result => {
+        return {
+            ...result,
+            isBandList: true,
+            isMainList: false,
+            songs: result.bandsongs ? await ReadSongsFromBand(result.id) : []
+        } as songlist;
+    });
+
+    const songlists = await Promise.all(songlist);
+
     return songlists;
 
     // return songsResult.data.reduce((prev: HashTable<any>, current: song) => {
@@ -19,20 +33,15 @@ export const ReadBandsAsync = async (): Promise<Array<songlist>> => {
 };
 
 export const CreateBandAsync = async (bandlist: bandlist): Promise<bandlist> => {
-    
-
     const addResult = await Axios.post<bandlist>(bandsEndpoint.GetEndpointUrl!(), bandlist, {
-        headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" }
+        headers: defaultHeader
     });
 
     return addResult.data;
 };
 
 export const DeleteBandAsync = async (bandlistId: string): Promise<void> => {
-
-    await Axios.delete<bandlist>(`${bandsEndpoint.GetEndpointUrl!()}/${bandlistId}`, {
-        headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" }
+    await Axios.delete<bandlist>(endPointWithId(bandlistId), {
+        headers: defaultHeader
     });
 };
-
-

@@ -20,6 +20,7 @@ export interface IAppProps /* extends dndList */ {
     DeleteSongAsync(songId: string): Promise<void>;
     CreateBandAsync: (band: bandlist) => Promise<bandlist>;
     DeleteBandAsync(bandId: string): Promise<void>;
+    AddSongsToBand(bandId: string, songIds: string[]): Promise<song[]>;
     // UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
 }
 
@@ -36,7 +37,7 @@ const App = (props: IAppProps): JSX.Element => {
     const [songLists, setSongLists] = useState({} as HashTable<songlist>);
     const [songListOrder, setSongListOrder] = useState([] as string[]);
 
-    const { CreateSongAsync, DeleteSongAsync, InitialStateRequest, CreateBandAsync, DeleteBandAsync } = props;
+    const { CreateSongAsync, DeleteSongAsync, InitialStateRequest, CreateBandAsync, DeleteBandAsync, AddSongsToBand } = props;
 
     useEffect(() => {
         InitialStateRequest().then(result => {
@@ -86,7 +87,7 @@ const App = (props: IAppProps): JSX.Element => {
 
     const AddBandToState = (bandlist: bandlist): void => {
         if (!songLists[bandlist.id]) {
-            const newSonglist = ToSonglist(bandlist)
+            const newSonglist = ToSonglist(bandlist);
 
             const newSongLists = {
                 ...songLists,
@@ -137,7 +138,7 @@ const App = (props: IAppProps): JSX.Element => {
     };
 
     const onDragEnd = (result: DropResult): void => {
-        const { destination, source, draggableId } = result;
+        const { destination, source } = result;
 
         if (destination) {
             if (hasSonglistChanged(destination, source)) {
@@ -157,28 +158,28 @@ const App = (props: IAppProps): JSX.Element => {
                     const newFinishSongIds = Array.from(finish.songs);
 
                     if (doesBandlistContainsSongId(finish, draggable.id) === false) {
+                        AddSongsToBand(finish.id, [draggable.id]).then(result => {
+                            newFinishSongIds.splice(destination.index, 0, result[0]);
+                            
+                            const newStartSonglist = {
+                                ...start,
+                                songs: newStartSongIds
+                            };
 
+                            const newFinishSonglist = {
+                                ...finish,
+                                songs: newFinishSongIds
+                            };
 
-                        newFinishSongIds.splice(destination.index, 0, draggable);
+                            const newStateSonglists = {
+                                ...songLists,
+                                [newStartSonglist.id]: newStartSonglist,
+                                [newFinishSonglist.id]: newFinishSonglist
+                            };
+
+                            setSongLists(newStateSonglists);
+                        });
                     }
-
-                    const newStartSonglist = {
-                        ...start,
-                        songs: newStartSongIds
-                    };
-
-                    const newFinishSonglist = {
-                        ...finish,
-                        songs: newFinishSongIds
-                    };
-
-                    const newStateSonglists = {
-                        ...songLists,
-                        [newStartSonglist.id]: newStartSonglist,
-                        [newFinishSonglist.id]: newFinishSonglist
-                    };
-
-                    setSongLists(newStateSonglists);
                 }
             } else if (hasPositionInSonglistChanged(destination, source)) {
                 const songlist = songLists[source.droppableId];
