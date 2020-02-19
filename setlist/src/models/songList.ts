@@ -8,4 +8,4 @@ export type songlist = {
     isMainList: boolean;
 };
 
-export type bandlist = { id: string; title: string; bandsongs: song[]; isBandList: boolean };
+export type bandlist = { id: string; title: string; bandsongs: Array<song> };

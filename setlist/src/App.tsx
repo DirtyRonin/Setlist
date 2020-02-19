@@ -11,6 +11,7 @@ import MainListComponent from "./components/mainList";
 import BandListComponent from "./components/bandList";
 import CreateSetlist from "./components/createSetlistForm";
 import { finished } from "stream";
+import { ToSonglist } from "./Util";
 
 export interface IAppProps /* extends dndList */ {
     InitialStateRequest(): Promise<IAppState>;
@@ -85,11 +86,7 @@ const App = (props: IAppProps): JSX.Element => {
 
     const AddBandToState = (bandlist: bandlist): void => {
         if (!songLists[bandlist.id]) {
-            const newSonglist = {
-                ...bandlist,
-                isMainList: false,
-                songs:bandlist.bandsongs
-            } as songlist;
+            const newSonglist = ToSonglist(bandlist)
 
             const newSongLists = {
                 ...songLists,

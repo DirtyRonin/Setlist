@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button, FormControlProps, Col } from "react-bootstrap";
-import { bandlist,songlist } from "../models";
+import { songlist,bandlist } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 
 export interface ICreateSetlistProps {
@@ -24,15 +24,14 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
 
         const isBandList: boolean = elements[htmlConfig.IsLibraryCheckbox.ControlId].checked;
         if (isBandList) {
-            const bandList: bandlist = {
+            const songlist: bandlist = {
                 id: "",
                 title: elements[NameInput.ControlId].value,
-                isBandList: isBandList,
                 bandsongs: []
             };
 
-            CreateBandAsync(bandList)
-                .then(newSetlist => AddBandToState(bandList))
+            CreateBandAsync(songlist)
+                .then(newBandlist => AddBandToState(newBandlist))
                 .catch(error => console.timeLog(error));
         }
     };

@@ -1,15 +1,16 @@
 import { EndpointConfiguration, ACCESS_CONTROL_ALLOW_ORIGIN_HEADER } from "../Configuration";
-import { bandlist } from "../models";
 import Axios from "axios";
+import { songlist, bandlist } from "../models";
+import { ToSonglist } from "../Util";
 
 const bandsEndpoint = EndpointConfiguration.Bands;
 
-export const ReadBandsAsync = async (): Promise<Array<bandlist>> => {
+export const ReadBandsAsync = async (): Promise<Array<songlist>> => {
     const bandsResult = await Axios.get<bandlist[]>(bandsEndpoint.GetEndpointUrl!(), {
         headers: ACCESS_CONTROL_ALLOW_ORIGIN_HEADER
     });
-
-    return bandsResult.data;
+    const songlists = bandsResult.data.map(band => ToSonglist(band))
+    return songlists;
 
     // return songsResult.data.reduce((prev: HashTable<any>, current: song) => {
     //     prev[current.id] = current;
@@ -17,20 +18,21 @@ export const ReadBandsAsync = async (): Promise<Array<bandlist>> => {
     // }, {} as HashTable<any>);
 };
 
-export const CreateBandAsync = async (band: bandlist): Promise<bandlist> => {
-    const newBand = { ...band, id: "" };
+export const CreateBandAsync = async (bandlist: bandlist): Promise<bandlist> => {
+    
 
-    const addResult = await Axios.post<bandlist>(bandsEndpoint.GetEndpointUrl!(), newBand, {
+    const addResult = await Axios.post<bandlist>(bandsEndpoint.GetEndpointUrl!(), bandlist, {
         headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" }
     });
 
     return addResult.data;
 };
 
-export const DeleteBandAsync = async (bandId: string): Promise<void> => {
-    await Axios.delete<bandlist>(`${bandsEndpoint.GetEndpointUrl!()}/${bandId}`, {
+export const DeleteBandAsync = async (bandlistId: string): Promise<void> => {
+
+    await Axios.delete<bandlist>(`${bandsEndpoint.GetEndpointUrl!()}/${bandlistId}`, {
         headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" }
     });
-}; 
+};
 
 

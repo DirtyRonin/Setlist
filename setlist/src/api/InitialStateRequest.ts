@@ -23,13 +23,7 @@ export const InitialStateRequest = async (): Promise<IAppState> => {
 
     if (bands) {
         bands.forEach(band => {
-            songLists[band.id] = {
-                id: band.id,
-                title: band.title,
-                isBandList: band.isBandList,
-                isMainList: false,
-                songs:band.bandsongs
-            } as songlist;
+            songLists[band.id] = band
         });
     }
 
