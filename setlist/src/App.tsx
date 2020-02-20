@@ -20,7 +20,8 @@ export interface IAppProps /* extends dndList */ {
     DeleteSongAsync(songId: string): Promise<void>;
     CreateBandAsync: (band: bandlist) => Promise<bandlist>;
     DeleteBandAsync(bandId: string): Promise<void>;
-    AddSongsToBand(bandId: string, songIds: string[]): Promise<song[]>;
+    AddSongsToBandAsync(bandId: string, songIds: string[]): Promise<void>;
+    RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
     // UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
 }
 
@@ -37,7 +38,7 @@ const App = (props: IAppProps): JSX.Element => {
     const [songLists, setSongLists] = useState({} as HashTable<songlist>);
     const [songListOrder, setSongListOrder] = useState([] as string[]);
 
-    const { CreateSongAsync, DeleteSongAsync, InitialStateRequest, CreateBandAsync, DeleteBandAsync, AddSongsToBand } = props;
+    const { CreateSongAsync, DeleteSongAsync, InitialStateRequest, CreateBandAsync, DeleteBandAsync, AddSongsToBandAsync ,RemoveSongsFromBandAsync} = props;
 
     useEffect(() => {
         InitialStateRequest().then(result => {
@@ -137,6 +138,29 @@ const App = (props: IAppProps): JSX.Element => {
         setSongListOrder(newSonglistOrder);
     };
 
+    const RemoveBandsongFromState= (bandId: string,songIds: string[])=> {
+        const songlist = songLists[bandId];
+
+        const newBandsongs =Array.from(songlist.songs);
+
+        songIds.forEach(songId =>{
+            const index = newBandsongs.findIndex(song=> song.id === songId)
+            newBandsongs.splice(index,1);
+        } )
+
+        const newSonglist = {
+            ...songlist,
+            songs: newBandsongs
+        } as songlist
+
+        const newSonglistState = {
+            ...songLists,
+            [newSonglist.id]:newSonglist
+        }
+
+        setSongLists(newSonglistState);
+    }
+
     const onDragEnd = (result: DropResult): void => {
         const { destination, source } = result;
 
@@ -158,8 +182,8 @@ const App = (props: IAppProps): JSX.Element => {
                     const newFinishSongIds = Array.from(finish.songs);
 
                     if (doesBandlistContainsSongId(finish, draggable.id) === false) {
-                        AddSongsToBand(finish.id, [draggable.id]).then(result => {
-                            newFinishSongIds.splice(destination.index, 0, result[0]);
+                        AddSongsToBandAsync(finish.id, [draggable.id]).then(result => {
+                            newFinishSongIds.splice(destination.index, 0, draggable);
                             
                             const newStartSonglist = {
                                 ...start,
@@ -233,6 +257,8 @@ const App = (props: IAppProps): JSX.Element => {
                     <BandListComponent
                         key={songList.id}
                         songlist={songList}
+                        RemoveSongsFromBandAsync={RemoveSongsFromBandAsync}
+                        RemoveBandsongFromState={RemoveBandsongFromState}
                         DeleteBandAsync={DeleteBandAsync}
                         RemoveBandFromState={RemoveBandFromState}
                     />

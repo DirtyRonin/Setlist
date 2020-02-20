@@ -6,12 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import { InitialStateRequest, CreateSongAsync, DeleteSongAsync, CreateBandAsync ,DeleteBandAsync,AddSongsToBand} from "./api";
+import { InitialStateRequest, CreateSongAsync, DeleteSongAsync, CreateBandAsync ,DeleteBandAsync,AddSongsToBandAsync,RemoveSongsFromBandAsync} from "./api";
 
 ReactDOM.render(
     <App
         InitialStateRequest={InitialStateRequest}
-        AddSongsToBand={AddSongsToBand}
+        AddSongsToBandAsync={AddSongsToBandAsync}
+        RemoveSongsFromBandAsync={RemoveSongsFromBandAsync}
         CreateSongAsync={CreateSongAsync}
         DeleteSongAsync={DeleteSongAsync}
         CreateBandAsync={CreateBandAsync}

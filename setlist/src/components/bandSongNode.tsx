@@ -11,6 +11,8 @@ export interface ISongNodeProps {
     song: song;
     index: number;
     songListId: string;
+    RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
+    RemoveBandsongFromState(bandId: string,songIds: string[]):void
     // DeleteSongAsync(songId: string): Promise<void>;
 
     // RemoveSongFromState(songListId: string, songId: string): void;
@@ -25,19 +27,24 @@ const SongNodeContainer = styled.div`
 `;
 
 const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
-    const { song, index, songListId } = props;
+    const { song, index, songListId, RemoveSongsFromBandAsync,RemoveBandsongFromState } = props;
     const songDef = SongNodeHtmlAttributesConfiguration;
 
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
 
+        RemoveSongsFromBandAsync(songListId,[song.id]).then(
+            result => RemoveBandsongFromState(songListId,[song.id])
+        ).catch(
+            error => console.log(error)
+        )
+
         // DeleteSongAsync(song.id)
         //     .then(result => RemoveSongFromState(songListId, song.id))
         //     .catch(error => console.log(error))
-
     };
 
-    const uniqueNodeId = `${songListId}-${song.id}-${index}`
+    const uniqueNodeId = `${songListId}-${song.id}-${index}`;
 
     return (
         <Draggable draggableId={uniqueNodeId} index={index}>

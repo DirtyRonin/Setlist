@@ -11,12 +11,12 @@ import BandSongNodeComponent from "./bandSongNode";
 
 export interface IBandListProps {
     songlist: songlist;
-
-    // CreateSongAsync(song: song): Promise<song>;
     DeleteBandAsync(bandId: string): Promise<void>;
 
-    // AddSongToMainListState: (songListId: string, newSong: song) => void;
     RemoveBandFromState(bandId: string): void;
+
+    RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
+    RemoveBandsongFromState(bandId: string,songIds: string[]):void
 }
 
 const Container = styled.div`
@@ -33,7 +33,7 @@ const NodeList = styled.div`
 `;
 
 const BandListComponent = (props: IBandListProps): JSX.Element => {
-    const { songlist, DeleteBandAsync,RemoveBandFromState } = props;
+    const { songlist, DeleteBandAsync,RemoveBandFromState,RemoveSongsFromBandAsync ,RemoveBandsongFromState} = props;
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
 
@@ -66,7 +66,7 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
                     <NodeList ref={provided.innerRef} {...provided.droppableProps}>
                         {songlist.songs &&
                             songlist.songs.map((song, index) => (
-                                <BandSongNodeComponent songListId={songlist.id} key={song.id} song={song} index={index} />
+                                <BandSongNodeComponent RemoveSongsFromBandAsync={RemoveSongsFromBandAsync} RemoveBandsongFromState={RemoveBandsongFromState} songListId={songlist.id} key={song.id} song={song} index={index} />
                             ))}
                         {provided.placeholder}
                     </NodeList>
