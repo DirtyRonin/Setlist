@@ -10,7 +10,9 @@ import { song, songlist, bandlist } from "./models";
 import MainListComponent from "./components/mainList";
 import BandListComponent from "./components/bandList";
 import CreateSetlist from "./components/createSetlistForm";
-import { finished } from "stream";
+
+import {RemoveSongFromSonglists} from "./service"
+
 import { ToSonglist } from "./Util";
 
 export interface IAppProps /* extends dndList */ {
@@ -66,21 +68,22 @@ const App = (props: IAppProps): JSX.Element => {
     };
 
     const RemoveSongFromMainListState = (songListId: string, songId: string): void => {
-        const currentSongList = songLists[songListId];
+        // const currentSongList = songLists[songListId];
 
-        const newSongs = Array.from(currentSongList.songs);
-        const newSongIds = newSongs.map(song => song.id);
-        const songIndex = newSongIds.indexOf(songId);
-        newSongs.splice(songIndex, 1);
+        const newBandlists = RemoveSongFromSonglists({...songLists},songId);
 
-        const newSonglist = {
-            ...currentSongList,
-            songs: newSongs
-        };
+        // const newSongs = Array.from(currentSongList.songs);
+        // const newSongIds = newSongs.map(song => song.id);
+        // const songIndex = newSongIds.indexOf(songId);
+        // newSongs.splice(songIndex, 1);
+
+        // const newSonglist = {
+        //     ...currentSongList,
+        //     songs: newSongs
+        // };
 
         const newStateSetlists = {
-            ...songLists,
-            [songListId]: newSonglist
+            ...newBandlists
         };
 
         setSongLists(newStateSetlists);

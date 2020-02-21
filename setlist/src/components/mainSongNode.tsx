@@ -31,6 +31,8 @@ const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
 
+        
+
         DeleteSongAsync(song.id)
             .then(result => RemoveSongFromState(songListId, song.id))
             .catch(error => console.log(error))
