@@ -6,17 +6,17 @@ import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
 import MainSongNodeComponent from "./mainSongNode";
-import { songlist, song, setlistSong } from "../models";
+import { ISonglist, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 
 export interface ISetlistProps {
-    songlist: songlist;
+    songlist: ISonglist;
 
-    CreateSongAsync(song: song): Promise<song>;
+    CreateSongAsync(song: ISong): Promise<ISong>;
     DeleteSongAsync(songId: string): Promise<void>;
     // UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
 
-    AddSongToState: (setlist: songlist, newSong: song) => void;
+    AddSongToState: (setlist: ISonglist, newSong: ISong) => void;
     RemoveSongFromState(setlistId: string, songId: string): void;
 }
 
@@ -43,7 +43,7 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const song: song = {
+        const song: ISong = {
             title: elements[songDef.Title.ControlId].value,
             artist: elements[songDef.Artist.ControlId].value,
             mode: elements[songDef.Mode.ControlId].value,

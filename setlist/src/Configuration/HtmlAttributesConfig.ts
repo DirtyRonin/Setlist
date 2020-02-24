@@ -32,17 +32,17 @@ export const SongNodeHtmlAttributesConfiguration: ConfigurationItemCollection<Ht
     Mode: { label: CreateSongNodeHtmlAttributesConfiguration.Mode.label, Data_TestId: "SongNode_Mode" }
 };
 
-type CreateSetlistHtmlComponentNames = "SetlistNameInput" | "MajorLibraryNameInput" | "IsLibraryCheckbox" | "CreateSetlistButton"|"CreateMajorLibraryButton";
+type CreateSetlistHtmlComponentNames = "SetlistNameInput" | "MajorLibraryNameInput" | "BandSelect" | "CreateSetlistButton"|"CreateMajorLibraryButton";
 
 export const CreateSetlistHtmlAttributesConfiguration: ConfigurationItemCollection<
     FromHtmlAttributesDefinition,
     CreateSetlistHtmlComponentNames
 > = {
-    SetlistNameInput: { label: "Setlist Name", Placeholder: "Enter Setlist Name", Data_TestId: "CreateSetlist_SetlistName", ControlId: "CreateSetlist_SetlistName" },
+    SetlistNameInput: { label: "List Name", Placeholder: "Enter List Name", Data_TestId: "CreateSetlist_SetlistName", ControlId: "CreateSetlist_SetlistName" },
     MajorLibraryNameInput: { label: "Major Library Name", Placeholder: "Enter Major Library Name", Data_TestId: "CreateSetlist_SetlistName", ControlId: "CreateSetlist_MajorLibraryName" },
-    IsLibraryCheckbox: { label: "Library", Placeholder: "Select Setlist Attribute", Data_TestId: "CreateSetlist_IsLibrary", ControlId: "CreateSetlist_IsLibrary" },
     CreateSetlistButton: { label: "Create Setlist", Placeholder: "", Data_TestId: "CreateSetlist_CreateSetlist", ControlId: "CreateSetlist_CreateSetlist" },
     CreateMajorLibraryButton: { label: "Create Major Library", Placeholder: "", Data_TestId: "CreateSetlist_MajorLibrary", ControlId: "CreateSetlist_MajorLibrary" },
+    BandSelect: { label: "Select List Type", Placeholder: "Select List Type", Data_TestId: "Select_ListType", ControlId: "Select_ListType" },
 };
 
 

@@ -1,7 +1,7 @@
 import { HashTable } from "../Util";
-import { song, songlist } from "../models";
+import { ISong, ISonglist } from "../models";
 
-export const GetSongIdsInBandlists = (bands: HashTable<songlist>, songId: string): HashTable<string[]> => {
+export const GetSongIdsFromSonglists = (bands: HashTable<ISonglist>, songId: string): HashTable<string[]> => {
     const readOnlyBands = { ...bands };
     const bandIds = Object.keys(readOnlyBands);
 
@@ -17,18 +17,18 @@ export const GetSongIdsInBandlists = (bands: HashTable<songlist>, songId: string
     return hashBandIds;
 };
 
-export const RemoveSongFromSonglists = (songlist: HashTable<songlist>, songId: string): HashTable<songlist> => {
+export const RemoveSongFromSonglists = (songlist: HashTable<ISonglist>, songId: string): HashTable<ISonglist> => {
     const readOnlySonglist = { ...songlist };
     const songlistIds = Object.keys(readOnlySonglist);
 
-    const newSonglist: HashTable<songlist> = songlistIds.reduce((tempSonglist, songlistId) => {
-        const newSongs:song[] = readOnlySonglist[songlistId].songs
+    const newSonglist: HashTable<ISonglist> = songlistIds.reduce((tempSonglist, songlistId) => {
+        const newSongs:ISong[] = readOnlySonglist[songlistId].songs
             .filter(song => song.id !== songId)
             .map(song => {
                 return { ...song };
             });
 
-            tempSonglist[songlistId] = {...readOnlySonglist[songlistId], songs: newSongs} as songlist
+            tempSonglist[songlistId] = {...readOnlySonglist[songlistId], songs: newSongs} as ISonglist
 
         return tempSonglist;
     }, {} as HashTable<any>);

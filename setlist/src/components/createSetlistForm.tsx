@@ -1,16 +1,26 @@
 import React from "react";
-import { Form, Button, FormControlProps, Col } from "react-bootstrap";
-import { songlist,bandlist } from "../models";
+import { Form, Button, FormControlProps, Col, Row } from "react-bootstrap";
+import { IBandlist, SonglistType, IBandSummary } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
+import { HashTable } from "../Util";
 
 export interface ICreateSetlistProps {
-    IsBandList: boolean;
-    CreateBandAsync: (bandlist: bandlist) => Promise<bandlist>;
-    AddBandToState: (bandlist: bandlist) => void;
+    IsBandListNeeded: boolean;
+    BandsSummary: HashTable<IBandSummary>;
+    CreateBandAsync: (bandlist: IBandlist) => Promise<IBandlist>;
+    AddBandToState: (bandlist: IBandlist) => void;
 }
 
 const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
-    const { IsBandList, CreateBandAsync,AddBandToState } = props;
+    const { BandsSummary, CreateBandAsync, AddBandToState } = props;
+
+    const selectNewBandlist= { id: "-1", title: "Create New Bandlist" } as IBandSummary;
+
+    const newSelect:IBandSummary[] = [selectNewBandlist].concat(
+        Object.values(BandsSummary).map(summary => {
+            return { id: summary.id, title: `New Setlist for ${summary.title}` };
+        })
+    );
 
     const htmlConfig = CreateSetlistHtmlAttributesConfiguration;
 
@@ -22,28 +32,45 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const isBandList: boolean = elements[htmlConfig.IsLibraryCheckbox.ControlId].checked;
+        const isBandList: boolean =  elements[htmlConfig.BandSelect.ControlId].value === selectNewBandlist.id; 
+
         if (isBandList) {
-            const songlist: bandlist = {
+            const songlist: IBandlist = {
                 id: "",
                 title: elements[NameInput.ControlId].value,
-                bandsongs: []
+                songs: [],
+                songlistType: SonglistType.BandList
             };
 
             CreateBandAsync(songlist)
                 .then(newBandlist => AddBandToState(newBandlist))
                 .catch(error => console.timeLog(error));
+        } else {
         }
     };
 
     return (
         <Form onSubmit={hanldeCreateSetlist} method="GET">
-            <Form.Group as={Col} md="6" controlId={NameInput.ControlId}>
-                <Form.Label>{NameInput.label}</Form.Label>
-                <Form.Control type="text" placeholder={NameInput.Placeholder}></Form.Control>
+            <Form.Group as={Row} controlId={NameInput.ControlId}>
+                <Form.Label column md="3">
+                    {NameInput.label}
+                </Form.Label>
+                <Col md="9">
+                    <Form.Control type="text" placeholder={NameInput.Placeholder}></Form.Control>
+                </Col>
             </Form.Group>
-            <Form.Group as={Col} md="6" controlId={htmlConfig.IsLibraryCheckbox.ControlId}>
-                <Form.Check type="checkbox" defaultChecked={IsBandList} label={htmlConfig.IsLibraryCheckbox.label} />
+
+            <Form.Group as={Row} controlId={htmlConfig.BandSelect.ControlId}>
+                <Form.Label column md="3">
+                    {htmlConfig.BandSelect.label}
+                </Form.Label>
+                <Col md="9">
+                    <Form.Control as="select">
+                        {newSelect.map(summary => (
+                            <option value={summary.id}>{summary.title}</option>
+                        ))}
+                    </Form.Control>
+                </Col>
             </Form.Group>
 
             <Button variant="primary" type="submit">

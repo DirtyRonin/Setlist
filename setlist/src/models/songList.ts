@@ -1,11 +1,27 @@
-import { song } from ".";
+import { ISong } from ".";
 
-export type songlist = {
+export interface IBandSummary{
     id: string;
     title: string;
-    songs: song[];
-    isBandList: boolean;
-    isMainList: boolean;
-};
+}
 
-export type bandlist = { id: string; title: string; bandsongs: Array<song> };
+export interface ISonglist {
+    id: string;
+    title: string;
+    songs: ISong[];
+    songlistType: SonglistType;
+}
+
+export interface IMainlist extends ISonglist { }
+export interface IBandlist extends ISonglist { }
+export interface ISetlist extends ISonglist {
+    BandId:string;
+ }
+
+
+
+export enum SonglistType {
+    MainList = "Main List",
+    BandList = "Band List",
+    SetList = "Set List",
+}

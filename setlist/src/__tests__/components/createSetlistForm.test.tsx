@@ -3,17 +3,17 @@ import { render, within, waitForElement, fireEvent, act, getByLabelText, queryBy
 
 import CreateSetlist, { ICreateSetlistProps } from "../../components/createSetlistForm"
 import { CreateSetlistHtmlAttributesConfiguration } from "../../Configuration";
-import { setlist } from "../../models/DndListModels"
+import { IApiBandlist } from "../../models/";
 
 const htmlConfig = CreateSetlistHtmlAttributesConfiguration;
 
-const mockCreateSetlistAsync = jest.fn().mockResolvedValue({})
-const mockAddSetlistToState = jest.fn()
+const mockCreateBandAsync = jest.fn().mockResolvedValue({})
+const mockAddBandToState = jest.fn()
 
 const props: ICreateSetlistProps = {
-    IsBandList: true,
-    CreateSetlistAsync: (setlist: setlist): Promise<setlist> => Promise.resolve({ ...setlist, id: "newId" }),
-    AddSetlistToState: (setlist: setlist): void => { }
+    IsBandListNeeded: true,
+    CreateBandAsync: (setlist: IApiBandlist): Promise<IApiBandlist> => Promise.resolve({ ...setlist, id: "newId" }),
+    AddBandToState: (setlist: IApiBandlist): void => { }
 }
 
 const renderCreateSetlistForm = async (defaultprops: ICreateSetlistProps, props: Partial<ICreateSetlistProps> = {}) =>
@@ -22,8 +22,8 @@ const renderCreateSetlistForm = async (defaultprops: ICreateSetlistProps, props:
 describe("Test create setlist form", () => {
 
     beforeEach(() => {
-        mockCreateSetlistAsync.mockClear();
-        mockAddSetlistToState.mockClear();
+        mockCreateBandAsync.mockClear();
+        mockAddBandToState.mockClear();
     })
 
     it("Should show the setlistname input when ismajorLibrary is true", async () => {
@@ -35,7 +35,7 @@ describe("Test create setlist form", () => {
 
         const newProps: ICreateSetlistProps = {
             ...props,
-            CreateSetlistAsync: mockCreateSetlistAsync
+            CreateBandAsync: mockCreateBandAsync
         }
 
         const { getByPlaceholderText, getByText } = await renderCreateSetlistForm(newProps);
@@ -50,22 +50,20 @@ describe("Test create setlist form", () => {
         act(() => { fireEvent.click(createMajorLibrary); })
         await waitForElement(() => getByText(htmlConfig.CreateMajorLibraryButton.label));
 
-        const expectedParams: setlist = {
+        const expectedParams: IApiBandlist = {
             id: "",
             title: "Major Lazor",
-            isLibrary: true,
-            isMajorLibrary: true,
-            songs: []
+            bandsongs: []
         }
 
-        expect(mockCreateSetlistAsync).toHaveBeenCalledWith(expectedParams);
+        expect(mockCreateBandAsync).toHaveBeenCalledWith(expectedParams);
     })
 
     it("Should call the add setlist to state function with expectedParams when ismajorlibrary is true", async () => {
 
         const newProps: ICreateSetlistProps = {
             ...props,
-            AddSetlistToState: mockAddSetlistToState
+            AddBandToState: mockAddBandToState
         }
 
         const { getByPlaceholderText, getByText } = await renderCreateSetlistForm(newProps);
@@ -80,21 +78,19 @@ describe("Test create setlist form", () => {
         act(() => { fireEvent.click(createMajorLibrary); })
         await waitForElement(() => getByText(htmlConfig.CreateMajorLibraryButton.label));
 
-        const expectedParams: setlist = {
+        const expectedParams: IApiBandlist = {
             id: "newId",
             title: "Major Lazor",
-            isLibrary: true,
-            isMajorLibrary: true,
-            songs: []
+            bandsongs: []
         }
 
-        expect(mockAddSetlistToState).toHaveBeenCalledWith(expectedParams);
+        expect(mockAddBandToState).toHaveBeenCalledWith(expectedParams);
     })
 
     it("Should show the setlistname input and the libraray checkbox when ismajorLibrary is false", async () => {
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsBandList: false
+            IsBandListNeeded: false
         }
 
         const { asFragment } = await renderCreateSetlistForm(newProps);
@@ -105,8 +101,8 @@ describe("Test create setlist form", () => {
 
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsBandList: false,
-            CreateSetlistAsync: mockCreateSetlistAsync
+            IsBandListNeeded: false,
+            CreateBandAsync: mockCreateBandAsync
         }
 
         const { getByPlaceholderText, getByText } = await renderCreateSetlistForm(newProps);
@@ -120,22 +116,20 @@ describe("Test create setlist form", () => {
         act(() => { fireEvent.click(createMajorLibrary); })
         await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
 
-        const expectedParams: setlist = {
+        const expectedParams: IApiBandlist = {
             id: "",
             title: "Rock Classics",
-            isLibrary: false,
-            isMajorLibrary: false,
-            songs: []
+            bandsongs: []
         }
 
-        expect(mockCreateSetlistAsync).toHaveBeenCalledWith(expectedParams);
+        expect(mockCreateBandAsync).toHaveBeenCalledWith(expectedParams);
     })
     it("Should call the async create setlist function as a library with expectedParams when ismajorlibrary is false", async () => {
 
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsBandList: false,
-            CreateSetlistAsync: mockCreateSetlistAsync
+            IsBandListNeeded: false,
+            CreateBandAsync: mockCreateBandAsync
         }
 
         const {getByPlaceholderText,getByLabelText,getByText} = await renderCreateSetlistForm(newProps);
@@ -154,22 +148,20 @@ describe("Test create setlist form", () => {
         act(() => { fireEvent.click(createMajorLibrary); })
         await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
 
-        const expectedParams: setlist = {
+        const expectedParams: IApiBandlist = {
             id: "",
             title: "Rock Classics",
-            isLibrary: true,
-            isMajorLibrary: false,
-            songs: []
+            bandsongs: []
         }
 
-        expect(mockCreateSetlistAsync).toHaveBeenCalledWith(expectedParams);
+        expect(mockCreateBandAsync).toHaveBeenCalledWith(expectedParams);
     })
 
     it("Should call the add setlist to state function with expectedParams when ismajorlibrary is false", async () => {
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsBandList: false,
-            AddSetlistToState: mockAddSetlistToState
+            IsBandListNeeded: false,
+            AddBandToState: mockAddBandToState
         }
 
         const { getByPlaceholderText, getByText } = await renderCreateSetlistForm(newProps);
@@ -183,22 +175,20 @@ describe("Test create setlist form", () => {
         act(() => { fireEvent.click(createMajorLibrary); })
         await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
 
-        const expectedParams: setlist = {
+        const expectedParams: IApiBandlist = {
             id: "newId",
             title: "Rock Classics",
-            isLibrary: false,
-            isMajorLibrary: false,
-            songs: []
+            bandsongs: []
         }
 
-        expect(mockAddSetlistToState).toHaveBeenCalledWith(expectedParams);
+        expect(mockAddBandToState).toHaveBeenCalledWith(expectedParams);
     })
 
     it("Should call the add setlist to state function as a library with expectedParams when ismajorlibrary is false", async () => {
         const newProps: ICreateSetlistProps = {
             ...props,
-            IsBandList: false,
-            AddSetlistToState: mockAddSetlistToState
+            IsBandListNeeded: false,
+            AddBandToState: mockAddBandToState
         }
 
         const { getByPlaceholderText, getByText ,getByLabelText} = await renderCreateSetlistForm(newProps);
@@ -217,15 +207,13 @@ describe("Test create setlist form", () => {
         act(() => { fireEvent.click(createMajorLibrary); })
         await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
 
-        const expectedParams: setlist = {
+        const expectedParams: IApiBandlist = {
             id: "newId",
             title: "Rock Classics",
-            isLibrary: true,
-            isMajorLibrary: false,
-            songs: []
+            bandsongs: []
         }
 
-        expect(mockAddSetlistToState).toHaveBeenCalledWith(expectedParams);
+        expect(mockAddBandToState).toHaveBeenCalledWith(expectedParams);
     })
 
 })

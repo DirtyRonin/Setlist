@@ -1,12 +1,13 @@
-import { songlist, bandlist } from "../models"
+import { ISonglist, IApiBandlist, SonglistType } from "../models";
 
-export const ToBandlist = (songlist: songlist): bandlist => { return { id: songlist.id, title: songlist.title, bandsongs: [] } as bandlist }
-export const ToSonglist = (bandlist: bandlist): songlist => {
+export const ToBandlist = (songlist: ISonglist): IApiBandlist => {
+    return { id: songlist.id, title: songlist.title, bandsongs: [], setlists: [] } as IApiBandlist;
+};
+export const ToSonglist = (bandlist: IApiBandlist): ISonglist => {
     return {
         id: bandlist.id,
         title: bandlist.title,
-        isBandList: true,
-        isMainList: false,
+        songlistType: SonglistType.BandList,
         songs: bandlist.bandsongs
-    } as songlist
-}
+    } as ISonglist;
+};

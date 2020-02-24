@@ -1,11 +1,11 @@
 import Axios from "axios";
-import { song } from "../models";
+import { ISong } from "../models";
 import { EndpointConfiguration, defaultHeader } from "../Configuration";
 
 const songsEndpoint = EndpointConfiguration.Songs;
 
-export const ReadSongsAsync = async (): Promise<Array<song>> => {
-    const songsResult = await Axios.get<song[]>(songsEndpoint.GetEndpointUrl!(), {
+export const ReadSongsAsync = async (): Promise<Array<ISong>> => {
+    const songsResult = await Axios.get<ISong[]>(songsEndpoint.GetEndpointUrl!(), {
         headers: defaultHeader
     });
 
@@ -17,17 +17,17 @@ export const ReadSongsAsync = async (): Promise<Array<song>> => {
     // }, {} as HashTable<any>);
 };
 
-export const CreateSongAsync = async (song: song): Promise<song> => {
+export const CreateSongAsync = async (song: ISong): Promise<ISong> => {
     const newsong = { ...song, id: "" };
 
-    const addResult = await Axios.post<song>(songsEndpoint.GetEndpointUrl!(), newsong, {
+    const addResult = await Axios.post<ISong>(songsEndpoint.GetEndpointUrl!(), newsong, {
         headers: defaultHeader
     });
     
     return addResult.data;
 };
 export const DeleteSongAsync = async (songId: string): Promise<void> => {
-    const deleteResult = await Axios.delete<song>(`${songsEndpoint.GetEndpointUrl!()}/${songId}`, {
+    await Axios.delete<ISong>(`${songsEndpoint.GetEndpointUrl!()}/${songId}`, {
         headers: defaultHeader
     });
 };

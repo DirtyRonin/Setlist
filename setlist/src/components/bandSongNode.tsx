@@ -3,12 +3,12 @@ import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 
-import { song } from "../models";
+import { ISong } from "../models";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { SongNodeHtmlAttributesConfiguration } from "../Configuration";
 
 export interface ISongNodeProps {
-    song: song;
+    song: ISong;
     index: number;
     songListId: string;
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;

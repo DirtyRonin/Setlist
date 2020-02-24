@@ -6,16 +6,16 @@ import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
 import MainSongNodeComponent from "./mainSongNode";
-import { songlist, song } from "../models";
+import { ISonglist, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 
 export interface IMainListProps {
-    songlist: songlist;
+    songlist: ISonglist;
 
-    CreateSongAsync(song: song): Promise<song>;
+    CreateSongAsync(song: ISong): Promise<ISong>;
     DeleteSongAsync(songId: string): Promise<void>;
 
-    AddSongToMainListState: (songListId: string, newSong: song) => void;
+    AddSongToMainListState: (songListId: string, newSong: ISong) => void;
     RemoveSongFromMainListState(songListId: string, songId: string): void;
 }
 
@@ -42,7 +42,7 @@ const MainListComponent = (props: IMainListProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const song: song = {
+        const song: ISong = {
             title: elements[songDef.Title.ControlId].value,
             artist: elements[songDef.Artist.ControlId].value,
             mode: elements[songDef.Mode.ControlId].value,
