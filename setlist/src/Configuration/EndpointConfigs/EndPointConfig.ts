@@ -1,20 +1,23 @@
+import { ConfigurationItemCollection } from "../ConfigurationItemCollection";
+import { NameDefinition, EndPointDefinition } from "./FieldsDefinition";
+import { BandSongsConfiguration, BandSongsEndPointDefinition } from "./BandSongsEndPointDefinition";
+import { SetlistSongsConfiguration, SetlistSongsEndPointDefinition } from "./SetlistSongsEndPointDefinition";
 
-export const NAME = "name"
+const WEB_API_URL = "http://localhost:5000/api";
 
-/* import { ConfigurationItemCollection, EndPointDefinition, NameDefinition, BandSongsEndPointDefinition } from "./";
-import { SetlistSongsEndPointDefinition } from "./EndpointConfigs/SetlistSongsEndPointDefinition";
+export const defaultHeader = { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" };
 
+export const GetEndpointURL = (endpointName: string, actionName?: string): string =>
+    actionName ? `${WEB_API_URL}/${endpointName}/${actionName}` : `${WEB_API_URL}/${endpointName}`;
 
+type EndpointFieldNames = "Songs" | "Bandsongs" | "Bands" | "Setlists";
 
-
-
-
-
-
-
-
-
-
+export const EndpointPartialTypeDefinition: ConfigurationItemCollection<NameDefinition, EndpointFieldNames> = {
+    Songs: { Name: "Songs" },
+    Bandsongs: { Name: "Bandsongs" },
+    Bands: { Name: "Bands" },
+    Setlists: { Name: "Setlists" }
+};
 
 export const EndpointConfiguration: ConfigurationItemCollection<
     EndPointDefinition | BandSongsEndPointDefinition | SetlistSongsEndPointDefinition,
@@ -39,4 +42,3 @@ export const EndpointConfiguration: ConfigurationItemCollection<
         ActionEndpoints: SetlistSongsConfiguration
     } as SetlistSongsEndPointDefinition
 };
- */

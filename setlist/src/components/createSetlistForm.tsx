@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button, FormControlProps, Col, Row } from "react-bootstrap";
-import { IBandlist, SonglistType, IBandSummary } from "../models";
+import { IBandlist, SonglistType, IBandSummary, ISetlist } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 import { HashTable } from "../Util";
 
@@ -35,17 +35,24 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
         const isBandList: boolean =  elements[htmlConfig.BandSelect.ControlId].value === selectNewBandlist.id; 
 
         if (isBandList) {
-            const songlist: IBandlist = {
+            const bandlist: IBandlist = {
                 id: "",
                 title: elements[NameInput.ControlId].value,
                 songs: [],
                 songlistType: SonglistType.BandList
             };
 
-            CreateBandAsync(songlist)
+            CreateBandAsync(bandlist)
                 .then(newBandlist => AddBandToState(newBandlist))
                 .catch(error => console.timeLog(error));
         } else {
+            const setlist: ISetlist = {
+                id: "",
+                title: elements[NameInput.ControlId].value,
+                songs: [],
+                songlistType: SonglistType.SetList,
+                BandId: elements[htmlConfig.BandSelect.ControlId].value
+            }
         }
     };
 
@@ -71,6 +78,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                         ))}
                     </Form.Control>
                 </Col>
+                
             </Form.Group>
 
             <Button variant="primary" type="submit">

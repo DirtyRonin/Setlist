@@ -1,3 +1,2 @@
-export * from "./config"
 export * from "./HtmlAttributesConfig"
-export * from "./EndpointConfig"
+export * from "./EndpointConfigs/index"

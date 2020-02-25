@@ -1,4 +1,4 @@
-import { ConfigurationItemCollection } from "./";
+import { ConfigurationItemCollection } from "./ConfigurationItemCollection";
 
 type HtmlAttributesDefinition = {
     label: string;
