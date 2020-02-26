@@ -7,8 +7,6 @@ export interface IApiBandlist {
     setlists: IApiSetList[];
 }
 
-
-
 export interface IApiSetList {
     id: string;
     title: string;

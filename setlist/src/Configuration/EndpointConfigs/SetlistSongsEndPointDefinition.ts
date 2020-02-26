@@ -1,6 +1,5 @@
-import { EndPointDefinition, NameDefinition } from "./FieldsDefinition";
 import { ConfigurationItemCollection } from "../ConfigurationItemCollection";
-import { GetEndpointURL, EndpointPartialTypeDefinition } from "./EndPointConfig";
+import { GetEndpointURL, EndpointPartialTypeDefinition, EndPointDefinition, NameDefinition } from "./EndPointConfig";
 
 type SetlistSongsActionNames = "GetSetlistSongs" | "AddSetlistSongs" | "RemoveSetlistSongs";
 

@@ -1,6 +1,5 @@
 import { ConfigurationItemCollection } from "../ConfigurationItemCollection";
-import {EndPointDefinition, NameDefinition} from "./FieldsDefinition"
-import { GetEndpointURL, EndpointPartialTypeDefinition } from "./EndPointConfig";
+import { GetEndpointURL, EndpointPartialTypeDefinition, EndPointDefinition, NameDefinition } from "./EndPointConfig";
 
 type BandsongsActionNames = "GetBandsongs" | "AddBandsongs" | "RemoveBandsongs";
 

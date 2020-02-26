@@ -1,4 +1,4 @@
-import { ISonglist, IApiBandlist, SonglistType, IBandlist } from "../models";
+import { IApiBandlist, SonglistType, IBandlist } from "../models";
 
 export const ToApiBandlist = (bandlist: IBandlist): IApiBandlist => {
     const { id, title } = bandlist;
