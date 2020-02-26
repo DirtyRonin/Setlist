@@ -18,8 +18,6 @@ export interface ISetlist extends ISonglist {
     BandId:string;
  }
 
-
-
 export enum SonglistType {
     MainList = "Main List",
     BandList = "Band List",

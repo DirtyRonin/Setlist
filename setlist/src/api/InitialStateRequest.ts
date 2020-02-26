@@ -15,10 +15,6 @@ export const InitialStateRequest = async (): Promise<IAppState> => {
         return result.concat(await ReadSetlistsFromBandAsync(band.id));
     }, Promise.resolve([] as ISetlist[]))
 
-
-
-
-    // const setlists = await ReadSetlistsFromBandAsync("");
     const bandsSummary = await ReadBandsSummaryAsync();
 
     const mainList = {

@@ -7,16 +7,18 @@ import { HashTable } from "../Util";
 export interface ICreateSetlistProps {
     IsBandListNeeded: boolean;
     BandsSummary: HashTable<IBandSummary>;
-    CreateBandAsync: (bandlist: IBandlist) => Promise<IBandlist>;
-    AddBandToState: (bandlist: IBandlist) => void;
+    CreateBandAsync(bandlist: IBandlist): Promise<IBandlist>;
+    AddBandToState(bandlist: IBandlist): void;
+    AddSetlistToBandAsync(setlist: ISetlist): Promise<ISetlist>;
+    AddSetlistToState(setlist: ISetlist): void;
 }
 
 const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
-    const { BandsSummary, CreateBandAsync, AddBandToState } = props;
+    const { BandsSummary, CreateBandAsync, AddBandToState, AddSetlistToBandAsync,AddSetlistToState } = props;
 
-    const selectNewBandlist= { id: "-1", title: "Create New Bandlist" } as IBandSummary;
+    const selectNewBandlist = { id: "-1", title: "Create New Bandlist" } as IBandSummary;
 
-    const newSelect:IBandSummary[] = [selectNewBandlist].concat(
+    const newSelect: IBandSummary[] = [selectNewBandlist].concat(
         Object.values(BandsSummary).map(summary => {
             return { id: summary.id, title: `New Setlist for ${summary.title}` };
         })
@@ -32,7 +34,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const isBandList: boolean =  elements[htmlConfig.BandSelect.ControlId].value === selectNewBandlist.id; 
+        const isBandList: boolean = elements[htmlConfig.BandSelect.ControlId].value === selectNewBandlist.id;
 
         if (isBandList) {
             const bandlist: IBandlist = {
@@ -42,9 +44,10 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                 songlistType: SonglistType.BandList
             };
 
-            CreateBandAsync(bandlist)
-                .then(newBandlist => AddBandToState(newBandlist))
-                .catch(error => console.timeLog(error));
+            CreateBandAsync(bandlist).then(
+                newBandlist => AddBandToState(newBandlist)
+            )
+
         } else {
             const setlist: ISetlist = {
                 id: "",
@@ -53,6 +56,10 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                 songlistType: SonglistType.SetList,
                 BandId: elements[htmlConfig.BandSelect.ControlId].value
             }
+
+            AddSetlistToBandAsync(setlist).then(
+                newSetlist => AddSetlistToState(setlist)
+            )
         }
     };
 
@@ -74,11 +81,11 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                 <Col md="9">
                     <Form.Control as="select">
                         {newSelect.map(summary => (
-                            <option value={summary.id}>{summary.title}</option>
+                            <option key={summary.id} value={summary.id}>{summary.title}</option>
                         ))}
                     </Form.Control>
                 </Col>
-                
+
             </Form.Group>
 
             <Button variant="primary" type="submit">

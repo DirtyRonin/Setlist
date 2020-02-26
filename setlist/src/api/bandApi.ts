@@ -2,7 +2,7 @@ import Axios from "axios";
 
 import { EndpointConfiguration, defaultHeader } from "../Configuration";
 import { IApiBandlist, SonglistType, IBandlist, IBandSummary } from "../models";
-import { ReadSongsFromBand, ToApiBandlist, ToBandlist } from ".";
+import { ReadSongsFromBand, ToApiBandlist, ToBandlistAsync } from ".";
 import { HashTable } from "../Util";
 
 const bandsEndpoint = EndpointConfiguration.Bands;
@@ -53,7 +53,7 @@ export const CreateBandAsync = async (bandlist: IBandlist): Promise<IBandlist> =
         headers: defaultHeader
     });
 
-    return ToBandlist(addResult.data);
+    return ToBandlistAsync(addResult.data);
 };
 
 export const DeleteBandAsync = async (bandlistId: string): Promise<void> => {

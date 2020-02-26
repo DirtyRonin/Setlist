@@ -14,7 +14,8 @@ import {
     DeleteBandAsync,
     AddSongsToBandAsync,
     RemoveSongsFromBandAsync,
-    ReadBandsSummaryAsync
+    ReadBandsSummaryAsync,
+    AddSetlistToBandAsync
 } from "./api";
 
 ReactDOM.render(
@@ -27,6 +28,7 @@ ReactDOM.render(
         DeleteSongAsync={DeleteSongAsync}
         CreateBandAsync={CreateBandAsync}
         DeleteBandAsync={DeleteBandAsync}
+        AddSetlistToBandAsync={AddSetlistToBandAsync}
     />,
     document.getElementById("root")
 );

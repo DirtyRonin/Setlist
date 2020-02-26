@@ -6,18 +6,12 @@ import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
 import MainSongNodeComponent from "./mainSongNode";
-import { ISonglist, ISong } from "../models";
+import { ISonglist, ISong, ISetlist } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
+import SetlistSongNodeComponent from "./setlistSongNode";
 
 export interface ISetlistProps {
-    songlist: ISonglist;
-
-    CreateSongAsync(song: ISong): Promise<ISong>;
-    DeleteSongAsync(songId: string): Promise<void>;
-    // UpdateSetlistAsync(setlist: setlist): Promise<setlist>;
-
-    AddSongToState: (setlist: ISonglist, newSong: ISong) => void;
-    RemoveSongFromState(setlistId: string, songId: string): void;
+    setlist: ISetlist;
 }
 
 const Container = styled.div`
@@ -34,7 +28,7 @@ const NodeList = styled.div`
 `;
 
 const SetlistComponent = (props: ISetlistProps): JSX.Element => {
-    const { CreateSongAsync, AddSongToState, songlist, RemoveSongFromState, DeleteSongAsync } = props;
+    const {  setlist } = props;
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
 
@@ -50,39 +44,19 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
             id: ""
         };
 
-        CreateSongAsync(song)
-            .then(newsongResult => {
-                const newSetlistSongs = Array.from(songlist.songs);
-                newSetlistSongs.push(newsongResult);
-
-                const newSetlist = {
-                    ...songlist,
-                    songs: newSetlistSongs
-                };
-
-                // UpdateSetlistAsync(newSetlist)
-                //     .then(newSetlistResult =>{
-                //         AddSongToState(newSetlist, newsongResult)
-                //     })
-                //     .catch(error =>
-                //         console.log(error)
-                //     );
-            })
-            .catch(error => console.log(error));
+        
     };
 
     return (
-        <Container data-testid={songlist.id}>
-            <Title>{songlist.title}</Title>
-            {songlist.songs && (
-                <Droppable droppableId={songlist.id}>
+        <Container data-testid={setlist.id}>
+            <Title>{setlist.title}</Title>
+            {setlist.songs && (
+                <Droppable droppableId={setlist.id}>
                     {provided => (
                         <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                            {songlist.songs.map((song, index) => (
-                                <MainSongNodeComponent
-                                    RemoveSongFromState={RemoveSongFromState}
-                                    DeleteSongAsync={DeleteSongAsync}
-                                    songListId={songlist.id}
+                            {setlist.songs.map((song, index) => (
+                                <SetlistSongNodeComponent
+                                    setlistId={setlist.id}
                                     key={song.id}
                                     song={song}
                                     index={index}
