@@ -12,7 +12,7 @@ export interface ISongNodeProps {
     index: number;
     songListId: string;
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
-    RemoveBandsongFromState(bandId: string,songIds: string[]):void
+    RemoveBandsongFromState(bandId: string,songIds: number[]):void
     // DeleteSongAsync(songId: string): Promise<void>;
 
     // RemoveSongFromState(songListId: string, songId: string): void;
@@ -33,7 +33,7 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
 
-        RemoveSongsFromBandAsync(songListId,[song.id]).then(
+        RemoveSongsFromBandAsync(songListId,[song.id.toString()]).then(
             result => RemoveBandsongFromState(songListId,[song.id])
         ).catch(
             error => console.log(error)

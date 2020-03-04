@@ -1,34 +1,34 @@
 import Axios from "axios";
 
-import { EndpointConfiguration, defaultHeader, SetlistEndPointDefinition } from "../Configuration";
-import { SonglistType, ISetlist, IApiSetList } from "../models";
+import { EndpointConfiguration, defaultHeader, SetEndPointDefinition } from "../Configuration";
+import { SonglistType, ISet, IApiSetList } from "../models";
 import { ToApiSetList, ToSetlistAsync } from ".";
 
-const setlistsEndpoint = (EndpointConfiguration.Setlists as SetlistEndPointDefinition).ActionEndpoints;
+const setEndpoint = (EndpointConfiguration.Sets as SetEndPointDefinition).ActionEndpoints;
 const endPointWithId = (actionEndPoint: string, id: string): string => `${actionEndPoint}/${id}`;
 
-export const ReadSetlistsFromBandAsync = async (bandId: string): Promise<ISetlist[]> => {
-    const setlistsResult = (await Axios.get<ISetlist[]>(endPointWithId(setlistsEndpoint.GetAllSetlistsFromBand.GetEndpointUrl(), bandId), { headers: defaultHeader })).data
+export const ReadSetlistsFromBandAsync = async (bandId: number): Promise<ISet[]> => {
+    const setlistsResult = (await Axios.get<ISet[]>(endPointWithId(setEndpoint.GetSetsByBandId.GetEndpointUrl(), bandId.toString()), { headers: defaultHeader })).data
 
-    const setlists = setlistsResult.map( result => {
+    const setlists = await setlistsResult.map( result => {
         return {
             ...result,
             songlistType: SonglistType.SetList,
-            BandId: bandId
-        } as ISetlist;
+            bandId: bandId.toString()
+        } as ISet;
     });
 
     return setlists;
 };
 
-export const AddSetlistToBandAsync = async (setlist: ISetlist): Promise<ISetlist> => {
-    const {BandId} = setlist;
+export const AddSetlistToBandAsync = async (setlist: ISet): Promise<ISet> => {
 
     const apiSetlist = ToApiSetList(setlist)
 
-    const addSetlistResult = (await Axios.post<IApiSetList>(endPointWithId(setlistsEndpoint.AddSetlistToBand.GetEndpointUrl(), BandId), apiSetlist, { headers: defaultHeader })).data;
+    const addSetlistResult = (await Axios.post<IApiSetList>(setEndpoint.AddSet.GetEndpointUrl(), apiSetlist, { headers: defaultHeader })).data;
 
-    return await ToSetlistAsync(addSetlistResult,BandId);
+    return await ToSetlistAsync(addSetlistResult);
 }
+
 
 

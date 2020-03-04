@@ -46,7 +46,7 @@ const MainListComponent = (props: IMainListProps): JSX.Element => {
             title: elements[songDef.Title.ControlId].value,
             artist: elements[songDef.Artist.ControlId].value,
             mode: elements[songDef.Mode.ControlId].value,
-            id: ""
+            id: -1
         };
 
         CreateSongAsync(song)

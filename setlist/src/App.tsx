@@ -6,7 +6,7 @@ import SetlistComponent from "./components/setlist";
 import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
 import { HashTable } from "./Util/HashTable";
-import { ISong, ISonglist, SonglistType, IBandlist, IBandSummary, ISetlist, IMainlist } from "./models";
+import { ISong, ISonglist, SonglistType, IBandlist, IBandSummary, ISet, IMainlist } from "./models";
 import MainListComponent from "./components/mainList";
 import BandListComponent from "./components/bandList";
 import CreateSetlist from "./components/createSetlistForm";
@@ -24,7 +24,7 @@ export interface IAppProps /* extends dndList */ {
     AddSongsToBandAsync(bandId: string, songIds: string[]): Promise<void>;
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
 
-    AddSetlistToBandAsync: (setlist: ISetlist) => Promise<ISetlist>;
+    AddSetlistToBandAsync: (setlist: ISet) => Promise<ISet>;
 }
 
 export interface IAppState {
@@ -144,7 +144,7 @@ const App = (props: IAppProps): JSX.Element => {
         setSongListOrder(newSonglistOrder);
     };
 
-    const RemoveBandsongFromState = (bandId: string, songIds: string[]) => {
+    const RemoveBandsongFromState = (bandId: string, songIds: number[]) => {
         const songlist = songLists[bandId];
 
         const newBandsongs = Array.from(songlist.songs);
@@ -167,7 +167,7 @@ const App = (props: IAppProps): JSX.Element => {
         setSongLists(newSonglistState);
     };
 
-    const AddSetlistToState = (setlist : ISetlist) => {
+    const AddSetlistToState = (setlist : ISet) => {
         if (!songLists[setlist.id]) {
             const newSongLists = {
                 ...songLists,
@@ -222,7 +222,7 @@ const App = (props: IAppProps): JSX.Element => {
                     const newFinishSongIds = Array.from(finish.songs);
 
                     if (doesBandlistContainsSongId(finish, draggable.id) === false) {
-                        AddSongsToBandAsync(finish.id, [draggable.id]).then(result => {
+                        AddSongsToBandAsync(finish.id, [draggable.id.toString()]).then(result => {
                             newFinishSongIds.splice(destination.index, 0, draggable);
 
                             const newStartSonglist = {
@@ -269,7 +269,7 @@ const App = (props: IAppProps): JSX.Element => {
         }
     };
 
-    const doesBandlistContainsSongId = (songlist: ISonglist, songId: string): boolean =>
+    const doesBandlistContainsSongId = (songlist: ISonglist, songId: number): boolean =>
         songlist.songlistType === SonglistType.BandList && songlist.songs.filter(song => song.id === songId).length > 0;
 
     const hasSonglistChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
@@ -307,7 +307,7 @@ const App = (props: IAppProps): JSX.Element => {
                 return (
                     <SetlistComponent
                         key={songList.id}
-                        setlist={songList as ISetlist}
+                        setlist={songList as ISet}
                     />
                 );
             }

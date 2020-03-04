@@ -1,7 +1,7 @@
 import { ISong } from ".";
 
 export interface IBandSummary{
-    id: string;
+    id: number;
     title: string;
 }
 
@@ -14,8 +14,8 @@ export interface ISonglist {
 
 export interface IMainlist extends ISonglist { }
 export interface IBandlist extends ISonglist { }
-export interface ISetlist extends ISonglist {
-    BandId:string;
+export interface ISet extends ISonglist {
+    bandId:string;
  }
 
 export enum SonglistType {

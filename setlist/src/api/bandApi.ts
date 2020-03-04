@@ -13,11 +13,7 @@ export const ReadBandsAsync = async (): Promise<Array<IBandlist>> => {
     const bandsResult = await readAllBandsAsync();
 
     const bandlists = bandsResult.map(async result => {
-        return {
-            ...result,
-            songlistType: SonglistType.BandList,
-            songs: result.bandsongs ? await ReadSongsFromBand(result.id) : []
-        } as IBandlist;
+        return await ToBandlistAsync(result);
     });
 
     return await Promise.all(bandlists);
@@ -49,7 +45,7 @@ const readAllBandsAsync = async (): Promise<IApiBandlist[]> =>
 export const CreateBandAsync = async (bandlist: IBandlist): Promise<IBandlist> => {
     const apiBand: IApiBandlist = ToApiBandlist(bandlist);
 
-    const addResult = await Axios.post<IApiBandlist>(bandsEndpoint.GetEndpointUrl!(), apiBand, {
+    const addResult = await Axios.post<IApiBandlist>(bandsEndpoint.GetEndpointUrl(), apiBand, {
         headers: defaultHeader
     });
 

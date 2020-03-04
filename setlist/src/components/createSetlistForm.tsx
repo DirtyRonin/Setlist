@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button, FormControlProps, Col, Row } from "react-bootstrap";
-import { IBandlist, SonglistType, IBandSummary, ISetlist } from "../models";
+import { IBandlist, SonglistType, IBandSummary, ISet } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 import { HashTable } from "../Util";
 
@@ -9,14 +9,14 @@ export interface ICreateSetlistProps {
     BandsSummary: HashTable<IBandSummary>;
     CreateBandAsync(bandlist: IBandlist): Promise<IBandlist>;
     AddBandToState(bandlist: IBandlist): void;
-    AddSetlistToBandAsync(setlist: ISetlist): Promise<ISetlist>;
-    AddSetlistToState(setlist: ISetlist): void;
+    AddSetlistToBandAsync(setlist: ISet): Promise<ISet>;
+    AddSetlistToState(setlist: ISet): void;
 }
 
 const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
     const { BandsSummary, CreateBandAsync, AddBandToState, AddSetlistToBandAsync,AddSetlistToState } = props;
 
-    const selectNewBandlist = { id: "-1", title: "Create New Bandlist" } as IBandSummary;
+    const selectNewBandlist = { id: 0, title: "Create New Bandlist" } as IBandSummary;
 
     const newSelect: IBandSummary[] = [selectNewBandlist].concat(
         Object.values(BandsSummary).map(summary => {
@@ -49,12 +49,12 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             )
 
         } else {
-            const setlist: ISetlist = {
+            const setlist: ISet = {
                 id: "",
                 title: elements[NameInput.ControlId].value,
                 songs: [],
                 songlistType: SonglistType.SetList,
-                BandId: elements[htmlConfig.BandSelect.ControlId].value
+                bandId: elements[htmlConfig.BandSelect.ControlId].value
             }
 
             AddSetlistToBandAsync(setlist).then(

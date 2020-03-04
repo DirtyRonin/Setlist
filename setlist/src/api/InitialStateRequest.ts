@@ -1,7 +1,7 @@
 import { IAppState } from "../App";
 import { EndpointConfiguration } from "../Configuration";
 import { ReadSongsAsync } from "./";
-import { ISonglist, SonglistType, ISetlist } from "../models";
+import { ISonglist, SonglistType, ISet, IBandlist, IBandSummary } from "../models";
 import { HashTable } from "../Util/HashTable";
 import { ReadBandsAsync, ReadBandsSummaryAsync } from "./bandApi";
 import { ReadSetlistsFromBandAsync } from "./setlistApi";
@@ -10,12 +10,12 @@ export const InitialStateRequest = async (): Promise<IAppState> => {
     const endpointName = EndpointConfiguration.Songs.Name;
     const songs = await ReadSongsAsync();
     const bands = await ReadBandsAsync();
-    const setlists = await bands.reduce(async (setlists, band) => {
-        const result = await setlists;
-        return result.concat(await ReadSetlistsFromBandAsync(band.id));
-    }, Promise.resolve([] as ISetlist[]))
+    // const setlists = await bands.reduce(async (setlists, band) => {
+    //     const result = await setlists;
+    //     return result.concat(await ReadSetlistsFromBandAsync(band.id));
+    // }, Promise.resolve([] as ISet[]))
 
-    const bandsSummary = await ReadBandsSummaryAsync();
+    const bandsSummary = {} as HashTable<IBandSummary> /* await ReadBandsSummaryAsync() */;
 
     const mainList = {
         id: "mainList_id",
@@ -26,6 +26,9 @@ export const InitialStateRequest = async (): Promise<IAppState> => {
 
     const songLists: HashTable<ISonglist> = {};
     songLists[mainList.id] = mainList;
+
+    
+    const setlists=[] as ISet[];
 
     if (bands) {
         bands.forEach(band => {

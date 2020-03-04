@@ -33,8 +33,8 @@ const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
 
         
 
-        DeleteSongAsync(song.id)
-            .then(result => RemoveSongFromState(songListId, song.id))
+        DeleteSongAsync(song.id.toString())
+            .then(result => RemoveSongFromState(songListId, song.id.toString()))
             .catch(error => console.log(error))
 
     };

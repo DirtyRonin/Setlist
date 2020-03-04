@@ -16,7 +16,7 @@ export interface IBandListProps {
     RemoveBandFromState(bandId: string): void;
 
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
-    RemoveBandsongFromState(bandId: string,songIds: string[]):void
+    RemoveBandsongFromState(bandId: string,songIds: number[]):void
 }
 
 const Container = styled.div`
@@ -46,7 +46,7 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
             title: elements[songDef.Title.ControlId].value,
             artist: elements[songDef.Artist.ControlId].value,
             mode: elements[songDef.Mode.ControlId].value,
-            id: ""
+            id: -1
         };
     };
 

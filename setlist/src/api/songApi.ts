@@ -1,13 +1,14 @@
 import Axios from "axios";
 import { ISong } from "../models";
-import { EndpointConfiguration, defaultHeader } from "../Configuration";
+import { EndpointConfiguration, defaultHeader, OdataPostHeader } from "../Configuration";
 
 const songsEndpoint = EndpointConfiguration.Songs;
 
 export const ReadSongsAsync = async (): Promise<Array<ISong>> => {
-    const songsResult = await Axios.get<ISong[]>(songsEndpoint.GetEndpointUrl!(), {
-        headers: defaultHeader
-    });
+    const songsResult = await Axios.get<ISong[]>(songsEndpoint.GetEndpointUrl!()
+        , {
+            headers: defaultHeader
+        });
 
     return songsResult.data;
 
@@ -18,16 +19,18 @@ export const ReadSongsAsync = async (): Promise<Array<ISong>> => {
 };
 
 export const CreateSongAsync = async (song: ISong): Promise<ISong> => {
-    const newsong = { ...song, id: "" };
+
+    const {title,artist,mode} = song;
+    const newsong = { title,artist,mode};
 
     const addResult = await Axios.post<ISong>(songsEndpoint.GetEndpointUrl!(), newsong, {
         headers: defaultHeader
     });
-    
+
     return addResult.data;
 };
 export const DeleteSongAsync = async (songId: string): Promise<void> => {
-    await Axios.delete<ISong>(`${songsEndpoint.GetEndpointUrl!()}/${songId}`, {
+    await Axios.delete(`${songsEndpoint.GetEndpointUrl!()}/${songId}`, {
         headers: defaultHeader
     });
 };

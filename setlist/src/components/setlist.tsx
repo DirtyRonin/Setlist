@@ -6,12 +6,12 @@ import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
 import MainSongNodeComponent from "./mainSongNode";
-import { ISonglist, ISong, ISetlist } from "../models";
+import { ISonglist, ISong, ISet } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import SetlistSongNodeComponent from "./setlistSongNode";
 
 export interface ISetlistProps {
-    setlist: ISetlist;
+    setlist: ISet;
 }
 
 const Container = styled.div`
@@ -41,7 +41,7 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
             title: elements[songDef.Title.ControlId].value,
             artist: elements[songDef.Artist.ControlId].value,
             mode: elements[songDef.Mode.ControlId].value,
-            id: ""
+            id: -1
         };
 
         
