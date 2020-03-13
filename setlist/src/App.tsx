@@ -18,7 +18,7 @@ export interface IAppProps /* extends dndList */ {
     ReadBandsSummaryAsync(): Promise<HashTable<IBandSummary>>;
 
     CreateSongAsync(song: ISong): Promise<ISong>;
-    DeleteSongAsync(songId: string): Promise<void>;
+    DeleteSongAsync(songId: string): Promise<ISong>;
     CreateBandAsync: (band: IBandlist) => Promise<IBandlist>;
     DeleteBandAsync(bandId: string): Promise<void>;
     AddSongsToBandAsync(bandId: string, songIds: string[]): Promise<void>;

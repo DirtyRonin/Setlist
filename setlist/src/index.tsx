@@ -8,8 +8,6 @@ import * as serviceWorker from "./serviceWorker";
 
 import {
     InitialStateRequest,
-    CreateSongAsync,
-    DeleteSongAsync,
     CreateBandAsync,
     DeleteBandAsync,
     AddSongsToBandAsync,
@@ -17,6 +15,11 @@ import {
     ReadBandsSummaryAsync,
     AddSetlistToBandAsync
 } from "./api";
+
+import {
+    CreateSongAsync,
+    DeleteSongAsync
+} from "./service"
 
 ReactDOM.render(
     <App

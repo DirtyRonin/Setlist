@@ -11,7 +11,7 @@ export interface ISongNodeProps {
     song: ISong;
     index: number;
     songListId: string;
-    DeleteSongAsync(songId: string): Promise<void>;
+    DeleteSongAsync(songId: string): Promise<ISong>;
 
     RemoveSongFromState(songListId: string, songId: string): void;
 }
@@ -34,7 +34,7 @@ const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
         
 
         DeleteSongAsync(song.id.toString())
-            .then(result => RemoveSongFromState(songListId, song.id.toString()))
+            .then(result => RemoveSongFromState(songListId, result.id.toString()))
             .catch(error => console.log(error))
 
     };

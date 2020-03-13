@@ -1,13 +1,12 @@
 import { IAppState } from "../App";
-import { EndpointConfiguration } from "../Configuration";
-import { ReadSongsAsync } from "./";
-import { ISonglist, SonglistType, ISet, IBandlist, IBandSummary } from "../models";
+import { ISonglist, SonglistType, ISet, IBandlist, IBandSummary, ISong } from "../models";
 import { HashTable } from "../Util/HashTable";
 import { ReadBandsAsync, ReadBandsSummaryAsync } from "./bandApi";
 import { ReadSetlistsFromBandAsync } from "./setlistApi";
+import { ReadSongsAsync } from "../service";
+import { CreateMainList } from "../mapping";
 
 export const InitialStateRequest = async (): Promise<IAppState> => {
-    const endpointName = EndpointConfiguration.Songs.Name;
     const songs = await ReadSongsAsync();
     const bands = await ReadBandsAsync();
     // const setlists = await bands.reduce(async (setlists, band) => {
@@ -17,18 +16,13 @@ export const InitialStateRequest = async (): Promise<IAppState> => {
 
     const bandsSummary = {} as HashTable<IBandSummary> /* await ReadBandsSummaryAsync() */;
 
-    const mainList = {
-        id: "mainList_id",
-        title: endpointName,
-        songs: songs ? songs : [],
-        songlistType: SonglistType.MainList
-    } as ISonglist;
+    const mainList = CreateMainList(songs);
 
     const songLists: HashTable<ISonglist> = {};
     songLists[mainList.id] = mainList;
 
-    
-    const setlists=[] as ISet[];
+
+    const setlists = [] as ISet[];
 
     if (bands) {
         bands.forEach(band => {

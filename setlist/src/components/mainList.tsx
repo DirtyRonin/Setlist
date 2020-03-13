@@ -13,7 +13,7 @@ export interface IMainListProps {
     songlist: ISonglist;
 
     CreateSongAsync(song: ISong): Promise<ISong>;
-    DeleteSongAsync(songId: string): Promise<void>;
+    DeleteSongAsync(songId: string): Promise<ISong>;
 
     AddSongToMainListState: (songListId: string, newSong: ISong) => void;
     RemoveSongFromMainListState(songListId: string, songId: string): void;
