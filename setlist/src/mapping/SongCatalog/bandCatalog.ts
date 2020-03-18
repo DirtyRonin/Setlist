@@ -11,7 +11,7 @@ export class BandCatalog extends SongCatalogBase implements IBandCatalog {
         )
     }
 
-    public static Create(band : IBand,bandSongs?: IBandSong[]): IBandCatalog {
-        return new BandCatalog(band,bandSongs)
+    public static Create(band : IBand): IBandCatalog {
+        return new BandCatalog(band,band.BandSongs)
     }
 }
