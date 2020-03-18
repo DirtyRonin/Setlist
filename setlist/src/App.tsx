@@ -6,7 +6,7 @@ import SetlistComponent from "./components/setlist";
 import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
 import { HashTable } from "./Util/HashTable";
-import { ISong, ISonglist, SonglistType, IBandlist, IBandSummary, ISet, IMainlist } from "./models";
+import { ISong, ISongCatalog, SongCatalogType, IBandCatalog, IBandSummary, ISetCatalog } from "./models";
 import MainListComponent from "./components/mainList";
 import BandListComponent from "./components/bandList";
 import CreateSetlist from "./components/createSetlistForm";
@@ -19,16 +19,16 @@ export interface IAppProps /* extends dndList */ {
 
     CreateSongAsync(song: ISong): Promise<ISong>;
     DeleteSongAsync(songId: string): Promise<ISong>;
-    CreateBandAsync: (band: IBandlist) => Promise<IBandlist>;
+    CreateBandAsync: (band: IBandCatalog) => Promise<IBandCatalog>;
     DeleteBandAsync(bandId: string): Promise<void>;
     AddSongsToBandAsync(bandId: string, songIds: string[]): Promise<void>;
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
 
-    AddSetlistToBandAsync: (setlist: ISet) => Promise<ISet>;
+    AddSetlistToBandAsync: (setlist: ISetCatalog) => Promise<ISetCatalog>;
 }
 
 export interface IAppState {
-    songLists: HashTable<ISonglist>;
+    songLists: HashTable<ISongCatalog>;
     songListOrder: string[];
     availableBandlists: HashTable<IBandSummary>;
 }
@@ -38,7 +38,7 @@ const AppContainer = styled.div`
 `;
 
 const App = (props: IAppProps): JSX.Element => {
-    const [songLists, setSongLists] = useState({} as HashTable<ISonglist>);
+    const [songLists, setSongLists] = useState({} as HashTable<ISongCatalog>);
     const [songListOrder, setSongListOrder] = useState([] as string[]);
     const [availableBandlists, setAvailableBandlists] = useState({} as HashTable<IBandSummary>);
 
@@ -68,15 +68,15 @@ const App = (props: IAppProps): JSX.Element => {
 
     const AddSongToMainListState = (songListId: string, newSong: ISong) => {
         const currentSongList = songLists[songListId];
-        const newSongs = Array.from(currentSongList.songs);
+        const newSongs = Array.from(currentSongList.Songs);
         newSongs.push(newSong);
 
-        const newSongList = {
+        const newSongList: ISongCatalog = {
             ...currentSongList,
-            songs: newSongs
+            Songs: newSongs
         };
 
-        const newSetlists = {
+        const newSetlists: HashTable<ISongCatalog> = {
             ...songLists,
             [songListId]: newSongList
         };
@@ -94,16 +94,16 @@ const App = (props: IAppProps): JSX.Element => {
         setSongLists(newStateSetlists);
     };
 
-    const AddBandToState = (bandlist: IBandlist): void => {
-        if (!songLists[bandlist.id]) {
+    const AddBandToState = (bandlist: IBandCatalog): void => {
+        if (!songLists[bandlist.Id]) {
             const newSongLists = {
                 ...songLists,
-                [bandlist.id]: bandlist
+                [bandlist.Id]: bandlist
             };
 
             setSongLists(newSongLists);
 
-            AddToSonglistOrder(bandlist.id);
+            AddToSonglistOrder(bandlist.Id);
         } else {
             console.log("Band Already Exists In State");
         }
@@ -117,7 +117,7 @@ const App = (props: IAppProps): JSX.Element => {
             const index = songListIds.indexOf(bandId);
             songListIds.splice(index, 1);
 
-            const newSonglists: HashTable<ISonglist> = songListIds.reduce((prev: HashTable<any>, current: string) => {
+            const newSonglists: HashTable<ISongCatalog> = songListIds.reduce((prev: HashTable<any>, current: string) => {
                 prev[current] = songLists[current];
                 return prev;
             }, {} as HashTable<any>);
@@ -144,39 +144,39 @@ const App = (props: IAppProps): JSX.Element => {
         setSongListOrder(newSonglistOrder);
     };
 
-    const RemoveBandsongFromState = (bandId: string, songIds: number[]) => {
+    const RemoveBandsongFromState = (bandId: string, songIds: string[]) => {
         const songlist = songLists[bandId];
 
-        const newBandsongs = Array.from(songlist.songs);
+        const newBandsongs = Array.from(songlist.Songs);
 
         songIds.forEach(songId => {
-            const index = newBandsongs.findIndex(song => song.id === songId);
+            const index = newBandsongs.findIndex(song => song.Id === songId);
             newBandsongs.splice(index, 1);
         });
 
         const newSonglist = {
             ...songlist,
-            songs: newBandsongs
-        } as ISonglist;
+            Songs: newBandsongs
+        } as ISongCatalog;
 
         const newSonglistState = {
             ...songLists,
-            [newSonglist.id]: newSonglist
+            [newSonglist.Id]: newSonglist
         };
 
         setSongLists(newSonglistState);
     };
 
-    const AddSetlistToState = (setlist : ISet) => {
-        if (!songLists[setlist.id]) {
+    const AddSetlistToState = (setlist: ISetCatalog) => {
+        if (!songLists[setlist.Id]) {
             const newSongLists = {
                 ...songLists,
-                [setlist.id]: setlist
+                [setlist.Id]: setlist
             };
 
             setSongLists(newSongLists);
 
-            AddToSonglistOrder(setlist.id);
+            AddToSonglistOrder(setlist.Id);
         } else {
             console.log("Band Already Exists In State");
         }
@@ -190,7 +190,7 @@ const App = (props: IAppProps): JSX.Element => {
             const index = songListIds.indexOf(setlistId);
             songListIds.splice(index, 1);
 
-            const newSonglists: HashTable<ISonglist> = songListIds.reduce((prev: HashTable<any>, current: string) => {
+            const newSonglists: HashTable<ISongCatalog> = songListIds.reduce((prev: HashTable<any>, current: string) => {
                 prev[current] = songLists[current];
                 return prev;
             }, {} as HashTable<any>);
@@ -209,36 +209,36 @@ const App = (props: IAppProps): JSX.Element => {
                 const start = songLists[source.droppableId];
                 const finish = songLists[destination.droppableId];
 
-                if (finish.songlistType === SonglistType.MainList) {
+                if (finish.SonglistType === SongCatalogType.MainList) {
                     //nothing happens
                 } else {
-                    const newStartSongIds = Array.from(start.songs);
+                    const newStartSongIds = Array.from(start.Songs);
                     const draggable = newStartSongIds[source.index];
 
-                    if (start.songlistType !== SonglistType.MainList) {
+                    if (start.SonglistType !== SongCatalogType.MainList) {
                         newStartSongIds.splice(source.index, 1);
                     }
 
-                    const newFinishSongIds = Array.from(finish.songs);
+                    const newFinishSongIds = Array.from(finish.Songs);
 
-                    if (doesBandlistContainsSongId(finish, draggable.id) === false) {
-                        AddSongsToBandAsync(finish.id, [draggable.id.toString()]).then(result => {
+                    if (doesBandlistContainsSongId(finish, draggable.Id) === false) {
+                        AddSongsToBandAsync(finish.Id, [draggable.Id.toString()]).then(result => {
                             newFinishSongIds.splice(destination.index, 0, draggable);
 
-                            const newStartSonglist = {
+                            const newStartSonglist: ISongCatalog = {
                                 ...start,
-                                songs: newStartSongIds
+                                Songs: newStartSongIds
                             };
 
-                            const newFinishSonglist = {
+                            const newFinishSonglist: ISongCatalog = {
                                 ...finish,
-                                songs: newFinishSongIds
+                                Songs: newFinishSongIds
                             };
 
-                            const newStateSonglists = {
+                            const newStateSonglists: HashTable<ISongCatalog> = {
                                 ...songLists,
-                                [newStartSonglist.id]: newStartSonglist,
-                                [newFinishSonglist.id]: newFinishSonglist
+                                [newStartSonglist.Id]: newStartSonglist,
+                                [newFinishSonglist.Id]: newFinishSonglist
                             };
 
                             setSongLists(newStateSonglists);
@@ -248,18 +248,18 @@ const App = (props: IAppProps): JSX.Element => {
             } else if (hasPositionInSonglistChanged(destination, source)) {
                 const songlist = songLists[source.droppableId];
 
-                const newSongIds = Array.from(songlist.songs);
+                const newSongIds = Array.from(songlist.Songs);
                 const draggable = newSongIds.splice(source.index, 1);
                 newSongIds.splice(destination.index, 0, draggable[0]);
 
-                const newSetlist = {
+                const newSetlist: ISongCatalog = {
                     ...songlist,
-                    songs: newSongIds
+                    Songs: newSongIds
                 };
 
-                const newStateSetlists = {
+                const newStateSetlists: HashTable<ISongCatalog> = {
                     ...songLists,
-                    [newSetlist.id]: newSetlist
+                    [newSetlist.Id]: newSetlist
                 };
 
                 setSongLists(newStateSetlists);
@@ -269,8 +269,8 @@ const App = (props: IAppProps): JSX.Element => {
         }
     };
 
-    const doesBandlistContainsSongId = (songlist: ISonglist, songId: number): boolean =>
-        songlist.songlistType === SonglistType.BandList && songlist.songs.filter(song => song.id === songId).length > 0;
+    const doesBandlistContainsSongId = (songlist: ISongCatalog, songId: string): boolean =>
+        songlist.SonglistType === SongCatalogType.BandList && songlist.Songs.filter(song => song.Id === songId).length > 0;
 
     const hasSonglistChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.droppableId !== source.droppableId;
@@ -281,22 +281,22 @@ const App = (props: IAppProps): JSX.Element => {
     const renderSetlists = (): JSX.Element[] => {
         return songListOrder.map(songListId => {
             const songList = songLists[songListId];
-            if (songList.songlistType === SonglistType.MainList) {
+            if (songList.SonglistType === SongCatalogType.MainList) {
                 return (
                     <MainListComponent
                         CreateSongAsync={CreateSongAsync}
                         DeleteSongAsync={DeleteSongAsync}
                         RemoveSongFromMainListState={RemoveSongFromMainListState}
                         AddSongToMainListState={AddSongToMainListState}
-                        key={songList.id}
-                        songlist={songList as IMainlist}
+                        key={songList.Id}
+                        songlist={songList as ISongCatalog}
                     />
                 );
-            } else if (songList.songlistType === SonglistType.BandList) {
+            } else if (songList.SonglistType === SongCatalogType.BandList) {
                 return (
                     <BandListComponent
-                        key={songList.id}
-                        songlist={songList as IBandlist}
+                        key={songList.Id}
+                        songlist={songList as IBandCatalog}
                         RemoveSongsFromBandAsync={RemoveSongsFromBandAsync}
                         RemoveBandsongFromState={RemoveBandsongFromState}
                         DeleteBandAsync={DeleteBandAsync}
@@ -306,8 +306,8 @@ const App = (props: IAppProps): JSX.Element => {
             } else {
                 return (
                     <SetlistComponent
-                        key={songList.id}
-                        setlist={songList as ISet}
+                        key={songList.Id}
+                        setlist={songList as ISetCatalog}
                     />
                 );
             }
@@ -315,7 +315,7 @@ const App = (props: IAppProps): JSX.Element => {
     };
 
     const IsBandListNeeded = () =>
-        Object.values(songLists).filter(songList => songList.songlistType === SonglistType.BandList).length === 0;
+        Object.values(songLists).filter(songList => songList.SonglistType === SongCatalogType.BandList).length === 0;
 
     return (
         <Container>

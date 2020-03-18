@@ -5,18 +5,18 @@ import { Form, FormControlProps, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
-import { ISonglist, ISong } from "../models";
+import { ISongCatalog, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import BandSongNodeComponent from "./bandSongNode";
 
 export interface IBandListProps {
-    songlist: ISonglist;
+    songlist: ISongCatalog;
     DeleteBandAsync(bandId: string): Promise<void>;
 
     RemoveBandFromState(bandId: string): void;
 
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
-    RemoveBandsongFromState(bandId: string,songIds: number[]):void
+    RemoveBandsongFromState(bandId: string,songIds: string[]):void
 }
 
 const Container = styled.div`
@@ -43,30 +43,30 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
         const elements: any = (event.target as any).elements;
 
         const song: ISong = {
-            title: elements[songDef.Title.ControlId].value,
-            artist: elements[songDef.Artist.ControlId].value,
-            mode: elements[songDef.Mode.ControlId].value,
-            id: -1
+            Title: elements[songDef.Title.ControlId].value,
+            Artist: elements[songDef.Artist.ControlId].value,
+            Key: elements[songDef.Mode.ControlId].value,
+            Id: ""
         };
     };
 
     const handleOnDeleteBandClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         
-        DeleteBandAsync(songlist.id)
-            .then(result => RemoveBandFromState(songlist.id))
+        DeleteBandAsync(songlist.Id)
+            .then(result => RemoveBandFromState(songlist.Id))
             .catch(error => console.log(error));
     };
 
     return (
-        <Container data-testid={songlist.id}>
-            <Title>{songlist.title}</Title>
-            <Droppable droppableId={songlist.id}>
+        <Container data-testid={songlist.Id}>
+            <Title>{songlist.Title}</Title>
+            <Droppable droppableId={songlist.Id}>
                 {provided => (
                     <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                        {songlist.songs &&
-                            songlist.songs.map((song, index) => (
-                                <BandSongNodeComponent RemoveSongsFromBandAsync={RemoveSongsFromBandAsync} RemoveBandsongFromState={RemoveBandsongFromState} songListId={songlist.id} key={song.id} song={song} index={index} />
+                        {songlist.Songs &&
+                            songlist.Songs.map((song, index) => (
+                                <BandSongNodeComponent RemoveSongsFromBandAsync={RemoveSongsFromBandAsync} RemoveBandsongFromState={RemoveBandsongFromState} songListId={songlist.Id} key={song.Id} song={song} index={index} />
                             ))}
                         {provided.placeholder}
                     </NodeList>

@@ -33,13 +33,13 @@ const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
 
         
 
-        DeleteSongAsync(song.id.toString())
-            .then(result => RemoveSongFromState(songListId, result.id.toString()))
+        DeleteSongAsync(song.Id.toString())
+            .then(result => RemoveSongFromState(songListId, result.Id.toString()))
             .catch(error => console.log(error))
 
     };
 
-    const uniqueNodeId = `${songListId}-${song.id}-${index}`
+    const uniqueNodeId = `${songListId}-${song.Id}-${index}`
 
     return (
         <Draggable draggableId={uniqueNodeId} index={index}>
@@ -51,7 +51,7 @@ const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                 <label>{songDef.Title.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Title.Data_TestId}>{song.title}</label>
+                                <label data-testid={songDef.Title.Data_TestId}>{song.Title}</label>
                             </Col>
                         </Row>
                         <Row>
@@ -59,7 +59,7 @@ const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                 <label>{songDef.Artist.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Artist.Data_TestId}>{song.artist}</label>
+                                <label data-testid={songDef.Artist.Data_TestId}>{song.Artist}</label>
                             </Col>
                         </Row>
                         <Row>
@@ -67,7 +67,7 @@ const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                 <label>{songDef.Mode.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Mode.Data_TestId}>{song.mode}</label>
+                                <label data-testid={songDef.Mode.Data_TestId}>{song.Key}</label>
                             </Col>
                         </Row>
                         <Row>

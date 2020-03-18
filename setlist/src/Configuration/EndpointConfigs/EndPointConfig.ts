@@ -3,7 +3,7 @@ import { BandSongsConfiguration, BandSongsEndPointDefinition } from "./BandSongs
 import { SetSongsConfiguration, SetSongsEndPointDefinition } from "./SetSongsEndPointDefinition";
 import { SetConfiguration, SetEndPointDefinition } from "./SetEndPointDefinition";
 
-const WEB_API_URL = "https://localhost:5001/api";
+const WEB_API_URL = "https://localhost:5001/odata";
 
 export const defaultHeader = { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" };
 export const OdataPostHeader = { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; odata.metadata=minimal ; charset=utf-8" };

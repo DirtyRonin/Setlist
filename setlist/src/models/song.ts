@@ -1,10 +1,11 @@
 export interface ISong{
-    id: number;
-    title: string;
-    artist: string;
-    mode: string;
-}
+    Id: string;
+    Title: string;
+    Artist: string;
+    Key: string;
+   }
 
-export interface IMainSong extends ISong { }
-export interface IBandSong extends IMainSong { }
+export interface IBandSong extends ISong {
+    Popularity : number
+ }
 export interface ISetSong extends IBandSong { }

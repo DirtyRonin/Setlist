@@ -1,26 +1,24 @@
 import { ISong } from "../models";
 import { GetSongsRequestAsync, CreateSongRequestAsync, DeleteSongRequestAsync } from "../api";
-import { MapResourceToSong, MapSongToResource } from "../mapping/songMapping";
+import { Song } from "../mapping";
 
 export const ReadSongsAsync = async (): Promise<Array<ISong>> => {
     const songResources = await GetSongsRequestAsync();
-    return songResources.data.map(resource =>
-        MapResourceToSong(resource)
+    return songResources.map(resource =>
+        Song.FromResource(resource)
     )
 };
 
 export const CreateSongAsync = async (song: ISong): Promise<ISong> => {
-    const resource = MapSongToResource(song, true)
+    const resource = Song.ToResource(song)
 
     const result = await CreateSongRequestAsync(resource)
 
-    return MapResourceToSong(result.data)
+    return Song.FromResource(result.data)
 }
 
 export const DeleteSongAsync = async (songId: string): Promise<ISong> => {
-    const id:number = Number(songId)
+    const result = await DeleteSongRequestAsync(songId);
 
-    const result = await DeleteSongRequestAsync(id);
-
-    return MapResourceToSong(result.data);
+    return Song.FromResource(result.data);
 }

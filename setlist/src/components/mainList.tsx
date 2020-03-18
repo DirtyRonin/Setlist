@@ -6,11 +6,11 @@ import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
 import MainSongNodeComponent from "./mainSongNode";
-import { ISonglist, ISong } from "../models";
+import { ISongCatalog, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 
 export interface IMainListProps {
-    songlist: ISonglist;
+    songlist: ISongCatalog;
 
     CreateSongAsync(song: ISong): Promise<ISong>;
     DeleteSongAsync(songId: string): Promise<ISong>;
@@ -43,29 +43,29 @@ const MainListComponent = (props: IMainListProps): JSX.Element => {
         const elements: any = (event.target as any).elements;
 
         const song: ISong = {
-            title: elements[songDef.Title.ControlId].value,
-            artist: elements[songDef.Artist.ControlId].value,
-            mode: elements[songDef.Mode.ControlId].value,
-            id: -1
+            Title: elements[songDef.Title.ControlId].value,
+            Artist: elements[songDef.Artist.ControlId].value,
+            Key: elements[songDef.Mode.ControlId].value,
+            Id: ""
         };
 
         CreateSongAsync(song)
-            .then(newSongResult => AddSongToMainListState(songlist.id, newSongResult))
+            .then(newSongResult => AddSongToMainListState(songlist.Id, newSongResult))
             .catch(error => console.log(error));
     };
 
     return (
-        <Container data-testid={songlist.id}>
-            <Title>{songlist.title}</Title>
-            <Droppable droppableId={songlist.id}>
+        <Container data-testid={songlist.Id}>
+            <Title>{songlist.Title}</Title>
+            <Droppable droppableId={songlist.Id}>
                 {provided => (
                     <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                        {songlist.songs.map((song, index) => (
+                        {songlist.Songs.map((song, index) => (
                             <MainSongNodeComponent
                                 RemoveSongFromState={RemoveSongFromMainListState}
                                 DeleteSongAsync={DeleteSongAsync}
-                                songListId={songlist.id}
-                                key={song.id}
+                                songListId={songlist.Id}
+                                key={song.Id}
                                 song={song}
                                 index={index}
                             />

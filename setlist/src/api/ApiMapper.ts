@@ -1,44 +1,44 @@
-import { IApiBandlist, SonglistType, IBandlist, IBandSongRef, ISet, IApiSetList, ISetSongRef } from "../models";
+import { IApiBandlist, SongCatalogType, IBandCatalog, IBandSongRef, ISetCatalog, IApiSetList, ISetSongRef } from "../models";
 import { ReadSongsFromBand } from ".";
 
-export const ToApiBandlist = (bandlist: IBandlist): IApiBandlist => {
-    const { id, title, songs } = bandlist;
+export const ToApiBandlist = (bandlist: IBandCatalog): IApiBandlist => {
+    const { Id: id, Title: title, Songs: songs } = bandlist;
     return {
-        id:+id,
-        title,
-        bandsongs: songs ? songs.map(song => { return { songId: song.id } as IBandSongRef }) : [],
-        setlists: []
+        Id:id,
+        Title: title,
+        Bandsongs: songs ? songs.map(song => { return { SongId: song.Id } as IBandSongRef }) : [],
+        Setlists: []
     } as IApiBandlist;
 };
-export const ToBandlistAsync = async (apiBandlist: IApiBandlist): Promise<IBandlist> => {
-    const { id, title, bandsongs } = apiBandlist;
+export const ToBandlistAsync = async (apiBandlist: IApiBandlist): Promise<IBandCatalog> => {
+    const { Id: id, Title: title, Bandsongs: bandsongs } = apiBandlist;
     return {
-        id:id.toString(),
-        title,
-        songlistType: SonglistType.BandList,
-        songs: bandsongs ? await ReadSongsFromBand(id) : []
-    } as IBandlist;
+        Id:id.toString(),
+        Title: title,
+        SonglistType: SongCatalogType.BandList,
+        Songs: bandsongs ? await ReadSongsFromBand(id) : []
+    } as IBandCatalog;
 };
 
-export const ToApiSetList = (setlist : ISet): IApiSetList => {
-    const { id, title, songs,bandId } = setlist;
+export const ToApiSetList = (setlist : ISetCatalog): IApiSetList => {
+    const { Id: id, Title: title, Songs: songs,BandId: bandId } = setlist;
     
     return {
-        id:+id,
-        title,
-        bandId:+bandId,
-        setsongs : songs ? songs.map(song => { return { songId: song.id } as ISetSongRef }) : [],
+        Id:id,
+        Title: title,
+        BandId:+bandId,
+        Setsongs : songs ? songs.map(song => { return { SongId: song.Id } as ISetSongRef }) : [],
     }as IApiSetList
 }
 
-export const ToSetlistAsync = async (apiSetlist: IApiSetList): Promise<ISet> => {
-    const { id, title, setsongs ,bandId } = apiSetlist;
+export const ToSetlistAsync = async (apiSetlist: IApiSetList): Promise<ISetCatalog> => {
+    const { Id: id, Title: title, Setsongs: setsongs ,BandId: bandId } = apiSetlist;
     return {
-        id:id.toString(),
-        title,
-        bandId: bandId.toString(),
-        songlistType: SonglistType.SetList,
+        Id:id.toString(),
+        Title: title,
+        BandId: bandId.toString(),
+        SonglistType: SongCatalogType.SetList,
         // songs: setsongs ? await ReadSongsFromSetlist(id,bandId) : []
-        songs: []
-    } as ISet;
+        Songs: []
+    } as ISetCatalog;
 };

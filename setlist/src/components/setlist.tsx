@@ -6,12 +6,12 @@ import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
 import MainSongNodeComponent from "./mainSongNode";
-import { ISonglist, ISong, ISet } from "../models";
+import { ISongCatalog, ISong, ISetCatalog } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import SetlistSongNodeComponent from "./setlistSongNode";
 
 export interface ISetlistProps {
-    setlist: ISet;
+    setlist: ISetCatalog;
 }
 
 const Container = styled.div`
@@ -38,26 +38,26 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
         const elements: any = (event.target as any).elements;
 
         const song: ISong = {
-            title: elements[songDef.Title.ControlId].value,
-            artist: elements[songDef.Artist.ControlId].value,
-            mode: elements[songDef.Mode.ControlId].value,
-            id: -1
+            Title: elements[songDef.Title.ControlId].value,
+            Artist: elements[songDef.Artist.ControlId].value,
+            Key: elements[songDef.Mode.ControlId].value,
+            Id: ""
         };
 
         
     };
 
     return (
-        <Container data-testid={setlist.id}>
-            <Title>{setlist.title}</Title>
-            {setlist.songs && (
-                <Droppable droppableId={setlist.id}>
+        <Container data-testid={setlist.Id}>
+            <Title>{setlist.Title}</Title>
+            {setlist.Songs && (
+                <Droppable droppableId={setlist.Id}>
                     {provided => (
                         <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                            {setlist.songs.map((song, index) => (
+                            {setlist.Songs.map((song, index) => (
                                 <SetlistSongNodeComponent
-                                    setlistId={setlist.id}
-                                    key={song.id}
+                                    setlistId={setlist.Id}
+                                    key={song.Id}
                                     song={song}
                                     index={index}
                                 />

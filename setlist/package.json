@@ -51,6 +51,8 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^4.4.2"
+    "@types/lodash.orderby": "^4.6.6",
+    "@types/styled-components": "^4.4.2",
+    "lodash.orderby": "^4.6.0"
   }
 }

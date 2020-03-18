@@ -1,14 +1,31 @@
 import { IAppState } from "../App";
-import { ISonglist, SonglistType, ISet, IBandlist, IBandSummary, ISong } from "../models";
+import { ISongCatalog, SongCatalogType, ISetCatalog, IBandCatalog, IBandSummary, ISong } from "../models";
 import { HashTable } from "../Util/HashTable";
-import { ReadBandsAsync, ReadBandsSummaryAsync } from "./bandApi";
+import {  ReadBandsSummaryAsync } from "./bandApi";
 import { ReadSetlistsFromBandAsync } from "./setlistApi";
-import { ReadSongsAsync } from "../service";
-import { CreateMainList } from "../mapping";
+import { ReadSongsAsync,ReadBandsAsync } from "../service";
+import { SongCatalog, BandCatalog } from "../mapping";
+import { QueryBuilder } from "../Util";
 
 export const InitialStateRequest = async (): Promise<IAppState> => {
     const songs = await ReadSongsAsync();
-    const bands = await ReadBandsAsync();
+    
+
+    // const song = new QueryBuilder().expand("Song").toQuery();
+    const bandsongs = new QueryBuilder().expand(`BandSongs($expand=song)`).toQuery();
+
+    const bands = await ReadBandsAsync(bandsongs);
+
+//     const query = new QueryBuilder()
+//   .count()
+//   .top(5)
+//   .expand('NavigationProp')
+//   .orderBy('MyPriorityProp')
+//   .filter(f => f.filterExpression('Property', 'eq', 'MyValue'))
+//   .select('My Properties')
+//   .toQuery()
+
+    
     // const setlists = await bands.reduce(async (setlists, band) => {
     //     const result = await setlists;
     //     return result.concat(await ReadSetlistsFromBandAsync(band.id));
@@ -16,22 +33,23 @@ export const InitialStateRequest = async (): Promise<IAppState> => {
 
     const bandsSummary = {} as HashTable<IBandSummary> /* await ReadBandsSummaryAsync() */;
 
-    const mainList = CreateMainList(songs);
+    const songCatalog = SongCatalog.Create(songs);
+    const bandlists = bands.map( band => BandCatalog.Create(band));
 
-    const songLists: HashTable<ISonglist> = {};
-    songLists[mainList.id] = mainList;
+    const songLists: HashTable<ISongCatalog> = {};
+    songLists[songCatalog.Id] = songCatalog;
 
 
-    const setlists = [] as ISet[];
+    const setlists = [] as ISetCatalog[];
 
-    if (bands) {
-        bands.forEach(band => {
-            songLists[band.id] = band;
+    if (bandlists) {
+        bandlists.forEach(band => {
+            songLists[band.Id] = band;
         });
     }
     if (setlists) {
         setlists.forEach(setlist => {
-            songLists[setlist.id] = setlist;
+            songLists[setlist.Id] = setlist;
         });
     }
 

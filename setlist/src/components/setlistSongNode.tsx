@@ -29,7 +29,7 @@ const SetlistSongNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
         event.preventDefault();
     };
 
-    const uniqueNodeId = `${setlistId}-${song.id}-${index}`;
+    const uniqueNodeId = `${setlistId}-${song.Id}-${index}`;
 
     return (
         <Draggable draggableId={uniqueNodeId} index={index}>
@@ -41,7 +41,7 @@ const SetlistSongNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
                                 <label>{songDef.Title.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Title.Data_TestId}>{song.title}</label>
+                                <label data-testid={songDef.Title.Data_TestId}>{song.Title}</label>
                             </Col>
                         </Row>
                         <Row>
@@ -49,7 +49,7 @@ const SetlistSongNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
                                 <label>{songDef.Artist.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Artist.Data_TestId}>{song.artist}</label>
+                                <label data-testid={songDef.Artist.Data_TestId}>{song.Artist}</label>
                             </Col>
                         </Row>
                         <Row>
@@ -57,7 +57,7 @@ const SetlistSongNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
                                 <label>{songDef.Mode.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Mode.Data_TestId}>{song.mode}</label>
+                                <label data-testid={songDef.Mode.Data_TestId}>{song.Key}</label>
                             </Col>
                         </Row>
                         <Row>

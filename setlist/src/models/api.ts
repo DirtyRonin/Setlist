@@ -1,23 +1,23 @@
 import { IBandSong, ISetSong } from "./song";
 
 export interface IApiBandlist {
-    id: number;
-    title: string;
-    bandsongs: IBandSongRef[];
-    setlists: IApiSetList[];
+    Id: string;
+    Title: string;
+    Bandsongs: IBandSongRef[];
+    Setlists: IApiSetList[];
+}
+export interface IBandSongRef {
+    SongId:string
 }
 
 export interface IApiSetList {
-    id: number;
-    title: string;
-    bandId:number;
-    setsongs: ISetSongRef[];
+    Id: string;
+    Title: string;
+    BandId:number;
+    Setsongs: ISetSongRef[];
 }
 
-export interface IBandSongRef {
-    songId:number
-}
 export interface ISetSongRef {
-    songId:number
+    SongId:string
 }
 

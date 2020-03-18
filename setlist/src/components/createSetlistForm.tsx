@@ -1,26 +1,26 @@
 import React from "react";
 import { Form, Button, FormControlProps, Col, Row } from "react-bootstrap";
-import { IBandlist, SonglistType, IBandSummary, ISet } from "../models";
+import { IBandCatalog, SongCatalogType, IBandSummary, ISetCatalog } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 import { HashTable } from "../Util";
 
 export interface ICreateSetlistProps {
     IsBandListNeeded: boolean;
     BandsSummary: HashTable<IBandSummary>;
-    CreateBandAsync(bandlist: IBandlist): Promise<IBandlist>;
-    AddBandToState(bandlist: IBandlist): void;
-    AddSetlistToBandAsync(setlist: ISet): Promise<ISet>;
-    AddSetlistToState(setlist: ISet): void;
+    CreateBandAsync(bandlist: IBandCatalog): Promise<IBandCatalog>;
+    AddBandToState(bandlist: IBandCatalog): void;
+    AddSetlistToBandAsync(setlist: ISetCatalog): Promise<ISetCatalog>;
+    AddSetlistToState(setlist: ISetCatalog): void;
 }
 
 const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
     const { BandsSummary, CreateBandAsync, AddBandToState, AddSetlistToBandAsync,AddSetlistToState } = props;
 
-    const selectNewBandlist = { id: 0, title: "Create New Bandlist" } as IBandSummary;
+    const selectNewBandlist = { Id: "", Title: "Create New Bandlist" } as IBandSummary;
 
     const newSelect: IBandSummary[] = [selectNewBandlist].concat(
         Object.values(BandsSummary).map(summary => {
-            return { id: summary.id, title: `New Setlist for ${summary.title}` };
+            return { Id: summary.Id, Title: `New Setlist for ${summary.Title}` } as IBandSummary;
         })
     );
 
@@ -34,14 +34,14 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const isBandList: boolean = elements[htmlConfig.BandSelect.ControlId].value === selectNewBandlist.id;
+        const isBandList: boolean = elements[htmlConfig.BandSelect.ControlId].value === selectNewBandlist.Id;
 
         if (isBandList) {
-            const bandlist: IBandlist = {
-                id: "",
-                title: elements[NameInput.ControlId].value,
-                songs: [],
-                songlistType: SonglistType.BandList
+            const bandlist: IBandCatalog = {
+                Id: "",
+                Title: elements[NameInput.ControlId].value,
+                Songs: [],
+                SonglistType: SongCatalogType.BandList
             };
 
             CreateBandAsync(bandlist).then(
@@ -49,12 +49,12 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             )
 
         } else {
-            const setlist: ISet = {
-                id: "",
-                title: elements[NameInput.ControlId].value,
-                songs: [],
-                songlistType: SonglistType.SetList,
-                bandId: elements[htmlConfig.BandSelect.ControlId].value
+            const setlist: ISetCatalog = {
+                Id: "",
+                Title: elements[NameInput.ControlId].value,
+                Songs: [],
+                SonglistType: SongCatalogType.SetList,
+                BandId: elements[htmlConfig.BandSelect.ControlId].value
             }
 
             AddSetlistToBandAsync(setlist).then(
@@ -81,7 +81,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                 <Col md="9">
                     <Form.Control as="select">
                         {newSelect.map(summary => (
-                            <option key={summary.id} value={summary.id}>{summary.title}</option>
+                            <option key={summary.Id} value={summary.Id}>{summary.Title}</option>
                         ))}
                     </Form.Control>
                 </Col>

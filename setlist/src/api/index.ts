@@ -4,3 +4,4 @@ export * from "./bandSongApi";
 export * from "./InitialStateRequest";
 export * from "./ApiMapper";
 export * from "./setlistApi";
+export * from "./IOdataWrapper";

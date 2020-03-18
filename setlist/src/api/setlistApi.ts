@@ -1,27 +1,27 @@
 import Axios from "axios";
 
 import { EndpointConfiguration, defaultHeader, SetEndPointDefinition } from "../Configuration";
-import { SonglistType, ISet, IApiSetList } from "../models";
+import { SongCatalogType, ISetCatalog, IApiSetList } from "../models";
 import { ToApiSetList, ToSetlistAsync } from ".";
 
 const setEndpoint = (EndpointConfiguration.Sets as SetEndPointDefinition).ActionEndpoints;
 const endPointWithId = (actionEndPoint: string, id: string): string => `${actionEndPoint}/${id}`;
 
-export const ReadSetlistsFromBandAsync = async (bandId: number): Promise<ISet[]> => {
-    const setlistsResult = (await Axios.get<ISet[]>(endPointWithId(setEndpoint.GetSetsByBandId.GetEndpointUrl(), bandId.toString()), { headers: defaultHeader })).data
+export const ReadSetlistsFromBandAsync = async (bandId: number): Promise<ISetCatalog[]> => {
+    const setlistsResult = (await Axios.get<ISetCatalog[]>(endPointWithId(setEndpoint.GetSetsByBandId.GetEndpointUrl(), bandId.toString()), { headers: defaultHeader })).data
 
     const setlists = await setlistsResult.map( result => {
         return {
             ...result,
-            songlistType: SonglistType.SetList,
-            bandId: bandId.toString()
-        } as ISet;
+            SonglistType: SongCatalogType.SetList,
+            BandId: bandId.toString()
+        } as ISetCatalog;
     });
 
     return setlists;
 };
 
-export const AddSetlistToBandAsync = async (setlist: ISet): Promise<ISet> => {
+export const AddSetlistToBandAsync = async (setlist: ISetCatalog): Promise<ISetCatalog> => {
 
     const apiSetlist = ToApiSetList(setlist)
 

@@ -1,2 +1,4 @@
-export * from "./Songlist"
-export * from "./songMapping"
+export * from "./SongCatalog/index"
+export * from "./band"
+export * from "./song"
+export * from "./bandSong"

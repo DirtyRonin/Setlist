@@ -51,9 +51,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByText(htmlConfig.CreateMajorLibraryButton.label));
 
         const expectedParams: IApiBandlist = {
-            id: "",
-            title: "Major Lazor",
-            bandsongs: []
+            Id: "",
+            Title: "Major Lazor",
+            Bandsongs: []
         }
 
         expect(mockCreateBandAsync).toHaveBeenCalledWith(expectedParams);
@@ -79,9 +79,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByText(htmlConfig.CreateMajorLibraryButton.label));
 
         const expectedParams: IApiBandlist = {
-            id: "newId",
-            title: "Major Lazor",
-            bandsongs: []
+            Id: "newId",
+            Title: "Major Lazor",
+            Bandsongs: []
         }
 
         expect(mockAddBandToState).toHaveBeenCalledWith(expectedParams);
@@ -117,9 +117,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
 
         const expectedParams: IApiBandlist = {
-            id: "",
-            title: "Rock Classics",
-            bandsongs: []
+            Id: "",
+            Title: "Rock Classics",
+            Bandsongs: []
         }
 
         expect(mockCreateBandAsync).toHaveBeenCalledWith(expectedParams);
@@ -149,9 +149,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
 
         const expectedParams: IApiBandlist = {
-            id: "",
-            title: "Rock Classics",
-            bandsongs: []
+            Id: "",
+            Title: "Rock Classics",
+            Bandsongs: []
         }
 
         expect(mockCreateBandAsync).toHaveBeenCalledWith(expectedParams);
@@ -176,9 +176,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
 
         const expectedParams: IApiBandlist = {
-            id: "newId",
-            title: "Rock Classics",
-            bandsongs: []
+            Id: "newId",
+            Title: "Rock Classics",
+            Bandsongs: []
         }
 
         expect(mockAddBandToState).toHaveBeenCalledWith(expectedParams);
@@ -208,9 +208,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
 
         const expectedParams: IApiBandlist = {
-            id: "newId",
-            title: "Rock Classics",
-            bandsongs: []
+            Id: "newId",
+            Title: "Rock Classics",
+            Bandsongs: []
         }
 
         expect(mockAddBandToState).toHaveBeenCalledWith(expectedParams);

@@ -14,8 +14,8 @@ type BandSongRef = {
 
 const GetBandSongRefs = (songIds: string[]): Array<BandSongRef> => songIds.map(songId => { return {songId}})
 
-export const ReadSongsFromBand = async(bandId: number):Promise<ISong[]> => {
-    const readResult = await Axios.get<ISong[]>(endPointWithId(bandsongsEndpoint.GetBandsongs.GetEndpointUrl(),bandId.toString()),{
+export const ReadSongsFromBand = async(bandId: string):Promise<ISong[]> => {
+    const readResult = await Axios.get<ISong[]>(endPointWithId(bandsongsEndpoint.GetBandsongs.GetEndpointUrl(),bandId),{
         headers: defaultHeader
     });
 

@@ -12,7 +12,7 @@ export interface ISongNodeProps {
     index: number;
     songListId: string;
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
-    RemoveBandsongFromState(bandId: string,songIds: number[]):void
+    RemoveBandsongFromState(bandId: string,songIds: string[]):void
     // DeleteSongAsync(songId: string): Promise<void>;
 
     // RemoveSongFromState(songListId: string, songId: string): void;
@@ -33,8 +33,8 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
 
-        RemoveSongsFromBandAsync(songListId,[song.id.toString()]).then(
-            result => RemoveBandsongFromState(songListId,[song.id])
+        RemoveSongsFromBandAsync(songListId,[song.Id.toString()]).then(
+            result => RemoveBandsongFromState(songListId,[song.Id])
         ).catch(
             error => console.log(error)
         )
@@ -44,7 +44,7 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
         //     .catch(error => console.log(error))
     };
 
-    const uniqueNodeId = `${songListId}-${song.id}-${index}`;
+    const uniqueNodeId = `${songListId}-${song.Id}-${index}`;
 
     return (
         <Draggable draggableId={uniqueNodeId} index={index}>
@@ -56,7 +56,7 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                 <label>{songDef.Title.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Title.Data_TestId}>{song.title}</label>
+                                <label data-testid={songDef.Title.Data_TestId}>{song.Title}</label>
                             </Col>
                         </Row>
                         <Row>
@@ -64,7 +64,7 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                 <label>{songDef.Artist.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Artist.Data_TestId}>{song.artist}</label>
+                                <label data-testid={songDef.Artist.Data_TestId}>{song.Artist}</label>
                             </Col>
                         </Row>
                         <Row>
@@ -72,7 +72,7 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                 <label>{songDef.Mode.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Mode.Data_TestId}>{song.mode}</label>
+                                <label data-testid={songDef.Mode.Data_TestId}>{song.Key}</label>
                             </Col>
                         </Row>
                         <Row>
