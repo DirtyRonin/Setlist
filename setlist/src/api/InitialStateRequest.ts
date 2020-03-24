@@ -1,4 +1,3 @@
-import { IAppState } from "../App";
 import { ISongCatalog, SongCatalogType, ISetCatalog, IBandCatalog, IBandSummary, ISong } from "../models";
 import { HashTable } from "../Util/HashTable";
 import {  ReadBandsSummaryAsync } from "./bandApi";
@@ -6,8 +5,9 @@ import { ReadSetlistsFromBandAsync } from "./setlistApi";
 import { ReadSongsAsync,ReadBandsAsync } from "../service";
 import { SongCatalog, BandCatalog } from "../mapping";
 import { QueryBuilder } from "../Util";
+import {  ICatalogState } from "../store";
 
-export const InitialStateRequest = async (): Promise<IAppState> => {
+export const InitialStateRequest = async (): Promise<ICatalogState> => {
     const songs = await ReadSongsAsync();
     
 
@@ -55,8 +55,8 @@ export const InitialStateRequest = async (): Promise<IAppState> => {
 
     const songListOrder: Array<string> = Object.keys(songLists);
 
-    const setlistKeys = Object.keys(songLists);
-    // const setlistOrder = setlistKeys.length > 0 ? setlistKeys : [];
+    // const setlistKeys = Object.keys(songLists);
 
-    return { songLists, songListOrder, availableBandlists: bandsSummary };
+     return { songLists, songListOrder/* , availableBandlists: bandsSummary */ };
+
 };

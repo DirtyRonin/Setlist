@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, FormControlProps, Col, Row } from "react-bootstrap";
+import { Form, Button, FormControlProps, Col, Row, InputGroup } from "react-bootstrap";
 import { IBandCatalog, SongCatalogType, IBandSummary, ISetCatalog } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 import { HashTable } from "../Util";
@@ -14,7 +14,7 @@ export interface ICreateSetlistProps {
 }
 
 const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
-    const { BandsSummary, CreateBandAsync, AddBandToState, AddSetlistToBandAsync,AddSetlistToState } = props;
+    const { BandsSummary, CreateBandAsync, AddBandToState, AddSetlistToBandAsync, AddSetlistToState } = props;
 
     const selectNewBandlist = { Id: "", Title: "Create New Bandlist" } as IBandSummary;
 
@@ -70,21 +70,28 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                     {NameInput.label}
                 </Form.Label>
                 <Col md="9">
-                    <Form.Control type="text" placeholder={NameInput.Placeholder}></Form.Control>
+                    <InputGroup>
+                        <Form.Control type="search" placeholder={NameInput.Placeholder} />
+                    </InputGroup>
                 </Col>
+
             </Form.Group>
 
             <Form.Group as={Row} controlId={htmlConfig.BandSelect.ControlId}>
                 <Form.Label column md="3">
                     {htmlConfig.BandSelect.label}
                 </Form.Label>
+
                 <Col md="9">
                     <Form.Control as="select">
                         {newSelect.map(summary => (
                             <option key={summary.Id} value={summary.Id}>{summary.Title}</option>
                         ))}
                     </Form.Control>
+
                 </Col>
+
+
 
             </Form.Group>
 

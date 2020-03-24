@@ -5,7 +5,7 @@ import { Form, FormControlProps, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import styled from "styled-components";
 
-import MainSongNodeComponent from "./mainSongNode";
+import SongCatalogNodeComponent from "./songCatalogNode";
 import { ISongCatalog, ISong, ISetCatalog } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import SetlistSongNodeComponent from "./setlistSongNode";

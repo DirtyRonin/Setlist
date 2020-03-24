@@ -11,9 +11,9 @@ export interface ISongNodeProps {
     song: ISong;
     index: number;
     songListId: string;
-    DeleteSongAsync(songId: string): Promise<ISong>;
+    // DeleteSongAsync(songId: string): Promise<ISong>;
 
-    RemoveSongFromState(songListId: string, songId: string): void;
+    // RemoveSongFromState(songListId: string, songId: string): void;
 }
 
 const SongNodeContainer = styled.div`
@@ -24,18 +24,21 @@ const SongNodeContainer = styled.div`
     background-color: white;
 `;
 
-const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
-    const { song, index, songListId, DeleteSongAsync, RemoveSongFromState } = props;
+const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
+    const { song,
+        index,
+        songListId,
+        // DeleteSongAsync,
+        // RemoveSongFromState
+    } = props;
     const songDef = SongNodeHtmlAttributesConfiguration;
 
     const btn_click_deleteSong = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
 
-        
-
-        DeleteSongAsync(song.Id.toString())
-            .then(result => RemoveSongFromState(songListId, result.Id.toString()))
-            .catch(error => console.log(error))
+        // DeleteSongAsync(song.Id.toString())
+        //     .then(result => RemoveSongFromState(songListId, result.Id.toString()))
+        //     .catch(error => console.log(error))
 
     };
 
@@ -84,4 +87,4 @@ const MainSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
     );
 };
 
-export default MainSongNodeComponent;
+export default SongCatalogNodeComponent;

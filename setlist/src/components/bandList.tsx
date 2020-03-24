@@ -3,11 +3,11 @@ import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { Form, FormControlProps, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import styled from "styled-components";
 
 import { ISongCatalog, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import BandSongNodeComponent from "./bandSongNode";
+import { Container, Title, NodeList } from "../styles";
 
 export interface IBandListProps {
     songlist: ISongCatalog;
@@ -18,19 +18,6 @@ export interface IBandListProps {
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
     RemoveBandsongFromState(bandId: string,songIds: string[]):void
 }
-
-const Container = styled.div`
-    margin: 8px;
-    border: 1px solid lightgrey;
-    border-radius: 2px;
-`;
-
-const Title = styled.h3`
-    padding: 8px;
-`;
-const NodeList = styled.div`
-    padding: 8px;
-`;
 
 const BandListComponent = (props: IBandListProps): JSX.Element => {
     const { songlist, DeleteBandAsync,RemoveBandFromState,RemoveSongsFromBandAsync ,RemoveBandsongFromState} = props;

@@ -1,39 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Droppable } from "react-beautiful-dnd";
 import { Form, FormControlProps, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import styled from "styled-components";
 
-import MainSongNodeComponent from "./mainSongNode";
+
+import SongCatalogNodeComponent from "./songCatalogNode";
 import { ISongCatalog, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
+import { Container, Title, NodeList } from "../styles";
+import { Song } from "../mapping";
 
 export interface IMainListProps {
     songlist: ISongCatalog;
 
-    CreateSongAsync(song: ISong): Promise<ISong>;
-    DeleteSongAsync(songId: string): Promise<ISong>;
+    // CreateSongAsync(song: ISong): Promise<ISong>;
+    // DeleteSongAsync(songId: string): Promise<ISong>;
 
-    AddSongToMainListState: (songListId: string, newSong: ISong) => void;
-    RemoveSongFromMainListState(songListId: string, songId: string): void;
+    // AddSongToMainListState: (songListId: string, newSong: ISong) => void;
+    // RemoveSongFromMainListState(songListId: string, songId: string): void;
 }
 
-const Container = styled.div`
-    margin: 8px;
-    border: 1px solid lightgrey;
-    border-radius: 2px;
-`;
+const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
+    const {
+        songlist,
+        // CreateSongAsync,
+        // AddSongToMainListState,
+        // RemoveSongFromMainListState,
+        // DeleteSongAsync
+    } = props;
 
-const Title = styled.h3`
-    padding: 8px;
-`;
-const NodeList = styled.div`
-    padding: 8px;
-`;
-
-const MainListComponent = (props: IMainListProps): JSX.Element => {
-    const { CreateSongAsync, AddSongToMainListState, songlist, RemoveSongFromMainListState, DeleteSongAsync } = props;
+    useEffect(() => {
+        /*initial request*/
+    }, []);
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
 
@@ -42,16 +41,15 @@ const MainListComponent = (props: IMainListProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const song: ISong = {
-            Title: elements[songDef.Title.ControlId].value,
-            Artist: elements[songDef.Artist.ControlId].value,
-            Key: elements[songDef.Mode.ControlId].value,
-            Id: ""
-        };
+        const song = Song.Create(
+            elements[songDef.Title.ControlId].value,
+            elements[songDef.Artist.ControlId].value,
+            elements[songDef.Mode.ControlId].value,
+        )
 
-        CreateSongAsync(song)
-            .then(newSongResult => AddSongToMainListState(songlist.Id, newSongResult))
-            .catch(error => console.log(error));
+        // CreateSongAsync(song)
+        //     .then(newSongResult => AddSongToMainListState(songlist.Id, newSongResult))
+        //     .catch(error => console.log(error));
     };
 
     return (
@@ -61,9 +59,9 @@ const MainListComponent = (props: IMainListProps): JSX.Element => {
                 {provided => (
                     <NodeList ref={provided.innerRef} {...provided.droppableProps}>
                         {songlist.Songs.map((song, index) => (
-                            <MainSongNodeComponent
-                                RemoveSongFromState={RemoveSongFromMainListState}
-                                DeleteSongAsync={DeleteSongAsync}
+                            <SongCatalogNodeComponent
+                                // RemoveSongFromState={RemoveSongFromMainListState}
+                                // DeleteSongAsync={DeleteSongAsync}
                                 songListId={songlist.Id}
                                 key={song.Id}
                                 song={song}
@@ -99,4 +97,4 @@ const MainListComponent = (props: IMainListProps): JSX.Element => {
     );
 };
 
-export default MainListComponent;
+export default SongCatalogComponent;

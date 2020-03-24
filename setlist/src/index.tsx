@@ -1,38 +1,22 @@
 import React from "react";
+import { Store } from 'redux';
 import ReactDOM from "react-dom";
+
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { storeSetup } from "./store";
+import { Provider } from "react-redux";
+import DefaultApp from "./store/containers/defaultContainer"
 
-import {
-    InitialStateRequest,
-    CreateBandAsync,
-    DeleteBandAsync,
-    AddSongsToBandAsync,
-    RemoveSongsFromBandAsync,
-    ReadBandsSummaryAsync,
-    AddSetlistToBandAsync
-} from "./api";
+const start = () =>      storeSetup();
 
-import {
-    CreateSongAsync,
-    DeleteSongAsync
-} from "./service"
 
 ReactDOM.render(
-    <App
-        InitialStateRequest={InitialStateRequest}
-        ReadBandsSummaryAsync={ReadBandsSummaryAsync}
-        AddSongsToBandAsync={AddSongsToBandAsync}
-        RemoveSongsFromBandAsync={RemoveSongsFromBandAsync}
-        CreateSongAsync={CreateSongAsync}
-        DeleteSongAsync={DeleteSongAsync}
-        CreateBandAsync={CreateBandAsync}
-        DeleteBandAsync={DeleteBandAsync}
-        AddSetlistToBandAsync={AddSetlistToBandAsync}
-    />,
+    <Provider store={start()}>
+        <DefaultApp />
+    </Provider>,
     document.getElementById("root")
 );
 serviceWorker.unregister();
