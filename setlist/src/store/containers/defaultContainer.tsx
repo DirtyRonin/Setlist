@@ -2,24 +2,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { HashTable } from '../../Util';
-import { ISongCatalog } from '../../models';
-import { RootState } from '../reducers';
+import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
-import { fetchSongCatalogsAsync } from '../actions';
-
-export interface IAppState {
-    catalogState:ICatalogState;
-    // availableBandlists: HashTable<IBandSummary>;
-}
-
-export interface ICatalogState{
-    songLists: HashTable<ISongCatalog>;
-    songListOrder: string[];
-}
+import { initialStateAsync, INewSong, newSongAsync } from '../actions';
 
 interface IAppConnectedDispatch{
-    FetchSongCatalog():void
+    initialState():void,
+    newSong(props:INewSong):void
 }
 
 export interface IAppProps extends IAppConnectedDispatch  {
@@ -40,12 +29,13 @@ export interface IAppProps extends IAppConnectedDispatch  {
 const mapStateToProps : (state: RootState) => 
     Partial<IAppProps> = (state:RootState):Partial<IAppProps>=>
     ({
-        catalogState: state.appReducers.catalogState
+        catalogState: state.catalogReducers.catalogState
     });
 
     const mapDispatchToProps = (dispatch:any) : IAppConnectedDispatch =>{
         return {
-            FetchSongCatalog:() => dispatch(fetchSongCatalogsAsync.request())
+            initialState:() => dispatch(initialStateAsync.request()),
+            newSong:(props:INewSong) => dispatch(newSongAsync.request(props))
         };
     };
 

@@ -1,6 +1,6 @@
-import { ISong } from "../models";
-import { GetSongsRequestAsync, CreateSongRequestAsync, DeleteSongRequestAsync } from "../api";
-import { Song } from "../mapping";
+import { ISong } from "../../models";
+import { GetSongsRequestAsync, CreateSongRequestAsync, DeleteSongRequestAsync } from "../../api";
+import { Song } from "../../mapping";
 
 export const ReadSongsAsync = async (): Promise<Array<ISong>> => {
     const songResources = await GetSongsRequestAsync();

@@ -36,8 +36,8 @@ const AppContainer = styled.div`
 
     const {
        catalogState,
-        FetchSongCatalog
-        // CreateSongAsync,
+        initialState,
+        newSong,
         // DeleteSongAsync,
         // InitialStateRequest,
         // ReadBandsSummaryAsync,
@@ -49,7 +49,7 @@ const AppContainer = styled.div`
     } = props;
 
     useEffect(() => {
-        FetchSongCatalog()
+        initialState()
 
         // InitialStateRequest().then(result => {
         //     setSongLists(result.songLists);
@@ -279,12 +279,12 @@ const AppContainer = styled.div`
             return [] as JSX.Element[]
         }
 
-        return catalogState.songListOrder.map(songListId => {
-            const songList = catalogState.songLists[songListId];
+        return catalogState.catalogsOrder.map(songListId => {
+            const songList = catalogState.catalogs[songListId];
             if (songList.SonglistType === SongCatalogType.MainList) {
                 return (
                     <SongCatalogComponent
-                        // CreateSongAsync={CreateSongAsync}
+                        AddSongToCatalog={newSong}
                         // DeleteSongAsync={DeleteSongAsync}
                         // RemoveSongFromMainListState={RemoveSongFromMainListState}
                         // AddSongToMainListState={AddSongToMainListState}
@@ -317,7 +317,7 @@ const AppContainer = styled.div`
     };
 
     const IsBandListNeeded = () =>
-        Object.values(catalogState!.songLists).filter(songList => songList.SonglistType === SongCatalogType.BandList).length === 0;
+        Object.values(catalogState!.catalogs).filter(songList => songList.SonglistType === SongCatalogType.BandList).length === 0;
 
     return (
         <Container>

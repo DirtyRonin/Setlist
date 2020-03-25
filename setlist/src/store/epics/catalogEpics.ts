@@ -3,34 +3,34 @@ import { from, of } from "rxjs";
 import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 import { isActionOf } from "typesafe-actions";
 
-import { AppActions, fetchSongCatalogsAsync, RootState } from "../index"
-import { InitialStateRequest } from "../../api";
-import { AddSongAsync } from "../actions";
-import { CreateSongAsync } from "../../service";
+import { CatalogActions, initialStateAsync } from "../index"
+import { CatalogState } from "../reducers";
+import { newSongAsync } from "../actions";
+import { CreateSongAsync, InitialStateRequest, AddSongToSongCatalog } from "../../service";
 
-const fetchCatalogsEpic: Epic<AppActions> = (action$) =>
+const fetchCatalogsEpic: Epic<CatalogActions> = (action$) =>
     action$.pipe(
-        filter(isActionOf(fetchSongCatalogsAsync.request)),
+        filter(isActionOf(initialStateAsync.request)),
         switchMap(action =>
             from(InitialStateRequest()).pipe(
-                map(fetchSongCatalogsAsync.success),
-                catchError((error:Error) => of(fetchSongCatalogsAsync.failure(error)) ),
-                takeUntil(action$.pipe(filter(isActionOf(fetchSongCatalogsAsync.cancel))))
+                map(initialStateAsync.success),
+                catchError((error: Error) => of(initialStateAsync.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(initialStateAsync.cancel))))
             )
         )
     );
 
-const addSongEpic: Epic<AppActions,AppActions,RootState> = (action$,state$) =>
+const addSongEpic: Epic<CatalogActions, CatalogActions, CatalogState> = (action$, state$) =>
     action$.pipe(
-        filter(isActionOf(AddSongAsync.request)),
+        filter(isActionOf(newSongAsync.request)),
         switchMap(action =>
-            from(CreateSongAsync(action.payload)).pipe(
-                map(AddSongAsync.success),
-                catchError((error:Error) => of(AddSongAsync.failure(error)) ),
-                takeUntil(action$.pipe(filter(isActionOf(AddSongAsync.cancel))))
+            from(AddSongToSongCatalog(action.payload, state$.value.catalogState.catalogs)).pipe(
+                map(newSongAsync.success),
+                catchError((error: Error) => of(newSongAsync.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(newSongAsync.cancel))))
             )
         )
     );
 
 
-export const catalogEpics = combineEpics(fetchCatalogsEpic)
+export const catalogEpics = combineEpics(fetchCatalogsEpic,addSongEpic)

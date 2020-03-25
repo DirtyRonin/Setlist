@@ -1,5 +1,5 @@
-import { HashTable } from "../Util";
-import { ISong, ISongCatalog } from "../models";
+import { HashTable } from "../../Util";
+import { ISong, ISongCatalog } from "../../models";
 
 export const GetSongIdsFromSonglists = (bands: HashTable<ISongCatalog>, songId: string): HashTable<string[]> => {
     const readOnlyBands = { ...bands };

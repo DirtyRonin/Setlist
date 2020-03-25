@@ -2,7 +2,11 @@ export interface ISong{
     Id: string;
     Title: string;
     Artist: string;
-    Key: string;
+    OriginalKey: string;
+    Evergreen: boolean;
+    // PlayTime: string;
+    Genre: string;
+    Comment: string;
    }
 
 export interface IBandSong extends ISong {

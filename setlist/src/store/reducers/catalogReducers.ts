@@ -4,23 +4,35 @@ import { ActionType, getType, action } from "typesafe-actions";
 import { HashTable } from "../../Util";
 import { ISongCatalog, IBandSummary } from "../../models";
 
-import * as actions from "../actions/";
-import { IAppState, ICatalogState } from "../containers";
+import * as catalogActions from "../actions/catalogActions";
 
-export type AppActions = ActionType<typeof actions>;
+export type CatalogActions = ActionType<typeof catalogActions>;
 
-export const defaultAppState: IAppState = {
-    catalogState: { songListOrder: [] as string[], songLists: {} as HashTable<ISongCatalog> } as ICatalogState
+export type CatalogState = {
+    catalogState:ICatalogState;
+}
+
+export interface ICatalogState{
+    catalogs: HashTable<ISongCatalog>;
+    catalogsOrder: string[];
+}
+
+export const defaultCatalog: CatalogState = {
+    catalogState: { catalogsOrder: [] as string[], catalogs: {} as HashTable<ISongCatalog> } as ICatalogState
     // availableBandlists : {} as HashTable<IBandSummary>
 }
 
-export default combineReducers<IAppState, AppActions>({
-    catalogState: (state = defaultAppState.catalogState, action) => {
+export default combineReducers<CatalogState, CatalogActions>({
+    catalogState: (state = defaultCatalog.catalogState, action) => {
         switch (action.type) {
-            case getType(actions.fetchSongCatalogsAsync.success):
-                return { songLists: action.payload.songLists, songListOrder: action.payload.songListOrder }
-            case getType(actions.AddSongAsync.success):
-                return {...state, }
+            case getType(catalogActions.initialStateAsync.success):
+                return {
+                    ...state,
+                    catalogs: action.payload.catalogs,
+                    catalogsOrder: action.payload.catalogsOrder
+                }
+            case getType(catalogActions.newSongAsync.success):
+                return { ...state, catalogs: action.payload }
             default:
                 return state;
         }

@@ -9,6 +9,7 @@ import SongCatalogNodeComponent from "./songCatalogNode";
 import { ISongCatalog, ISong, ISetCatalog } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import SetlistSongNodeComponent from "./setlistSongNode";
+import { Song } from "../mapping";
 
 export interface ISetlistProps {
     setlist: ISetCatalog;
@@ -37,13 +38,14 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const song: ISong = {
-            Title: elements[songDef.Title.ControlId].value,
-            Artist: elements[songDef.Artist.ControlId].value,
-            Key: elements[songDef.Mode.ControlId].value,
-            Id: ""
-        };
-
+        const song = Song.Create(
+            elements[songDef.Title.ControlId].value,
+            elements[songDef.Artist.ControlId].value,
+            elements[songDef.Mode.ControlId].value,
+            false,
+            "no genre",
+            "no comment"
+        )
         
     };
 

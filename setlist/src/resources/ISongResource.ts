@@ -1,6 +1,10 @@
 export interface ISongResource {
     Id: string;
-    Title: string;
     Artist: string;
-    Key: string;
+    Title: string;
+    OriginalKey: string;
+    Evergreen: boolean;
+    // PlayTime: string;
+    Genre: string;
+    Comment: string;
 }

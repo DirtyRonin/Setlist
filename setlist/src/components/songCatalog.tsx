@@ -10,11 +10,12 @@ import { ISongCatalog, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import { Container, Title, NodeList } from "../styles";
 import { Song } from "../mapping";
+import { INewSong } from "../store";
 
 export interface IMainListProps {
     songlist: ISongCatalog;
 
-    // CreateSongAsync(song: ISong): Promise<ISong>;
+    AddSongToCatalog(props:INewSong):void
     // DeleteSongAsync(songId: string): Promise<ISong>;
 
     // AddSongToMainListState: (songListId: string, newSong: ISong) => void;
@@ -24,7 +25,7 @@ export interface IMainListProps {
 const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
     const {
         songlist,
-        // CreateSongAsync,
+        AddSongToCatalog
         // AddSongToMainListState,
         // RemoveSongFromMainListState,
         // DeleteSongAsync
@@ -45,7 +46,12 @@ const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
             elements[songDef.Title.ControlId].value,
             elements[songDef.Artist.ControlId].value,
             elements[songDef.Mode.ControlId].value,
+            false,
+            "no genre",
+            "no comment"
         )
+
+        AddSongToCatalog({song, songCatalogId : songlist.Id } as INewSong)
 
         // CreateSongAsync(song)
         //     .then(newSongResult => AddSongToMainListState(songlist.Id, newSongResult))

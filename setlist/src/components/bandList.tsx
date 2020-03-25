@@ -8,6 +8,7 @@ import { ISongCatalog, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import BandSongNodeComponent from "./bandSongNode";
 import { Container, Title, NodeList } from "../styles";
+import { Song } from "../mapping";
 
 export interface IBandListProps {
     songlist: ISongCatalog;
@@ -29,12 +30,14 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const song: ISong = {
-            Title: elements[songDef.Title.ControlId].value,
-            Artist: elements[songDef.Artist.ControlId].value,
-            Key: elements[songDef.Mode.ControlId].value,
-            Id: ""
-        };
+        const song = Song.Create(
+            elements[songDef.Title.ControlId].value,
+            elements[songDef.Artist.ControlId].value,
+            elements[songDef.Mode.ControlId].value,
+            false,
+            "no genre",
+            "no comment"
+        )
     };
 
     const handleOnDeleteBandClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

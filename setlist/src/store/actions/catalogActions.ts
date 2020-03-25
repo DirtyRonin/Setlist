@@ -1,18 +1,23 @@
 import { createAction, createAsyncAction, action } from "typesafe-actions";
 import { ICatalogState } from "..";
-import { ISong } from "../../models";
+import { ISong, ISongCatalog } from "../../models";
+import { HashTable } from "../../Util";
 
-export const fetchSongCatalogsAsync= createAsyncAction(
-    "FETCH_SONG_CATALOG_REQUEST",
-    "FETCH_SONG_CATALOG_SUCCESS",
-    "FETCH_SONG_CATALOG_FAILURE",
-    "FETCH_SONG_CATALOG_CANCEL",
+export const initialStateAsync= createAsyncAction(
+    "INITIAL_STATE_REQUEST",
+    "INITIAL_STATE_SUCCESS",
+    "INITIAL_STATE_FAILURE",
+    "INITIAL_STATE_CANCEL",
 )<void,ICatalogState,Error,string>();
 
-export const AddSongAsync= createAsyncAction(
-    "ADD_SONG_REQUEST",
-    "ADD_SONG_SUCCESS",
-    "ADD_SONG_FAILURE",
-    "ADD_SONG_CANCEL",
-)<ISong,ISong,Error,string>();
+export const newSongAsync= createAsyncAction(
+    "NEW_SONG_REQUEST",
+    "NEW_SONG_SUCCESS",
+    "NEW_SONG_FAILURE",
+    "NEW_SONG_CANCEL",
+)<INewSong,HashTable<ISongCatalog>,Error,string>();
 
+export interface INewSong {
+    song:ISong;
+    songCatalogId:string;
+}

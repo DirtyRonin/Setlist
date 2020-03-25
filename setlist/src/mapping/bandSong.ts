@@ -16,9 +16,9 @@ export class BandSong {
 
     public static Create(song: ISong, popularity?: number, id?: string): IBandSong {
         const bandSong = new BandSong(song, popularity, id)
-        const { Title, Artist, Key, Id } = bandSong.Song
+        const { Title, Artist, OriginalKey: Key, Id } = bandSong.Song
 
-        return { Title, Artist, Key, Id, Popularity: bandSong.Popularity } as IBandSong
+        return { Title, Artist, OriginalKey: Key, Id, Popularity: bandSong.Popularity } as IBandSong
     }
 
     public static ToResource(bandSong: IBandSong, bandId: string, id?: string): IBandSongResource {

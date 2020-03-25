@@ -70,7 +70,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                 <label>{songDef.Mode.label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Mode.Data_TestId}>{song.Key}</label>
+                                <label data-testid={songDef.Mode.Data_TestId}>{song.OriginalKey}</label>
                             </Col>
                         </Row>
                         <Row>
