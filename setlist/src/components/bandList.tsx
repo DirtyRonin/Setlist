@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import { ISongCatalog, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import BandSongNodeComponent from "./bandSongNode";
-import { Container, Title, NodeList } from "../styles";
+import { ContainerCss, TitleCss, NodeListCss } from "../styles";
 import { Song } from "../mapping";
 
 export interface IBandListProps {
@@ -49,17 +49,17 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
     };
 
     return (
-        <Container data-testid={songlist.Id}>
-            <Title>{songlist.Title}</Title>
+        <ContainerCss data-testid={songlist.Id}>
+            <TitleCss>{songlist.Title}</TitleCss>
             <Droppable droppableId={songlist.Id}>
                 {provided => (
-                    <NodeList ref={provided.innerRef} {...provided.droppableProps}>
+                    <NodeListCss ref={provided.innerRef} {...provided.droppableProps}>
                         {songlist.Songs &&
                             songlist.Songs.map((song, index) => (
                                 <BandSongNodeComponent RemoveSongsFromBandAsync={RemoveSongsFromBandAsync} RemoveBandsongFromState={RemoveBandsongFromState} songListId={songlist.Id} key={song.Id} song={song} index={index} />
                             ))}
                         {provided.placeholder}
-                    </NodeList>
+                    </NodeListCss>
                 )}
             </Droppable>
 
@@ -86,7 +86,7 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
             <Button variant="primary" type="button" onClick={handleOnDeleteBandClick}>
                 Delete Band
             </Button>
-        </Container>
+        </ContainerCss>
     );
 };
 

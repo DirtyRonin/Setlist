@@ -45,4 +45,20 @@ export const CreateSetlistHtmlAttributesConfiguration: ConfigurationItemCollecti
     BandSelect: { label: "Select List Type", Placeholder: "Select List Type", Data_TestId: "Select_ListType", ControlId: "Select_ListType" },
 };
 
+type FilterSongComponentNames = "SearchTitleInput" | "SearchArtistInput" | "SearchGenreInput" | "SearchEvergreenCheckBox" |"SearchNinetiesCheckBox" | "SearchButton" ;
+
+export const FilterSongHtmlAttributesConfiguration:ConfigurationItemCollection<
+FromHtmlAttributesDefinition,
+FilterSongComponentNames
+> = {
+    SearchTitleInput: { label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterSong_SearchTitle", ControlId: "FilterSong_SearchTitle" },
+    SearchArtistInput: { label: "Search For Artist", Placeholder: "Enter Artist", Data_TestId: "FilterSong_SearchArtist", ControlId: "FilterSong_SearchArtist" },
+    SearchGenreInput: { label: "Search For Genre", Placeholder: "Enter Genre", Data_TestId: "FilterSong_SearchGenre", ControlId: "FilterSong_SearchGenre" },
+    SearchEvergreenCheckBox: { label: "Evergreen", Placeholder: "", Data_TestId: "FilterSong_SearchEvergreen", ControlId: "FilterSong_SearchEvergreen" },
+    SearchNinetiesCheckBox: { label: "90er", Placeholder: "", Data_TestId: "FilterSong_SearchNineties", ControlId: "FilterSong_SearchNineties" },
+    SearchButton: { label: "Search", Placeholder: "", Data_TestId: "FilterSong_SearchButton", ControlId: "FilterSong_SearchButton" },
+}
+
+
+
 

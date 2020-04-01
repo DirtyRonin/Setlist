@@ -1,14 +1,73 @@
-import { ISongCatalog, SongCatalogType, ISetCatalog, IBandCatalog, IBandSummary, ISong } from "../../models";
-import { HashTable } from "../../Util/HashTable";
-import {  ReadBandsSummaryAsync } from "../../api/bandApi";
-import { ReadSetlistsFromBandAsync } from "../../api/setlistApi";
-import { ReadSongsAsync,ReadBandsAsync, CreateSongAsync } from "../../service";
-import { SongCatalog, BandCatalog } from "../../mapping";
-import { QueryBuilder } from "../../Util";
-import {  ICatalogState, INewSong } from "../../store";
+import { nameof } from "ts-simple-nameof"
 
-export const InitialStateRequest = async (): Promise<ICatalogState> => {
-    const songs = await ReadSongsAsync();
+import { ISongCatalog, CatalogType, ISetCatalog, IBandCatalog, IBandSummary, ISong, IFilterSongActionProps, INewSongActionProps } from "../../models";
+import { HashTable } from "../../Util/HashTable";
+// import { ReadBandsSummaryAsync } from "../../api/bandApi";
+import { ReadSetlistsFromBandAsync } from "../../api/setlistApi";
+import { ReadSongsAsync, CreateSongAsync } from "../../service";
+import { SongCatalog, BandCatalog, Song, FilterSongActionProps } from "../../mapping";
+import { QueryBuilder, IsMiminumStringLength } from "../../Util";
+import { ICatalogState, CatalogState } from "../../store";
+import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
+
+
+export const FetchSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
+    if (catalogs == null) { throw ("catalogs are null") }
+
+    const { Filter } = props
+    let query = new QueryBuilder().count()
+
+    const filters: FilterBuilder[] = []
+
+    if (IsMiminumStringLength(Filter.Title)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Title), Filter.Title))
+    }
+    if (IsMiminumStringLength(Filter.Artist)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Artist), Filter.Artist))
+    }
+    if (IsMiminumStringLength(Filter.Genre)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Genre), Filter.Genre))
+    }
+    if (Filter.Nineties) {
+        filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Nineties),'eq', Filter.Nineties))
+    }
+    if (Filter.Evergreen) {
+        filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Evergreen),'eq', Filter.Evergreen))
+    }
+    
+
+    if (filters.length) {
+        query.filter(x => filters.reduce((prev, current) => prev.and(x => current)))
+    }
+
+    query = query.orderBy(nameof<ISong>(x => x.Title))
+
+    // query.select('My Properties')
+    const filter = query.toQuery()
+
+    const songs = await ReadSongsAsync(filter);
+
+    const songCatalog = SongCatalog.Create(Filter, songs);
+
+    const newCatalogs = { ...catalogs, [songCatalog.Id]: songCatalog } as HashTable<ISongCatalog>;
+
+    return newCatalogs;
+}
+
+export const createEmptySongCatalog = (): ICatalogState => {
+
+    const defaultActionProps = FilterSongActionProps.Default()
+
+    const songCatalog = SongCatalog.CreateAndUpdate(defaultActionProps.Filter);
+
+    const catalogs = {} as HashTable<ISongCatalog>
+    catalogs[songCatalog.Id] = songCatalog;
+
+    const catalogsOrder: Array<string> = Object.keys(catalogs);
+
+    return { catalogs, catalogsOrder } as ICatalogState
+
+    /* const songs = await ReadSongsAsync();
     
 
     // const song = new QueryBuilder().expand("Song").toQuery();
@@ -31,7 +90,7 @@ export const InitialStateRequest = async (): Promise<ICatalogState> => {
     //     return result.concat(await ReadSetlistsFromBandAsync(band.id));
     // }, Promise.resolve([] as ISet[]))
 
-    const bandsSummary = {} as HashTable<IBandSummary> /* await ReadBandsSummaryAsync() */;
+    const bandsSummary = {} as HashTable<IBandSummary> //await ReadBandsSummaryAsync();
 
     const songCatalog = SongCatalog.Create(songs);
     const bandlists = bands.map( band => BandCatalog.Create(band));
@@ -57,14 +116,17 @@ export const InitialStateRequest = async (): Promise<ICatalogState> => {
 
     // const setlistKeys = Object.keys(songLists);
 
-     return { catalogs: songLists, catalogsOrder: songListOrder/* , availableBandlists: bandsSummary */ };
+     return { catalogs: songLists, catalogsOrder: songListOrder , availableBandlists: bandsSummary  }
+     */
 
 };
 
-export const AddSongToSongCatalog =async (props : INewSong,catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
-    
-    const {song,songCatalogId} = props
+export const AddSongToSongCatalogAsync = async (props: INewSongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
+
+    const { song, songCatalogId } = props
     const newSong = await CreateSongAsync(song)
+
+    if (catalogs == null) { throw ("catalogs are null") }
 
     const currentSongCatalog = catalogs[songCatalogId];
     const newSongs = Array.from(currentSongCatalog.Songs);
@@ -82,3 +144,20 @@ export const AddSongToSongCatalog =async (props : INewSong,catalogs: HashTable<I
 
     return newSongCatalogs;
 };
+
+export const FilterSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
+
+    const { Filter, ToBeUpdated } = props
+    const query = new QueryBuilder().count()
+        
+
+    if (IsMiminumStringLength(Filter.Title)) {
+        query.filter(f => f.startsWithFilterExpression(nameof<ISong>(x => x.Title), Filter.Title))
+    }
+    query.orderBy(nameof<ISong>(x => x.Title))
+
+    // query.select('My Properties')
+    query.toQuery()
+
+    return catalogs
+}

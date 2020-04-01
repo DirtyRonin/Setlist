@@ -3,34 +3,51 @@ import { from, of } from "rxjs";
 import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 import { isActionOf } from "typesafe-actions";
 
-import { CatalogActions, initialStateAsync } from "../index"
-import { CatalogState } from "../reducers";
-import { newSongAsync } from "../actions";
-import { CreateSongAsync, InitialStateRequest, AddSongToSongCatalog } from "../../service";
+import { CatalogActions } from "../index"
+import {  ICatalogState, RootState } from "../reducers";
+import { newSong, fetchSongCatalog, setSongCatalogFilter } from "../actions";
+import { CreateSongAsync, createEmptySongCatalog, AddSongToSongCatalogAsync, FetchSongCatalogAsync, FilterSongCatalogAsync } from "../../service";
+import { HashTable } from "../../Util";
+import { ISongCatalog } from "../../models";
 
-const fetchCatalogsEpic: Epic<CatalogActions> = (action$) =>
+const fetchSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
     action$.pipe(
-        filter(isActionOf(initialStateAsync.request)),
+        filter(isActionOf(fetchSongCatalog.request)),
         switchMap(action =>
-            from(InitialStateRequest()).pipe(
-                map(initialStateAsync.success),
-                catchError((error: Error) => of(initialStateAsync.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(initialStateAsync.cancel))))
+            from(FetchSongCatalogAsync(action.payload,(state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+                map(fetchSongCatalog.success),
+                catchError((error: Error) => of(fetchSongCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(fetchSongCatalog.cancel))))
             )
         )
     );
 
-const addSongEpic: Epic<CatalogActions, CatalogActions, CatalogState> = (action$, state$) =>
-    action$.pipe(
-        filter(isActionOf(newSongAsync.request)),
+const addSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>  {
+    return  action$.pipe(
+        filter(isActionOf(newSong.request)),
         switchMap(action =>
-            from(AddSongToSongCatalog(action.payload, state$.value.catalogState.catalogs)).pipe(
-                map(newSongAsync.success),
-                catchError((error: Error) => of(newSongAsync.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(newSongAsync.cancel))))
+            from(AddSongToSongCatalogAsync(action.payload,(state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+                map(newSong.success),
+                catchError((error: Error) => of(newSong.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(newSong.cancel))))
             )
         )
     );
+}
+
+const filterSongEpic:Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>  {
+    return  action$.pipe(
+        filter(isActionOf(setSongCatalogFilter.request)),
+        switchMap(action =>
+            from(FilterSongCatalogAsync(action.payload,(state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+                map(setSongCatalogFilter.success),
+                catchError((error: Error) => of(setSongCatalogFilter.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(setSongCatalogFilter.cancel))))
+            )
+        )
+    );
+}
+    
 
 
-export const catalogEpics = combineEpics(fetchCatalogsEpic,addSongEpic)
+export const catalogEpics = combineEpics(addSongEpic,fetchSongCatalogsEpic,filterSongEpic)

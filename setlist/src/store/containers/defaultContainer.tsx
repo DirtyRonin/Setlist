@@ -4,45 +4,51 @@ import { connect } from 'react-redux';
 
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
-import { initialStateAsync, INewSong, newSongAsync } from '../actions';
+import {  newSong, fetchSongCatalog, setCatalogState } from '../actions';
+import { createEmptySongCatalog } from '../../service';
+import { INewSongActionProps, IFilterSongActionProps } from '../../models';
 
-interface IAppConnectedDispatch{
-    initialState():void,
-    newSong(props:INewSong):void
+interface IAppConnectedDispatch {
+    setCatalogState(catalogState: ICatalogState): void,
+    newSong(props: INewSongActionProps): void
+    fetchSongCatalog(props:IFilterSongActionProps): void
 }
 
-export interface IAppProps extends IAppConnectedDispatch  {
-    catalogState?:ICatalogState;
-    // InitialStateRequest(): Promise<IAppState>;
-    // ReadBandsSummaryAsync(): Promise<HashTable<IBandSummary>>;
-
-    // CreateSongAsync(song: ISong): Promise<ISong>;
-    // DeleteSongAsync(songId: string): Promise<ISong>;
-    // CreateBandAsync: (band: IBandCatalog) => Promise<IBandCatalog>;
-    // DeleteBandAsync(bandId: string): Promise<void>;
-    // AddSongsToBandAsync(bandId: string, songIds: string[]): Promise<void>;
-    // RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
-
-    // AddSetlistToBandAsync: (setlist: ISetCatalog) => Promise<ISetCatalog>;
+interface IStateProps{
+    catalogState: ICatalogState;
+    createEmptySongCatalog:() => ICatalogState ;
 }
 
-const mapStateToProps : (state: RootState) => 
-    Partial<IAppProps> = (state:RootState):Partial<IAppProps>=>
-    ({
-        catalogState: state.catalogReducers.catalogState
-    });
+export type AppProps = IStateProps & IAppConnectedDispatch;
 
-    const mapDispatchToProps = (dispatch:any) : IAppConnectedDispatch =>{
-        return {
-            initialState:() => dispatch(initialStateAsync.request()),
-            newSong:(props:INewSong) => dispatch(newSongAsync.request(props))
-        };
+// const mapStateToProps : (state: RootState)  => 
+//     Partial<AppProps> = (state: RootState) :Partial<AppProps> =>
+//     ({
+//         catalogState: state.catalogReducers.catalogState,
+//         createEmptySongCatalog
+//     } );
+ 
+        
+const mapStateToProps = (state: RootState) : IStateProps =>    
+        ({
+            catalogState: state.catalogReducers.catalogState,
+            createEmptySongCatalog
+        } as IStateProps);
+
+const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatch => {
+    return {
+        setCatalogState: (catalogState: ICatalogState) => dispatch(setCatalogState(catalogState)),
+        newSong: (props: INewSongActionProps) => dispatch(newSong.request(props)),
+        fetchSongCatalog: (props:IFilterSongActionProps) => dispatch(fetchSongCatalog.request(props)),
     };
+};
 
-    const DefaultApp = (props:IAppProps ) => (
-        <div>
-            <App {...props} />
-        </div>
-    )
 
-export default connect(mapStateToProps,mapDispatchToProps)(DefaultApp);
+
+const DefaultApp = (props: AppProps) => (
+    <div>
+        <App {...props} />
+    </div>
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultApp);

@@ -36,7 +36,13 @@ const SetlistSongNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
             {provided => (
                 <Container>
                     <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+
                         <Row>
+                            <Col>
+                                <label>{song.Title} - {song.Artist}</label>
+                            </Col>
+                        </Row>
+                        {/* <Row>
                             <Col>
                                 <label>{songDef.Title.label}</label>
                             </Col>
@@ -66,7 +72,7 @@ const SetlistSongNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
                                     Delete Song from Setlist
                                 </Button>
                             </Col>
-                        </Row>
+                        </Row> */}
                     </SongNodeContainer>
                 </Container>
             )}

@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
 import { DragDropContext, DropResult, DraggableLocation } from "react-beautiful-dnd";
 
 import SetlistComponent from "./components/setlist";
 import styled from "styled-components";
-import { Container, Row, Col } from "react-bootstrap";
 import { HashTable } from "./Util/HashTable";
-import { ISong, ISongCatalog, SongCatalogType, IBandCatalog, IBandSummary, ISetCatalog } from "./models";
+import { ISong, ISongCatalog, CatalogType, IBandCatalog, IBandSummary, ISetCatalog, IFilterSongActionProps } from "./models";
 import SongCatalogComponent from "./components/songCatalog";
 import BandListComponent from "./components/bandList";
 import CreateSetlist from "./components/createSetlistForm";
 
 import { RemoveSongFromSonglists } from "./service";
-import { RootState } from "./store/reducers";
-import { connect } from "react-redux";
-import { IAppProps } from "./store";
+
+import { AppProps } from "./store";
+import { FilterSongActionProps } from "./mapping";
 
 
 
@@ -26,18 +26,21 @@ import { IAppProps } from "./store";
 // `;
 const AppContainer = styled.div`
     display: flex;
-    height: 300px;
+    height: 500px;
 `;
 
- export const App = (props: IAppProps): JSX.Element => {
+export const App = (props: AppProps): JSX.Element => {
     // const [songLists, setSongLists] = useState({} as HashTable<ISongCatalog>);
     // const [songListOrder, setSongListOrder] = useState([] as string[]);
     // const [availableBandlists, setAvailableBandlists] = useState({} as HashTable<IBandSummary>);
 
     const {
-       catalogState,
-        initialState,
+        catalogState,
+        // setCatalogState: initialState,
         newSong,
+        fetchSongCatalog,
+        createEmptySongCatalog,
+        setCatalogState
         // DeleteSongAsync,
         // InitialStateRequest,
         // ReadBandsSummaryAsync,
@@ -49,7 +52,11 @@ const AppContainer = styled.div`
     } = props;
 
     useEffect(() => {
-        initialState()
+
+        const newState = createEmptySongCatalog();
+        setCatalogState(newState)
+
+        // initialState()
 
         // InitialStateRequest().then(result => {
         //     setSongLists(result.songLists);
@@ -266,7 +273,7 @@ const AppContainer = styled.div`
     };
 
     const doesBandlistContainsSongId = (songlist: ISongCatalog, songId: string): boolean =>
-        songlist.SonglistType === SongCatalogType.BandList && songlist.Songs.filter(song => song.Id === songId).length > 0;
+        songlist.SonglistType === CatalogType.BandList && songlist.Songs.filter(song => song.Id === songId).length > 0;
 
     const hasSonglistChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.droppableId !== source.droppableId;
@@ -275,16 +282,17 @@ const AppContainer = styled.div`
         destination.index !== source.index;
 
     const renderSetlists = (): JSX.Element[] => {
-        if(!catalogState){
+        if (!catalogState) {
             return [] as JSX.Element[]
         }
 
         return catalogState.catalogsOrder.map(songListId => {
             const songList = catalogState.catalogs[songListId];
-            if (songList.SonglistType === SongCatalogType.MainList) {
+            if (songList.SonglistType === CatalogType.MainList) {
                 return (
                     <SongCatalogComponent
                         AddSongToCatalog={newSong}
+                        FetchSongCatalog={fetchSongCatalog}
                         // DeleteSongAsync={DeleteSongAsync}
                         // RemoveSongFromMainListState={RemoveSongFromMainListState}
                         // AddSongToMainListState={AddSongToMainListState}
@@ -292,7 +300,7 @@ const AppContainer = styled.div`
                         songlist={songList as ISongCatalog}
                     />
                 );
-            } 
+            }
             // else if (songList.SonglistType === SongCatalogType.BandList) {
             //     return (
             //         <BandListComponent
@@ -317,7 +325,7 @@ const AppContainer = styled.div`
     };
 
     const IsBandListNeeded = () =>
-        Object.values(catalogState!.catalogs).filter(songList => songList.SonglistType === SongCatalogType.BandList).length === 0;
+        Object.values(catalogState!.catalogs).filter(songList => songList.SonglistType === CatalogType.BandList).length === 0;
 
     return (
         <Container>

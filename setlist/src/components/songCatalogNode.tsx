@@ -51,6 +51,11 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                     <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                         <Row>
                             <Col>
+                                <label>{song.Title} - {song.Artist}</label>
+                            </Col>
+                        </Row>
+                        {/* <Row>
+                            <Col>
                                 <label>{songDef.Title.label}</label>
                             </Col>
                             <Col>
@@ -79,7 +84,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                     Delete Song
                                 </Button>
                             </Col>
-                        </Row>
+                        </Row> */}
                     </SongNodeContainer>
                 </Container>
             )}

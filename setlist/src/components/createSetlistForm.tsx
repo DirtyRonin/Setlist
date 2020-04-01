@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button, FormControlProps, Col, Row, InputGroup } from "react-bootstrap";
-import { IBandCatalog, SongCatalogType, IBandSummary, ISetCatalog } from "../models";
+import { IBandCatalog, CatalogType, IBandSummary, ISetCatalog } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 import { HashTable } from "../Util";
 
@@ -41,7 +41,15 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                 Id: "",
                 Title: elements[NameInput.ControlId].value,
                 Songs: [],
-                SonglistType: SongCatalogType.BandList
+                SonglistType: CatalogType.BandList,
+                Filter: {
+                    Title: "",
+                    Artist: "",
+                    Genre: "",
+                    Evergreen: false,
+                    Nineties: false
+                },
+                ToBeUpdated: false
             };
 
             CreateBandAsync(bandlist).then(
@@ -53,8 +61,16 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                 Id: "",
                 Title: elements[NameInput.ControlId].value,
                 Songs: [],
-                SonglistType: SongCatalogType.SetList,
-                BandId: elements[htmlConfig.BandSelect.ControlId].value
+                SonglistType: CatalogType.SetList,
+                BandId: elements[htmlConfig.BandSelect.ControlId].value,
+                Filter: {
+                    Title: "",
+                    Artist: "",
+                    Genre: "",
+                    Evergreen: false,
+                    Nineties: false
+                },
+                ToBeUpdated: false
             }
 
             AddSetlistToBandAsync(setlist).then(
@@ -81,18 +97,11 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                 <Form.Label column md="3">
                     {htmlConfig.BandSelect.label}
                 </Form.Label>
-
-                <Col md="9">
-                    <Form.Control as="select">
-                        {newSelect.map(summary => (
-                            <option key={summary.Id} value={summary.Id}>{summary.Title}</option>
-                        ))}
-                    </Form.Control>
-
-                </Col>
-
-
-
+                <Form.Control as="select" column md="9">
+                    {newSelect.map(summary => (
+                        <option key={summary.Id} value={summary.Id}>{summary.Title}</option>
+                    ))}
+                </Form.Control>
             </Form.Group>
 
             <Button variant="primary" type="submit">

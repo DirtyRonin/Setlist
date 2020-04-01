@@ -15,6 +15,20 @@ export default class FilterBuilder {
     concatInValues = (values: filterExpressionType[]): string =>
         values.map(value => `'${this.getValue(value)}'`).join(',')
 
+    startsWithFilterExpression=(field:string, value:string) => {
+        this.fragments.push(
+            new QueryFragment(FragmentType.Filter, `startswith(tolower(${field}),'${value}')`)
+        )
+        return this;
+    }
+    //contains is V4, substringof is V3 of OData
+    containsFilterExpression=(field:string, value:string) => {
+        this.fragments.push(
+            new QueryFragment(FragmentType.Filter, `contains(tolower(${field}),'${value}')`)
+        )
+        return this;
+    }
+
     inFilterExpression = (field: string, values: filterExpressionType[]) => {
         this.fragments.push(
             new QueryFragment(FragmentType.Filter, `${field} in ${this.concatInValues(values)}`)

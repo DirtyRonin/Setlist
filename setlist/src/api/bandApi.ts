@@ -1,8 +1,8 @@
 import Axios, { AxiosResponse } from "axios";
 
 import { EndpointConfiguration, defaultHeader } from "../Configuration";
-import { IApiBandlist, SongCatalogType, IBandCatalog, IBandSummary } from "../models";
-import { ReadSongsFromBand, ToApiBandlist, ToBandlistAsync, IOdataWrapper } from ".";
+import { IApiBandlist, CatalogType, IBandCatalog, IBandSummary } from "../models";
+// import { ReadSongsFromBand, ToApiBandlist, ToBandlistAsync, IOdataWrapper } from ".";
 import { HashTable } from "../Util";
 import { IBandResource } from "../resources";
 
@@ -10,13 +10,13 @@ const bandsEndpoint = EndpointConfiguration.Bands;
 
 const endPointWithId = (id: string): string => `${bandsEndpoint.GetEndpointUrl!()}/${id}`;
 
-export const GetBandsRequestAsync = async (query:string): Promise<IBandResource[]> =>
-        {
-            const result = await Axios.get<IOdataWrapper<IBandResource[]>>(`${bandsEndpoint.GetEndpointUrl()}${query ? query : ""}`, {
-            headers: defaultHeader
-        });
-    return result.data.value;
-    }
+// export const GetBandsRequestAsync = async (query:string): Promise<IBandResource[]> =>
+//         {
+//             const result = await Axios.get<IOdataWrapper<IBandResource[]>>(`${bandsEndpoint.GetEndpointUrl()}${query ? query : ""}`, {
+//             headers: defaultHeader
+//         });
+//     return result.data.value;
+//     }
 
 /* export const ReadBandsAsync = async (): Promise<Array<IBandlist>> => {
     const bandsResult = await GetBandsRequestAsync();
@@ -33,28 +33,28 @@ export const GetBandsRequestAsync = async (query:string): Promise<IBandResource[
     // }, {} as HashTable<any>);
 }; */
 
-export const ReadBandsSummaryAsync = async (): Promise<HashTable<IBandSummary>> => {
-    const bandsResult = await GetBandsRequestAsync("");
+// export const ReadBandsSummaryAsync = async (): Promise<HashTable<IBandSummary>> => {
+//     const bandsResult = await GetBandsRequestAsync("");
 
-    return bandsResult.reduce((hashTable, apiBandlist) => {
-        const { Id: id, Title: title } = apiBandlist;
-        hashTable[id] = { Id: id, Title: title } as IBandSummary;
+//     return bandsResult.reduce((hashTable, apiBandlist) => {
+//         const { Id: id, Title: title } = apiBandlist;
+//         hashTable[id] = { Id: id, Title: title } as IBandSummary;
 
-        return hashTable;
-    }, {} as HashTable<any>);
-};
+//         return hashTable;
+//     }, {} as HashTable<any>);
+// };
 
 
 
-export const CreateBandAsync = async (bandlist: IBandCatalog): Promise<IBandCatalog> => {
-    const apiBand: IApiBandlist = ToApiBandlist(bandlist);
+// export const CreateBandAsync = async (bandlist: IBandCatalog): Promise<IBandCatalog> => {
+//     const apiBand: IApiBandlist = ToApiBandlist(bandlist);
 
-    const addResult = await Axios.post<IApiBandlist>(bandsEndpoint.GetEndpointUrl(), apiBand, {
-        headers: defaultHeader
-    });
+//     const addResult = await Axios.post<IApiBandlist>(bandsEndpoint.GetEndpointUrl(), apiBand, {
+//         headers: defaultHeader
+//     });
 
-    return ToBandlistAsync(addResult.data);
-};
+//     return ToBandlistAsync(addResult.data);
+// };
 
 export const DeleteBandAsync = async (bandlistId: string): Promise<void> => {
     await Axios.delete<IApiBandlist>(endPointWithId(bandlistId), {

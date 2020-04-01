@@ -1,19 +1,25 @@
-import { ISong, SongCatalogType, ISongCatalog } from "../../models";
+import { ISong, CatalogType, ISongCatalog, ISongFilter } from "../../models";
 import { SongCatalogBase } from "./songCatalogBase";
 
 export class SongCatalog extends SongCatalogBase implements ISongCatalog {
 
-    private constructor(songs?: ISong[]) {
+    private constructor(filter:ISongFilter,toBeUpdated?: boolean, songs?: ISong[]) {
         super(
-            `${SongCatalogType.MainList.toString()}_id`,
-            SongCatalogType.MainList.toString(),
-            SongCatalogType.MainList,
-            songs
+            `${CatalogType.MainList.toString()}_id`,
+            CatalogType.MainList.toString(),
+            CatalogType.MainList,
+            filter,
+            toBeUpdated,
+            songs,
         )
     }
 
-    public static Create(songs?: ISong[]): ISongCatalog {
-        return new SongCatalog(songs)
+    public static Create(filter:ISongFilter,songs?: ISong[]): ISongCatalog {
+        return new SongCatalog(filter,false, songs)
+    }
+
+    public static CreateAndUpdate(filter:ISongFilter,songs?: ISong[]): ISongCatalog {
+        return new SongCatalog(filter,true, songs)
     }
 }
 

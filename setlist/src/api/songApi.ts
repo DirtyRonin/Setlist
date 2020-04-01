@@ -6,8 +6,9 @@ import { IOdataWrapper } from ".";
 
 const songsEndpoint = EndpointConfiguration.Songs;
 
-export const GetSongsRequestAsync = async (): Promise<ISongResource[]> =>{
-    const result = await Axios.get<IOdataWrapper<ISongResource[]>>(songsEndpoint.GetEndpointUrl!(), {
+export const GetSongsRequestAsync = async (filter:string): Promise<ISongResource[]> =>{
+
+    const result = await Axios.get<IOdataWrapper<ISongResource[]>>(`${songsEndpoint.GetEndpointUrl()}/${filter.toLowerCase()}`, {
         headers: defaultHeader
     });
 

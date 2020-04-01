@@ -6,12 +6,11 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as serviceWorker from "./serviceWorker";
-import { storeSetup } from "./store";
+import { storeSetup, defaultCatalog } from "./store";
 import { Provider } from "react-redux";
 import DefaultApp from "./store/containers/defaultContainer"
 
-const start = () =>      storeSetup();
-
+const start = () =>  storeSetup();
 
 ReactDOM.render(
     <Provider store={start()}>
