@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { Form, FormControlProps, Col, Row, Navbar, FormControl, Nav, NavDropdown, Container, InputGroup } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 
 
 import SongCatalogNodeComponent from "./songCatalogNode";
@@ -36,7 +38,7 @@ const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
     useEffect(() => {
         const filter: IFilterSongActionProps = {
             Filter: songlist.Filter,
-            ToBeUpdated: songlist.ToBeUpdated
+            Refresh: songlist.Refresh
         }
 
         FetchSongCatalog(filter)
@@ -116,17 +118,31 @@ const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
                                                     </Row>
                                                 </Navbar.Collapse>
                                             </Navbar>
+                                            <InfiniteScroll
+                                                dataLength={songlist.Values.length}
+                                                next={() => {
+                                                    setTimeout(() => {},2000)
+                                                 }}
+                                                hasMore={true}
+                                                loader={<h4>Loading...</h4>}
+                                                endMessage={
+                                                    <p style={{ textAlign: 'center' }}>
+                                                        <b>Yay! You have seen it all</b>
+                                                    </p>
+                                                }
+                                            >
+                                                {songlist.Values.map((song, index) => (
+                                                    <SongCatalogNodeComponent
+                                                        // RemoveSongFromState={RemoveSongFromMainListState}
+                                                        // DeleteSongAsync={DeleteSongAsync}
+                                                        songListId={songlist.Id}
+                                                        key={song.Id}
+                                                        song={song}
+                                                        index={index}
+                                                    />
+                                                ))}
+                                            </InfiniteScroll>
 
-                                            {songlist.Songs.map((song, index) => (
-                                                <SongCatalogNodeComponent
-                                                    // RemoveSongFromState={RemoveSongFromMainListState}
-                                                    // DeleteSongAsync={DeleteSongAsync}
-                                                    songListId={songlist.Id}
-                                                    key={song.Id}
-                                                    song={song}
-                                                    index={index}
-                                                />
-                                            ))}
                                             {provided.placeholder}
                                         </NodeListCss>
                                     )}

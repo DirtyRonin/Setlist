@@ -1,25 +1,26 @@
-import { ISong, CatalogType, ISongCatalog, ISongFilter } from "../../models";
-import { SongCatalogBase } from "./songCatalogBase";
+import { ISong, CatalogType, ISongCatalog, ISongFilter, ODataProps } from "../../models";
+import { CatalogBase } from "./songCatalogBase";
 
-export class SongCatalog extends SongCatalogBase implements ISongCatalog {
+export class SongCatalog extends CatalogBase<ISong,ISongFilter> implements ISongCatalog {
 
-    private constructor(filter:ISongFilter,toBeUpdated?: boolean, songs?: ISong[]) {
+    private constructor(filter: ISongFilter, oData: ODataProps, refresh?: boolean, songs?: ISong[]) {
         super(
-            `${CatalogType.MainList.toString()}_id`,
-            CatalogType.MainList.toString(),
-            CatalogType.MainList,
+            `${CatalogType.Song.toString()}_id`,
+            CatalogType.Song.toString(),
+            CatalogType.Song,
             filter,
-            toBeUpdated,
+            oData,
+            refresh,
             songs,
         )
     }
 
-    public static Create(filter:ISongFilter,songs?: ISong[]): ISongCatalog {
-        return new SongCatalog(filter,false, songs)
+    public static Create(filter: ISongFilter, oData: ODataProps, songs?: ISong[]): ISongCatalog {
+        return new SongCatalog(filter, oData, false, songs)
     }
 
-    public static CreateAndUpdate(filter:ISongFilter,songs?: ISong[]): ISongCatalog {
-        return new SongCatalog(filter,true, songs)
+    public static CreateAndUpdate(filter: ISongFilter, oData: ODataProps, songs?: ISong[]): ISongCatalog {
+        return new SongCatalog(filter, oData, true, songs)
     }
 }
 

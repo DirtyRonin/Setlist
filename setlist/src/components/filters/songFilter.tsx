@@ -23,7 +23,7 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
 
         console.log("checked that handleFilter")
 
-        const elements: any = (event.target as any).elements;
+        const elements: any = (event.target as any).form.elements;
 
         const songFilter: IFilterSongActionProps = {
             Filter: {
@@ -33,10 +33,10 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
                 Nineties: elements[SearchNinetiesCheckBox.ControlId].checked,
                 Evergreen: elements[SearchEvergreenCheckBox.ControlId].checked,
             },
-            ToBeUpdated: true
+            Refresh: true
         }
 
-        songFilter.ToBeUpdated =
+        songFilter.Refresh =
             Filter.Evergreen !== songFilter.Filter.Evergreen ? true :
                 Filter.Nineties !== songFilter.Filter.Nineties ? true :
                     IsFilterableString(Filter.Title, songFilter.Filter.Title) ? true :
@@ -44,7 +44,7 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
                             IsFilterableString(Filter.Genre, songFilter.Filter.Genre) ? true :
                                 false
 
-        if (songFilter.ToBeUpdated) {
+        if (songFilter.Refresh) {
             FetchSongCatalog(songFilter)
         }
     }
@@ -53,7 +53,7 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
 
     return (
 
-        <Form onSubmit={handleFilter} >
+        <Form onChange={handleFilter} >
             <Row>
                 <Col sm="6">
                     <Form.Group controlId={SearchTitleInput.ControlId}>

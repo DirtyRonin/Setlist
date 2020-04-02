@@ -29,25 +29,25 @@ export const FetchSongCatalogAsync = async (props: IFilterSongActionProps, catal
         filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Genre), Filter.Genre))
     }
     if (Filter.Nineties) {
-        filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Nineties),'eq', Filter.Nineties))
+        filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Nineties), 'eq', Filter.Nineties))
     }
     if (Filter.Evergreen) {
-        filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Evergreen),'eq', Filter.Evergreen))
+        filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Evergreen), 'eq', Filter.Evergreen))
     }
-    
+
 
     if (filters.length) {
         query.filter(x => filters.reduce((prev, current) => prev.and(x => current)))
     }
 
-    query = query.orderBy(nameof<ISong>(x => x.Title))
+    query = query.orderBy(nameof<ISong>(x => x.Artist))
 
     // query.select('My Properties')
     const filter = query.toQuery()
 
-    const songs = await ReadSongsAsync(filter);
+    const { NextLink, Values: Values, Context, Count } = await ReadSongsAsync(filter);
 
-    const songCatalog = SongCatalog.Create(Filter, songs);
+    const songCatalog = SongCatalog.Create(Filter, { NextLink, Context, Count }, Values);
 
     const newCatalogs = { ...catalogs, [songCatalog.Id]: songCatalog } as HashTable<ISongCatalog>;
 
@@ -58,7 +58,7 @@ export const createEmptySongCatalog = (): ICatalogState => {
 
     const defaultActionProps = FilterSongActionProps.Default()
 
-    const songCatalog = SongCatalog.CreateAndUpdate(defaultActionProps.Filter);
+    const songCatalog = SongCatalog.CreateAndUpdate(defaultActionProps.Filter, { NextLink: "", Count: 0, Context: "" });
 
     const catalogs = {} as HashTable<ISongCatalog>
     catalogs[songCatalog.Id] = songCatalog;
@@ -129,12 +129,12 @@ export const AddSongToSongCatalogAsync = async (props: INewSongActionProps, cata
     if (catalogs == null) { throw ("catalogs are null") }
 
     const currentSongCatalog = catalogs[songCatalogId];
-    const newSongs = Array.from(currentSongCatalog.Songs);
+    const newSongs = Array.from(currentSongCatalog.Values);
     newSongs.push(newSong);
 
     const newSongCatalog: ISongCatalog = {
         ...currentSongCatalog,
-        Songs: newSongs
+        Values: newSongs
     };
 
     const newSongCatalogs: HashTable<ISongCatalog> = {
@@ -147,9 +147,9 @@ export const AddSongToSongCatalogAsync = async (props: INewSongActionProps, cata
 
 export const FilterSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
 
-    const { Filter, ToBeUpdated } = props
+    const { Filter, Refresh: ToBeUpdated } = props
     const query = new QueryBuilder().count()
-        
+
 
     if (IsMiminumStringLength(Filter.Title)) {
         query.filter(f => f.startsWithFilterExpression(nameof<ISong>(x => x.Title), Filter.Title))

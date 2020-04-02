@@ -21,3 +21,9 @@ export interface ISetSongRef {
     SongId:string
 }
 
+export interface IOdataWrapper<T> {
+    Context:string
+    Count:number
+    NextLink:string
+    Values: T[]
+}

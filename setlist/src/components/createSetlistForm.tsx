@@ -40,8 +40,8 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             const bandlist: IBandCatalog = {
                 Id: "",
                 Title: elements[NameInput.ControlId].value,
-                Songs: [],
-                SonglistType: CatalogType.BandList,
+                Values: [],
+                CatalogType: CatalogType.Band,
                 Filter: {
                     Title: "",
                     Artist: "",
@@ -49,7 +49,12 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                     Evergreen: false,
                     Nineties: false
                 },
-                ToBeUpdated: false
+                Refresh: false,
+                OData:{
+                    Context:"",
+                    Count:0,
+                    NextLink:""
+                }
             };
 
             CreateBandAsync(bandlist).then(
@@ -60,8 +65,8 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             const setlist: ISetCatalog = {
                 Id: "",
                 Title: elements[NameInput.ControlId].value,
-                Songs: [],
-                SonglistType: CatalogType.SetList,
+                Values: [],
+                CatalogType: CatalogType.Set,
                 BandId: elements[htmlConfig.BandSelect.ControlId].value,
                 Filter: {
                     Title: "",
@@ -70,7 +75,12 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                     Evergreen: false,
                     Nineties: false
                 },
-                ToBeUpdated: false
+                Refresh: false,
+                OData:{
+                    Context:"",
+                    Count:0,
+                    NextLink:""
+                }
             }
 
             AddSetlistToBandAsync(setlist).then(

@@ -1,4 +1,4 @@
-import { ISong } from ".";
+import { ISong, IBandSong } from ".";
 
 export interface IBandSummary{
     Id: string;
@@ -13,25 +13,37 @@ export interface ISongFilter {
     Genre: string;
 }
 
-export interface ICatalog{
+export interface ODataProps{
+    Context:string
+    Count:number
+    NextLink:string
+}
+
+export interface ICatalog<TValues,SFilter>{
+    CatalogType: CatalogType;
+    Filter:SFilter
     Id: string;
     Title: string;
-    ToBeUpdated: boolean;
+    Refresh: boolean;
+    Values:TValues[];
+    OData:ODataProps
 }
 
-export interface ISongCatalog extends ICatalog {
-    Songs: ISong[];
-    SonglistType: CatalogType;
-    Filter: ISongFilter
+export interface ISongCatalog extends ICatalog<ISong,ISongFilter> {
+    // Values: ISong[];
+    
+    // Filter: ISongFilter
 }
 
-export interface IBandCatalog extends ISongCatalog { }
+export interface IBandCatalog extends ICatalog<IBandSong,ISongFilter> { }
 export interface ISetCatalog extends ISongCatalog {
     BandId:string;
  }
 
+ export type Catalogs = ISongCatalog | IBandCatalog | ISetCatalog
+
 export enum CatalogType {
-    MainList = "Song Catalog",
-    BandList = "Band Catalog",
-    SetList = "Set Catalog",
+    Song = "Song Catalog",
+    Band = "Band Catalog",
+    Set = "Set Catalog",
 }

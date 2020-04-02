@@ -3,11 +3,11 @@ import { ISongFilter, IFilterSongActionProps } from "../../models";
 export class FilterSongActionProps implements IFilterSongActionProps {
 
     Filter: ISongFilter;
-    ToBeUpdated: boolean;
+    Refresh: boolean;
 
     constructor(filter: ISongFilter, toBeUpdated: boolean) {
         this.Filter = filter
-        this.ToBeUpdated = toBeUpdated
+        this.Refresh = toBeUpdated
 
     }
 
@@ -26,8 +26,8 @@ export class FilterSongActionProps implements IFilterSongActionProps {
 
     public static Create(filter: ISongFilter, toBeUpdated: boolean): IFilterSongActionProps {
         const filterProps = new FilterSongActionProps(filter, toBeUpdated)
-        const { Filter, ToBeUpdated } = filterProps
+        const { Filter, Refresh: ToBeUpdated } = filterProps
 
-        return { Filter, ToBeUpdated }
+        return { Filter, Refresh: ToBeUpdated }
     }
 }

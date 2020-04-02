@@ -273,7 +273,7 @@ export const App = (props: AppProps): JSX.Element => {
     };
 
     const doesBandlistContainsSongId = (songlist: ISongCatalog, songId: string): boolean =>
-        songlist.SonglistType === CatalogType.BandList && songlist.Songs.filter(song => song.Id === songId).length > 0;
+        songlist.CatalogType === CatalogType.Band && songlist.Values.filter(song => song.Id === songId).length > 0;
 
     const hasSonglistChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.droppableId !== source.droppableId;
@@ -288,7 +288,7 @@ export const App = (props: AppProps): JSX.Element => {
 
         return catalogState.catalogsOrder.map(songListId => {
             const songList = catalogState.catalogs[songListId];
-            if (songList.SonglistType === CatalogType.MainList) {
+            if (songList.CatalogType === CatalogType.Song) {
                 return (
                     <SongCatalogComponent
                         AddSongToCatalog={newSong}
@@ -325,7 +325,7 @@ export const App = (props: AppProps): JSX.Element => {
     };
 
     const IsBandListNeeded = () =>
-        Object.values(catalogState!.catalogs).filter(songList => songList.SonglistType === CatalogType.BandList).length === 0;
+        Object.values(catalogState!.catalogs).filter(songList => songList.CatalogType === CatalogType.Band).length === 0;
 
     return (
         <Container>

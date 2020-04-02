@@ -1,18 +1,24 @@
 import Axios, { AxiosResponse } from "axios";
-import { ISong } from "../models";
+import { ISong, IOdataWrapper } from "../models";
 import { EndpointConfiguration, defaultHeader, OdataPostHeader } from "../Configuration";
 import { ISongResource } from "../resources";
-import { IOdataWrapper } from ".";
 
 const songsEndpoint = EndpointConfiguration.Songs;
 
-export const GetSongsRequestAsync = async (filter:string): Promise<ISongResource[]> =>{
+export const GetSongsRequestAsync = async (filter:string): Promise<IOdataWrapper<ISongResource>> =>{
 
-    const result = await Axios.get<IOdataWrapper<ISongResource[]>>(`${songsEndpoint.GetEndpointUrl()}/${filter.toLowerCase()}`, {
+    const result = await Axios.get(`${songsEndpoint.GetEndpointUrl()}/${filter.toLowerCase()}`, {
         headers: defaultHeader
     });
 
-    return result.data.value;
+    const Odata:IOdataWrapper<ISongResource> = {
+        Values:result.data.value,
+        Context:result.data["@odata.context"],
+        Count:result.data["@odata.count"],
+        NextLink:result.data["@odata.nextLink"],
+    }
+
+    return Odata;
 }
 
 // return songsResult.data.reduce((prev: HashTable<any>, current: song) => {

@@ -52,11 +52,11 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
     return (
         <Container data-testid={setlist.Id}>
             <Title>{setlist.Title}</Title>
-            {setlist.Songs && (
+            {setlist.Values && (
                 <Droppable droppableId={setlist.Id}>
                     {provided => (
                         <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                            {setlist.Songs.map((song, index) => (
+                            {setlist.Values.map((song, index) => (
                                 <SetlistSongNodeComponent
                                     setlistId={setlist.Id}
                                     key={song.Id}

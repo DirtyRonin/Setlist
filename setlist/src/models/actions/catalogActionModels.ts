@@ -7,6 +7,6 @@ export interface INewSongActionProps {
 
 export interface IFilterSongActionProps {
     Filter:ISongFilter,
-    ToBeUpdated: boolean
+    Refresh: boolean
 }
 

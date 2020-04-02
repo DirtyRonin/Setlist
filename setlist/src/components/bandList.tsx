@@ -54,8 +54,8 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
             <Droppable droppableId={songlist.Id}>
                 {provided => (
                     <NodeListCss ref={provided.innerRef} {...provided.droppableProps}>
-                        {songlist.Songs &&
-                            songlist.Songs.map((song, index) => (
+                        {songlist.Values &&
+                            songlist.Values.map((song, index) => (
                                 <BandSongNodeComponent RemoveSongsFromBandAsync={RemoveSongsFromBandAsync} RemoveBandsongFromState={RemoveBandsongFromState} songListId={songlist.Id} key={song.Id} song={song} index={index} />
                             ))}
                         {provided.placeholder}

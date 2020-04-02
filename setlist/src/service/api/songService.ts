@@ -1,12 +1,17 @@
-import { ISong } from "../../models";
+import { ISong, IOdataWrapper } from "../../models";
 import { GetSongsRequestAsync, CreateSongRequestAsync, DeleteSongRequestAsync } from "../../api";
 import { Song } from "../../mapping";
 
-export const ReadSongsAsync = async (filter:string): Promise<Array<ISong>> => {
-    const songResources = await GetSongsRequestAsync(filter);
-    return songResources.map(resource =>
+export const ReadSongsAsync = async (filter:string): Promise<IOdataWrapper<ISong>> => {
+    const odataSongResources = await GetSongsRequestAsync(filter);
+
+    const songs = odataSongResources.Values.map(resource =>
         Song.FromResource(resource)
     )
+
+     
+
+    return {...odataSongResources,Values:songs}
 };
 
 export const CreateSongAsync = async (song: ISong): Promise<ISong> => {

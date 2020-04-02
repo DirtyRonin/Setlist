@@ -13,7 +13,7 @@ export const ReadSetlistsFromBandAsync = async (bandId: number): Promise<ISetCat
     const setlists = await setlistsResult.map( result => {
         return {
             ...result,
-            SonglistType: CatalogType.SetList,
+            CatalogType: CatalogType.Set,
             BandId: bandId.toString()
         } as ISetCatalog;
     });

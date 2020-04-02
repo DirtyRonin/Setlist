@@ -3,4 +3,3 @@ export * from "./bandApi";
 export * from "./bandSongApi";
 export * from "./ApiMapper";
 export * from "./setlistApi";
-export * from "./IOdataWrapper";

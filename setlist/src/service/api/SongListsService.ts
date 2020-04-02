@@ -6,7 +6,7 @@ export const GetSongIdsFromSonglists = (bands: HashTable<ISongCatalog>, songId: 
     const bandIds = Object.keys(readOnlyBands);
 
     const hashBandIds: HashTable<string[]> = bandIds.reduce((hashedBandIds, bandId) => {
-        hashedBandIds[bandId] = readOnlyBands[bandId].Songs
+        hashedBandIds[bandId] = readOnlyBands[bandId].Values
             .filter(song => song.Id.toString() === songId)
             .map(song => {
                 return { songId };
@@ -22,13 +22,13 @@ export const RemoveSongFromSonglists = (songlist: HashTable<ISongCatalog>, songI
     const songlistIds = Object.keys(readOnlySonglist);
 
     const newSonglist: HashTable<ISongCatalog> = songlistIds.reduce((tempSonglist, songlistId) => {
-        const newSongs:ISong[] = readOnlySonglist[songlistId].Songs
+        const newSongs:ISong[] = readOnlySonglist[songlistId].Values
             .filter(song => song.Id.toString() !== songId)
             .map(song => {
                 return { ...song };
             });
 
-            tempSonglist[songlistId] = {...readOnlySonglist[songlistId], Songs: newSongs} as ISongCatalog
+            tempSonglist[songlistId] = {...readOnlySonglist[songlistId], Values: newSongs} as ISongCatalog
 
         return tempSonglist;
     }, {} as HashTable<any>);

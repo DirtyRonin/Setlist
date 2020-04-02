@@ -1,20 +1,22 @@
-import { ISongCatalog, ISong, CatalogType, ISongFilter } from "../../models";
+import { CatalogType, ODataProps, ICatalog } from "../../models";
 
-export abstract class SongCatalogBase implements ISongCatalog {
+export abstract class CatalogBase<TValues,SFilter> implements ICatalog<TValues,SFilter> {
     readonly Id: string;
     readonly Title: string;
-    readonly Songs: ISong[];
-    readonly SonglistType: CatalogType;
-    readonly Filter: ISongFilter;
-    readonly ToBeUpdated: boolean;
+    readonly Values: TValues[];
+    readonly CatalogType: CatalogType;
+    readonly Filter: SFilter;
+    readonly Refresh: boolean;
+    readonly OData:ODataProps
 
-    constructor(id: string, title: string, songlistType: CatalogType, filter: ISongFilter, toBeUpdated: boolean = false, songs: ISong[] = [], ) {
+    constructor(id: string, title: string, songlistType: CatalogType, filter: SFilter,oData: ODataProps,refresh: boolean = false, songs: TValues[] = [], ) {
         this.Id = id;
-        this.Songs = songs
+        this.Values = songs
         this.Title = title
-        this.SonglistType = songlistType
-        this.Filter=filter
-        this.ToBeUpdated = toBeUpdated
+        this.CatalogType = songlistType
+        this.Filter = filter
+        this.Refresh = refresh
+        this.OData = oData
     }
 
 }
