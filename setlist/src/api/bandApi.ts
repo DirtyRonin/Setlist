@@ -4,7 +4,7 @@ import { EndpointConfiguration, defaultHeader } from "../Configuration";
 import { IApiBandlist, CatalogType, IBandCatalog, IBandSummary } from "../models";
 // import { ReadSongsFromBand, ToApiBandlist, ToBandlistAsync, IOdataWrapper } from ".";
 import { HashTable } from "../Util";
-import { IBandResource } from "../resources";
+import { IBandResource } from "../resource";
 
 const bandsEndpoint = EndpointConfiguration.Bands;
 

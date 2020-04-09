@@ -1,17 +1,19 @@
-import { ISongFilter, IFilterSongActionProps } from "../../models";
+import { ISongFilter, IFilterSongActionProps, ISongCatalog } from "../../models";
 
 export class FilterSongActionProps implements IFilterSongActionProps {
 
     Filter: ISongFilter;
     Refresh: boolean;
+    SongCatalogId: string
 
-    constructor(filter: ISongFilter, toBeUpdated: boolean) {
+    constructor(songCatalogId: string, filter: ISongFilter, refresh: boolean) {
         this.Filter = filter
-        this.Refresh = toBeUpdated
+        this.Refresh = refresh
+        this.SongCatalogId = songCatalogId
 
     }
 
-    public static Default(): IFilterSongActionProps {
+    public static Default(songCatalogId: string): IFilterSongActionProps {
 
         const filter: ISongFilter = {
             Title: "",
@@ -21,13 +23,15 @@ export class FilterSongActionProps implements IFilterSongActionProps {
             Nineties: false
         }
 
-        return FilterSongActionProps.Create(filter, true)
+        return FilterSongActionProps.Create(songCatalogId,filter, true)
     }
 
-    public static Create(filter: ISongFilter, toBeUpdated: boolean): IFilterSongActionProps {
-        const filterProps = new FilterSongActionProps(filter, toBeUpdated)
-        const { Filter, Refresh: ToBeUpdated } = filterProps
+    public static Create(songCatalogId: string,filter: ISongFilter, refresh: boolean): IFilterSongActionProps {
+        return new FilterSongActionProps(songCatalogId,filter, refresh)
+    }
 
-        return { Filter, Refresh: ToBeUpdated }
+    public static CreateFromSongCatalog(songCatalog:ISongCatalog){
+        const {Id,Filter,Refresh} = songCatalog
+        return new FilterSongActionProps(Id,Filter,Refresh)
     }
 }

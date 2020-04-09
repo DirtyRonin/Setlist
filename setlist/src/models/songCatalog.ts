@@ -19,23 +19,28 @@ export interface ODataProps{
     NextLink:string
 }
 
-export interface ICatalog<TValues,SFilter>{
+export interface ISongCatalogOptions{
+    ShowAddSong:boolean
+}
+
+export interface ICatalog<TValues,SFilter,ROptions>{
     CatalogType: CatalogType;
     Filter:SFilter
     Id: string;
     Title: string;
     Refresh: boolean;
     Values:TValues[];
-    OData:ODataProps
+    OData:ODataProps;
+    CatalogOptions: ROptions;
 }
 
-export interface ISongCatalog extends ICatalog<ISong,ISongFilter> {
+export interface ISongCatalog extends ICatalog<ISong,ISongFilter,ISongCatalogOptions> {
     // Values: ISong[];
     
     // Filter: ISongFilter
 }
 
-export interface IBandCatalog extends ICatalog<IBandSong,ISongFilter> { }
+export interface IBandCatalog extends ICatalog<IBandSong,ISongFilter,ISongCatalogOptions> { }
 export interface ISetCatalog extends ISongCatalog {
     BandId:string;
  }

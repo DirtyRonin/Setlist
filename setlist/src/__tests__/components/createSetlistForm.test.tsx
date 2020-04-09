@@ -46,9 +46,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByPlaceholderText(htmlConfig.MajorLibraryNameInput.Placeholder));
 
         //push create button
-        const createMajorLibrary = getByText(htmlConfig.CreateMajorLibraryButton.label)
+        const createMajorLibrary = getByText(htmlConfig.CreateMajorLibraryButton.Label)
         act(() => { fireEvent.click(createMajorLibrary); })
-        await waitForElement(() => getByText(htmlConfig.CreateMajorLibraryButton.label));
+        await waitForElement(() => getByText(htmlConfig.CreateMajorLibraryButton.Label));
 
         const expectedParams: IApiBandlist = {
             Id: "",
@@ -74,9 +74,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByPlaceholderText(htmlConfig.MajorLibraryNameInput.Placeholder));
 
         //push create button
-        const createMajorLibrary = getByText(htmlConfig.CreateMajorLibraryButton.label)
+        const createMajorLibrary = getByText(htmlConfig.CreateMajorLibraryButton.Label)
         act(() => { fireEvent.click(createMajorLibrary); })
-        await waitForElement(() => getByText(htmlConfig.CreateMajorLibraryButton.label));
+        await waitForElement(() => getByText(htmlConfig.CreateMajorLibraryButton.Label));
 
         const expectedParams: IApiBandlist = {
             Id: "newId",
@@ -112,9 +112,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByPlaceholderText(htmlConfig.SetlistNameInput.Placeholder));
 
         //push create button
-        const createMajorLibrary = getByText(htmlConfig.CreateSetlistButton.label)
+        const createMajorLibrary = getByText(htmlConfig.CreateSetlistButton.Label)
         act(() => { fireEvent.click(createMajorLibrary); })
-        await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
+        await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.Label));
 
         const expectedParams: IApiBandlist = {
             Id: "",
@@ -144,9 +144,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByLabelText(htmlConfig.IsLibraryCheckbox.label));
        
         //push create button
-        const createMajorLibrary = getByText(htmlConfig.CreateSetlistButton.label)
+        const createMajorLibrary = getByText(htmlConfig.CreateSetlistButton.Label)
         act(() => { fireEvent.click(createMajorLibrary); })
-        await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
+        await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.Label));
 
         const expectedParams: IApiBandlist = {
             Id: "",
@@ -171,9 +171,9 @@ describe("Test create setlist form", () => {
         await waitForElement(() => getByPlaceholderText(htmlConfig.SetlistNameInput.Placeholder));
 
         //push create button
-        const createMajorLibrary = getByText(htmlConfig.CreateSetlistButton.label)
+        const createMajorLibrary = getByText(htmlConfig.CreateSetlistButton.Label)
         act(() => { fireEvent.click(createMajorLibrary); })
-        await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
+        await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.Label));
 
         const expectedParams: IApiBandlist = {
             Id: "newId",
@@ -203,9 +203,9 @@ describe("Test create setlist form", () => {
          await waitForElement(() => getByLabelText(htmlConfig.IsLibraryCheckbox.label));
 
         //push create button
-        const createMajorLibrary = getByText(htmlConfig.CreateSetlistButton.label)
+        const createMajorLibrary = getByText(htmlConfig.CreateSetlistButton.Label)
         act(() => { fireEvent.click(createMajorLibrary); })
-        await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.label));
+        await waitForElement(() => getByText(htmlConfig.CreateSetlistButton.Label));
 
         const expectedParams: IApiBandlist = {
             Id: "newId",

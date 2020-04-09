@@ -54,7 +54,11 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                     Context:"",
                     Count:0,
                     NextLink:""
+                },
+                CatalogOptions:{
+                    ShowAddSong:false
                 }
+
             };
 
             CreateBandAsync(bandlist).then(
@@ -80,6 +84,9 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                     Context:"",
                     Count:0,
                     NextLink:""
+                },
+                CatalogOptions:{
+                    ShowAddSong:false
                 }
             }
 
@@ -90,10 +97,10 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
     };
 
     return (
-        <Form onSubmit={hanldeCreateSetlist} method="GET">
+        <Form onSubmit={hanldeCreateSetlist}>
             <Form.Group as={Row} controlId={NameInput.ControlId}>
                 <Form.Label column md="3">
-                    {NameInput.label}
+                    {NameInput.Label}
                 </Form.Label>
                 <Col md="9">
                     <InputGroup>
@@ -105,7 +112,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
 
             <Form.Group as={Row} controlId={htmlConfig.BandSelect.ControlId}>
                 <Form.Label column md="3">
-                    {htmlConfig.BandSelect.label}
+                    {htmlConfig.BandSelect.Label}
                 </Form.Label>
                 <Form.Control as="select" column md="9">
                     {newSelect.map(summary => (
@@ -115,7 +122,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             </Form.Group>
 
             <Button variant="primary" type="submit">
-                {CreateButton.label}
+                {CreateButton.Label}
             </Button>
         </Form>
     );

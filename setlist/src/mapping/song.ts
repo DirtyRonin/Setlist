@@ -1,6 +1,6 @@
 import { ISong } from "../models";
 import { GUID_EMPTY } from "../Util";
-import { ISongResource } from "../resources";
+import { ISongResource } from "../resource";
 
 export class Song {
 

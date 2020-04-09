@@ -4,14 +4,15 @@ import { connect } from 'react-redux';
 
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
-import {  newSong, fetchSongCatalog, setCatalogState } from '../actions';
+import {  newSong, fetchSongCatalog, setCatalogState, fetchSongCatalogNextLink } from '../actions';
 import { createEmptySongCatalog } from '../../service';
-import { INewSongActionProps, IFilterSongActionProps } from '../../models';
+import { INewSongActionProps, IFilterSongActionProps, INextLinkActionProps } from '../../models';
 
 interface IAppConnectedDispatch {
     setCatalogState(catalogState: ICatalogState): void,
     newSong(props: INewSongActionProps): void
     fetchSongCatalog(props:IFilterSongActionProps): void
+    fetchSongCatalogNextLink: (props:INextLinkActionProps)=>void
 }
 
 interface IStateProps{
@@ -40,6 +41,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         setCatalogState: (catalogState: ICatalogState) => dispatch(setCatalogState(catalogState)),
         newSong: (props: INewSongActionProps) => dispatch(newSong.request(props)),
         fetchSongCatalog: (props:IFilterSongActionProps) => dispatch(fetchSongCatalog.request(props)),
+        fetchSongCatalogNextLink: (props:INextLinkActionProps) => dispatch(fetchSongCatalogNextLink.request(props)),
     };
 };
 

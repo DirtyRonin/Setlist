@@ -53,7 +53,7 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                     <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                         <Row>
                             <Col>
-                                <label>{songDef.Title.label}</label>
+                                <label>{songDef.Title.Label}</label>
                             </Col>
                             <Col>
                                 <label data-testid={songDef.Title.Data_TestId}>{song.Title}</label>
@@ -61,7 +61,7 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                         </Row>
                         <Row>
                             <Col>
-                                <label>{songDef.Artist.label}</label>
+                                <label>{songDef.Artist.Label}</label>
                             </Col>
                             <Col>
                                 <label data-testid={songDef.Artist.Data_TestId}>{song.Artist}</label>
@@ -69,7 +69,7 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                         </Row>
                         <Row>
                             <Col>
-                                <label>{songDef.Mode.label}</label>
+                                <label>{songDef.Mode.Label}</label>
                             </Col>
                             <Col>
                                 <label data-testid={songDef.Mode.Data_TestId}>{song.OriginalKey}</label>

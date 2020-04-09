@@ -8,44 +8,45 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 
 import SongCatalogNodeComponent from "./songCatalogNode";
-import { ISongCatalog, ISong, ISongFilter, INewSongActionProps, IFilterSongActionProps } from "../models";
-import { CreateSongNodeHtmlAttributesConfiguration, FilterSongHtmlAttributesConfiguration } from "../Configuration";
+import { ISongCatalog, ISong, ISongFilter, INewSongActionProps, IFilterSongActionProps, INextLinkActionProps } from "../models";
+import { CreateSongNodeHtmlAttributesConfiguration, FilterSongHtmlAttributesConfiguration, SongCatalogHtmlAttributesConfiguration } from "../Configuration";
 import { ContainerCss, TitleCss, NodeListCss, SongFilterCss } from "../styles";
-import { Song } from "../mapping";
+import { Song, FilterSongActionProps } from "../mapping";
 import { SongFilterComponent, ISongFilterProps } from "./filters/songFilter";
 
-export interface IMainListProps {
+export interface ISongCatalogProps {
     songlist: ISongCatalog;
 
     AddSongToCatalog(props: INewSongActionProps): void
     FetchSongCatalog(props: IFilterSongActionProps): void
+    FetchSongCatalogNextLink: (props: INextLinkActionProps) => void
     // DeleteSongAsync(songId: string): Promise<ISong>;
 
     // AddSongToMainListState: (songListId: string, newSong: ISong) => void;
     // RemoveSongFromMainListState(songListId: string, songId: string): void;
 }
 
-const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
+const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
     const {
         songlist,
         AddSongToCatalog,
-        FetchSongCatalog
+        FetchSongCatalog,
+        FetchSongCatalogNextLink: fetchSongCatalogNextLink
         // AddSongToMainListState,
         // RemoveSongFromMainListState,
         // DeleteSongAsync
     } = props;
 
     useEffect(() => {
-        const filter: IFilterSongActionProps = {
-            Filter: songlist.Filter,
-            Refresh: songlist.Refresh
-        }
+        const filter =FilterSongActionProps.CreateFromSongCatalog(songlist)
 
         FetchSongCatalog(filter)
     }, []);
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
-    const filterSongDet = FilterSongHtmlAttributesConfiguration;
+    const songCatalogDef = SongCatalogHtmlAttributesConfiguration;
+
+    
 
     const hanldeOnAddSongClick = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
@@ -63,10 +64,18 @@ const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
 
         AddSongToCatalog({ song, songCatalogId: songlist.Id } as INewSongActionProps)
 
-        // CreateSongAsync(song)
-        //     .then(newSongResult => AddSongToMainListState(songlist.Id, newSongResult))
-        //     .catch(error => console.log(error));
+
     };
+
+    const handleScrollDown = () => {
+        const { Id, OData } = songlist
+        const actionProps: INextLinkActionProps = { CatalogId: Id, NextLink: OData.NextLink }
+
+        setTimeout(() => {
+            fetchSongCatalogNextLink(actionProps)
+        }, 500);
+
+    }
 
     const handleSearchOnChange = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
@@ -101,35 +110,44 @@ const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
                             <Col>
                                 <Droppable droppableId={songlist.Id}>
                                     {provided => (
-                                        <NodeListCss ref={provided.innerRef} {...provided.droppableProps}>
+                                        <NodeListCss id={songCatalogDef.NodeList.ControlId} ref={provided.innerRef} {...provided.droppableProps}>
                                             <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
                                                 <Navbar.Brand >{songlist.Title}</Navbar.Brand>
-                                                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                                                <Navbar.Collapse id="responsive-navbar-nav">
+                                                <Navbar.Toggle aria-controls={songCatalogDef.Navbar.ControlId} />
+                                                <Navbar.Collapse id={songCatalogDef.Navbar.ControlId}>
                                                     <Row>
-                                                        <Col sm="12">
+                                                        <Col sm="6">
                                                             <SongFilterCss>
                                                                 <SongFilterComponent
+                                                                    CatalogId={songlist.Id}
                                                                     Filter={songlist.Filter}
                                                                     FetchSongCatalog={FetchSongCatalog}
                                                                 />
                                                             </SongFilterCss>
+                                                        </Col>
+                                                        <Col sm="6">
+                                                            <Form >
+                                                                <Form.Row>
+                                                                    <Form.Group as={Col} controlId={songCatalogDef.ShowAddSongCheckBox.ControlId}>
+                                                                        <Form.Check type="switch" label={songCatalogDef.ShowAddSongCheckBox.Label} />
+                                                                    </Form.Group>
+                                                                </Form.Row>
+                                                            </Form>
                                                         </Col>
                                                     </Row>
                                                 </Navbar.Collapse>
                                             </Navbar>
                                             <InfiniteScroll
                                                 dataLength={songlist.Values.length}
-                                                next={() => {
-                                                    setTimeout(() => {},2000)
-                                                 }}
-                                                hasMore={true}
+                                                next={handleScrollDown}
+                                                hasMore={songlist.Values.length < songlist.OData.Count}
                                                 loader={<h4>Loading...</h4>}
                                                 endMessage={
                                                     <p style={{ textAlign: 'center' }}>
                                                         <b>Yay! You have seen it all</b>
                                                     </p>
                                                 }
+                                                scrollableTarget={songCatalogDef.NodeList.ControlId}
                                             >
                                                 {songlist.Values.map((song, index) => (
                                                     <SongCatalogNodeComponent
@@ -147,6 +165,7 @@ const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
                                         </NodeListCss>
                                     )}
                                 </Droppable>
+                                {songlist.OData.Count}
                             </Col>
                         </Row>
 
@@ -154,21 +173,21 @@ const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
                     </ContainerCss>
                 </Col>
 
-                {/* <Col>
+                <Col >
                     <Container>
-                        <Title>Add Song</Title>
+                        <TitleCss>Add Song</TitleCss>
                         <Form onSubmit={hanldeOnAddSongClick} method="GET">
                             <Form.Row>
                                 <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
-                                    <Form.Label>{songDef.Title.label}</Form.Label>
+                                    <Form.Label>{songDef.Title.Label}</Form.Label>
                                     <Form.Control type="text" placeholder={songDef.Title.Placeholder}></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
-                                    <Form.Label>{songDef.Artist.label}</Form.Label>
+                                    <Form.Label>{songDef.Artist.Label}</Form.Label>
                                     <Form.Control type="text" placeholder={songDef.Artist.Placeholder}></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col} md="4" controlId={songDef.Mode.ControlId}>
-                                    <Form.Label>{songDef.Mode.label}</Form.Label>
+                                    <Form.Label>{songDef.Mode.Label}</Form.Label>
                                     <Form.Control type="text" placeholder={songDef.Mode.Placeholder}></Form.Control>
                                 </Form.Group>
                             </Form.Row>
@@ -178,7 +197,7 @@ const SongCatalogComponent = (props: IMainListProps): JSX.Element => {
                             </Button>
                         </Form>
                     </Container>
-                </Col> */}
+                </Col>
             </Row>
         </Container>
 

@@ -20,10 +20,7 @@ import { FilterSongActionProps } from "./mapping";
 
 
 
-// const AppContainer = styled.div`
-//     display: flex;
-//     height: 110px;
-// `;
+
 const AppContainer = styled.div`
     display: flex;
     height: 500px;
@@ -39,6 +36,7 @@ export const App = (props: AppProps): JSX.Element => {
         // setCatalogState: initialState,
         newSong,
         fetchSongCatalog,
+        fetchSongCatalogNextLink,
         createEmptySongCatalog,
         setCatalogState
         // DeleteSongAsync,
@@ -293,6 +291,7 @@ export const App = (props: AppProps): JSX.Element => {
                     <SongCatalogComponent
                         AddSongToCatalog={newSong}
                         FetchSongCatalog={fetchSongCatalog}
+                        FetchSongCatalogNextLink = {fetchSongCatalogNextLink}
                         // DeleteSongAsync={DeleteSongAsync}
                         // RemoveSongFromMainListState={RemoveSongFromMainListState}
                         // AddSongToMainListState={AddSongToMainListState}
@@ -328,7 +327,7 @@ export const App = (props: AppProps): JSX.Element => {
         Object.values(catalogState!.catalogs).filter(songList => songList.CatalogType === CatalogType.Band).length === 0;
 
     return (
-        <Container>
+        <Container fluid>
             {/* <Row>
                 <Col md="8">
                     <CreateSetlist

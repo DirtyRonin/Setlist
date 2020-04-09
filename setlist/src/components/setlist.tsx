@@ -72,15 +72,15 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
             <Form onSubmit={hanldeOnAddSongClick} method="GET">
                 <Form.Row>
                     <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
-                        <Form.Label>{songDef.Title.label}</Form.Label>
+                        <Form.Label>{songDef.Title.Label}</Form.Label>
                         <Form.Control type="text" placeholder={songDef.Title.Placeholder}></Form.Control>
                     </Form.Group>
                     <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
-                        <Form.Label>{songDef.Artist.label}</Form.Label>
+                        <Form.Label>{songDef.Artist.Label}</Form.Label>
                         <Form.Control type="text" placeholder={songDef.Artist.Placeholder}></Form.Control>
                     </Form.Group>
                     <Form.Group as={Col} md="4" controlId={songDef.Mode.ControlId}>
-                        <Form.Label>{songDef.Mode.label}</Form.Label>
+                        <Form.Label>{songDef.Mode.Label}</Form.Label>
                         <Form.Control type="text" placeholder={songDef.Mode.Placeholder}></Form.Control>
                     </Form.Group>
                 </Form.Row>

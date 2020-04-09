@@ -7,6 +7,12 @@ export interface INewSongActionProps {
 
 export interface IFilterSongActionProps {
     Filter:ISongFilter,
-    Refresh: boolean
+    Refresh: boolean,
+    SongCatalogId:string
+}
+
+export interface INextLinkActionProps {
+    NextLink:string,
+    CatalogId:string
 }
 

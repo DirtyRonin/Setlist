@@ -23,13 +23,12 @@ export const TitleCss = styled.h3``;
 
 // 
 export const NodeListCss = styled.div`
-     
     overflow: auto;
     max-height: 750px;
     width: 450px;
  `;
 //  
  export const AlignRightCss = styled.div`
- display: flex; 
- justify-content: flex-end;
-`;
+    display: flex; 
+    justify-content: flex-end;
+`;dfgdfg

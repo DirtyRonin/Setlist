@@ -2,7 +2,7 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
 import { HashTable } from "../../Util";
-import { ISongCatalog, Catalogs } from "../../models";
+import { Catalogs } from "../../models";
 
 import * as catalogActions from "../actions/catalogActions";
 
@@ -32,6 +32,8 @@ export default combineReducers<CatalogState, CatalogActions>({
                     catalogsOrder: action.payload.catalogsOrder
                 } 
             case getType(catalogActions.fetchSongCatalog.success):
+                return { ...state, catalogs: action.payload, } 
+            case getType(catalogActions.fetchSongCatalogNextLink.success):
                 return { ...state, catalogs: action.payload, } 
             case getType(catalogActions.newSong.success):
                 return { ...state, catalogs: action.payload } 

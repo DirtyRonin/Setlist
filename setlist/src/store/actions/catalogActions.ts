@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction, action } from "typesafe-actions";
 import { ICatalogState } from "..";
-import { ISong, ISongCatalog, ISongFilter, IFilterSongActionProps, INewSongActionProps } from "../../models";
+import { ISong, ISongCatalog, ISongFilter, IFilterSongActionProps, INewSongActionProps, INextLinkActionProps, Catalogs } from "../../models";
 import { HashTable } from "../../Util";
 
 export const setCatalogState= createAction(
@@ -13,6 +13,13 @@ export const fetchSongCatalog = createAsyncAction(
     "FETCH_SONGCATALOG_FAILURE",
     "FETCH_SONGCATALOG_CANCEL",
 )<IFilterSongActionProps,HashTable<ISongCatalog>,Error,string>();
+
+export const fetchSongCatalogNextLink = createAsyncAction(
+    "FETCH_SONGCATALOG_NEXTLINK_REQUEST",
+    "FETCH_SONGCATALOG_NEXTLINK_SUCCESS",
+    "FETCH_SONGCATALOG_NEXTLINK_FAILURE",
+    "FETCH_SONGCATALOG_NEXTLINK_CANCEL",
+)<INextLinkActionProps,HashTable<ISongCatalog>,Error,string>();
 
 export const setSongCatalogFilter = createAsyncAction(
     "SET_SONGCATALOG_FILTER_REQUEST",

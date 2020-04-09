@@ -1,17 +1,43 @@
+import validator from 'validator';
+
 import { ISong, IOdataWrapper } from "../../models";
 import { GetSongsRequestAsync, CreateSongRequestAsync, DeleteSongRequestAsync } from "../../api";
 import { Song } from "../../mapping";
+import { EndpointConfiguration } from '../../Configuration';
 
-export const ReadSongsAsync = async (filter:string): Promise<IOdataWrapper<ISong>> => {
-    const odataSongResources = await GetSongsRequestAsync(filter);
+export const ReadSongsAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<ISong>> => {
+
+    const default_url_options = {
+        protocols: ['http', 'https', 'ftp'],
+        require_tld: false,
+        require_protocol: false,
+        require_host: false,
+        require_valid_protocol: false,
+        allow_underscores: false,
+        allow_trailing_dot: false,
+        allow_protocol_relative_urls: false
+      };
+
+    const url = validator.isURL(filterOrNextLink,default_url_options) ? filterOrNextLink :
+        `${EndpointConfiguration.Songs.GetEndpointUrl()}/${filterOrNextLink.toLowerCase()}`
+
+    const odataSongResources = await GetSongsRequestAsync(url);
 
     const songs = odataSongResources.Values.map(resource =>
         Song.FromResource(resource)
     )
 
-     
+    return { ...odataSongResources, Values: songs }
+};
 
-    return {...odataSongResources,Values:songs}
+export const ReadSongNextLinkAsync = async (nextLink: string): Promise<IOdataWrapper<ISong>> => {
+    const odataSongResources = await GetSongsRequestAsync(nextLink);
+
+    const songs = odataSongResources.Values.map(resource =>
+        Song.FromResource(resource)
+    )
+
+    return { ...odataSongResources, Values: songs }
 };
 
 export const CreateSongAsync = async (song: ISong): Promise<ISong> => {
