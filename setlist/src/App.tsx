@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Modal, Form, Button, FormControlProps } from "react-bootstrap";
 
 import { DragDropContext, DropResult, DraggableLocation } from "react-beautiful-dnd";
 
 import SetlistComponent from "./components/setlist";
 import styled from "styled-components";
 import { HashTable } from "./Util/HashTable";
-import { ISong, ISongCatalog, CatalogType, IBandCatalog, IBandSummary, ISetCatalog, IFilterSongActionProps } from "./models";
+import { ISong, ISongCatalog, CatalogType, IBandCatalog, IBandSummary, ISetCatalog, IFilterSongActionProps, ISongActionProps, IModal, defaultModal, ModalTypes } from "./models";
 import SongCatalogComponent from "./components/songCatalog";
 import BandListComponent from "./components/bandList";
 import CreateSetlist from "./components/createSetlistForm";
 
 import { RemoveSongFromSonglists } from "./service";
 
-import { AppProps } from "./store";
-import { FilterSongActionProps } from "./mapping";
-
-
-
-
-
+import { AppProps, addSongToCatalog } from "./store";
+import { FilterSongActionProps, Song } from "./mapping";
+import { CreateSongNodeHtmlAttributesConfiguration } from "./Configuration";
+import { SongModalComponent } from "./components/modals/songModal";
 
 const AppContainer = styled.div`
     display: flex;
@@ -34,11 +31,12 @@ export const App = (props: AppProps): JSX.Element => {
     const {
         catalogState,
         // setCatalogState: initialState,
-        newSong,
+        songModalActionsProvider,
         fetchSongCatalog,
         fetchSongCatalogNextLink,
         createEmptySongCatalog,
-        setCatalogState
+        setCatalogState,
+        setSongModal
         // DeleteSongAsync,
         // InitialStateRequest,
         // ReadBandsSummaryAsync,
@@ -48,6 +46,9 @@ export const App = (props: AppProps): JSX.Element => {
         // RemoveSongsFromBandAsync,
         // AddSetlistToBandAsync
     } = props;
+
+    const songDef = CreateSongNodeHtmlAttributesConfiguration;
+
 
     useEffect(() => {
 
@@ -270,8 +271,8 @@ export const App = (props: AppProps): JSX.Element => {
         }
     };
 
-    const doesBandlistContainsSongId = (songlist: ISongCatalog, songId: string): boolean =>
-        songlist.CatalogType === CatalogType.Band && songlist.Values.filter(song => song.Id === songId).length > 0;
+    // const doesBandlistContainsSongId = (songlist: ISongCatalog, songId: string): boolean =>
+    //     songlist.CatalogType === CatalogType.Band && songlist.Values.filter(song => song.Id === songId).length > 0;
 
     const hasSonglistChanged = (destination: DraggableLocation, source: DraggableLocation): boolean =>
         destination.droppableId !== source.droppableId;
@@ -289,14 +290,15 @@ export const App = (props: AppProps): JSX.Element => {
             if (songList.CatalogType === CatalogType.Song) {
                 return (
                     <SongCatalogComponent
-                        AddSongToCatalog={newSong}
-                        FetchSongCatalog={fetchSongCatalog}
-                        FetchSongCatalogNextLink = {fetchSongCatalogNextLink}
+                        fetchSongCatalog={fetchSongCatalog}
+                        fetchSongCatalogNextLink={fetchSongCatalogNextLink}
+                        setSongModal={setSongModal}
                         // DeleteSongAsync={DeleteSongAsync}
                         // RemoveSongFromMainListState={RemoveSongFromMainListState}
                         // AddSongToMainListState={AddSongToMainListState}
                         key={songList.Id}
                         songlist={songList as ISongCatalog}
+                        showModal={catalogState.modal.show}
                     />
                 );
             }
@@ -323,12 +325,37 @@ export const App = (props: AppProps): JSX.Element => {
         });
     };
 
+    const handleCloseModal = () => {
+        setSongModal(defaultModal);
+    }
+
     const IsBandListNeeded = () =>
         Object.values(catalogState!.catalogs).filter(songList => songList.CatalogType === CatalogType.Band).length === 0;
 
+    const hanldeOnAddSongClick = (event: React.FormEvent<FormControlProps>) => {
+        event.preventDefault();
+
+        const elements: any = (event.target as any).elements;
+
+        const song = {
+            ...Song.EmptySong(),
+            Artist: elements[songDef.Artist.ControlId].value,
+            Title: elements[songDef.Title.ControlId].value,
+            Genre: elements[songDef.Genre.ControlId].value
+        } as ISong
+
+        if (catalogState.modal.catalogId) {
+            songModalActionsProvider[catalogState.modal.type](
+                { song, songCatalogId: catalogState.modal.catalogId } as ISongActionProps
+            )
+        }
+
+    };
+
     return (
-        <Container fluid>
-            {/* <Row>
+        <div>
+            <Container fluid>
+                {/* <Row>
                 <Col md="8">
                     <CreateSetlist
                         IsBandListNeeded={IsBandListNeeded()}
@@ -342,12 +369,58 @@ export const App = (props: AppProps): JSX.Element => {
                 <Col md="2" />
                 <Col md="2" />
             </Row> */}
-            <Row>
-                <AppContainer data-testid="DragDropContext">
-                    <DragDropContext onDragEnd={onDragEnd}>{renderSetlists()}</DragDropContext>
-                </AppContainer>
-            </Row>
-        </Container>
+                <Row>
+                    <AppContainer data-testid="DragDropContext">
+                        <DragDropContext onDragEnd={onDragEnd}>{renderSetlists()}</DragDropContext>
+                    </AppContainer>
+                </Row>
+                <Row>
+                    <Col >
+
+                    </Col>
+                </Row>
+            </Container>
+            <SongModalComponent
+                modal={catalogState.modal}
+                setSongModal={setSongModal}
+                executeSongModalAction={songModalActionsProvider[catalogState.modal.type]}
+            />
+
+            {/* <Modal show={catalogState.modal.show} onHide={handleCloseModal}>
+                <Modal.Dialog>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add Song</Modal.Title>
+                    </Modal.Header>
+
+
+                    <Form onSubmit={hanldeOnAddSongClick} method="GET">
+                        <Modal.Body>
+                            <Form.Row>
+                                <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
+                                    <Form.Label>{songDef.Title.Label}</Form.Label>
+                                    <Form.Control type="text" value={catalogState.modal.song.Title} placeholder={songDef.Title.Placeholder}></Form.Control>
+                                </Form.Group>
+                                <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
+                                    <Form.Label>{songDef.Artist.Label}</Form.Label>
+                                    <Form.Control type="text" value={catalogState.modal.song.Artist} placeholder={songDef.Artist.Placeholder}></Form.Control>
+                                </Form.Group>
+                                <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
+                                    <Form.Label>{songDef.Genre.Label}</Form.Label>
+                                    <Form.Control type="text" placeholder={songDef.Genre.Placeholder}></Form.Control>
+                                </Form.Group>
+                            </Form.Row>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                            <Button variant="primary" type="submit" >Add Song to Main List</Button>
+                        </Modal.Footer>
+                    </Form>
+
+
+
+                </Modal.Dialog>
+            </Modal> */}
+        </div>
     );
 };
 

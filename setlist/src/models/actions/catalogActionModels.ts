@@ -1,6 +1,6 @@
 import { ISongFilter, ISong } from "..";
 
-export interface INewSongActionProps {
+export interface ISongActionProps {
     song:ISong;
     songCatalogId:string;
 }

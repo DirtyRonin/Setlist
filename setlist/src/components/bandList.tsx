@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import { ISongCatalog, ISong } from "../models";
 import { CreateSongNodeHtmlAttributesConfiguration } from "../Configuration";
 import BandSongNodeComponent from "./bandSongNode";
-import { ContainerCss, TitleCss, NodeListCss } from "../styles";
+import { ContainerCss, NodeListCss } from "../styles";
 import { Song } from "../mapping";
 
 export interface IBandListProps {
@@ -17,11 +17,11 @@ export interface IBandListProps {
     RemoveBandFromState(bandId: string): void;
 
     RemoveSongsFromBandAsync(bandId: string, songIds: string[]): Promise<void>;
-    RemoveBandsongFromState(bandId: string,songIds: string[]):void
+    RemoveBandsongFromState(bandId: string, songIds: string[]): void
 }
 
 const BandListComponent = (props: IBandListProps): JSX.Element => {
-    const { songlist, DeleteBandAsync,RemoveBandFromState,RemoveSongsFromBandAsync ,RemoveBandsongFromState} = props;
+    const { songlist, DeleteBandAsync, RemoveBandFromState, RemoveSongsFromBandAsync, RemoveBandsongFromState } = props;
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
 
@@ -30,19 +30,17 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const song = Song.Create(
-            elements[songDef.Title.ControlId].value,
-            elements[songDef.Artist.ControlId].value,
-            elements[songDef.Mode.ControlId].value,
-            false,
-            "no genre",
-            "no comment"
-        )
+        const song = {
+            ...Song.EmptySong(),
+            Artist: elements[songDef.Artist.ControlId].value,
+            Title: elements[songDef.Title.ControlId].value,
+            Genre: elements[songDef.Genre.ControlId].value
+        } as ISong
     };
 
     const handleOnDeleteBandClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
-        
+
         DeleteBandAsync(songlist.Id)
             .then(result => RemoveBandFromState(songlist.Id))
             .catch(error => console.log(error));
@@ -50,13 +48,19 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
 
     return (
         <ContainerCss data-testid={songlist.Id}>
-            <TitleCss>{songlist.Title}</TitleCss>
+            <h1>{songlist.Title}</h1>
             <Droppable droppableId={songlist.Id}>
                 {provided => (
                     <NodeListCss ref={provided.innerRef} {...provided.droppableProps}>
                         {songlist.Values &&
-                            songlist.Values.map((song, index) => (
-                                <BandSongNodeComponent RemoveSongsFromBandAsync={RemoveSongsFromBandAsync} RemoveBandsongFromState={RemoveBandsongFromState} songListId={songlist.Id} key={song.Id} song={song} index={index} />
+                            Array.from(songlist.Values.values()).map((song, index) => (
+                                <BandSongNodeComponent
+                                    RemoveSongsFromBandAsync={RemoveSongsFromBandAsync}
+                                    RemoveBandsongFromState={RemoveBandsongFromState}
+                                    songListId={songlist.Id}
+                                    key={song.Id}
+                                    song={song}
+                                    index={index} />
                             ))}
                         {provided.placeholder}
                     </NodeListCss>
@@ -73,9 +77,9 @@ const BandListComponent = (props: IBandListProps): JSX.Element => {
                         <Form.Label>{songDef.Artist.Label}</Form.Label>
                         <Form.Control type="text" placeholder={songDef.Artist.Placeholder}></Form.Control>
                     </Form.Group>
-                    <Form.Group as={Col} md="4" controlId={songDef.Mode.ControlId}>
-                        <Form.Label>{songDef.Mode.Label}</Form.Label>
-                        <Form.Control type="text" placeholder={songDef.Mode.Placeholder}></Form.Control>
+                    <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
+                        <Form.Label>{songDef.Genre.Label}</Form.Label>
+                        <Form.Control type="text" placeholder={songDef.Genre.Placeholder}></Form.Control>
                     </Form.Group>
                 </Form.Row>
 

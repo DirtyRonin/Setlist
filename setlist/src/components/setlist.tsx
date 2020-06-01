@@ -29,7 +29,7 @@ const NodeList = styled.div`
 `;
 
 const SetlistComponent = (props: ISetlistProps): JSX.Element => {
-    const {  setlist } = props;
+    const { setlist } = props;
 
     const songDef = CreateSongNodeHtmlAttributesConfiguration;
 
@@ -38,15 +38,13 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
 
         const elements: any = (event.target as any).elements;
 
-        const song = Song.Create(
-            elements[songDef.Title.ControlId].value,
-            elements[songDef.Artist.ControlId].value,
-            elements[songDef.Mode.ControlId].value,
-            false,
-            "no genre",
-            "no comment"
-        )
-        
+        const song = {
+            ...Song.EmptySong(),
+            Artist: elements[songDef.Artist.ControlId].value,
+            Title: elements[songDef.Title.ControlId].value,
+            Genre: elements[songDef.Genre.ControlId].value
+        } as ISong
+
     };
 
     return (
@@ -56,7 +54,7 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
                 <Droppable droppableId={setlist.Id}>
                     {provided => (
                         <NodeList ref={provided.innerRef} {...provided.droppableProps}>
-                            {setlist.Values.map((song, index) => (
+                            {Array.from(setlist.Values.values()).map((song, index) => (
                                 <SetlistSongNodeComponent
                                     setlistId={setlist.Id}
                                     key={song.Id}
@@ -79,9 +77,9 @@ const SetlistComponent = (props: ISetlistProps): JSX.Element => {
                         <Form.Label>{songDef.Artist.Label}</Form.Label>
                         <Form.Control type="text" placeholder={songDef.Artist.Placeholder}></Form.Control>
                     </Form.Group>
-                    <Form.Group as={Col} md="4" controlId={songDef.Mode.ControlId}>
-                        <Form.Label>{songDef.Mode.Label}</Form.Label>
-                        <Form.Control type="text" placeholder={songDef.Mode.Placeholder}></Form.Control>
+                    <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
+                        <Form.Label>{songDef.Genre.Label}</Form.Label>
+                        <Form.Control type="text" placeholder={songDef.Genre.Placeholder}></Form.Control>
                     </Form.Group>
                 </Form.Row>
 

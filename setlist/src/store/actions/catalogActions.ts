@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction, action } from "typesafe-actions";
 import { ICatalogState } from "..";
-import { ISong, ISongCatalog, ISongFilter, IFilterSongActionProps, INewSongActionProps, INextLinkActionProps, Catalogs } from "../../models";
+import { ISong, ISongCatalog, ISongFilter, IFilterSongActionProps, ISongActionProps, INextLinkActionProps, Catalogs, IModal } from "../../models";
 import { HashTable } from "../../Util";
 
 export const setCatalogState= createAction(
@@ -28,9 +28,33 @@ export const setSongCatalogFilter = createAsyncAction(
     "SET_SONGCATALOG_FILTER_CANCEL",
 )<IFilterSongActionProps,HashTable<ISongCatalog>,Error,string>();
 
-export const newSong= createAsyncAction(
+export const addSongToCatalog= createAsyncAction(
     "NEW_SONG_REQUEST",
     "NEW_SONG_SUCCESS",
     "NEW_SONG_FAILURE",
     "NEW_SONG_CANCEL",
-)<INewSongActionProps,HashTable<ISongCatalog>,Error,string>();
+)<ISongActionProps,HashTable<ISongCatalog>,Error,string>();
+
+export const editSongInCatalog= createAsyncAction(
+    "EDIT_SONG_REQUEST",
+    "EDIT_SONG_SUCCESS",
+    "EDIT_SONG_FAILURE",
+    "EDIT_SONG_CANCEL",
+)<ISongActionProps,HashTable<ISongCatalog>,Error,string>();
+
+export const deleteSongInCatalog= createAsyncAction(
+    "DELETE_SONG_REQUEST",
+    "DELETE_SONG_SUCCESS",
+    "DELETE_SONG_FAILURE",
+    "DELETE_SONG_CANCEL",
+)<ISongActionProps,HashTable<ISongCatalog>,Error,string>();
+
+export const readSongInCatalog= createAction(
+    "READ_SONG_REQUEST",
+)();
+
+
+
+export const setSongModal = createAction(
+    "SET_SONG_MODAL"
+)<IModal>();

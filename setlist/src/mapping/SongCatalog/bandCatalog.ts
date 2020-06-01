@@ -2,7 +2,7 @@ import { CatalogType, IBandCatalog, IBand, IBandSong, ISongFilter, ODataProps, I
 import { CatalogBase } from "./songCatalogBase";
 
 export class BandCatalog extends CatalogBase<IBandSong, ISongFilter, ISongCatalogOptions> implements IBandCatalog {
-    private constructor(filter: ISongFilter, band: IBand, oData: ODataProps, options: ISongCatalogOptions, refresh?: boolean, bandSongs?: IBandSong[]) {
+    private constructor(filter: ISongFilter, band: IBand, oData: ODataProps, options: ISongCatalogOptions, refresh?: boolean, bandSongs?: Map<string, IBandSong>) {
         super(
             band.Id,
             band.Title,

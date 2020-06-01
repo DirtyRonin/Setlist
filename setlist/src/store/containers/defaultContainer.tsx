@@ -4,44 +4,46 @@ import { connect } from 'react-redux';
 
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
-import {  newSong, fetchSongCatalog, setCatalogState, fetchSongCatalogNextLink } from '../actions';
+import { addSongToCatalog, fetchSongCatalog, setCatalogState, fetchSongCatalogNextLink, setSongModal, editSongInCatalog, deleteSongInCatalog, readSongInCatalog } from '../actions';
 import { createEmptySongCatalog } from '../../service';
-import { INewSongActionProps, IFilterSongActionProps, INextLinkActionProps } from '../../models';
+import { ISongActionProps, IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions } from '../../models';
+
+
 
 interface IAppConnectedDispatch {
     setCatalogState(catalogState: ICatalogState): void,
-    newSong(props: INewSongActionProps): void
-    fetchSongCatalog(props:IFilterSongActionProps): void
-    fetchSongCatalogNextLink: (props:INextLinkActionProps)=>void
+    fetchSongCatalog(props: IFilterSongActionProps): void
+    fetchSongCatalogNextLink(props: INextLinkActionProps): void
+    setSongModal(props: IModal): void
+    songModalActionsProvider: songModalActions
 }
 
-interface IStateProps{
+interface IStateProps {
     catalogState: ICatalogState;
-    createEmptySongCatalog:() => ICatalogState ;
+    createEmptySongCatalog: () => ICatalogState;
 }
 
 export type AppProps = IStateProps & IAppConnectedDispatch;
 
-// const mapStateToProps : (state: RootState)  => 
-//     Partial<AppProps> = (state: RootState) :Partial<AppProps> =>
-//     ({
-//         catalogState: state.catalogReducers.catalogState,
-//         createEmptySongCatalog
-//     } );
- 
-        
-const mapStateToProps = (state: RootState) : IStateProps =>    
-        ({
-            catalogState: state.catalogReducers.catalogState,
-            createEmptySongCatalog
-        } as IStateProps);
+const mapStateToProps = (state: RootState): IStateProps =>
+    ({
+        catalogState: state.catalogReducers.catalogState,
+        createEmptySongCatalog
+    } as IStateProps);
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatch => {
     return {
         setCatalogState: (catalogState: ICatalogState) => dispatch(setCatalogState(catalogState)),
-        newSong: (props: INewSongActionProps) => dispatch(newSong.request(props)),
-        fetchSongCatalog: (props:IFilterSongActionProps) => dispatch(fetchSongCatalog.request(props)),
-        fetchSongCatalogNextLink: (props:INextLinkActionProps) => dispatch(fetchSongCatalogNextLink.request(props)),
+        fetchSongCatalog: (props: IFilterSongActionProps) => dispatch(fetchSongCatalog.request(props)),
+        fetchSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(fetchSongCatalogNextLink.request(props)),
+        setSongModal:(props:IModal) => dispatch(setSongModal(props)),
+        songModalActionsProvider: {
+            None: (props: ISongActionProps) => { },
+            New: (props: ISongActionProps) => dispatch(addSongToCatalog.request(props)),
+            Edit: (props: ISongActionProps) => dispatch(editSongInCatalog.request(props)),
+            Remove: (props: ISongActionProps) => dispatch(deleteSongInCatalog.request(props)),
+            Read: (props: ISongActionProps) => dispatch(readSongInCatalog()),
+        }
     };
 };
 

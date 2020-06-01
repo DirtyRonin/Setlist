@@ -69,10 +69,10 @@ const BandSongNodeComponent = (props: ISongNodeProps): JSX.Element => {
                         </Row>
                         <Row>
                             <Col>
-                                <label>{songDef.Mode.Label}</label>
+                                <label>{songDef.Genre.Label}</label>
                             </Col>
                             <Col>
-                                <label data-testid={songDef.Mode.Data_TestId}>{song.OriginalKey}</label>
+                                <label data-testid={songDef.Genre.Data_TestId}>{song.OriginalKey}</label>
                             </Col>
                         </Row>
                         <Row>

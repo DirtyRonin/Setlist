@@ -9,6 +9,9 @@ import * as serviceWorker from "./serviceWorker";
 import { storeSetup, defaultCatalog } from "./store";
 import { Provider } from "react-redux";
 import DefaultApp from "./store/containers/defaultContainer"
+import { initFontAwesomeLib } from "./styles";
+
+initFontAwesomeLib()
 
 const start = () =>  storeSetup();
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button, FormControlProps, Col, Row, InputGroup } from "react-bootstrap";
-import { IBandCatalog, CatalogType, IBandSummary, ISetCatalog } from "../models";
+import { IBandCatalog, CatalogType, IBandSummary, ISetCatalog, IBandSong, ISong } from "../models";
 import { CreateSetlistHtmlAttributesConfiguration } from "../Configuration";
 import { HashTable } from "../Util";
 
@@ -40,7 +40,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             const bandlist: IBandCatalog = {
                 Id: "",
                 Title: elements[NameInput.ControlId].value,
-                Values: [],
+                Values: new Map<string,IBandSong>(),
                 CatalogType: CatalogType.Band,
                 Filter: {
                     Title: "",
@@ -69,7 +69,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             const setlist: ISetCatalog = {
                 Id: "",
                 Title: elements[NameInput.ControlId].value,
-                Values: [],
+                Values: new Map<string,ISong>(),
                 CatalogType: CatalogType.Set,
                 BandId: elements[htmlConfig.BandSelect.ControlId].value,
                 Filter: {

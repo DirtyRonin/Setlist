@@ -8,7 +8,7 @@ import { ISongResource } from "../resource";
 const songsEndpoint = EndpointConfiguration.Songs;
 
 export const GetSongsRequestAsync = async (url: string): Promise<IOdataWrapper<ISongResource>> => {
-    
+
     const result = await Axios.get(url, {
         headers: defaultHeader
     });
@@ -42,5 +42,10 @@ export const CreateSongRequestAsync = async (song: ISongResource): Promise<Axios
 
 export const DeleteSongRequestAsync = async (songId: string): Promise<AxiosResponse<ISongResource>> =>
     await Axios.delete<ISongResource>(`${songsEndpoint.GetEndpointUrl!()}/${songId}`, {
+        headers: defaultHeader
+    });
+
+export const UpdateSongRequestAsync = async (song: ISongResource): Promise<AxiosResponse<ISongResource>> =>
+    await Axios.put<ISongResource>(`${songsEndpoint.GetEndpointUrl!()}/${song.Id}`, song, {
         headers: defaultHeader
     });

@@ -23,13 +23,13 @@ export interface ISongCatalogOptions{
     ShowAddSong:boolean
 }
 
-export interface ICatalog<TValues,SFilter,ROptions>{
+export interface ICatalog<TValue,SFilter,ROptions>{
     CatalogType: CatalogType;
     Filter:SFilter
     Id: string;
     Title: string;
     Refresh: boolean;
-    Values:TValues[];
+    Values:Map<string,TValue>;
     OData:ODataProps;
     CatalogOptions: ROptions;
 }

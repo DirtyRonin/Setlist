@@ -12,15 +12,20 @@ type FormHtmlAttributesDefinition = {
     ControlId: string;
 };
 
-type CreateSongNodeHtmlComponentNames = "Title" | "Artist" | "Mode";
+type CreateSongNodeHtmlComponentNames = "Title" | "Artist" | "Genre" | "Nineties" | "Evergreen" |"OriginalKey" | "Comment";
 
-export const CreateSongNodeHtmlAttributesConfiguration: ConfigurationItemCollection<
-    FormHtmlAttributesDefinition,
-    CreateSongNodeHtmlComponentNames
+export const CreateSongNodeHtmlAttributesConfiguration: Record<
+    CreateSongNodeHtmlComponentNames,
+    FormHtmlAttributesDefinition
 > = {
     Title: { Label: "Title", Placeholder: "Enter Title", Data_TestId: "CreateSongNode_Title", ControlId: "CreateSongNode_Title" },
     Artist: { Label: "Artist", Placeholder: "Enter Artist", Data_TestId: "CreateSongNode_Artist", ControlId: "CreateSongNode_Artist" },
-    Mode: { Label: "Mode", Placeholder: "Enter Mode", Data_TestId: "CreateSongNode_Mode", ControlId: "CreateSongNode_Mode" }
+    Genre: { Label: "Genre", Placeholder: "Enter Genre", Data_TestId: "CreateSongNode_Genre", ControlId: "CreateSongNode_Genre" },
+    Nineties: { Label: "Nineties", Placeholder: "Enter Nineties", Data_TestId: "CreateSongNode_Nineties", ControlId: "CreateSongNode_Nineties" },
+    Evergreen: { Label: "Evergreen", Placeholder: "Enter Evergreen", Data_TestId: "CreateSongNode_Evergreen", ControlId: "CreateSongNode_Evergreen" },
+    OriginalKey: { Label: "OriginalKey", Placeholder: "Enter OriginalKey", Data_TestId: "CreateSongNode_OriginalKey", ControlId: "CreateSongNode_OriginalKey" },
+    Comment: { Label: "Comment", Placeholder: "Enter Comment", Data_TestId: "CreateSongNode_Comment", ControlId: "CreateSongNode_Comment" },
+
 };
 
 type SongNodeHtmlComponentNames = CreateSongNodeHtmlComponentNames | "Id";
@@ -29,10 +34,14 @@ export const SongNodeHtmlAttributesConfiguration: ConfigurationItemCollection<Ht
     Id: { Label: "id", Data_TestId: "SongNode_Id" },
     Title: { Label: CreateSongNodeHtmlAttributesConfiguration.Title.Label, Data_TestId: "SongNode_Title" },
     Artist: { Label: CreateSongNodeHtmlAttributesConfiguration.Artist.Label, Data_TestId: "SongNode_Artist" },
-    Mode: { Label: CreateSongNodeHtmlAttributesConfiguration.Mode.Label, Data_TestId: "SongNode_Mode" }
+    Genre: { Label: CreateSongNodeHtmlAttributesConfiguration.Genre.Label, Data_TestId: "SongNode_Genre" },
+    Nineties: { Label: "Nineties",  Data_TestId: "CreateSongNode_Nineties" },
+    Evergreen: { Label: "Evergreen",  Data_TestId: "CreateSongNode_Evergreen" },
+    OriginalKey: { Label: "OriginalKey", Data_TestId: "CreateSongNode_OriginalKey" },
+    Comment: { Label: "Comment", Data_TestId: "CreateSongNode_Comment" },
 };
 
-type CreateSetlistHtmlComponentNames = "SetlistNameInput" | "MajorLibraryNameInput" | "BandSelect" | "CreateSetlistButton"|"CreateMajorLibraryButton";
+type CreateSetlistHtmlComponentNames = "SetlistNameInput" | "MajorLibraryNameInput" | "BandSelect" | "CreateSetlistButton" | "CreateMajorLibraryButton";
 
 export const CreateSetlistHtmlAttributesConfiguration: ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
@@ -45,11 +54,11 @@ export const CreateSetlistHtmlAttributesConfiguration: ConfigurationItemCollecti
     BandSelect: { Label: "Select List Type", Placeholder: "Select List Type", Data_TestId: "Select_ListType", ControlId: "Select_ListType" },
 };
 
-type FilterSongComponentNames = "SearchTitleInput" | "SearchArtistInput" | "SearchGenreInput" | "SearchEvergreenCheckBox" |"SearchNinetiesCheckBox" | "SearchButton" ;
+type FilterSongComponentNames = "SearchTitleInput" | "SearchArtistInput" | "SearchGenreInput" | "SearchEvergreenCheckBox" | "SearchNinetiesCheckBox" | "SearchButton";
 
-export const FilterSongHtmlAttributesConfiguration:ConfigurationItemCollection<
-FormHtmlAttributesDefinition,
-FilterSongComponentNames
+export const FilterSongHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    FilterSongComponentNames
 > = {
     SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterSong_SearchTitle", ControlId: "FilterSong_SearchTitle" },
     SearchArtistInput: { Label: "Search For Artist", Placeholder: "Enter Artist", Data_TestId: "FilterSong_SearchArtist", ControlId: "FilterSong_SearchArtist" },
@@ -61,13 +70,13 @@ FilterSongComponentNames
 
 type SongCatalogComponentNames = "ShowAddSongCheckBox" | "Navbar" | "NodeList"
 
-export const SongCatalogHtmlAttributesConfiguration:ConfigurationItemCollection<
-FormHtmlAttributesDefinition,
-SongCatalogComponentNames 
+export const SongCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    SongCatalogComponentNames
 > = {
-    ShowAddSongCheckBox : { Label: "Add Songs", Placeholder:"", Data_TestId: "SongCatalog_ShowAddSong", ControlId: "SongCatalog_ShowAddSong" },
-    Navbar: {Label:"",Placeholder:"", Data_TestId:"SongCatalog_Options_responsiveNavbar", ControlId:"SongCatalog_Options_responsiveNavbar"},
-    NodeList: {Label:"",Placeholder:"", Data_TestId:"SongCatalog_NodeList", ControlId:"SongCatalog_NodeList"},
+    ShowAddSongCheckBox: { Label: "Add Songs", Placeholder: "", Data_TestId: "SongCatalog_ShowAddSong", ControlId: "SongCatalog_ShowAddSong" },
+    Navbar: { Label: "", Placeholder: "", Data_TestId: "SongCatalog_Options_responsiveNavbar", ControlId: "SongCatalog_Options_responsiveNavbar" },
+    NodeList: { Label: "", Placeholder: "", Data_TestId: "SongCatalog_NodeList", ControlId: "SongCatalog_NodeList" },
 }
 
 

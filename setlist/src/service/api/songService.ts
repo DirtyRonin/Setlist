@@ -1,7 +1,7 @@
 import validator from 'validator';
 
 import { ISong, IOdataWrapper } from "../../models";
-import { GetSongsRequestAsync, CreateSongRequestAsync, DeleteSongRequestAsync } from "../../api";
+import { GetSongsRequestAsync, CreateSongRequestAsync, DeleteSongRequestAsync, UpdateSongRequestAsync } from "../../api";
 import { Song } from "../../mapping";
 import { EndpointConfiguration } from '../../Configuration';
 
@@ -44,6 +44,14 @@ export const CreateSongAsync = async (song: ISong): Promise<ISong> => {
     const resource = Song.ToResource(song)
 
     const result = await CreateSongRequestAsync(resource)
+
+    return Song.FromResource(result.data)
+}
+
+export const UpdateSongAsync = async(song:ISong):Promise<ISong> => {
+    const resource = Song.ToResource(song)
+
+    const result = await UpdateSongRequestAsync(resource)
 
     return Song.FromResource(result.data)
 }
