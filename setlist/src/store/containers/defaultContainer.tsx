@@ -4,14 +4,13 @@ import { connect } from 'react-redux';
 
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
-import { addSongToCatalog, fetchSongCatalog, setCatalogState, fetchSongCatalogNextLink, setSongModal, editSongInCatalog, deleteSongInCatalog, readSongInCatalog } from '../actions';
-import { createEmptySongCatalog } from '../../service';
-import { ISongActionProps, IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions } from '../../models';
-
-
+import { addSongToCatalog, fetchSongCatalog, setCatalogState, fetchSongCatalogNextLink, setSongModal, editSongInCatalog, deleteSongInCatalog, readSongInCatalog, fetchBandCatalog } from '../actions';
+import { createEmptySongCatalog,createEmptyBandCatalog } from '../../service';
+import { ISongActionProps, IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps } from '../../models';
 
 interface IAppConnectedDispatch {
-    setCatalogState(catalogState: ICatalogState): void,
+    setCatalogState(catalogState: ICatalogState): void
+    fetchBandCatalog(props: IFilterBandActionProps): void
     fetchSongCatalog(props: IFilterSongActionProps): void
     fetchSongCatalogNextLink(props: INextLinkActionProps): void
     setSongModal(props: IModal): void
@@ -20,7 +19,8 @@ interface IAppConnectedDispatch {
 
 interface IStateProps {
     catalogState: ICatalogState;
-    createEmptySongCatalog: () => ICatalogState;
+    createEmptySongCatalog: (catalogState : ICatalogState) => ICatalogState;
+    createEmptyBandCatalog: (catalogState : ICatalogState) => ICatalogState;
 }
 
 export type AppProps = IStateProps & IAppConnectedDispatch;
@@ -28,12 +28,14 @@ export type AppProps = IStateProps & IAppConnectedDispatch;
 const mapStateToProps = (state: RootState): IStateProps =>
     ({
         catalogState: state.catalogReducers.catalogState,
-        createEmptySongCatalog
+        createEmptySongCatalog,
+        createEmptyBandCatalog
     } as IStateProps);
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatch => {
     return {
         setCatalogState: (catalogState: ICatalogState) => dispatch(setCatalogState(catalogState)),
+        fetchBandCatalog:(props: IFilterBandActionProps) => dispatch(fetchBandCatalog.request(props)),
         fetchSongCatalog: (props: IFilterSongActionProps) => dispatch(fetchSongCatalog.request(props)),
         fetchSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(fetchSongCatalogNextLink.request(props)),
         setSongModal:(props:IModal) => dispatch(setSongModal(props)),

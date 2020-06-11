@@ -1,11 +1,11 @@
 import { ISong, CatalogType, ISongCatalog, ISongFilter, ODataProps, ISongCatalogOptions } from "../../models";
-import { CatalogBase } from "./songCatalogBase";
+import { CatalogBase } from "./catalogBase";
 
 export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOptions> implements ISongCatalog {
 
     private constructor(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, refresh?: boolean, songs?: Map<string, ISong>) {
         super(
-            `${CatalogType.Song.toString()}_id`,
+            SongCatalog.CatalogId,
             CatalogType.Song.toString(),
             CatalogType.Song,
             filter,

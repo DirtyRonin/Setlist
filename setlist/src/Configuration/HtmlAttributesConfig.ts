@@ -79,5 +79,16 @@ export const SongCatalogHtmlAttributesConfiguration: ConfigurationItemCollection
     NodeList: { Label: "", Placeholder: "", Data_TestId: "SongCatalog_NodeList", ControlId: "SongCatalog_NodeList" },
 }
 
+type BandCatalogComponentNames = "ShowAddBandCheckBox" | "Navbar" | "NodeList"
+
+export const BandCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    BandCatalogComponentNames
+> = {
+    ShowAddBandCheckBox: { Label: "Add Bands", Placeholder: "", Data_TestId: "BandCatalog_ShowAddBand", ControlId: "BandCatalog_ShowAddBand" },
+    Navbar: { Label: "", Placeholder: "", Data_TestId: "BandCatalog_Options_responsiveNavbar", ControlId: "BandCatalog_Options_responsiveNavbar" },
+    NodeList: { Label: "", Placeholder: "", Data_TestId: "BandCatalog_NodeList", ControlId: "BandCatalog_NodeList" },
+}
+
 
 

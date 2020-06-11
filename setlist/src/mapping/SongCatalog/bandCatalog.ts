@@ -1,26 +1,42 @@
-import { CatalogType, IBandCatalog, IBand, IBandSong, ISongFilter, ODataProps, ISongCatalogOptions } from "../../models";
-import { CatalogBase } from "./songCatalogBase";
+import { CatalogType, IBandCatalog, IBand, ODataProps, IBandFilter, IBandCatalogOptions } from "../../models";
+import { CatalogBase } from "./catalogBase";
 
-export class BandCatalog extends CatalogBase<IBandSong, ISongFilter, ISongCatalogOptions> implements IBandCatalog {
-    private constructor(filter: ISongFilter, band: IBand, oData: ODataProps, options: ISongCatalogOptions, refresh?: boolean, bandSongs?: Map<string, IBandSong>) {
+export class BandCatalog extends CatalogBase<IBand, IBandFilter, IBandCatalogOptions> implements IBandCatalog {
+    private constructor(filter: IBandFilter, oData: ODataProps, options: IBandCatalogOptions, refresh?: boolean, bands?: Map<string, IBand>) {
         super(
-            band.Id,
-            band.Title,
+            BandCatalog.CatalogId,
+            CatalogType.Band.toString(),
             CatalogType.Band,
             filter,
             oData,
             options,
             refresh,
-            bandSongs,
+            bands,
         )
     }
 
-    public static Create(filter: ISongFilter, band: IBand, oData: ODataProps, options: ISongCatalogOptions): IBandCatalog {
-        return new BandCatalog(filter, band, oData, options, false, band.BandSongs)
+    public static Create(filter: IBandFilter, oData: ODataProps, options: IBandCatalogOptions, bands?: Map<string, IBand>): IBandCatalog {
+        return new BandCatalog(filter, oData, options, false, bands)
     }
 
-
-    public static CreateAndUpdate(filter: ISongFilter, band: IBand, oData: ODataProps, options: ISongCatalogOptions): IBandCatalog {
-        return new BandCatalog(filter, band, oData, options, true, band.BandSongs)
+    public static CreateAndUpdate(filter: IBandFilter, oData: ODataProps, options: IBandCatalogOptions, bands?: Map<string, IBand>): IBandCatalog {
+        return new BandCatalog(filter, oData, options, true, bands)
     }
+
+    public static AddValues(bandCatalog: IBandCatalog, addBands: IBand[]): IBandCatalog {
+        const currentCatalog = { ...bandCatalog };
+        addBands.forEach(newBand => currentCatalog.Values.set(newBand.Id, newBand))
+
+        return currentCatalog
+    }
+
+    public static UpdateOData(bandCatalog: IBandCatalog, oData: ODataProps): IBandCatalog {
+        return { ...bandCatalog, OData: oData }
+    }
+    
+    public static UpdateFilter(bandCatalog: IBandCatalog, filter: IBandFilter): IBandCatalog {
+        return { ...bandCatalog, Filter: filter }
+    }
+
+    public static CatalogId: string = `${CatalogType.Band.toString()}_id`
 }

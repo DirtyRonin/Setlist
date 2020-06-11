@@ -40,23 +40,17 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             const bandlist: IBandCatalog = {
                 Id: "",
                 Title: elements[NameInput.ControlId].value,
-                Values: new Map<string,IBandSong>(),
+                Values: new Map<string, IBandSong>(),
                 CatalogType: CatalogType.Band,
-                Filter: {
-                    Title: "",
-                    Artist: "",
-                    Genre: "",
-                    Evergreen: false,
-                    Nineties: false
-                },
+                Filter: { Title: "" },
                 Refresh: false,
-                OData:{
-                    Context:"",
-                    Count:0,
-                    NextLink:""
+                OData: {
+                    Context: "",
+                    Count: 0,
+                    NextLink: ""
                 },
-                CatalogOptions:{
-                    ShowAddSong:false
+                CatalogOptions: {
+                    ShowAddSong: false
                 }
 
             };
@@ -69,7 +63,7 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
             const setlist: ISetCatalog = {
                 Id: "",
                 Title: elements[NameInput.ControlId].value,
-                Values: new Map<string,ISong>(),
+                Values: new Map<string, ISong>(),
                 CatalogType: CatalogType.Set,
                 BandId: elements[htmlConfig.BandSelect.ControlId].value,
                 Filter: {
@@ -80,13 +74,13 @@ const CreateSetlist = (props: ICreateSetlistProps): JSX.Element => {
                     Nineties: false
                 },
                 Refresh: false,
-                OData:{
-                    Context:"",
-                    Count:0,
-                    NextLink:""
+                OData: {
+                    Context: "",
+                    Count: 0,
+                    NextLink: ""
                 },
-                CatalogOptions:{
-                    ShowAddSong:false
+                CatalogOptions: {
+                    ShowAddSong: false
                 }
             }
 

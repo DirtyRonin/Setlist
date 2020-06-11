@@ -1,1 +1,2 @@
-export * from "./catalogActionProps"
+export * from "./filterSongActionProps"
+export * from "./filterBandActionProps"

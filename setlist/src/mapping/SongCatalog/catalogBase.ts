@@ -1,7 +1,7 @@
 import { CatalogType, ODataProps, ICatalog, ISongCatalogOptions } from "../../models";
 
 export abstract class CatalogBase<TValues, SFilter, ROptions> implements ICatalog<TValues, SFilter, ROptions> {
-    readonly Id: string;
+    readonly  Id: string;
     readonly Title: string;
     readonly Values: Map<string, TValues>;
     readonly CatalogType: CatalogType;
@@ -10,11 +10,11 @@ export abstract class CatalogBase<TValues, SFilter, ROptions> implements ICatalo
     readonly OData: ODataProps;
     readonly CatalogOptions: ROptions;
 
-    constructor(id: string, title: string, songlistType: CatalogType, filter: SFilter, oData: ODataProps, catalogOptions: ROptions, refresh: boolean = false, songs: Map<string, TValues> = new Map(), ) {
+    constructor(id: string, title: string, catalogType: CatalogType, filter: SFilter, oData: ODataProps, catalogOptions: ROptions, refresh: boolean = false, songs: Map<string, TValues> = new Map(), ) {
         this.Id = id;
         this.Values = songs
         this.Title = title
-        this.CatalogType = songlistType
+        this.CatalogType = catalogType
         this.Filter = filter
         this.Refresh = refresh
         this.OData = oData
@@ -22,3 +22,4 @@ export abstract class CatalogBase<TValues, SFilter, ROptions> implements ICatalo
     }
 
 }
+

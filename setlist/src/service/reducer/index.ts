@@ -1,1 +1,2 @@
-export * from "./catalogService"
+export * from "./songCatalogService"
+export * from "./bandCatalogService"

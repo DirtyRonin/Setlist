@@ -1,17 +1,15 @@
 import { nameof } from "ts-simple-nameof"
 
-import { ISongCatalog, CatalogType, ISetCatalog, IBandCatalog, IBandSummary, ISong, IFilterSongActionProps, ISongActionProps, INextLinkActionProps, Catalogs } from "../../models";
+import { ISongCatalog, ISong, IFilterSongActionProps, ISongActionProps, INextLinkActionProps, Catalogs } from "../../models";
 import { HashTable } from "../../Util/HashTable";
-// import { ReadBandsSummaryAsync } from "../../api/bandApi";
-import { ReadSetlistsFromBandAsync } from "../../api/setlistApi";
-import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "../../service";
-import { SongCatalog, BandCatalog, Song, FilterSongActionProps } from "../../mapping";
+import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "..";
+import { SongCatalog, FilterSongActionProps } from "../../mapping";
 import { QueryBuilder, IsMiminumStringLength } from "../../Util";
-import { ICatalogState, CatalogState } from "../../store";
+import { ICatalogState } from "../../store";
 import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 
 
-export const fetchSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
+export const fetchSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: HashTable<Catalogs>): Promise<Catalogs> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { Filter, SongCatalogId } = props
@@ -37,7 +35,7 @@ export const fetchSongCatalogAsync = async (props: IFilterSongActionProps, catal
 
 
     if (filters.length) {
-        query.filter(x => filters.reduce((prev, current) => prev.and(x => current)))
+        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
     }
 
     query = query.orderBy(`${nameof<ISong>(x => x.Artist)},${nameof<ISong>(x => x.Title)}`)
@@ -47,47 +45,39 @@ export const fetchSongCatalogAsync = async (props: IFilterSongActionProps, catal
 
     const { NextLink, Values, Context, Count } = await ReadSongsAsync(filter);
 
-    const prevSongCatalog = { ...catalogs[SongCatalogId] }
+    const prevSongCatalog = { ...catalogs[SongCatalogId] } as ISongCatalog
 
     const mappedValues = Values?.reduce((map, song) => {
         map.set(song.Id, song)
         return map
     }, new Map<string, ISong>())
 
-    const songCatalog = SongCatalog.Create(Filter, { NextLink, Context, Count }, prevSongCatalog.CatalogOptions, mappedValues);
-
-    const newCatalogs = { ...catalogs, [songCatalog.Id]: songCatalog } as HashTable<ISongCatalog>;
-
-    return newCatalogs;
+    return SongCatalog.Create(Filter, { NextLink, Context, Count }, prevSongCatalog.CatalogOptions, mappedValues);
 }
 
-export const fetchSongCatalogNextLinkAsync = async (props: INextLinkActionProps, catalogs: HashTable<Catalogs>): Promise<HashTable<Catalogs>> => {
+export const fetchSongCatalogNextLinkAsync = async (props: INextLinkActionProps, catalogs: HashTable<Catalogs>): Promise<Catalogs> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { NextLink, Values, Context, Count } = await ReadSongsAsync(props.NextLink);
 
-    const prevSongCatalog = { ...catalogs[props.CatalogId] }
+    const prevSongCatalog = { ...catalogs[props.CatalogId] } as ISongCatalog
 
     let newSongCatalog = SongCatalog.AddValues(prevSongCatalog, Values);
-    newSongCatalog = SongCatalog.UpdateOData(newSongCatalog, { NextLink, Context, Count })
-
-    const newCatalogs: HashTable<Catalogs> = { ...catalogs, [newSongCatalog.Id]: newSongCatalog }
-
-    return newCatalogs
+    return SongCatalog.UpdateOData(newSongCatalog, { NextLink, Context, Count })
 }
 
-export const createEmptySongCatalog = (): ICatalogState => {
+export const createEmptySongCatalog = (catalogState : ICatalogState): ICatalogState => {
+    const {catalogs, catalogsOrder,modal} = catalogState
 
     const defaultActionProps = FilterSongActionProps.Default(SongCatalog.CatalogId)
 
     const songCatalog = SongCatalog.CreateAndUpdate(defaultActionProps.Filter, { NextLink: "", Count: 0, Context: "" }, { ShowAddSong: false });
 
-    const catalogs = {} as HashTable<ISongCatalog>
-    catalogs[songCatalog.Id] = songCatalog;
+    const newCatalogs: HashTable<Catalogs> = {...catalogs,[songCatalog.Id] : songCatalog} ;
 
-    const catalogsOrder: Array<string> = Object.keys(catalogs);
+    const newCatalogsOrder: Array<string> = [...catalogsOrder,songCatalog.Id]
 
-    return { catalogs, catalogsOrder } as ICatalogState
+    return { catalogs: newCatalogs,catalogsOrder: newCatalogsOrder,modal } as ICatalogState
 
     /* const songs = await ReadSongsAsync();
     
@@ -143,13 +133,13 @@ export const createEmptySongCatalog = (): ICatalogState => {
 
 };
 
-export const addSongToSongCatalogAsync = async (props: ISongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
+export const addSongToSongCatalogAsync = async (props: ISongActionProps, catalogs: HashTable<Catalogs>): Promise<Catalogs> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { song, songCatalogId } = props
     const newSong = await CreateSongAsync(song)
 
-    const currentCatalog = { ...catalogs[songCatalogId] };
+    const currentCatalog = { ...catalogs[songCatalogId] } as ISongCatalog;
 
     const newSongs: Map<string, ISong> = new Map([[newSong.Id, newSong]]);
 
@@ -157,37 +147,25 @@ export const addSongToSongCatalogAsync = async (props: ISongActionProps, catalog
         newSongs.set(key, song)
     )
 
-    const newSongCatalog: ISongCatalog = {
+    return {
         ...currentCatalog,
         Values: newSongs
-    };
-
-    const newSongCatalogs: HashTable<ISongCatalog> = {
-        ...catalogs,
-        [songCatalogId]: newSongCatalog
-    };
-
-    return newSongCatalogs;
+    } as Catalogs;
 };
 
-export const editSongInCatalogAsync = async (props: ISongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
+export const editSongInCatalogAsync = async (props: ISongActionProps, catalogs: HashTable<Catalogs>): Promise<Catalogs> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { song, songCatalogId } = props
     const updatedSong: ISong = await UpdateSongAsync(song)
 
-    const currentCatalog = { ...catalogs[songCatalogId] }
+    const currentCatalog = { ...catalogs[songCatalogId] } as ISongCatalog;
     currentCatalog.Values.set(updatedSong.Id, updatedSong);
 
-    const newSongCatalogs: HashTable<ISongCatalog> = {
-        ...catalogs,
-        [songCatalogId]: currentCatalog
-    };
-
-    return newSongCatalogs;
+    return currentCatalog
 }
 
-export const deleteSongInCatalogAsync = async (props: ISongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
+export const deleteSongInCatalogAsync = async (props: ISongActionProps, catalogs: HashTable<Catalogs>): Promise<Catalogs> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { song, songCatalogId } = props
@@ -196,27 +174,22 @@ export const deleteSongInCatalogAsync = async (props: ISongActionProps, catalogs
     const currentCatalog = { ...catalogs[songCatalogId] }
     currentCatalog.Values.delete(deletedSong.Id);
 
-    const newSongCatalogs: HashTable<ISongCatalog> = {
-        ...catalogs,
-        [songCatalogId]: currentCatalog
-    };
-
-    return newSongCatalogs;
+    return currentCatalog
 }
 
-export const filterSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: HashTable<ISongCatalog>): Promise<HashTable<ISongCatalog>> => {
+// export const filterSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: HashTable<Catalogs>): Promise<Catalogs> => {
 
-    const { Filter, Refresh: ToBeUpdated } = props
-    const query = new QueryBuilder().count()
+//     const { Filter } = props
+//     const query = new QueryBuilder().count()
 
 
-    if (IsMiminumStringLength(Filter.Title)) {
-        query.filter(f => f.startsWithFilterExpression(nameof<ISong>(x => x.Title), Filter.Title))
-    }
-    query.orderBy(nameof<ISong>(x => x.Title))
+//     if (IsMiminumStringLength(Filter.Title)) {
+//         query.filter(f => f.startsWithFilterExpression(nameof<ISong>(x => x.Title), Filter.Title))
+//     }
+//     query.orderBy(nameof<ISong>(x => x.Title))
 
-    // query.select('My Properties')
-    query.toQuery()
+//     // query.select('My Properties')
+//     query.toQuery()
 
-    return catalogs
-}
+//     return catalogs
+// }

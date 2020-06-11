@@ -4,11 +4,9 @@ import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 import { isActionOf } from "typesafe-actions";
 
 import { CatalogActions } from "../index"
-import { ICatalogState, RootState } from "../reducers";
+import { RootState } from "../reducers";
 import { addSongToCatalog, fetchSongCatalog, setSongCatalogFilter, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "../actions";
-import { CreateSongAsync, createEmptySongCatalog, addSongToSongCatalogAsync, fetchSongCatalogAsync, filterSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync } from "../../service";
-import { HashTable } from "../../Util";
-import { ISongCatalog } from "../../models";
+import { addSongToSongCatalogAsync , fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync } from "../../service";
 
 const fetchSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
     action$.pipe(
@@ -73,24 +71,12 @@ const deleteSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$, stat
     );
 }
 
-const filterSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
-    return action$.pipe(
-        filter(isActionOf(setSongCatalogFilter.request)),
-        switchMap(action =>
-            from(filterSongCatalogAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
-                map(setSongCatalogFilter.success),
-                catchError((error: Error) => of(setSongCatalogFilter.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(setSongCatalogFilter.cancel))))
-            )
-        )
-    );
-}
-
 export const catalogEpics = combineEpics(
     addSongEpic,
     editSongEpic, 
     deleteSongEpic,
     fetchSongCatalogNextLinkEpic,
     fetchSongCatalogsEpic,
-    filterSongEpic,
+    // filterSongEpic,
 )
+

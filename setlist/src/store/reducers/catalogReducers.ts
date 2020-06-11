@@ -4,7 +4,8 @@ import { ActionType, getType } from "typesafe-actions";
 import { HashTable } from "../../Util";
 import { Catalogs, IModal, defaultModal } from "../../models";
 
-import * as catalogActions from "../actions/catalogActions";
+import * as catalogActions from "../actions/";
+import { catalogEpics } from "../epics";
 
 export type CatalogActions = ActionType<typeof catalogActions>;
 
@@ -24,7 +25,6 @@ export const defaultCatalog: CatalogState = {
         catalogs: {} as HashTable<Catalogs>,
         modal: defaultModal
     }
-    // availableBandlists : {} as HashTable<IBandSummary>
 }
 
 export default combineReducers<CatalogState, CatalogActions>({
@@ -37,25 +37,35 @@ export default combineReducers<CatalogState, CatalogActions>({
                     catalogsOrder: action.payload.catalogsOrder
                 }
             case getType(catalogActions.fetchSongCatalog.success):
-                return { ...state, catalogs: action.payload, }
+                return { ...state, catalogs: {
+                    ...state.catalogs,[action.payload.Id]:action.payload
+                }, }
             case getType(catalogActions.fetchSongCatalogNextLink.success):
-                return { ...state, catalogs: action.payload, }
+                return { ...state, catalogs: {
+                    ...state.catalogs,[action.payload.Id]:action.payload
+                }, }
             case getType(catalogActions.addSongToCatalog.success):
                 return {
                     ...state,
-                    catalogs: action.payload,
+                    catalogs: {
+                        ...state.catalogs,[action.payload.Id]:action.payload
+                    },
                     modal: defaultModal
                 }
             case getType(catalogActions.editSongInCatalog.success):
                 return {
                     ...state,
-                    catalogs: action.payload,
+                    catalogs: {
+                        ...state.catalogs,[action.payload.Id]:action.payload
+                    },
                     modal: defaultModal
                 }
             case getType(catalogActions.deleteSongInCatalog.success):
                 return {
                     ...state,
-                    catalogs: action.payload,
+                    catalogs: {
+                        ...state.catalogs,[action.payload.Id]:action.payload
+                    },
                     modal: defaultModal
                 }
             case getType(catalogActions.readSongInCatalog):
@@ -63,6 +73,11 @@ export default combineReducers<CatalogState, CatalogActions>({
                     ...state,
                     modal: defaultModal
                 }
+            case getType(catalogActions.fetchBandCatalog.success):{
+                return {...state,catalogs:{
+                    ...state.catalogs,[action.payload.Id]:action.payload
+                }}
+            }
             case getType(catalogActions.setSongModal):
                 return { ...state, modal: action.payload }
             default:

@@ -1,4 +1,4 @@
-import { ISongFilter, ISong } from "..";
+import { ISongFilter, ISong, IBandFilter } from "..";
 
 export interface ISongActionProps {
     song:ISong;
@@ -9,6 +9,11 @@ export interface IFilterSongActionProps {
     Filter:ISongFilter,
     Refresh: boolean,
     SongCatalogId:string
+}
+export interface IFilterBandActionProps {
+    Filter:IBandFilter,
+    Refresh: boolean,
+    BandCatalogId:string
 }
 
 export interface INextLinkActionProps {

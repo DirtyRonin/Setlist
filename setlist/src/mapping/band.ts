@@ -19,10 +19,10 @@ export class Band implements IBand {
         return new Band(title, bandSongs, id)
     }
 
-    public static ToResource(song: IBand): IBandResource {
-        const { Title, BandSongs, Id } = song;
-        return { Title, BandSongs: Array.from(BandSongs.values()), Id } as IBandResource
-    }
+    // public static ToResource(song: IBand): IBandResource {
+    //     const { Title, BandSongs, Id } = song;
+    //     return { Title, BandSongs: Array.from(BandSongs.values()), Id } as IBandResource
+    // }
 
     public static FromResource(resource: IBandResource): IBand {
         const { Title, BandSongs, Id } = resource;

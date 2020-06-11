@@ -3,10 +3,11 @@ import { combineEpics } from 'redux-observable';
 import { StateType } from "typesafe-actions";
 
 import catalogReducers from "./catalogReducers"
-import { catalogEpics } from "../epics"
+import { catalogEpics, bandCatalogEpics } from "../epics"
 
 export const rootEpic = combineEpics(
-  catalogEpics
+  catalogEpics,
+  bandCatalogEpics
 )
 
 export const rootReducer = combineReducers({

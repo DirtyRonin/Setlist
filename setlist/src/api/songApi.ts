@@ -12,9 +12,6 @@ export const GetSongsRequestAsync = async (url: string): Promise<IOdataWrapper<I
     const result = await Axios.get(url, {
         headers: defaultHeader
     });
-    // const result = await Axios.get(`${songsEndpoint.GetEndpointUrl()}/${url.toLowerCase()}`, {
-    //     headers: defaultHeader
-    // });
 
     const Odata: IOdataWrapper<ISongResource> = {
         Values: result.data.value,
@@ -26,15 +23,7 @@ export const GetSongsRequestAsync = async (url: string): Promise<IOdataWrapper<I
     return Odata;
 }
 
-// return songsResult.data.reduce((prev: HashTable<any>, current: song) => {
-//     prev[current.id] = current;
-//     return prev;
-// }, {} as HashTable<any>);
-
-
 export const CreateSongRequestAsync = async (song: ISongResource): Promise<AxiosResponse<ISongResource>> => {
-    const saveSong = { ...song, Id: "" }
-
     return await Axios.post<ISongResource>(songsEndpoint.GetEndpointUrl!(), song, {
         headers: defaultHeader
     });

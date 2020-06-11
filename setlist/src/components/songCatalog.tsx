@@ -49,10 +49,6 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
 
     const songCatalogDef = SongCatalogHtmlAttributesConfiguration;
 
-
-
-
-
     const handleScrollDown = () => {
         const { Id, OData } = songlist
         const actionProps: INextLinkActionProps = { CatalogId: Id, NextLink: OData.NextLink }
@@ -60,7 +56,6 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
         setTimeout(() => {
             fetchSongCatalogNextLink(actionProps)
         }, 500);
-
     }
 
     const handleShowAddSong = (event: React.FormEvent<FormControlProps>) => {
@@ -76,29 +71,12 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
         setSongModal(modal)
     }
 
-    const getSongCatalogNodeComponent = () => {
-
-    }
-
     return (
 
         <Container fluid>
             <Row>
-                {/* <Navbar bg="dark" variant="dark"> */}
-                {/* <Navbar variant="dark" bg="dark justify-content-between">
-                <Navbar.Brand>{songlist.Title}</Navbar.Brand>
-                <Form inline>
-                    <Button variant="outline-info">Search</Button>
-                </Form>
-            </Navbar> */}
                 <Col >
                     <ContainerCss data-testid={songlist.Id}>
-                        {/* <Title>{songlist.Title}</Title> */}
-
-
-                        <Row>
-
-                        </Row>
                         <Row>
                             <Col>
                                 <Droppable droppableId={songlist.Id}>
@@ -160,12 +138,8 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
                                 {songlist.OData.Count}
                             </Col>
                         </Row>
-
-
                     </ContainerCss>
                 </Col>
-
-
             </Row>
         </Container>
 
