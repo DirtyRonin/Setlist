@@ -1,23 +1,33 @@
-import { ISongFilter, ISong, IBandFilter } from "..";
+import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter } from "..";
 
-export interface ISongActionProps {
-    song:ISong;
-    songCatalogId:string;
+interface IFilterActionPropsBase<T> {
+    catalogId: string;
+    filter: T
+    refresh: boolean,
 }
 
-export interface IFilterSongActionProps {
-    Filter:ISongFilter,
-    Refresh: boolean,
-    SongCatalogId:string
+export interface IFilterActionProps extends IFilterActionPropsBase<ISongFilter | IBandFilter> { }
+export interface IFilterSongActionProps extends IFilterActionPropsBase<ISongFilter> { }
+export interface IFilterBandActionProps extends IFilterActionPropsBase<IBandFilter> { }
+export interface IFilterBandSongActionProps extends IFilterActionPropsBase<IBandSongFilter> { }
+
+export interface IEntityActionProps  {
+    catalogId: string;
+    value: ISong | IBand | IBandSong
+ }
+export interface ISongEntityActionProps extends IEntityActionProps { 
+    value: ISong
 }
-export interface IFilterBandActionProps {
-    Filter:IBandFilter,
-    Refresh: boolean,
-    BandCatalogId:string
+export interface IBandEntityActionProps extends IEntityActionProps { 
+    value: IBand
+}
+
+export interface IBandSongEntityActionProps extends IEntityActionProps { 
+    value: IBandSong
 }
 
 export interface INextLinkActionProps {
-    NextLink:string,
-    CatalogId:string
+    catalogId: string;
+    nextLink: string,
 }
 

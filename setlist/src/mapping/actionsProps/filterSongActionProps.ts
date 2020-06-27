@@ -2,14 +2,14 @@ import { ISongFilter, IFilterSongActionProps, ISongCatalog } from "../../models"
 
 export class FilterSongActionProps implements IFilterSongActionProps {
 
-    Filter: ISongFilter;
-    Refresh: boolean;
-    SongCatalogId: string
+    filter: ISongFilter;
+    refresh: boolean;
+    catalogId: string
 
     constructor(songCatalogId: string, filter: ISongFilter, refresh: boolean) {
-        this.Filter = filter
-        this.Refresh = refresh
-        this.SongCatalogId = songCatalogId
+        this.filter = filter
+        this.refresh = refresh
+        this.catalogId = songCatalogId
 
     }
 

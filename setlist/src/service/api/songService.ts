@@ -30,16 +30,6 @@ export const ReadSongsAsync = async (filterOrNextLink: string): Promise<IOdataWr
     return { ...odataSongResources, Values: songs }
 };
 
-export const ReadSongNextLinkAsync = async (nextLink: string): Promise<IOdataWrapper<ISong>> => {
-    const odataSongResources = await GetSongsRequestAsync(nextLink);
-
-    const songs = odataSongResources.Values.map(resource =>
-        Song.FromResource(resource)
-    )
-
-    return { ...odataSongResources, Values: songs }
-};
-
 export const CreateSongAsync = async (song: ISong): Promise<ISong> => {
     const resource = Song.ToResource(song)
 

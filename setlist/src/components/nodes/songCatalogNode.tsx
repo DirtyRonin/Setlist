@@ -1,10 +1,11 @@
 import React from "react";
-
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { Draggable } from "react-beautiful-dnd";
 
-import { ISong, IModal, ModalTypes } from "../models";
-import { Container, Row, Col, Button } from "react-bootstrap";
-import { SongNodeContainer } from "../styles";
+import { ISong, IModal, ModalTypes, IModalSong, CatalogType } from "../../models";
+import { SongNodeContainer } from "../../styles";
+
+
 
 export interface ISongNodeProps {
     song: ISong;
@@ -21,11 +22,12 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     } = props;
 
     const createModal = (type :ModalTypes) =>{
-        const modal: IModal = {
+        const modal: IModalSong = {
             show: true,
             catalogId: songListId,
+            catalogType: CatalogType.Song,
             type,
-            song: song
+            value: song
         }
         setSongModal(modal)
     }

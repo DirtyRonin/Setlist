@@ -1,9 +1,8 @@
 import Axios, { AxiosResponse } from "axios";
 
 import { EndpointConfiguration, defaultHeader } from "../Configuration";
-import { IApiBandlist, CatalogType, IBandCatalog, IBandSummary, IOdataWrapper } from "../models";
+import { IOdataWrapper } from "../models";
 // import { ReadSongsFromBand, ToApiBandlist, ToBandlistAsync, IOdataWrapper } from ".";
-import { HashTable } from "../Util";
 import { IBandResource } from "../resource";
 
 const bandsEndpoint = EndpointConfiguration.Bands;
@@ -24,5 +23,18 @@ export const GetBandsRequestAsync = async (url: string): Promise<IOdataWrapper<I
     return Odata;
 }
 
+export const CreateBandRequestAsync = async (band: IBandResource): Promise<AxiosResponse<IBandResource>> => {
+    return await Axios.post<IBandResource>(bandsEndpoint.GetEndpointUrl!(), band, {
+        headers: defaultHeader
+    });
+}
 
+export const UpdateBandRequestAsync = async (value: IBandResource): Promise<AxiosResponse<IBandResource>> =>
+    await Axios.put<IBandResource>(`${bandsEndpoint.GetEndpointUrl!()}/${value.Id}`, value, {
+        headers: defaultHeader
+    });
 
+    export const DeleteBandRequestAsync = async (itemId: string): Promise<AxiosResponse<IBandResource>> =>
+    await Axios.delete<IBandResource>(`${bandsEndpoint.GetEndpointUrl!()}/${itemId}`, {
+        headers: defaultHeader
+    });

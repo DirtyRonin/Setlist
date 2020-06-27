@@ -43,6 +43,3 @@ export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOpt
 
     public static CatalogId: string = `${CatalogType.Song.toString()}_id`
 }
-
-
-// export const CreateSongCatalog = (songs: ISong[] = []): ISongCatalog => new SongCatalog(songs);

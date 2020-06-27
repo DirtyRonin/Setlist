@@ -18,5 +18,6 @@ export interface ODataProps{
 export enum CatalogType {
     Song = "Song Catalog",
     Band = "Band Catalog",
-    Set = "Set Catalog",
+    BandSong = "BandSong Catalog",
+    None = "None"
 }

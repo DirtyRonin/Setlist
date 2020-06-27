@@ -2,7 +2,7 @@ import { IOdataWrapper, IBand } from "../../models";
 import validator from "validator";
 import { EndpointConfiguration } from "../../Configuration";
 import { Band } from "../../mapping";
-import { GetBandsRequestAsync } from "../../api";
+import { GetBandsRequestAsync, CreateBandRequestAsync, UpdateBandRequestAsync, DeleteBandRequestAsync } from "../../api";
 
 export const ReadBandsAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<IBand>> => {
 
@@ -28,3 +28,25 @@ export const ReadBandsAsync = async (filterOrNextLink: string): Promise<IOdataWr
 
     return { ...odataBandResources, Values: bands }
 };
+
+export const CreateBandAsync = async (item: IBand): Promise<IBand> => {
+    const resource = Band.ToResource(item)
+
+    const result = await CreateBandRequestAsync(resource)
+
+    return Band.FromResource(result.data)
+}
+
+export const UpdateBandAsync = async(item:IBand):Promise<IBand> => {
+    const resource = Band.ToResource(item)
+
+    const result = await UpdateBandRequestAsync(resource)
+
+    return Band.FromResource(result.data)
+}
+
+export const DeleteBandAsync = async (itemId: string): Promise<IBand> => {
+    const result = await DeleteBandRequestAsync(itemId);
+
+    return Band.FromResource(result.data);
+}

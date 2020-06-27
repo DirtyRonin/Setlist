@@ -1,4 +1,4 @@
-import { ISong, ISongActionProps } from ".";
+import { CatalogType } from "../catalog";
 
 export enum ModalTypes {
     None = "None",
@@ -12,14 +12,13 @@ export interface IModal {
     show: boolean
     type: ModalTypes
     catalogId: string
-    song: ISong
+    catalogType: CatalogType
 }
 
 export const defaultModal: IModal = {
     show: false,
     type: ModalTypes.None,
     catalogId: "",
-    song: {} as ISong,
+    catalogType: CatalogType.None,
 }
 
-export type songModalActions = Record<keyof typeof ModalTypes, (props: ISongActionProps) => void>

@@ -1,18 +1,17 @@
 import React, { useEffect } from "react";
 
 import { Droppable } from "react-beautiful-dnd";
-import { Form, FormControlProps, Col, Row, Navbar, FormControl, Nav, NavDropdown, Container, InputGroup, Modal } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
+import { Form, FormControlProps, Col, Row, Navbar, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 
 
-import SongCatalogNodeComponent from "./songCatalogNode";
-import { ISongCatalog, ISong, ISongFilter, ISongActionProps, IFilterSongActionProps, INextLinkActionProps, IModal, ModalTypes } from "../models";
-import { CreateSongNodeHtmlAttributesConfiguration, FilterSongHtmlAttributesConfiguration, SongCatalogHtmlAttributesConfiguration } from "../Configuration";
+import { ISongCatalog, IFilterSongActionProps, INextLinkActionProps, IModal, ModalTypes, CatalogType, IModalSong } from "../models";
+import { SongCatalogHtmlAttributesConfiguration } from "../Configuration";
 import { ContainerCss, NodeListCss, SongFilterCss } from "../styles";
 import { Song, FilterSongActionProps } from "../mapping";
-import { SongFilterComponent, ISongFilterProps } from "./filters/songFilter";
+import { SongFilterComponent } from "./filters/songFilter";
+import SongCatalogNodeComponent from "./nodes/songCatalogNode";
 
 export interface ISongCatalogProps {
     songlist: ISongCatalog;
@@ -22,10 +21,6 @@ export interface ISongCatalogProps {
     fetchSongCatalogNextLink: (props: INextLinkActionProps) => void
 
     setSongModal(props: IModal): void
-    // DeleteSongAsync(songId: string): Promise<ISong>;
-
-    // AddSongToMainListState: (songListId: string, newSong: ISong) => void;
-    // RemoveSongFromMainListState(songListId: string, songId: string): void;
 }
 
 const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
@@ -35,9 +30,6 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
         fetchSongCatalogNextLink,
         setSongModal,
         showModal
-        // AddSongToMainListState,
-        // RemoveSongFromMainListState,
-        // DeleteSongAsync
     } = props;
 
     useEffect(() => {
@@ -51,7 +43,7 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
 
     const handleScrollDown = () => {
         const { Id, OData } = songlist
-        const actionProps: INextLinkActionProps = { CatalogId: Id, NextLink: OData.NextLink }
+        const actionProps: INextLinkActionProps = { catalogId: Id, nextLink: OData.NextLink }
 
         setTimeout(() => {
             fetchSongCatalogNextLink(actionProps)
@@ -61,11 +53,12 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
     const handleShowAddSong = (event: React.FormEvent<FormControlProps>) => {
         const elements: any = (event.target as any).form.elements;
 
-        const modal: IModal = {
+        const modal: IModalSong = {
             show: elements[songCatalogDef.ShowAddSongCheckBox.ControlId].checked,
             catalogId: songlist.Id,
+            catalogType: CatalogType.Song,
             type: ModalTypes.New,
-            song: Song.EmptySong()
+            value: Song.EmptySong()
         }
 
         setSongModal(modal)

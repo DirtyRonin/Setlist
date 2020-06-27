@@ -4,13 +4,15 @@ import { Container, Row, Col } from "react-bootstrap";
 import { DragDropContext, DropResult, DraggableLocation } from "react-beautiful-dnd";
 
 import styled from "styled-components";
-import { ISongCatalog, CatalogType, IBandCatalog } from "./models";
+import { ISongCatalog, CatalogType, IBandCatalog, IModal, ISong, IModalSong } from "./models";
 import SongCatalogComponent from "./components/songCatalog";
 
 
 import { AppProps } from "./store";
 import { SongModalComponent } from "./components/modals/songModal";
 import BandCatalogComponent from "./components/bandCatalog";
+import { IModalBand } from "./models/modals/modelBand";
+import { BandModalComponent } from "./components/modals/bandModal";
 
 const AppContainer = styled.div`
     display: flex;
@@ -22,16 +24,21 @@ export const App = (props: AppProps): JSX.Element => {
     const {
         catalogState,
         songModalActionsProvider,
+        bandModalActionsProvider,
         fetchBandCatalog,
         fetchSongCatalog,
+
         fetchSongCatalogNextLink,
+        fetchBandCatalogNextLink,
+
         createEmptySongCatalog,
         createEmptyBandCatalog,
+        newBandSongCatalog,
+
         setCatalogState,
-        setSongModal
+        setModal,
+        showBandSongsCatalog,
     } = props;
-
-
 
     useEffect(() => {
         const newState = createEmptySongCatalog(catalogState);
@@ -42,7 +49,9 @@ export const App = (props: AppProps): JSX.Element => {
     const onDragEnd = (result: DropResult): void => {
     };
   
-
+    // const CurrentBandSongIds :string[] = Object.values(catalogState.catalogs).filter(
+    //     catalog => catalog.CatalogType === CatalogType.BandSong 
+    // ).map(bandSongCatalog => bandSongCatalog.Id)
 
     const renderSetlists = (): JSX.Element[] => {
         if (!catalogState) {
@@ -56,7 +65,7 @@ export const App = (props: AppProps): JSX.Element => {
                     <SongCatalogComponent
                         fetchSongCatalog={fetchSongCatalog}
                         fetchSongCatalogNextLink={fetchSongCatalogNextLink}
-                        setSongModal={setSongModal}
+                        setSongModal={setModal}
                         key={catalog.Id}
                         songlist={catalog as ISongCatalog}
                         showModal={catalogState.modal.show}
@@ -67,9 +76,12 @@ export const App = (props: AppProps): JSX.Element => {
                 return (
                     <BandCatalogComponent
                         fetchBandCatalog={fetchBandCatalog}
+                        fetchCatalogNextLink = {fetchBandCatalogNextLink}
                         key={catalog.Id}
                         bandlist={catalog as IBandCatalog}
                         showModal={catalogState.modal.show}
+                        showBandSongsCatalog = {showBandSongsCatalog}
+                        setModal={setModal}
                     />
                 );
             }
@@ -91,11 +103,17 @@ export const App = (props: AppProps): JSX.Element => {
                     </Col>
                 </Row>
             </Container>
-            <SongModalComponent
-                modal={catalogState.modal}
-                setSongModal={setSongModal}
+            {catalogState.modal.catalogType === CatalogType.Song &&  <SongModalComponent
+                modal={catalogState.modal as IModalSong}
+                setSongModal={setModal}
                 executeSongModalAction={songModalActionsProvider[catalogState.modal.type]}
-            />
+            />}
+            {catalogState.modal.catalogType === CatalogType.Band &&  <BandModalComponent
+                modal={catalogState.modal as IModalBand}
+                setModal={setModal}
+                executeBandModalAction={bandModalActionsProvider[catalogState.modal.type]}
+            />}
+           
         </div>
     );
 };

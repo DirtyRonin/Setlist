@@ -2,14 +2,14 @@ import { IBandFilter, IBandCatalog, IFilterBandActionProps } from "../../models"
 
 export class FilterBandActionProps implements IFilterBandActionProps {
 
-    Filter: IBandFilter;
-    Refresh: boolean;
-    BandCatalogId: string;
+    filter: IBandFilter;
+    refresh: boolean;
+    catalogId: string;
 
     constructor(bandCatalogId: string, filter: IBandFilter, refresh: boolean) {
-        this.Filter = filter
-        this.Refresh = refresh
-        this.BandCatalogId = bandCatalogId
+        this.filter = filter
+        this.refresh = refresh
+        this.catalogId = bandCatalogId
     }
 
     public static Default(bandCatalogId: string): IFilterBandActionProps {

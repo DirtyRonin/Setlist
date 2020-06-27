@@ -23,8 +23,6 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
         // event.preventDefault();
 
-        console.log("checked that handleFilter")
-
         const elements: any = (event.target as any).form.elements;
 
         const filter = {
@@ -37,15 +35,15 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
 
         const songFilter = FilterSongActionProps.Create(CatalogId, filter, true)
 
-        songFilter.Refresh =
-            Filter.Evergreen !== songFilter.Filter.Evergreen ? true :
-                Filter.Nineties !== songFilter.Filter.Nineties ? true :
-                    IsFilterableString(Filter.Title, songFilter.Filter.Title) ? true :
-                        IsFilterableString(Filter.Artist, songFilter.Filter.Artist) ? true :
-                            IsFilterableString(Filter.Genre, songFilter.Filter.Genre) ? true :
+        songFilter.refresh =
+            Filter.Evergreen !== songFilter.filter.Evergreen ? true :
+                Filter.Nineties !== songFilter.filter.Nineties ? true :
+                    IsFilterableString(Filter.Title, songFilter.filter.Title) ? true :
+                        IsFilterableString(Filter.Artist, songFilter.filter.Artist) ? true :
+                            IsFilterableString(Filter.Genre, songFilter.filter.Genre) ? true :
                                 false
 
-        if (songFilter.Refresh) {
+        if (songFilter.refresh) {
             FetchSongCatalog(songFilter)
         }
     }

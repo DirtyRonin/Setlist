@@ -1,20 +1,21 @@
 import React from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
-import { CreateSongNodeHtmlAttributesConfiguration } from "../../Configuration";
-import { IModal, ModalTypes, defaultModal, ISongActionProps, ISong } from "../../models";
+import { SongModalHtmlAttributesConfiguration } from "../../Configuration";
+import { IModal, ModalTypes, defaultModal, ISongEntityActionProps, ISong, IModalSong } from "../../models";
 import { Song } from "../../mapping";
+import { IsModalReadonly } from "../../Util";
 
 export interface ISongModalComponent {
-    modal: IModal
+    modal: IModalSong
     setSongModal(props: IModal): void
-    executeSongModalAction(props: ISongActionProps): void
+    executeSongModalAction(props: ISongEntityActionProps): void
 }
 
 export const SongModalComponent = (props: ISongModalComponent) => {
 
     const { modal, setSongModal, executeSongModalAction } = props
 
-    const songDef = CreateSongNodeHtmlAttributesConfiguration;
+    const songDef = SongModalHtmlAttributesConfiguration;
 
     const handleCloseModal = () => {
         setSongModal(defaultModal);
@@ -28,7 +29,7 @@ export const SongModalComponent = (props: ISongModalComponent) => {
         const song = GetSongForModalType(modal.type, elements)
 
         if (modal.catalogId)
-            executeSongModalAction({ song, songCatalogId: modal.catalogId } as ISongActionProps)
+            executeSongModalAction({ value: song, catalogId: modal.catalogId } as ISongEntityActionProps)
     };
 
     const GetSongForModalType = (type: ModalTypes, elements: any) => {
@@ -40,13 +41,13 @@ export const SongModalComponent = (props: ISongModalComponent) => {
         } as ISong
 
         if (type != ModalTypes.New) {
-            song.Id = modal.song.Id
+            song.Id = modal.value.Id
         }
 
         return song;
     }
 
-    const IsReadonly = ModalTypes.Remove === modal.type || ModalTypes.Read === modal.type || ModalTypes.None === modal.type
+    const IsReadonly = IsModalReadonly(modal.type)
 
     return <Modal show={modal.show} onHide={handleCloseModal}>
         <Modal.Dialog>
@@ -58,15 +59,15 @@ export const SongModalComponent = (props: ISongModalComponent) => {
                     <Form.Row>
                         <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
                             <Form.Label>{songDef.Title.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.song.Title} placeholder={songDef.Title.Placeholder}></Form.Control>
+                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Title} placeholder={songDef.Title.Placeholder}></Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
                             <Form.Label>{songDef.Artist.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.song.Artist} placeholder={songDef.Artist.Placeholder}></Form.Control>
+                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Artist} placeholder={songDef.Artist.Placeholder}></Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
                             <Form.Label>{songDef.Genre.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.song.Genre} placeholder={songDef.Genre.Placeholder}></Form.Control>
+                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Genre} placeholder={songDef.Genre.Placeholder}></Form.Control>
                         </Form.Group>
                     </Form.Row>
                 </Modal.Body>
