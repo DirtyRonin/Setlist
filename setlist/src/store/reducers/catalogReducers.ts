@@ -29,12 +29,7 @@ export const defaultCatalog: CatalogState = {
 export default combineReducers<CatalogState, CatalogActions>({
     catalogState: (state = defaultCatalog.catalogState, action) => {
         switch (action.type) {
-            case getType(catalogActions.setCatalogState):
-                return {
-                    ...state,
-                    catalogs: action.payload.catalogs,
-                    catalogsOrder: action.payload.catalogsOrder
-                }
+            case getType(catalogActions.setCatalogState): return setCatalogState(state,action.payload)
             
             case getType(catalogActions.fetchBandCatalog.success): return updateCatalog(state, action.payload)
             case getType(catalogActions.fetchBandCatalogNextLink.success): return updateCatalog(state, action.payload)
@@ -49,6 +44,10 @@ export default combineReducers<CatalogState, CatalogActions>({
             case getType(catalogActions.deleteSongInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.editSongInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.readSongInCatalog): return setModal(state, defaultModal)
+
+            case getType(catalogActions.openBandSongsCatalog.success): return setCatalogState(state,action.payload)
+            case getType(catalogActions.closeBandSongsCatalog.success): return setCatalogState(state,action.payload)
+            
 
             case getType(catalogActions.setModal): return setModal(state, action.payload)
 
@@ -79,6 +78,14 @@ const setModal = (state: ICatalogState, modal: IModal): ICatalogState => {
     return {
         ...state,
         modal
+    }
+}
+
+const setCatalogState = (currentCatalogState: ICatalogState, newCatalogState: ICatalogState): ICatalogState => {
+    return {
+        ...currentCatalogState, 
+        catalogs: newCatalogState.catalogs,
+        catalogsOrder : newCatalogState.catalogsOrder
     }
 }
 

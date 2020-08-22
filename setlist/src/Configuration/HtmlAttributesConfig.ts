@@ -66,17 +66,33 @@ export const SongCatalogHtmlAttributesConfiguration: ConfigurationItemCollection
     NodeList: { Label: "", Placeholder: "", Data_TestId: "SongCatalog_NodeList", ControlId: "SongCatalog_NodeList" },
 }
 
-type BandCatalogComponentNames = "ShowAddBandCheckBox" | "Navbar" | "NodeList" | "ShowBandSongCatalogCheckBox"
+type BandCatalogComponentNames = "ShowAddBandCheckBox" | "Navbar" | "NodeList" 
 
 export const BandCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
     BandCatalogComponentNames
 > = {
-    ShowAddBandCheckBox: { Label: "Add Bands", Placeholder: "", Data_TestId: "BandCatalog_ShowAddBand", ControlId: "BandCatalog_ShowAddBand" },
+    ShowAddBandCheckBox: { Label: "Add Band", Placeholder: "", Data_TestId: "BandCatalog_ShowAddBand", ControlId: "BandCatalog_ShowAddBand" },
     Navbar: { Label: "", Placeholder: "", Data_TestId: "BandCatalog_Options_responsiveNavbar", ControlId: "BandCatalog_Options_responsiveNavbar" },
     NodeList: { Label: "", Placeholder: "", Data_TestId: "BandCatalog_NodeList", ControlId: "BandCatalog_NodeList" },
-    ShowBandSongCatalogCheckBox: { Label: "Show Band Songs", Placeholder: "", Data_TestId: "BandCatalog_ShowBandSongCatalog", ControlId: "BandCatalog_ShowBandSongCatalog" },
 }
 
+type BandCatalogNodeComponentNames = "ShowBandSongCatalogCheckBox"
 
+export const BandCatalogNodeHtmlAttributesConfiguration: ConfigurationItemCollection<
+FormHtmlAttributesDefinition,
+BandCatalogNodeComponentNames
+> = {
+    ShowBandSongCatalogCheckBox: { Label: "Show Band Songs", Placeholder: "", Data_TestId: "BandCatalogNode_ShowBandSongCatalog", ControlId: "BandCatalogNode_ShowBandSongCatalog" },
+}
 
+type BandSongCatalogComponentNames = "ShowAddBandSongCheckBox" | "Navbar" | "NodeList" 
+
+export const BandSongCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    BandSongCatalogComponentNames
+> = {
+    ShowAddBandSongCheckBox: { Label: "Add BandSong", Placeholder: "", Data_TestId: "BandSongCatalog_ShowAddBandSong", ControlId: "BandSongCatalog_ShowAddBandSong" },
+    Navbar: { Label: "", Placeholder: "", Data_TestId: "BandSongCatalog_Options_responsiveNavbar", ControlId: "BandSongCatalog_Options_responsiveNavbar" },
+    NodeList: { Label: "", Placeholder: "", Data_TestId: "BandSongCatalog_NodeList", ControlId: "BandSongCatalog_NodeList" },
+}

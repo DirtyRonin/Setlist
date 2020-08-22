@@ -4,7 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { DragDropContext, DropResult, DraggableLocation } from "react-beautiful-dnd";
 
 import styled from "styled-components";
-import { ISongCatalog, CatalogType, IBandCatalog, IModal, ISong, IModalSong } from "./models";
+import { ISongCatalog, CatalogType, IBandCatalog, IModal, ISong, IModalSong, IBandSongCatalog } from "./models";
 import SongCatalogComponent from "./components/songCatalog";
 
 
@@ -13,6 +13,7 @@ import { SongModalComponent } from "./components/modals/songModal";
 import BandCatalogComponent from "./components/bandCatalog";
 import { IModalBand } from "./models/modals/modelBand";
 import { BandModalComponent } from "./components/modals/bandModal";
+import BandSongCatalogComponent from "./components/bandSongCatalog";
 
 const AppContainer = styled.div`
     display: flex;
@@ -23,8 +24,11 @@ export const App = (props: AppProps): JSX.Element => {
 
     const {
         catalogState,
+        catalogState:{modal,catalogs,catalogsOrder},
         songModalActionsProvider,
         bandModalActionsProvider,
+
+        fetchBandSongCatalog,
         fetchBandCatalog,
         fetchSongCatalog,
 
@@ -33,15 +37,18 @@ export const App = (props: AppProps): JSX.Element => {
 
         createEmptySongCatalog,
         createEmptyBandCatalog,
-        newBandSongCatalog,
+
+        openBandSongsCatalog: showBandSongsCatalog,
+        closeBandSongsCatalog,
 
         setCatalogState,
         setModal,
-        showBandSongsCatalog,
     } = props;
 
+    // const {catalogs,catalogsOrder,modal} = catalogState
+
     useEffect(() => {
-        const newState = createEmptySongCatalog(catalogState);
+        const newState = createEmptySongCatalog({...catalogState});
         const allState = createEmptyBandCatalog(newState);
         setCatalogState(allState)
     }, []);
@@ -58,8 +65,10 @@ export const App = (props: AppProps): JSX.Element => {
             return [] as JSX.Element[]
         }
 
-        return catalogState.catalogsOrder.map(songListId => {
-            const catalog = catalogState.catalogs[songListId];
+        
+
+        return catalogsOrder.map(songListId => {
+            const catalog = catalogs[songListId];
             if (catalog.CatalogType === CatalogType.Song) {
                 return (
                     <SongCatalogComponent
@@ -68,24 +77,39 @@ export const App = (props: AppProps): JSX.Element => {
                         setSongModal={setModal}
                         key={catalog.Id}
                         songlist={catalog as ISongCatalog}
-                        showModal={catalogState.modal.show}
+                        showModal={modal.show}
                     />
                 );
             }
-            if (catalog.CatalogType === CatalogType.Band) {
+            else if (catalog.CatalogType === CatalogType.Band) {
                 return (
                     <BandCatalogComponent
                         fetchBandCatalog={fetchBandCatalog}
                         fetchCatalogNextLink = {fetchBandCatalogNextLink}
                         key={catalog.Id}
                         bandlist={catalog as IBandCatalog}
-                        showModal={catalogState.modal.show}
+                        showModal={modal.show}
+                        openedCatalogs = { catalogsOrder  }
                         showBandSongsCatalog = {showBandSongsCatalog}
+                        closeBandSongsCatalog = {closeBandSongsCatalog}
                         setModal={setModal}
                     />
                 );
+            }else if (catalog.CatalogType === CatalogType.BandSong){
+                return (
+                    <BandSongCatalogComponent 
+                        fetchBandSongCatalog = {fetchBandSongCatalog}
+                        key = {catalog.Id}
+                        showModal={modal.show}
+                        bandSongList = {catalog as IBandSongCatalog}
+                    />
+                )
             }
-            return (<div></div>)
+            
+            else{
+                return (<div></div>)
+            }
+            
         });
     };
 
@@ -103,15 +127,15 @@ export const App = (props: AppProps): JSX.Element => {
                     </Col>
                 </Row>
             </Container>
-            {catalogState.modal.catalogType === CatalogType.Song &&  <SongModalComponent
-                modal={catalogState.modal as IModalSong}
+            {modal.catalogType === CatalogType.Song &&  <SongModalComponent
+                modal={modal as IModalSong}
                 setSongModal={setModal}
-                executeSongModalAction={songModalActionsProvider[catalogState.modal.type]}
+                executeSongModalAction={songModalActionsProvider[modal.type]}
             />}
-            {catalogState.modal.catalogType === CatalogType.Band &&  <BandModalComponent
-                modal={catalogState.modal as IModalBand}
+            {modal.catalogType === CatalogType.Band &&  <BandModalComponent
+                modal={modal as IModalBand}
                 setModal={setModal}
-                executeBandModalAction={bandModalActionsProvider[catalogState.modal.type]}
+                executeBandModalAction={bandModalActionsProvider[modal.type]}
             />}
            
         </div>

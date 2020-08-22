@@ -1,4 +1,5 @@
 import { IFilterBandSongActionProps, IBandSongFilter, IBandSongCatalog } from "../../models";
+import { BandSongCatalog } from "../SongCatalog";
 
 export class FilterBandSongActionProps implements IFilterBandSongActionProps {
 
@@ -6,28 +7,28 @@ export class FilterBandSongActionProps implements IFilterBandSongActionProps {
     refresh: boolean;
     catalogId: string;
 
-    constructor(catalogId: string, filter: IBandSongFilter, refresh: boolean) {
+    constructor(parentId: string, filter: IBandSongFilter, refresh: boolean) {
         this.filter = filter
         this.refresh = refresh
-        this.catalogId = catalogId
+        this.catalogId = BandSongCatalog.GetCatalogId(parentId)
     }
 
-    public static Default(catalogId: string): IFilterBandSongActionProps {
+    public static Default(parentId: string): IFilterBandSongActionProps {
 
         const filter: IBandSongFilter = {
             Title: "",
-            ParentId: catalogId
+            ParentId: parentId
         }
 
-        return FilterBandSongActionProps.Create(catalogId,filter, true)
+        return FilterBandSongActionProps.Create(parentId, filter, true)
     }
 
-    public static Create(catalogId: string,filter: IBandSongFilter, refresh: boolean): IFilterBandSongActionProps {
-        return new FilterBandSongActionProps(catalogId,filter, refresh)
+    public static Create(parentId: string, filter: IBandSongFilter, refresh: boolean): IFilterBandSongActionProps {
+        return new FilterBandSongActionProps(parentId, filter, refresh)
     }
 
-    public static CreateFromCatalog(catalog:IBandSongCatalog){
-        const {Id,Filter,Refresh} = catalog
-        return new FilterBandSongActionProps(Id,Filter,Refresh)
+    public static CreateFromCatalog(catalog: IBandSongCatalog) {
+        const { Id, Filter, Refresh } = catalog
+        return new FilterBandSongActionProps(Id, Filter, Refresh)
     }
 }

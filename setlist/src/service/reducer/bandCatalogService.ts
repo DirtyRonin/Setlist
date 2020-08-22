@@ -6,18 +6,19 @@ import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 import { nameof } from "ts-simple-nameof";
 import { ReadBandsAsync, CreateBandAsync, UpdateBandAsync, DeleteBandAsync } from "..";
 
-export const createEmptyBandCatalog = (catalogState : ICatalogState): ICatalogState => {
-    const {catalogs, catalogsOrder,modal} = catalogState
+
+export const createEmptyBandCatalog = (catalogState: ICatalogState): ICatalogState => {
+    const { catalogs, catalogsOrder, modal } = catalogState
 
     const defaultActionProps = FilterBandActionProps.Default(BandCatalog.CatalogId)
 
     const bandCatalog = BandCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, {});
 
-    const newCatalogs: HashTable<Catalog> = {...catalogs,[bandCatalog.Id] : bandCatalog} ;
+    const newCatalogs: HashTable<Catalog> = { ...catalogs, [bandCatalog.Id]: bandCatalog };
 
-    const newCatalogsOrder: Array<string> = [...catalogsOrder,bandCatalog.Id]
+    const newCatalogsOrder: Array<string> = [...catalogsOrder, bandCatalog.Id]
 
-    return { catalogs: newCatalogs,catalogsOrder: newCatalogsOrder,modal } as ICatalogState
+    return { catalogs: newCatalogs, catalogsOrder: newCatalogsOrder, modal } as ICatalogState
 }
 
 export const fetchBandCatalogAsync = async (props: IFilterBandActionProps, catalogs: HashTable<Catalog>): Promise<Catalog> => {
