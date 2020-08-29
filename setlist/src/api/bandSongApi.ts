@@ -1,42 +1,22 @@
 import Axios from "axios";
 import { EndpointConfiguration, defaultHeader, BandSongsEndPointDefinition } from "../Configuration";
-import { ISong } from "../models";
+import { ISong, IOdataWrapper } from "../models";
+import { IBandSongResource } from "../resource";
 
+const bandSongsEndpoint = EndpointConfiguration.Bandsongs;
 
+export const GetBandSongsRequestAsync = async (url: string): Promise<IOdataWrapper<IBandSongResource>> => {
 
-
-const bandsongsEndpoint = (EndpointConfiguration.Bandsongs as BandSongsEndPointDefinition).ActionEndpoints;
-const endPointWithId = (actionEndPoint: string,id: string): string => `${actionEndPoint}/${id}`;
-
-type BandSongRef = {
-    songId:string
-}
-
-const GetBandSongRefs = (songIds: string[]): Array<BandSongRef> => songIds.map(songId => { return {songId}})
-
-export const ReadSongsFromBand = async(bandId: string):Promise<ISong[]> => {
-    const readResult = await Axios.get<ISong[]>(endPointWithId(bandsongsEndpoint.GetBandsongs.GetEndpointUrl(),bandId),{
+    const result = await Axios.get(url, {
         headers: defaultHeader
     });
 
-    return readResult.data;
-}
+    const Odata: IOdataWrapper<IBandSongResource> = {
+        Values: result.data.value,
+        Context: result.data["@odata.context"],
+        Count: result.data["@odata.count"],
+        NextLink: result.data["@odata.nextLink"],
+    }
 
-export const AddSongsToBandAsync = async (bandId: string, songIds: string[]): Promise<void> => {
-
-    const bandSongRefs: Array<BandSongRef> = GetBandSongRefs(songIds)
-
-    await Axios.put<void>(endPointWithId(bandsongsEndpoint.AddBandsongs.GetEndpointUrl(),bandId), bandSongRefs, {
-        headers: defaultHeader
-    });
-};
-
-
-export const RemoveSongsFromBandAsync = async(bandId: string, songIds: string[]):Promise<void> => {
-
-    const bandSongRefs: Array<BandSongRef> = GetBandSongRefs(songIds)
-
-    await Axios.put<void>(endPointWithId(bandsongsEndpoint.RemoveBandsongs.GetEndpointUrl(),bandId),bandSongRefs,{
-        headers: defaultHeader
-    });
+    return Odata;
 }

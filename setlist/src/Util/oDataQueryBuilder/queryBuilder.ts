@@ -33,7 +33,15 @@ export default class FilterBuilder {
         this.fragments.push(
             new QueryFragment(FragmentType.Filter, `${field} in ${this.concatInValues(values)}`)
         )
+        return this;
     }
+    filterGuidExpression = (field: string, operator: string, value: filterExpressionType) => {
+        this.fragments.push(
+            new QueryFragment(FragmentType.Filter, `${field} ${operator} ${value}`)
+        );
+        return this;
+    };
+
     filterExpression = (field: string, operator: string, value: filterExpressionType) => {
         this.fragments.push(
             new QueryFragment(FragmentType.Filter, `${field} ${operator} ${this.getValue(value)}`)

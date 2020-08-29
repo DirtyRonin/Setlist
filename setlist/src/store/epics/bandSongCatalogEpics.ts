@@ -1,12 +1,34 @@
 import { Epic, combineEpics } from "redux-observable";
 import { isActionOf } from "typesafe-actions";
-import { of } from "rxjs";
+import { of, from } from "rxjs";
 import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 
-import { CatalogActions, RootState, openBandSongsCatalog, closeBandSongsCatalog } from "..";
-import { createEmptyBandSongCatalog, closeBandSongCatalog } from "../../service";
+import { CatalogActions, RootState, openBandSongsCatalog, closeBandSongsCatalog, fetchBandSongCatalog, fetchBandSongCatalogNextLink } from "..";
+import { createEmptyBandSongCatalog, closeBandSongCatalog, fetchBandSongCatalogAsync, fetchBandSongCatalogNextLinkAsync } from "../../service";
 
+const fetchBandSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
+    action$.pipe(
+        filter(isActionOf(fetchBandSongCatalog.request)),
+        switchMap(action =>
+            from(fetchBandSongCatalogAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+                map(fetchBandSongCatalog.success),
+                catchError((error: Error) => of(fetchBandSongCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(fetchBandSongCatalog.cancel))))
+            )
+        )
+    );
 
+const fetchBandSongCatalogNextLinkEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
+action$.pipe(
+    filter(isActionOf(fetchBandSongCatalogNextLink.request)),
+    switchMap(action =>
+        from(fetchBandSongCatalogNextLinkAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+            map(fetchBandSongCatalogNextLink.success),
+            catchError((error: Error) => of(fetchBandSongCatalogNextLink.failure(error))),
+            takeUntil(action$.pipe(filter(isActionOf(fetchBandSongCatalogNextLink.cancel))))
+        )
+    )
+);
 
 const addBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
     return action$.pipe(
@@ -36,5 +58,7 @@ const closeBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (act
 
 export const bandSongCatalogEpics = combineEpics(
     addBandSongCatalogEpic,
-    closeBandSongCatalogEpic
+    closeBandSongCatalogEpic,
+    fetchBandSongCatalogsEpic,
+    fetchBandSongCatalogNextLinkEpic
 )

@@ -19,7 +19,7 @@ type EndpointFieldNames = "Songs" | "Bandsongs" | "Bands" | "Sets" | "SetSongs" 
 
 export const EndpointPartialTypeDefinition: ConfigurationItemCollection<NameDefinition, EndpointFieldNames> = {
     Songs: { Name: "Songs" },
-    Bandsongs: { Name: "Bandsongs" },
+    Bandsongs: { Name: "BandSongs" },
     Bands: { Name: "Bands" },
     Sets: { Name: "Sets" },
     SetSongs: { Name: "SetSongs" }

@@ -45,6 +45,8 @@ export default combineReducers<CatalogState, CatalogActions>({
             case getType(catalogActions.editSongInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.readSongInCatalog): return setModal(state, defaultModal)
 
+            case getType(catalogActions.fetchBandSongCatalog.success): return updateCatalog(state, action.payload)
+            case getType(catalogActions.fetchBandSongCatalogNextLink.success): return updateCatalog(state, action.payload)
             case getType(catalogActions.openBandSongsCatalog.success): return setCatalogState(state,action.payload)
             case getType(catalogActions.closeBandSongsCatalog.success): return setCatalogState(state,action.payload)
             

@@ -7,28 +7,35 @@ export class FilterBandSongActionProps implements IFilterBandSongActionProps {
     refresh: boolean;
     catalogId: string;
 
-    constructor(parentId: string, filter: IBandSongFilter, refresh: boolean) {
+    constructor(catalogId: string, filter: IBandSongFilter, refresh: boolean) {
         this.filter = filter
         this.refresh = refresh
-        this.catalogId = BandSongCatalog.GetCatalogId(parentId)
+        this.catalogId = catalogId
     }
 
-    public static Default(parentId: string): IFilterBandSongActionProps {
+    public static Default(bandId: string): IFilterBandSongActionProps {
 
         const filter: IBandSongFilter = {
             Title: "",
-            ParentId: parentId
+            Artist: "",
+            Genre: "",
+            Evergreen: false,
+            Nineties: false,
+            BandId: bandId
         }
 
-        return FilterBandSongActionProps.Create(parentId, filter, true)
+        return FilterBandSongActionProps.Create(FilterBandSongActionProps.CatalogId(bandId), filter, true)
     }
 
-    public static Create(parentId: string, filter: IBandSongFilter, refresh: boolean): IFilterBandSongActionProps {
-        return new FilterBandSongActionProps(parentId, filter, refresh)
+    public static Create(bandId: string, filter: IBandSongFilter, refresh: boolean): IFilterBandSongActionProps {
+        return new FilterBandSongActionProps(FilterBandSongActionProps.CatalogId(bandId), filter, refresh)
     }
 
     public static CreateFromCatalog(catalog: IBandSongCatalog) {
         const { Id, Filter, Refresh } = catalog
         return new FilterBandSongActionProps(Id, Filter, Refresh)
     }
+
+    public static CatalogId = (bandId: string): string => BandSongCatalog.GetCatalogId(bandId)
+
 }

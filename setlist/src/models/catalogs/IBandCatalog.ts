@@ -1,4 +1,5 @@
-import { ICatalog, IBand } from ".";
+import { ICatalog } from "./ICatalog";
+import { IBand } from "..";
 
 export interface IBandFilter {
     Title: string;

@@ -7,7 +7,7 @@ type FormHtmlAttributesDefinition = {
     ControlId: string;
 };
 
-type SongModalNodeHtmlComponentNames = "Title" | "Artist" | "Genre" | "Nineties" | "Evergreen" |"OriginalKey" | "Comment";
+type SongModalNodeHtmlComponentNames = "Title" | "Artist" | "Genre" | "Nineties" | "Evergreen" | "OriginalKey" | "Comment";
 
 export const SongModalHtmlAttributesConfiguration: Record<
     SongModalNodeHtmlComponentNames,
@@ -23,7 +23,7 @@ export const SongModalHtmlAttributesConfiguration: Record<
 
 };
 
-type BandModalNodeHtmlComponentNames = "Title" ;
+type BandModalNodeHtmlComponentNames = "Title";
 
 export const BandModalHtmlAttributesConfiguration: Record<
     BandModalNodeHtmlComponentNames,
@@ -34,25 +34,44 @@ export const BandModalHtmlAttributesConfiguration: Record<
 
 type FilterSongComponentNames = "SearchTitleInput" | "SearchArtistInput" | "SearchGenreInput" | "SearchEvergreenCheckBox" | "SearchNinetiesCheckBox" | "SearchButton";
 
-export const FilterSongHtmlAttributesConfiguration: ConfigurationItemCollection<
+export type FilterSongHtmlAttributesConfigurationType = ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
     FilterSongComponentNames
-> = {
-    SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterSong_SearchTitle", ControlId: "FilterSong_SearchTitle" },
-    SearchArtistInput: { Label: "Search For Artist", Placeholder: "Enter Artist", Data_TestId: "FilterSong_SearchArtist", ControlId: "FilterSong_SearchArtist" },
-    SearchGenreInput: { Label: "Search For Genre", Placeholder: "Enter Genre", Data_TestId: "FilterSong_SearchGenre", ControlId: "FilterSong_SearchGenre" },
-    SearchEvergreenCheckBox: { Label: "Evergreen", Placeholder: "", Data_TestId: "FilterSong_SearchEvergreen", ControlId: "FilterSong_SearchEvergreen" },
-    SearchNinetiesCheckBox: { Label: "90er", Placeholder: "", Data_TestId: "FilterSong_SearchNineties", ControlId: "FilterSong_SearchNineties" },
-    SearchButton: { Label: "Search", Placeholder: "", Data_TestId: "FilterSong_SearchButton", ControlId: "FilterSong_SearchButton" },
+>
+
+const filterSongName= "FilterSong"
+export const FilterSongHtmlAttributesConfiguration: FilterSongHtmlAttributesConfigurationType = {
+    SearchTitleInput: { Label: `Search For Title`, Placeholder: `Enter Title`, Data_TestId: `${filterSongName}_SearchTitle`, ControlId: `${filterSongName}_SearchTitle` },
+    SearchArtistInput: { Label: `Search For Artist`, Placeholder: `Enter Artist`, Data_TestId: `${filterSongName}_SearchArtist`, ControlId: `${filterSongName}_SearchArtist` },
+    SearchGenreInput: { Label: `Search For Genre`, Placeholder: `Enter Genre`, Data_TestId: `${filterSongName}_SearchGenre`, ControlId: `${filterSongName}_SearchGenre` },
+    SearchEvergreenCheckBox: { Label: `Evergreen`, Placeholder: ``, Data_TestId: `${filterSongName}_SearchEvergreen`, ControlId: `${filterSongName}_SearchEvergreen` },
+    SearchNinetiesCheckBox: { Label: `90er`, Placeholder: ``, Data_TestId: `${filterSongName}_SearchNineties`, ControlId: `${filterSongName}_SearchNineties` },
+    SearchButton: { Label: `Search`, Placeholder: ``, Data_TestId: `${filterSongName}_SearchButton`, ControlId: `${filterSongName}_SearchButton` },
 }
 
-type FilterBandComponentNames = "SearchTitleInput" ;
+type FilterBandComponentNames = "SearchTitleInput";
 
 export const FilterBandHtmlAttributesConfiguration: ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
     FilterBandComponentNames
 > = {
     SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterBand_SearchTitle", ControlId: "FilterBand_SearchTitle" },
+}
+
+type FilterBandSongComponentNames = FilterSongComponentNames;
+export type FilterBandSongHtmlAttributesConfigurationType = ConfigurationItemCollection<
+FormHtmlAttributesDefinition,
+FilterBandSongComponentNames
+>
+
+const filterBandSongName= "FilterBandSong"
+export const FilterBandSongHtmlAttributesConfiguration:FilterBandSongHtmlAttributesConfigurationType  = {
+    SearchTitleInput: { Label: `Search For Title`, Placeholder: `Enter Title`, Data_TestId: `${filterBandSongName}_SearchTitle`, ControlId: `${filterBandSongName}_SearchTitle` },
+    SearchArtistInput: { Label: `Search For Artist`, Placeholder: `Enter Artist`, Data_TestId: `${filterBandSongName}_SearchArtist`, ControlId: `${filterBandSongName}_SearchArtist` },
+    SearchGenreInput: { Label: `Search For Genre`, Placeholder: `Enter Genre`, Data_TestId: `${filterBandSongName}_SearchGenre`, ControlId: `${filterBandSongName}_SearchGenre` },
+    SearchEvergreenCheckBox: { Label: `Evergreen`, Placeholder: ``, Data_TestId: `${filterBandSongName}_SearchEvergreen`, ControlId: `${filterBandSongName}_SearchEvergreen` },
+    SearchNinetiesCheckBox: { Label: `90er`, Placeholder: ``, Data_TestId: `${filterBandSongName}_SearchNineties`, ControlId: `${filterBandSongName}_SearchNineties` },
+    SearchButton: { Label: `Search`, Placeholder: ``, Data_TestId: `${filterBandSongName}_SearchButton`, ControlId: `${filterBandSongName}_SearchButton` },
 }
 
 type SongCatalogComponentNames = "ShowAddSongCheckBox" | "Navbar" | "NodeList"
@@ -66,7 +85,7 @@ export const SongCatalogHtmlAttributesConfiguration: ConfigurationItemCollection
     NodeList: { Label: "", Placeholder: "", Data_TestId: "SongCatalog_NodeList", ControlId: "SongCatalog_NodeList" },
 }
 
-type BandCatalogComponentNames = "ShowAddBandCheckBox" | "Navbar" | "NodeList" 
+type BandCatalogComponentNames = "ShowAddBandCheckBox" | "Navbar" | "NodeList"
 
 export const BandCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
@@ -80,13 +99,13 @@ export const BandCatalogHtmlAttributesConfiguration: ConfigurationItemCollection
 type BandCatalogNodeComponentNames = "ShowBandSongCatalogCheckBox"
 
 export const BandCatalogNodeHtmlAttributesConfiguration: ConfigurationItemCollection<
-FormHtmlAttributesDefinition,
-BandCatalogNodeComponentNames
+    FormHtmlAttributesDefinition,
+    BandCatalogNodeComponentNames
 > = {
     ShowBandSongCatalogCheckBox: { Label: "Show Band Songs", Placeholder: "", Data_TestId: "BandCatalogNode_ShowBandSongCatalog", ControlId: "BandCatalogNode_ShowBandSongCatalog" },
 }
 
-type BandSongCatalogComponentNames = "ShowAddBandSongCheckBox" | "Navbar" | "NodeList" 
+type BandSongCatalogComponentNames = "ShowAddBandSongCheckBox" | "Navbar" | "NodeList"
 
 export const BandSongCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
     FormHtmlAttributesDefinition,

@@ -1,5 +1,5 @@
 import { createAsyncAction } from "typesafe-actions";
-import {  IFilterBandSongActionProps, Catalog, IStatusBandSongCatalogActionProps } from "../../models";
+import {  IFilterBandSongActionProps, Catalog, IStatusBandSongCatalogActionProps, INextLinkActionProps } from "../../models";
 import { ICatalogState } from "..";
 
 export const fetchBandSongCatalog = createAsyncAction(
@@ -8,6 +8,13 @@ export const fetchBandSongCatalog = createAsyncAction(
     "FETCH_BANDSONGCATALOG_FAILURE",
     "FETCH_BANDSONGCATALOG_CANCEL",
 )<IFilterBandSongActionProps,Catalog,Error,string>();
+
+export const fetchBandSongCatalogNextLink = createAsyncAction(
+    "FETCH_BANDSONGCATALOG_NEXTLINK_REQUEST",
+    "FETCH_BANDSONGCATALOG_NEXTLINK_SUCCESS",
+    "FETCH_BANDSONGCATALOG_NEXTLINK_FAILURE",
+    "FETCH_BANDSONGCATALOG_NEXTLINK_CANCEL",
+)<INextLinkActionProps,Catalog,Error,string>();
 
 export const openBandSongsCatalog = createAsyncAction(
     `OPEN_BANDSONGCATALOG_REQUEST`,

@@ -1,4 +1,4 @@
-import { CatalogType } from "../catalog";
+import { CatalogType } from "..";
 
 export enum ModalTypes {
     None = "None",

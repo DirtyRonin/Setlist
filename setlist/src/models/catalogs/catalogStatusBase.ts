@@ -1,4 +1,4 @@
-import { CatalogType } from "..";
+import { CatalogType } from "."
 
 export enum CatalogStatusTypes {
     None = "None",

@@ -1,5 +1,6 @@
 import { IModal, ModalTypes } from ".";
-import { IBandEntityActionProps, IBand, IEntityActionProps } from "..";
+import { IEntityActionProps } from "..";
+import { IBand } from "../entity/IBand";
 
 export interface IModalBand extends IModal {
     value : IBand

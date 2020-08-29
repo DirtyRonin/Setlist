@@ -1,4 +1,5 @@
-import { ISong, ICatalog } from ".";
+import { ICatalog } from "./ICatalog";
+import { ISong } from "..";
 
 export interface ISongFilter {
     Title: string;

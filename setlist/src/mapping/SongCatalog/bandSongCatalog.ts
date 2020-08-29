@@ -3,25 +3,30 @@ import { IBandSong, IBandSongFilter, IBandSongCatalogOptions, IBandSongCatalog, 
 
 export class BandSongCatalog extends CatalogBase<IBandSong, IBandSongFilter, IBandSongCatalogOptions> implements IBandSongCatalog {
 
-    private constructor(bandId: string, filter: IBandSongFilter, oData: ODataProps, options: IBandSongCatalogOptions, refresh?: boolean, values?: Map<string, IBandSong>) {
+    BandId: string;
+
+    private constructor(bandId: string, title: string, filter: IBandSongFilter, oData: ODataProps, options: IBandSongCatalogOptions, refresh?: boolean, values?: Map<string, IBandSong>) {
         super(
             BandSongCatalog.GetCatalogId(bandId),
-            CatalogType.BandSong.toString(),
+            title,
             CatalogType.BandSong,
             filter,
             oData,
             options,
             refresh,
-            values,
+            values
         )
+        this.BandId = bandId
+
     }
 
-    public static Create(bandId: string,filter: IBandSongFilter, oData: ODataProps, options: IBandSongCatalogOptions, values?: Map<string, IBandSong>): IBandSongCatalog {
-        return new BandSongCatalog(bandId,filter, oData, options, false, values)
+
+    public static Create(bandId: string, filter: IBandSongFilter, oData: ODataProps, options: IBandSongCatalogOptions, values?: Map<string, IBandSong>, title: string = ""): IBandSongCatalog {
+        return new BandSongCatalog(bandId, title, filter, oData, options, false, values)
     }
 
-    public static CreateAndUpdate(bandId: string,filter: IBandSongFilter, oData: ODataProps, options: IBandSongCatalogOptions, values?: Map<string, IBandSong>): IBandSongCatalog {
-        return new BandSongCatalog(bandId,filter, oData, options, true, values)
+    public static CreateAndUpdate(bandId: string, filter: IBandSongFilter, oData: ODataProps, options: IBandSongCatalogOptions, values?: Map<string, IBandSong>, title: string = ""): IBandSongCatalog {
+        return new BandSongCatalog(bandId, title, filter, oData, options, true, values)
     }
 
     public static AddValues(catalog: IBandSongCatalog, addValues: IBandSong[]): IBandSongCatalog {
@@ -41,7 +46,7 @@ export class BandSongCatalog extends CatalogBase<IBandSong, IBandSongFilter, IBa
         return newCatalog;
     }
 
-    public static GetCatalogId(bandId:string):string { 
+    public static GetCatalogId(bandId: string): string {
         return `${CatalogType.BandSong.toString()}_${bandId}`
     }
 }

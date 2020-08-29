@@ -1,4 +1,3 @@
-import { IBandSong, ISetSong } from "./song";
 
 export interface IApiBandlist {
     Id: string;

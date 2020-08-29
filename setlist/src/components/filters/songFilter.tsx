@@ -6,6 +6,7 @@ import { ISongFilter, IFilterSongActionProps } from "../../models";
 import { IsFilterableString } from "../../Util";
 import { AlignRightCss } from "../../styles";
 import { FilterSongActionProps } from "../../mapping";
+import { SongFilterTemplate } from "./songFilterTemplate";
 
 export interface ISongFilterProps {
     CatalogId: string;
@@ -18,19 +19,17 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
 
     const htmlConfig = FilterSongHtmlAttributesConfiguration;
 
-    const { SearchTitleInput, SearchArtistInput, SearchGenreInput, SearchNinetiesCheckBox, SearchEvergreenCheckBox, SearchButton } = FilterSongHtmlAttributesConfiguration
-
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
         // event.preventDefault();
 
         const elements: any = (event.target as any).form.elements;
 
-        const filter = {
-            Title: elements[SearchTitleInput.ControlId].value,
-            Artist: elements[SearchArtistInput.ControlId].value,
-            Genre: elements[SearchGenreInput.ControlId].value,
-            Nineties: elements[SearchNinetiesCheckBox.ControlId].checked,
-            Evergreen: elements[SearchEvergreenCheckBox.ControlId].checked,
+        const filter: ISongFilter = {
+            Title: elements[htmlConfig.SearchTitleInput.ControlId].value,
+            Artist: elements[htmlConfig.SearchArtistInput.ControlId].value,
+            Genre: elements[htmlConfig.SearchGenreInput.ControlId].value,
+            Nineties: elements[htmlConfig.SearchNinetiesCheckBox.ControlId].checked,
+            Evergreen: elements[htmlConfig.SearchEvergreenCheckBox.ControlId].checked,
         }
 
         const songFilter = FilterSongActionProps.Create(CatalogId, filter, true)
@@ -48,36 +47,9 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
         }
     }
 
-
-
     return (
-
         <Form onChange={handleFilter} >
-            <Form.Row>
-                <Form.Group as={Col} controlId={SearchTitleInput.ControlId}>
-                    <Form.Control type="search" placeholder={SearchTitleInput.Placeholder} />
-                </Form.Group>
-            </Form.Row>
-            <Form.Row>
-                <Form.Group as={Col} controlId={SearchArtistInput.ControlId}>
-                    <Form.Control type="search" placeholder={SearchArtistInput.Placeholder} />
-                </Form.Group>
-            </Form.Row>
-            <Form.Row>
-                <Form.Group as={Col} controlId={SearchGenreInput.ControlId}>
-                    <Form.Control type="search" placeholder={SearchGenreInput.Placeholder} />
-                </Form.Group>
-            </Form.Row>
-            <Form.Row>
-                <Form.Group as={Col} controlId={SearchNinetiesCheckBox.ControlId}>
-                    <Form.Check type="switch" label={SearchNinetiesCheckBox.Label} />
-                </Form.Group>
-            </Form.Row>
-            <Form.Row>
-                <Form.Group as={Col} controlId={SearchEvergreenCheckBox.ControlId}>
-                    <Form.Check type="switch" label={SearchEvergreenCheckBox.Label} />
-                </Form.Group>
-            </Form.Row>
+            {SongFilterTemplate(htmlConfig)}
         </Form>
     )
 }

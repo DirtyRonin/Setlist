@@ -6,7 +6,7 @@ interface IFilterActionPropsBase<T> {
     refresh: boolean,
 }
 
-export interface IFilterActionProps extends IFilterActionPropsBase<ISongFilter | IBandFilter> { }
+export interface IFilterActionProps extends IFilterActionPropsBase<ISongFilter | IBandFilter | IBandSongFilter> { }
 export interface IFilterSongActionProps extends IFilterActionPropsBase<ISongFilter> { }
 export interface IFilterBandActionProps extends IFilterActionPropsBase<IBandFilter> { }
 export interface IFilterBandSongActionProps extends IFilterActionPropsBase<IBandSongFilter> { }
@@ -32,7 +32,7 @@ export interface IStatusCatalogActionProps {
 }
 
 export interface IStatusBandSongCatalogActionProps extends IStatusCatalogActionProps {
-    parentId: string
+    bandId: string
 }
 
 export interface INextLinkActionProps {

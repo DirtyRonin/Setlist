@@ -34,6 +34,7 @@ export const App = (props: AppProps): JSX.Element => {
 
         fetchSongCatalogNextLink,
         fetchBandCatalogNextLink,
+        fetchBandSongCatalogNextLink,
 
         createEmptySongCatalog,
         createEmptyBandCatalog,
@@ -99,9 +100,11 @@ export const App = (props: AppProps): JSX.Element => {
                 return (
                     <BandSongCatalogComponent 
                         fetchBandSongCatalog = {fetchBandSongCatalog}
+                        fetchBandSongCatalogNextLink = {fetchBandSongCatalogNextLink}
                         key = {catalog.Id}
                         showModal={modal.show}
-                        bandSongList = {catalog as IBandSongCatalog}
+                        bandSongCatalog = {catalog as IBandSongCatalog}
+                        setModal={setModal}
                     />
                 )
             }

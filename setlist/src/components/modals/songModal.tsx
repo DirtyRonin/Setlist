@@ -40,7 +40,7 @@ export const SongModalComponent = (props: ISongModalComponent) => {
             Genre: elements[songDef.Genre.ControlId].value
         } as ISong
 
-        if (type != ModalTypes.New) {
+        if (type !== ModalTypes.New) {
             song.Id = modal.value.Id
         }
 

@@ -1,8 +1,7 @@
 import Axios, { AxiosResponse } from "axios";
-import isURL from 'validator/lib/isURL';
 
-import { ISong, IOdataWrapper } from "../models";
-import { EndpointConfiguration, defaultHeader, OdataPostHeader } from "../Configuration";
+import { IOdataWrapper } from "../models";
+import { EndpointConfiguration, defaultHeader } from "../Configuration";
 import { ISongResource } from "../resource";
 
 const songsEndpoint = EndpointConfiguration.Songs;

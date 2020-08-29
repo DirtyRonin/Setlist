@@ -13,7 +13,7 @@ export const createEmptyBandCatalog = (catalogState: ICatalogState): ICatalogSta
     const defaultActionProps = FilterBandActionProps.Default(BandCatalog.CatalogId)
 
     const bandCatalog = BandCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, {});
-
+    
     const newCatalogs: HashTable<Catalog> = { ...catalogs, [bandCatalog.Id]: bandCatalog };
 
     const newCatalogsOrder: Array<string> = [...catalogsOrder, bandCatalog.Id]

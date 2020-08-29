@@ -49,7 +49,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
         const elements: any = (event.target as any).form.elements;
         const show: boolean = elements[concatUniqueID(bandCatalogNodeDef.ShowBandSongCatalogCheckBox.ControlId)].checked
 
-        const props: IStatusBandSongCatalogActionProps = { show, parentId: band.Id, catalogType: CatalogType.BandSong }
+        const props: IStatusBandSongCatalogActionProps = { show, bandId: band.Id, catalogType: CatalogType.BandSong }
 
         if (props.show) {
             showBandSongsCatalog(props);

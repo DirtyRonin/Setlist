@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 import { BandModalHtmlAttributesConfiguration } from "../../Configuration";
-import { IModal, ModalTypes, defaultModal, IBandEntityActionProps, IBand } from "../../models";
+import { IModal, ModalTypes, defaultModal, IBandEntityActionProps, IBand} from "../../models";
 import { Band } from "../../mapping";
 import { IModalBand } from "../../models/modals/modelBand";
 import { IsModalReadonly } from "../../Util";
@@ -39,7 +39,7 @@ export const BandModalComponent = (props: IBandModalComponent) => {
             Title: elements[bandModalDef.Title.ControlId].value,
         } as IBand
 
-        if (type != ModalTypes.New) {
+        if (type !== ModalTypes.New) {
             band.Id = modal.value.Id
         }
 
