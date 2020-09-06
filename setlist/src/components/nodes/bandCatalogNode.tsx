@@ -12,8 +12,8 @@ export interface IBandNodeProps {
     index: number;
     catalogId: string;
     openedCatalogs: string[];
-    showBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
-    closeBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
+    // openBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
+    // closeBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
     setModal(props: IModal): void
 }
 
@@ -23,8 +23,8 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
         index,
         catalogId,
         openedCatalogs,
-        showBandSongsCatalog,
-        closeBandSongsCatalog,
+        // openBandSongsCatalog,
+        // closeBandSongsCatalog,
         setModal
     } = props;
 
@@ -49,13 +49,15 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
         const elements: any = (event.target as any).form.elements;
         const show: boolean = elements[concatUniqueID(bandCatalogNodeDef.ShowBandSongCatalogCheckBox.ControlId)].checked
 
-        const props: IStatusBandSongCatalogActionProps = { show, bandId: band.Id, catalogType: CatalogType.BandSong }
+        const catalogId =BandSongCatalog.GetCatalogId(band.Id)
 
-        if (props.show) {
-            showBandSongsCatalog(props);
-        }else{
-            closeBandSongsCatalog(props);
-        }
+        const props: IStatusBandSongCatalogActionProps = { show, bandId: band.Id, catalogType: CatalogType.BandSong,catalogId }
+
+        // if (props.show) {
+        //     openBandSongsCatalog(props);
+        // }else{
+        //     closeBandSongsCatalog(props);
+        // }
 
 
     }

@@ -21,7 +21,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
         setSongModal
     } = props;
 
-    const createModal = (type :ModalTypes) =>{
+    const createModal = (type: ModalTypes) => {
         const modal: IModalSong = {
             show: true,
             catalogId: songListId,
@@ -35,6 +35,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const handleShowEditSong = () => createModal(ModalTypes.Edit)
     const handleShowReadSong = () => createModal(ModalTypes.Read)
     const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
+    const handleShowAddSong = () => createModal(ModalTypes.Add)
 
     const uniqueNodeId = `${songListId}-${song.Id}-${index}`
 
@@ -44,19 +45,36 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                 <Container>
                     <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                         <Row>
-                            <Col >
-                                <label>{song.Title} - {song.Artist}</label>
+                            <Col xs="10" >
+
+                                <Row>
+                                    <Col>
+                                        <label>{song.Title}</label>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <label>{song.Artist}</label>
+                                    </Col>
+                                </Row>
+                            </Col >
+                            <Col xs='2' >
+
+                                <Button variant="secondary" onClick={handleShowAddSong}>...</Button>
+
+                                {/* <Row>
+                                    <Col sm="4">
+                                        <Button variant="secondary" onClick={handleShowReadSong}>{ModalTypes.Read}</Button>
+                                    </Col>
+                                    <Col sm="4">
+                                        <Button variant="secondary" onClick={handleShowEditSong}>{ModalTypes.Edit}</Button>
+                                    </Col>
+                                    <Col sm="4">
+                                        <Button variant="secondary" onClick={handleShowDeleteSong}>{ModalTypes.Remove}</Button>
+                                    </Col>
+                                </Row> */}
                             </Col>
-                            <Col></Col>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowReadSong}>{ModalTypes.Read}</Button>
-                            </Col>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowEditSong}>{ModalTypes.Edit}</Button>
-                            </Col>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowDeleteSong}>{ModalTypes.Remove}</Button>
-                            </Col>
+
                         </Row>
                     </SongNodeContainer>
                 </Container>

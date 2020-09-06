@@ -1,5 +1,5 @@
-import { createAsyncAction } from "typesafe-actions";
-import {  IFilterBandSongActionProps, Catalog, IStatusBandSongCatalogActionProps, INextLinkActionProps } from "../../models";
+import { createAsyncAction, createAction } from "typesafe-actions";
+import {  IFilterBandSongActionProps, Catalog, IStatusBandSongCatalogActionProps, INextLinkActionProps, IEntityActionProps } from "../../models";
 import { ICatalogState } from "..";
 
 export const fetchBandSongCatalog = createAsyncAction(
@@ -29,3 +29,28 @@ export const closeBandSongsCatalog = createAsyncAction(
     `CLOSE_BANDSONGCATALOG_FAILURE`,
     `CLOSE_BANDSONGCATALOG_CANCEL`,
 )<IStatusBandSongCatalogActionProps, ICatalogState, Error, string>();
+
+export const addBandSongToCatalog= createAsyncAction(
+    "NEW_BANDSONG_REQUEST",
+    "NEW_BANDSONG_SUCCESS",
+    "NEW_BANDSONG_FAILURE",
+    "NEW_BANDSONG_CANCEL",
+)<IEntityActionProps,Catalog,Error,string>();
+
+export const editBandSongInCatalog= createAsyncAction(
+    "EDIT_BANDSONG_REQUEST",
+    "EDIT_BANDSONG_SUCCESS",
+    "EDIT_BANDSONG_FAILURE",
+    "EDIT_BANDSONG_CANCEL",
+)<IEntityActionProps,Catalog,Error,string>();
+
+export const deleteBandSongInCatalog= createAsyncAction(
+    "DELETE_BANDSONG_REQUEST",
+    "DELETE_BANDSONG_SUCCESS",
+    "DELETE_BANDSONG_FAILURE",
+    "DELETE_BANDSONG_CANCEL",
+)<IEntityActionProps,Catalog,Error,string>();
+
+export const readBandSongInCatalog= createAction(
+    "READ_BANDSONG_REQUEST",
+)();

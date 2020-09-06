@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
-
 import { Col, Row, Navbar, Container, FormControlProps, Form } from "react-bootstrap";
-import { IBandSongCatalog, IFilterBandActionProps, INextLinkActionProps, IModal } from "../models";
-import { FilterBandSongActionProps } from "../mapping";
-import { ContainerCss, NodeListCss, SongFilterCss } from "../styles";
 import { Droppable } from "react-beautiful-dnd";
-import { BandSongCatalogHtmlAttributesConfiguration } from "../Configuration";
 import InfiniteScroll from "react-infinite-scroll-component";
-import BandSongCatalogNodeComponent from "./nodes/bandSongCatalogNode";
-import { BandSongFilterComponent } from "./filters/bandSongFilter";
+
+import { IBandSongCatalog, IModal, IFilterBandActionProps, INextLinkActionProps } from "../../models";
+import { FilterBandSongActionProps } from "../../mapping";
+import { BandSongCatalogHtmlAttributesConfiguration } from "../../Configuration";
+import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
+import { BandSongFilterComponent } from "../filters/bandSongFilter";
+import BandSongCatalogNodeComponent from "../nodes/bandSongCatalogNode";
+
+
 
 export interface IBandSongCatalogProps{
     bandSongCatalog : IBandSongCatalog;

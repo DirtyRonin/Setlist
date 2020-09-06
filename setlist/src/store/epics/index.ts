@@ -1,3 +1,3 @@
-export * from "./songCatalogEpics"
-export * from "./bandCatalogEpics"
+export * from "./catalogEpics/songCatalogEpics"
+export * from "./catalogEpics/bandCatalogEpics"
 export * from "./bandSongCatalogEpics"

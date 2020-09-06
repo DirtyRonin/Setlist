@@ -5,5 +5,6 @@ export * from "./catalogs/index"
 export * from "./entity/index"
 export * from "./modals/index"
 export * from "./api"
+export * from "./user"
 
 export type Catalog = ISongCatalog | IBandCatalog | IBandSongCatalog

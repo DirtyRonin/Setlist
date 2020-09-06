@@ -39,7 +39,7 @@ export const BandModalComponent = (props: IBandModalComponent) => {
             Title: elements[bandModalDef.Title.ControlId].value,
         } as IBand
 
-        if (type !== ModalTypes.New) {
+        if (type !== "New") {
             band.Id = modal.value.Id
         }
 

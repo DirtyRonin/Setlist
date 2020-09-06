@@ -1,15 +1,15 @@
-import { Catalog, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, IBandSong, IBandSongCatalog, IBandSongCatalogOptions, ISong, INextLinkActionProps } from "../../models";
+import { Catalog, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, IBandSong, IBandSongCatalog, IBandSongCatalogOptions, ISong, INextLinkActionProps, IEntityActionProps, IBandSongEntityActionProps } from "../../models";
 import { FilterBandSongActionProps, BandSongCatalog } from "../../mapping";
 import { ICatalogState } from "../../store";
-import { HashTable, QueryBuilder, IsMiminumStringLength } from "../../Util";
+import { IHashTable, QueryBuilder, IsMiminumStringLength } from "../../Util";
 import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 import { nameof } from "ts-simple-nameof";
-import { ReadBandSongsAsync } from "..";
+import { ReadBandSongsAsync, CreateBandSongAsync } from "..";
 
 export const createEmptyBandSongCatalog = (props: IStatusBandSongCatalogActionProps, catalogState: ICatalogState): ICatalogState => {
 
     const { bandId } = props;
-    const { catalogs, catalogsOrder, modal } = catalogState
+    const { catalogs, componentsOrder: catalogsOrder, modal } = catalogState
 
     const defaultActionProps = FilterBandSongActionProps.Default(bandId)
 
@@ -20,14 +20,14 @@ export const createEmptyBandSongCatalog = (props: IStatusBandSongCatalogActionPr
 
     
 
-    const newCatalogs: HashTable<Catalog> = { ...catalogs, [bandSongCatalog.Id]: bandSongCatalog };
+    const newCatalogs: IHashTable<Catalog> = { ...catalogs, [bandSongCatalog.Id]: bandSongCatalog };
 
     const newCatalogsOrder: Array<string> = [...catalogsOrder, bandSongCatalog.Id]
 
-    return { catalogs: newCatalogs, catalogsOrder: newCatalogsOrder, modal } as ICatalogState
+    return { catalogs: newCatalogs, componentsOrder: newCatalogsOrder, modal } as ICatalogState
 }
 
-export const fetchBandSongCatalogAsync = async (props: IFilterBandSongActionProps, catalogs: HashTable<Catalog>): Promise<Catalog> => {
+export const fetchBandSongCatalogAsync = async (props: IFilterBandSongActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { filter: Filter, catalogId: BandCatalogId } = props
@@ -79,7 +79,7 @@ export const fetchBandSongCatalogAsync = async (props: IFilterBandSongActionProp
     return BandSongCatalog.Create(Filter.BandId, Filter, { NextLink, Context, Count }, prevBandSongCatalog.CatalogOptions, mappedValues, prevBandSongCatalog.Title);
 }
 
-export const fetchBandSongCatalogNextLinkAsync = async (props: INextLinkActionProps, catalogs: HashTable<Catalog>): Promise<Catalog> => {
+export const fetchBandSongCatalogNextLinkAsync = async (props: INextLinkActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { NextLink, Values, Context, Count } = await ReadBandSongsAsync(props.nextLink);
@@ -93,14 +93,34 @@ export const fetchBandSongCatalogNextLinkAsync = async (props: INextLinkActionPr
 export const closeBandSongCatalog = (props: IStatusBandSongCatalogActionProps, catalogState: ICatalogState): ICatalogState => {
 
     const { bandId: parentId } = props;
-    const { catalogs, catalogsOrder, modal } = catalogState
+    const { catalogs, componentsOrder: catalogsOrder, modal } = catalogState
 
     const bandSongCatalogId = BandSongCatalog.GetCatalogId(parentId);
 
-    const newCatalogs: HashTable<Catalog> = { ...catalogs };
+    const newCatalogs: IHashTable<Catalog> = { ...catalogs };
     delete newCatalogs[bandSongCatalogId];
 
     const newCatalogsOrder: Array<string> = catalogsOrder.filter(order => order !== bandSongCatalogId)
 
-    return { catalogs: newCatalogs, catalogsOrder: newCatalogsOrder, modal } as ICatalogState
+    return { catalogs: newCatalogs, componentsOrder: newCatalogsOrder, modal } as ICatalogState
 }
+
+export const addBandSongToSongCatalogAsync = async (props: IEntityActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
+    if (catalogs == null) { throw ("catalogs are null") }
+
+    const { value: bandSong, catalogId: bandSongCatalogId } = props as IBandSongEntityActionProps
+    const newBandSong = await CreateBandSongAsync(bandSong)
+
+    const currentCatalog = { ...catalogs[bandSongCatalogId] } as IBandSongCatalog;
+
+    const newBandSongs: Map<string, IBandSong> = new Map([[newBandSong.Id, newBandSong]]);
+
+    currentCatalog.Values.forEach((bandSong, key) =>
+        newBandSongs.set(key, bandSong)
+    )
+
+    return {
+        ...currentCatalog,
+        Values: newBandSongs
+    } as Catalog;
+};

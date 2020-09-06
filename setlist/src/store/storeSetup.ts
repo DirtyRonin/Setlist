@@ -1,7 +1,8 @@
 import { Store, createStore, compose, applyMiddleware } from 'redux';
 import {createLogger}  from 'redux-logger';
-import { RootState, rootReducer, rootEpic, CatalogActions } from '.';
+import {  rootReducer, rootEpic, CatalogActions } from '.';
 import { createEpicMiddleware } from 'redux-observable';
+import { RootState } from './reducers';
 
 export function storeSetup(initialState?: RootState) {
   const loggerMiddleware = createLogger();

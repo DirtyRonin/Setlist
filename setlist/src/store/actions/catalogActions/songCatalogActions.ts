@@ -1,19 +1,41 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IModal, Catalog, IEntityActionProps } from "../../models";
+import { IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IModal, Catalog, IEntityActionProps, IStatusSongCatalogActionProps, ISongCatalog } from "../../../models";
+import { ICatalogState } from "../..";
+
+export const openSongCatalog_New = createAsyncAction(
+    `OPEN_SONGCATALOG_NEW_REQUEST`,
+    `OPEN_SONGCATALOG_NEW_SUCCESS`,
+    `OPEN_SONGCATALOG_NEW_FAILURE`,
+    `OPEN_SONGCATALOG_NEW_CANCEL`,
+)<void, ISongCatalog, Error, string>();
+
+export const openSongsCatalog = createAsyncAction(
+    `OPEN_SONGCATALOG_REQUEST`,
+    `OPEN_SONGCATALOG_SUCCESS`,
+    `OPEN_SONGCATALOG_FAILURE`,
+    `OPEN_SONGCATALOG_CANCEL`,
+)<IStatusSongCatalogActionProps, ICatalogState, Error, string>();
+
+export const closeSongsCatalog = createAsyncAction(
+    `CLOSE_SONGCATALOG_REQUEST`,
+    `CLOSE_SONGCATALOG_SUCCESS`,
+    `CLOSE_SONGCATALOG_FAILURE`,
+    `CLOSE_SONGCATALOG_CANCEL`,
+)<IStatusSongCatalogActionProps, ICatalogState, Error, string>();
 
 export const fetchSongCatalog = createAsyncAction(
     "FETCH_SONGCATALOG_REQUEST",
     "FETCH_SONGCATALOG_SUCCESS",
     "FETCH_SONGCATALOG_FAILURE",
     "FETCH_SONGCATALOG_CANCEL",
-)<IFilterSongActionProps,Catalog,Error,string>();
+)<IFilterSongActionProps,ISongCatalog,Error,string>();
 
 export const fetchSongCatalogNextLink = createAsyncAction(
     "FETCH_SONGCATALOG_NEXTLINK_REQUEST",
     "FETCH_SONGCATALOG_NEXTLINK_SUCCESS",
     "FETCH_SONGCATALOG_NEXTLINK_FAILURE",
     "FETCH_SONGCATALOG_NEXTLINK_CANCEL",
-)<INextLinkActionProps,Catalog,Error,string>();
+)<INextLinkActionProps,ISongCatalog,Error,string>();
 
 export const setSongCatalogFilter = createAsyncAction(
     "SET_SONGCATALOG_FILTER_REQUEST",

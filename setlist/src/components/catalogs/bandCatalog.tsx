@@ -6,38 +6,39 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 
 
-import { IModal, IBandCatalog, IFilterBandActionProps, INextLinkActionProps, ModalTypes, CatalogType, IStatusBandSongCatalogActionProps } from "../models";
-import { BandCatalogHtmlAttributesConfiguration } from "../Configuration";
-import { ContainerCss, NodeListCss, SongFilterCss } from "../styles";
-import { FilterBandActionProps, Band } from "../mapping";
-import BandCatalogNodeComponent from "./nodes/bandCatalogNode";
-import { IModalBand } from "../models/modals/modelBand";
-import { BandFilterComponent } from "./filters";
+import { IModal, IBandCatalog, IFilterBandActionProps, INextLinkActionProps, ModalTypes, CatalogType, IStatusBandSongCatalogActionProps } from "../../models";
+import { BandCatalogHtmlAttributesConfiguration } from "../../Configuration";
+import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
+import { FilterBandActionProps, Band } from "../../mapping";
+import BandCatalogNodeComponent from "../nodes/bandCatalogNode";
+import { IModalBand } from "../../models/modals/modelBand";
+import { BandFilterComponent } from "../filters";
+import { BandCatalogProps } from "../../store/containers/catalogs/BandCatalogContainer";
 
-export interface IBandCatalogProps {
-    bandlist: IBandCatalog;
-    showModal: boolean;
-    openedCatalogs: string[];
+// export interface IBandCatalogProps {
+//     bandlist: IBandCatalog;
+//     showModal: boolean;
+//     openedCatalogs: string[];
 
-    fetchBandCatalog(props: IFilterBandActionProps): void
-    fetchCatalogNextLink: (props: INextLinkActionProps) => void
+//     fetchBandCatalog(props: IFilterBandActionProps): void
+//     fetchCatalogNextLink: (props: INextLinkActionProps) => void
 
-    showBandSongsCatalog(props : IStatusBandSongCatalogActionProps): void
-    closeBandSongsCatalog(props : IStatusBandSongCatalogActionProps): void
+//     openBandSongsCatalog(props : IStatusBandSongCatalogActionProps): void
+//     closeBandSongsCatalog(props : IStatusBandSongCatalogActionProps): void
 
 
-    setModal(props: IModal): void
-}
+//     setModal(props: IModal): void
+// }
 
-const BandCatalogComponent = (props: IBandCatalogProps): JSX.Element => {
+const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
     const {
         bandlist,
         showModal,
         openedCatalogs,
         fetchBandCatalog,
-        fetchCatalogNextLink,
-        showBandSongsCatalog,
-        closeBandSongsCatalog,
+        fetchBandCatalogNextLink,
+        // openBandSongsCatalog,
+        // closeBandSongsCatalog,
         setModal
     } = props;
 
@@ -55,7 +56,7 @@ const BandCatalogComponent = (props: IBandCatalogProps): JSX.Element => {
         const actionProps: INextLinkActionProps = { catalogId: Id, nextLink: OData.NextLink }
 
         setTimeout(() => {
-            fetchCatalogNextLink(actionProps)
+            fetchBandCatalogNextLink(actionProps)
         }, 500);
 
     }
@@ -67,7 +68,7 @@ const BandCatalogComponent = (props: IBandCatalogProps): JSX.Element => {
             show: elements[bandCatalogDef.ShowAddBandCheckBox.ControlId].checked,
             catalogId: bandlist.Id,
             catalogType: CatalogType.Band,
-            type: ModalTypes.New,
+            type: "New",
             value: Band.EmptyBand()
         }
 
@@ -135,8 +136,8 @@ const BandCatalogComponent = (props: IBandCatalogProps): JSX.Element => {
                                                     index={index}
                                                     catalogId={bandlist.Id}
                                                     openedCatalogs = {openedCatalogs}
-                                                    showBandSongsCatalog = {showBandSongsCatalog}
-                                                    closeBandSongsCatalog = {closeBandSongsCatalog}
+                                                    // openBandSongsCatalog = {openBandSongsCatalog}
+                                                    // closeBandSongsCatalog = {closeBandSongsCatalog}
                                                     setModal={setModal}
                                                     key={band.Id}
                                                     />

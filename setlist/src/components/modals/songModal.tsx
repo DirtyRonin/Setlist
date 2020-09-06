@@ -7,18 +7,18 @@ import { IsModalReadonly } from "../../Util";
 
 export interface ISongModalComponent {
     modal: IModalSong
-    setSongModal(props: IModal): void
+    setModal(props: IModal): void
     executeSongModalAction(props: ISongEntityActionProps): void
 }
 
 export const SongModalComponent = (props: ISongModalComponent) => {
 
-    const { modal, setSongModal, executeSongModalAction } = props
+    const { modal, setModal, executeSongModalAction } = props
 
     const songDef = SongModalHtmlAttributesConfiguration;
 
     const handleCloseModal = () => {
-        setSongModal(defaultModal);
+        setModal(defaultModal);
     }
 
     const hanldeOnClick = (event: React.FormEvent<FormControlProps>) => {
@@ -40,7 +40,7 @@ export const SongModalComponent = (props: ISongModalComponent) => {
             Genre: elements[songDef.Genre.ControlId].value
         } as ISong
 
-        if (type !== ModalTypes.New) {
+        if (type !== "New") {
             song.Id = modal.value.Id
         }
 

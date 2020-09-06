@@ -29,7 +29,11 @@ export interface IBandSongEntityActionProps extends IEntityActionProps {
 export interface IStatusCatalogActionProps {
     show: boolean
     catalogType: CatalogType;
+    catalogId: string;
 }
+
+export interface IStatusSongCatalogActionProps extends IStatusCatalogActionProps { }
+export interface IStatusBandCatalogActionProps extends IStatusCatalogActionProps { }
 
 export interface IStatusBandSongCatalogActionProps extends IStatusCatalogActionProps {
     bandId: string

@@ -1,28 +1,33 @@
-
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
-import { HashTable } from "../../Util";
-import { Catalog, IModal, defaultModal } from "../../models";
+import { IHashTable } from "../../Util";
+import { Catalog, IModal, defaultModal, IUser } from "../../models";
 
 import * as catalogActions from "../actions/";
 
 export type CatalogActions = ActionType<typeof catalogActions>;
 
+export interface ICatalogState {
+    catalogs: IHashTable<Catalog>;
+    componentsOrder: string[];
+    modal: IModal
+    user: IUser
+    openCatalog: Catalog;
+}
+
+export type ComponentTypes = Catalog | IModal
+
 export type CatalogState = {
     catalogState: ICatalogState;
 }
 
-export interface ICatalogState {
-    catalogs: HashTable<Catalog>;
-    catalogsOrder: string[];
-    modal: IModal
-}
-
 export const defaultCatalog: CatalogState = {
     catalogState: {
-        catalogsOrder: [] as string[],
-        catalogs: {} as HashTable<Catalog>,
-        modal: defaultModal
+        componentsOrder: [] as string[],
+        catalogs: {} as IHashTable<Catalog>,
+        modal: defaultModal,
+        user: {userId : "Admin"} as IUser,
+        openCatalog: {} as Catalog
     }
 }
 
@@ -37,6 +42,8 @@ export default combineReducers<CatalogState, CatalogActions>({
             case getType(catalogActions.deleteBandInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.editBandInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.readBandInCatalog): return setModal(state, defaultModal)
+            case getType(catalogActions.openBandsCatalog.success): return setCatalogState(state,action.payload)
+            case getType(catalogActions.closeBandsCatalog.success): return setCatalogState(state,action.payload)
 
             case getType(catalogActions.fetchSongCatalog.success): return updateCatalog(state, action.payload)
             case getType(catalogActions.fetchSongCatalogNextLink.success): return updateCatalog(state, action.payload)
@@ -44,9 +51,12 @@ export default combineReducers<CatalogState, CatalogActions>({
             case getType(catalogActions.deleteSongInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.editSongInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.readSongInCatalog): return setModal(state, defaultModal)
+            case getType(catalogActions.openSongsCatalog.success): return setCatalogState(state,action.payload)
+            case getType(catalogActions.closeSongsCatalog.success): return setCatalogState(state,action.payload)
 
             case getType(catalogActions.fetchBandSongCatalog.success): return updateCatalog(state, action.payload)
             case getType(catalogActions.fetchBandSongCatalogNextLink.success): return updateCatalog(state, action.payload)
+            // case getType(catalogActions.addBandSongToCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.openBandSongsCatalog.success): return setCatalogState(state,action.payload)
             case getType(catalogActions.closeBandSongsCatalog.success): return setCatalogState(state,action.payload)
             
@@ -87,7 +97,7 @@ const setCatalogState = (currentCatalogState: ICatalogState, newCatalogState: IC
     return {
         ...currentCatalogState, 
         catalogs: newCatalogState.catalogs,
-        catalogsOrder : newCatalogState.catalogsOrder
+        componentsOrder : newCatalogState.componentsOrder
     }
 }
 

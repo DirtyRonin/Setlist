@@ -4,31 +4,30 @@ import { Droppable } from "react-beautiful-dnd";
 import { Form, FormControlProps, Col, Row, Navbar, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import { ISongCatalog, IFilterSongActionProps, INextLinkActionProps, IModal, IModalSong, CatalogType, ModalTypes } from "../../models";
+import { FilterSongActionProps, Song } from "../../mapping";
+import { SongCatalogHtmlAttributesConfiguration } from "../../Configuration";
+import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
+import { SongFilterComponent } from "../filters";
+import SongCatalogNodeComponent from "../nodes/songCatalogNode";
+import { SongCatalogProps } from "../../store/containers/catalogs/SongCatalogContainer";
 
+// export interface ISongCatalogProps {
+//     songlist: ISongCatalog;
+//     showModal: boolean;
 
-import { ISongCatalog, IFilterSongActionProps, INextLinkActionProps, IModal, ModalTypes, CatalogType, IModalSong } from "../models";
-import { SongCatalogHtmlAttributesConfiguration } from "../Configuration";
-import { ContainerCss, NodeListCss, SongFilterCss } from "../styles";
-import { Song, FilterSongActionProps } from "../mapping";
-import { SongFilterComponent } from "./filters/songFilter";
-import SongCatalogNodeComponent from "./nodes/songCatalogNode";
+//     fetchSongCatalog(props: IFilterSongActionProps): void
+//     fetchSongCatalogNextLink: (props: INextLinkActionProps) => void
 
-export interface ISongCatalogProps {
-    songlist: ISongCatalog;
-    showModal: boolean;
+//     setModal(props: IModal): void
+// }
 
-    fetchSongCatalog(props: IFilterSongActionProps): void
-    fetchSongCatalogNextLink: (props: INextLinkActionProps) => void
-
-    setSongModal(props: IModal): void
-}
-
-const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
+const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     const {
         songlist,
         fetchSongCatalog,
         fetchSongCatalogNextLink,
-        setSongModal,
+        setModal,
         showModal
     } = props;
 
@@ -57,11 +56,11 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
             show: elements[songCatalogDef.ShowAddSongCheckBox.ControlId].checked,
             catalogId: songlist.Id,
             catalogType: CatalogType.Song,
-            type: ModalTypes.New,
+            type: "New",
             value: Song.EmptySong()
         }
 
-        setSongModal(modal)
+        setModal(modal)
     }
 
     return (
@@ -115,7 +114,7 @@ const SongCatalogComponent = (props: ISongCatalogProps): JSX.Element => {
                                             >
                                                 {Array.from(songlist.Values.values()).map((song, index) => (
                                                     <SongCatalogNodeComponent
-                                                        setSongModal={setSongModal}
+                                                        setSongModal={setModal}
                                                         songListId={songlist.Id}
                                                         key={song.Id}
                                                         song={song}

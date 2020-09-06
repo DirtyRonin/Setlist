@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios, { AxiosResponse } from "axios";
 import { EndpointConfiguration, defaultHeader, BandSongsEndPointDefinition } from "../Configuration";
 import { ISong, IOdataWrapper } from "../models";
 import { IBandSongResource } from "../resource";
@@ -19,4 +19,11 @@ export const GetBandSongsRequestAsync = async (url: string): Promise<IOdataWrapp
     }
 
     return Odata;
+}
+
+export const CreateBandSongRequestAsync = async (bandSong: IBandSongResource): Promise<AxiosResponse<IBandSongResource>> => {
+    //maybe edit type to remove prop Song
+    return await Axios.post<IBandSongResource>(bandSongsEndpoint.GetEndpointUrl!(), bandSong, {
+        headers: defaultHeader
+    });
 }

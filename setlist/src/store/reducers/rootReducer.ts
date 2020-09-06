@@ -3,16 +3,22 @@ import { combineEpics } from 'redux-observable';
 import { StateType } from "typesafe-actions";
 
 import catalogReducers from "./catalogReducers"
-import { catalogEpics, bandCatalogEpics, bandSongCatalogEpics } from "../epics"
+import bandCatalogReducers from "./catalogReducers/bandCatalogReducer"
+import songCatalogReducers from "./catalogReducers/songCatalogReducer"
+import dropDownFilterReducer from "../subStores/subReducers/DropDownFilterReducers"
+import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics } from "../epics"
 
 export const rootEpic = combineEpics(
-  catalogEpics,
+  songCatalogEpics,
   bandCatalogEpics,
   bandSongCatalogEpics
 )
 
 export const rootReducer = combineReducers({
-  catalogReducers
+  catalogReducers,
+  bandCatalogReducers,
+  songCatalogReducers,
+  dropDownFilterReducer
 });
 
 export type RootState = StateType<typeof rootReducer>;

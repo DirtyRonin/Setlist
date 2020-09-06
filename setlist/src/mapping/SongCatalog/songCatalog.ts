@@ -3,7 +3,7 @@ import { CatalogBase } from "./catalogBase";
 
 export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOptions> implements ISongCatalog {
 
-    private constructor(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, refresh?: boolean, songs?: Map<string, ISong>) {
+    private constructor(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, refresh?: boolean, songs: Map<string, ISong> = new Map<string, ISong>()) {
         super(
             SongCatalog.CatalogId,
             CatalogType.Song.toString(),
@@ -16,11 +16,11 @@ export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOpt
         )
     }
 
-    public static Create(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, songs?: Map<string, ISong>): ISongCatalog {
+    public static Create(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, songs: Map<string, ISong> = new Map<string, ISong>()): ISongCatalog {
         return new SongCatalog(filter, oData, options, false, songs)
     }
 
-    public static CreateAndUpdate(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, songs?: Map<string, ISong>): ISongCatalog {
+    public static CreateAndUpdate(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, songs: Map<string, ISong> = new Map<string, ISong>()): ISongCatalog {
         return new SongCatalog(filter, oData, options, true, songs)
     }
 

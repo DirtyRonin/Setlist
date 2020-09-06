@@ -1,15 +1,20 @@
 import { nameof } from "ts-simple-nameof"
 
-import { ISongCatalog, ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, Catalog, IEntityActionProps } from "../../models";
-import { HashTable } from "../../Util/HashTable";
+import { ISongCatalog, ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, Catalog, IEntityActionProps, IStatusSongCatalogActionProps } from "../../models";
+import { IHashTable, HashTableHelper } from "../../Util/HashTable";
 import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "..";
 import { SongCatalog, FilterSongActionProps } from "../../mapping";
 import { QueryBuilder, IsMiminumStringLength } from "../../Util";
 import { ICatalogState } from "../../store";
 import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 
+export const createEmptySongCatalog_New = (catalogs :IHashTable<Catalog>): ISongCatalog => {
+    const catalog = HashTableHelper.Do(catalogs).FindLastOrDefault()
+    const defaultActionProps = FilterSongActionProps.Default(catalog.Id)
+    return SongCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, {ShowAddSong:false});
+}
 
-export const fetchSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: HashTable<Catalog>): Promise<Catalog> => {
+export const fetchSongCatalogAsync = async (props: IFilterSongActionProps, catalogs: IHashTable<Catalog>): Promise<ISongCatalog> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { filter: Filter, catalogId: SongCatalogId } = props
@@ -55,7 +60,7 @@ export const fetchSongCatalogAsync = async (props: IFilterSongActionProps, catal
     return SongCatalog.Create(Filter, { NextLink, Context, Count }, prevSongCatalog.CatalogOptions, mappedValues);
 }
 
-export const fetchSongCatalogNextLinkAsync = async (props: INextLinkActionProps, catalogs: HashTable<Catalog>): Promise<Catalog> => {
+export const fetchSongCatalogNextLinkAsync = async (props: INextLinkActionProps, catalogs: IHashTable<Catalog>): Promise<ISongCatalog> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { NextLink, Values, Context, Count } = await ReadSongsAsync(props.nextLink);
@@ -66,18 +71,32 @@ export const fetchSongCatalogNextLinkAsync = async (props: INextLinkActionProps,
     return SongCatalog.UpdateOData(newSongCatalog, { NextLink, Context, Count })
 }
 
-export const createEmptySongCatalog = (catalogState : ICatalogState): ICatalogState => {
-    const {catalogs, catalogsOrder,modal} = catalogState
+export const closeSongCatalog = (props: IStatusSongCatalogActionProps, catalogState: ICatalogState): ICatalogState => {
+
+    const { catalogs, componentsOrder: catalogsOrder, modal } = catalogState
+
+    const songCatalogId = SongCatalog.CatalogId;
+
+    const newCatalogs: IHashTable<Catalog> = { ...catalogs };
+    delete newCatalogs[songCatalogId];
+
+    const newCatalogsOrder: Array<string> = catalogsOrder.filter(order => order !== songCatalogId)
+
+    return { catalogs: newCatalogs, componentsOrder: newCatalogsOrder, modal } as ICatalogState
+}
+
+export const createEmptySongCatalog = (props: IStatusSongCatalogActionProps,catalogState : ICatalogState): ICatalogState => {
+    const {catalogs, componentsOrder: catalogsOrder,modal} = catalogState
 
     const defaultActionProps = FilterSongActionProps.Default(SongCatalog.CatalogId)
 
     const songCatalog = SongCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, { ShowAddSong: false });
 
-    const newCatalogs: HashTable<Catalog> = {...catalogs,[songCatalog.Id] : songCatalog} ;
+    const newCatalogs: IHashTable<Catalog> = {...catalogs,[songCatalog.Id] : songCatalog} ;
 
     const newCatalogsOrder: Array<string> = [...catalogsOrder,songCatalog.Id]
 
-    return { catalogs: newCatalogs,catalogsOrder: newCatalogsOrder,modal } as ICatalogState
+    return { catalogs: newCatalogs,componentsOrder: newCatalogsOrder,modal } as ICatalogState
 
     /* const songs = await ReadSongsAsync();
     
@@ -133,7 +152,7 @@ export const createEmptySongCatalog = (catalogState : ICatalogState): ICatalogSt
 
 };
 
-export const addSongToSongCatalogAsync = async (props: IEntityActionProps, catalogs: HashTable<Catalog>): Promise<Catalog> => {
+export const addSongToSongCatalogAsync = async (props: IEntityActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { value: song, catalogId: songCatalogId } = props as ISongEntityActionProps
@@ -153,7 +172,7 @@ export const addSongToSongCatalogAsync = async (props: IEntityActionProps, catal
     } as Catalog;
 };
 
-export const editSongInCatalogAsync = async (props: IEntityActionProps, catalogs: HashTable<Catalog>): Promise<Catalog> => {
+export const editSongInCatalogAsync = async (props: IEntityActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { value: song, catalogId: songCatalogId } = props as ISongEntityActionProps
@@ -165,7 +184,7 @@ export const editSongInCatalogAsync = async (props: IEntityActionProps, catalogs
     return currentCatalog
 }
 
-export const deleteSongInCatalogAsync = async (props: IEntityActionProps, catalogs: HashTable<Catalog>): Promise<Catalog> => {
+export const deleteSongInCatalogAsync = async (props: IEntityActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
     if (catalogs == null) { throw ("catalogs are null") }
 
     const { value: song, catalogId: songCatalogId } = props as ISongEntityActionProps

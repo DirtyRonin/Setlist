@@ -3,10 +3,51 @@ import { from, of } from "rxjs";
 import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 import { isActionOf } from "typesafe-actions";
 
-import { CatalogActions } from "../index"
-import { RootState } from "../reducers";
-import { addSongToCatalog, fetchSongCatalog, setSongCatalogFilter, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "../actions";
-import { addSongToSongCatalogAsync , fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync } from "../../service";
+import { CatalogActions } from "../../index"
+import { RootState } from "../../reducers";
+import * as Action from "../../actions";
+import { addSongToCatalog, fetchSongCatalog, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "../../actions";
+import { addSongToSongCatalogAsync , fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync, createEmptySongCatalog, closeSongCatalog, createEmptySongCatalog_New } from "../../../service";
+
+
+const openBandCatalogEpic_New: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
+    return action$.pipe(
+        filter(isActionOf(Action.openBandsCatalog_New.request)),
+        switchMap(() =>
+            of(createEmptySongCatalog_New((state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+                map(Action.openBandsCatalog_New.success),
+                catchError((error: Error) => of(Action.openBandsCatalog_New.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.openBandsCatalog_New.cancel))))
+            )
+        )
+    );
+}
+
+const openSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
+    return action$.pipe(
+        filter(isActionOf(Action.openSongsCatalog.request)),
+        switchMap((action) =>
+            of(createEmptySongCatalog(action.payload,(state$.value as RootState).catalogReducers.catalogState)).pipe(
+                map(Action.openSongsCatalog.success),
+                catchError((error: Error) => of(Action.openSongsCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.openSongsCatalog.cancel))))
+            )
+        )
+    );
+}
+
+const closeBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
+    return action$.pipe(
+        filter(isActionOf(Action.closeSongsCatalog.request)),
+        switchMap((action) =>
+            of(closeSongCatalog(action.payload,(state$.value as RootState).catalogReducers.catalogState)).pipe(
+                map(Action.closeSongsCatalog.success),
+                catchError((error: Error) => of(Action.closeSongsCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.closeSongsCatalog.cancel))))
+            )
+        )
+    );
+}
 
 const fetchSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
     action$.pipe(
@@ -72,7 +113,9 @@ const deleteSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$, stat
 }
 
 
-export const catalogEpics = combineEpics(
+export const songCatalogEpics = combineEpics(
+    closeBandSongCatalogEpic,
+    openSongCatalogEpic,
     addSongEpic,
     editSongEpic, 
     deleteSongEpic,

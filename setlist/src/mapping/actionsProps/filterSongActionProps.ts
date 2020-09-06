@@ -13,7 +13,7 @@ export class FilterSongActionProps implements IFilterSongActionProps {
 
     }
 
-    public static Default(songCatalogId: string): IFilterSongActionProps {
+    public static Default(songCatalogId: string = ""): IFilterSongActionProps {
 
         const filter: ISongFilter = {
             Title: "",

@@ -1,7 +1,7 @@
 import validator from "validator";
 import { EndpointConfiguration } from "../../Configuration";
 import { IBandSong, IOdataWrapper } from "../../models";
-import { GetBandSongsRequestAsync } from "../../api";
+import { GetBandSongsRequestAsync, CreateBandSongRequestAsync } from "../../api";
 import { BandSong } from "../../mapping";
 
 export const ReadBandSongsAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<IBandSong>> => {
@@ -28,3 +28,11 @@ export const ReadBandSongsAsync = async (filterOrNextLink: string): Promise<IOda
 
     return { ...odataBandSongResources, Values: bandSongs }
 };
+
+export const CreateBandSongAsync = async (bandSong: IBandSong): Promise<IBandSong> => {
+    const resource = BandSong.ToResource(bandSong)
+
+    const result = await CreateBandSongRequestAsync(resource)
+
+    return BandSong.FromResource(result.data)
+}

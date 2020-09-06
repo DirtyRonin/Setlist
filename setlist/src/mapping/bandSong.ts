@@ -27,6 +27,11 @@ export class BandSong implements IBandSong {
         return { Title, Id, SongId, Song, BandId, Popularity } as IBandSong
     }
 
+    public static ToResource(bandSong: IBandSong): IBandSongResource {
+        const { Popularity, Song, Id, SongId, BandId } = bandSong;
+        return { Id, BandId, SongId, Popularity } as IBandSongResource
+    }
+
     public static FromResource(resource: IBandSongResource): IBandSong {
         const { Id, BandId, SongId, Song, Popularity } = resource;
         return BandSong.Create(Song.Title, Popularity, Song, Id, SongId, BandId)

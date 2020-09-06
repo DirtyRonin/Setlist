@@ -4,33 +4,10 @@ import { of, from } from "rxjs";
 import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 
 import { CatalogActions, RootState, openBandSongsCatalog, closeBandSongsCatalog, fetchBandSongCatalog, fetchBandSongCatalogNextLink } from "..";
-import { createEmptyBandSongCatalog, closeBandSongCatalog, fetchBandSongCatalogAsync, fetchBandSongCatalogNextLinkAsync } from "../../service";
+import * as Action from ".."
+import { createEmptyBandSongCatalog, closeBandSongCatalog, fetchBandSongCatalogAsync, fetchBandSongCatalogNextLinkAsync, addBandSongToSongCatalogAsync } from "../../service";
 
-const fetchBandSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
-    action$.pipe(
-        filter(isActionOf(fetchBandSongCatalog.request)),
-        switchMap(action =>
-            from(fetchBandSongCatalogAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
-                map(fetchBandSongCatalog.success),
-                catchError((error: Error) => of(fetchBandSongCatalog.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(fetchBandSongCatalog.cancel))))
-            )
-        )
-    );
-
-const fetchBandSongCatalogNextLinkEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
-action$.pipe(
-    filter(isActionOf(fetchBandSongCatalogNextLink.request)),
-    switchMap(action =>
-        from(fetchBandSongCatalogNextLinkAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
-            map(fetchBandSongCatalogNextLink.success),
-            catchError((error: Error) => of(fetchBandSongCatalogNextLink.failure(error))),
-            takeUntil(action$.pipe(filter(isActionOf(fetchBandSongCatalogNextLink.cancel))))
-        )
-    )
-);
-
-const addBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
+const openBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
     return action$.pipe(
         filter(isActionOf(openBandSongsCatalog.request)),
         switchMap((action) =>
@@ -56,9 +33,49 @@ const closeBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (act
     );
 }
 
+const fetchBandSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
+    action$.pipe(
+        filter(isActionOf(fetchBandSongCatalog.request)),
+        switchMap(action =>
+            from(fetchBandSongCatalogAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+                map(fetchBandSongCatalog.success),
+                catchError((error: Error) => of(fetchBandSongCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(fetchBandSongCatalog.cancel))))
+            )
+        )
+    );
+
+const fetchBandSongCatalogNextLinkEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
+action$.pipe(
+    filter(isActionOf(fetchBandSongCatalogNextLink.request)),
+    switchMap(action =>
+        from(fetchBandSongCatalogNextLinkAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+            map(fetchBandSongCatalogNextLink.success),
+            catchError((error: Error) => of(fetchBandSongCatalogNextLink.failure(error))),
+            takeUntil(action$.pipe(filter(isActionOf(fetchBandSongCatalogNextLink.cancel))))
+        )
+    )
+);
+
+
+
+const addBandSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
+    return action$.pipe(
+        filter(isActionOf(Action.addBandSongToCatalog.request)),
+        switchMap(action =>
+            from(addBandSongToSongCatalogAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+                map(Action.addBandSongToCatalog.success),
+                catchError((error: Error) => of(Action.addBandSongToCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.addBandSongToCatalog.cancel))))
+            )
+        )
+    );
+}
+
 export const bandSongCatalogEpics = combineEpics(
-    addBandSongCatalogEpic,
+    openBandSongCatalogEpic,
     closeBandSongCatalogEpic,
     fetchBandSongCatalogsEpic,
-    fetchBandSongCatalogNextLinkEpic
+    fetchBandSongCatalogNextLinkEpic,
+    addBandSongEpic
 )

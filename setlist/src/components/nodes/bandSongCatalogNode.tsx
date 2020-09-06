@@ -32,9 +32,9 @@ const BandSongCatalogNodeComponent = (props: IBandSongNodeProps): JSX.Element =>
         // setModal(modal)
     }
 
-    const handleShowEditSong = () => createModal(ModalTypes.Edit)
-    const handleShowReadSong = () => createModal(ModalTypes.Read)
-    const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
+    const handleShowEditSong = () => createModal("Edit")
+    const handleShowReadSong = () => createModal("Read")
+    const handleShowDeleteSong = () => createModal("Remove")
 
     const uniqueNodeId = `${bandSongCatalogId}-${bandSong.Id}-${index}`
 
@@ -49,7 +49,7 @@ const BandSongCatalogNodeComponent = (props: IBandSongNodeProps): JSX.Element =>
                             </Col>
                             <Col></Col>
                             <Col>
-                                <Button variant="secondary" onClick={handleShowReadSong}>{ModalTypes.Read}</Button>
+                                <Button variant="secondary" onClick={handleShowReadSong}>{ModalTypes.New}</Button>
                             </Col>
                             <Col>
                                 <Button variant="secondary" onClick={handleShowEditSong}>{ModalTypes.Edit}</Button>

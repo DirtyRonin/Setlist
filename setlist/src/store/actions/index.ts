@@ -1,4 +1,4 @@
-export * from "./catalogActions"
-export * from "./bandCatalogActions"
-export * from "./songCatalogActions"
+export * from "./commonActions"
+export * from "./catalogActions/bandCatalogActions"
+export * from "./catalogActions/songCatalogActions"
 export * from "./bandSongCatalogActions"

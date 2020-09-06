@@ -9,10 +9,11 @@ type FormHtmlAttributesDefinition = {
 
 type SongModalNodeHtmlComponentNames = "Title" | "Artist" | "Genre" | "Nineties" | "Evergreen" | "OriginalKey" | "Comment";
 
-export const SongModalHtmlAttributesConfiguration: Record<
+export type SongModalHtmlAttributesConfigurationType = Record<
     SongModalNodeHtmlComponentNames,
     FormHtmlAttributesDefinition
-> = {
+>
+export const SongModalHtmlAttributesConfiguration: SongModalHtmlAttributesConfigurationType = {
     Title: { Label: "Title", Placeholder: "Enter Title", Data_TestId: "SongModal_Title", ControlId: "SongModal_Title" },
     Artist: { Label: "Artist", Placeholder: "Enter Artist", Data_TestId: "SongModal_Artist", ControlId: "SongModal_Artist" },
     Genre: { Label: "Genre", Placeholder: "Enter Genre", Data_TestId: "SongModal_Genre", ControlId: "SongModal_Genre" },
@@ -20,7 +21,22 @@ export const SongModalHtmlAttributesConfiguration: Record<
     Evergreen: { Label: "Evergreen", Placeholder: "Enter Evergreen", Data_TestId: "SongModal_Evergreen", ControlId: "SongModal_Evergreen" },
     OriginalKey: { Label: "OriginalKey", Placeholder: "Enter OriginalKey", Data_TestId: "SongModal_OriginalKey", ControlId: "SongModal_OriginalKey" },
     Comment: { Label: "Comment", Placeholder: "Enter Comment", Data_TestId: "SongModal_Comment", ControlId: "SongModal_Comment" },
+};
 
+type BandSongModalNodeHtmlComponentNames = SongModalNodeHtmlComponentNames
+
+export type BandSongModalHtmlAttributesConfigurationType = Record<
+    BandSongModalNodeHtmlComponentNames,
+    FormHtmlAttributesDefinition
+>
+export const BandSongModalHtmlAttributesConfiguration: BandSongModalHtmlAttributesConfigurationType = {
+    Title: { Label: "Title", Placeholder: "Enter Title", Data_TestId: "BandSongModal_Title", ControlId: "BandSongModal_Title" },
+    Artist: { Label: "Artist", Placeholder: "Enter Artist", Data_TestId: "BandSongModal_Artist", ControlId: "BandSongModal_Artist" },
+    Genre: { Label: "Genre", Placeholder: "Enter Genre", Data_TestId: "BandSongModal_Genre", ControlId: "BandSongModal_Genre" },
+    Nineties: { Label: "Nineties", Placeholder: "Enter Nineties", Data_TestId: "BandSongModal_Nineties", ControlId: "BandSongModal_Nineties" },
+    Evergreen: { Label: "Evergreen", Placeholder: "Enter Evergreen", Data_TestId: "BandSongModal_Evergreen", ControlId: "BandSongModal_Evergreen" },
+    OriginalKey: { Label: "OriginalKey", Placeholder: "Enter OriginalKey", Data_TestId: "BandSongModal_OriginalKey", ControlId: "BandSongModal_OriginalKey" },
+    Comment: { Label: "Comment", Placeholder: "Enter Comment", Data_TestId: "BandSongModal_Comment", ControlId: "BandSongModal_Comment" },
 };
 
 type BandModalNodeHtmlComponentNames = "Title";
@@ -39,7 +55,7 @@ export type FilterSongHtmlAttributesConfigurationType = ConfigurationItemCollect
     FilterSongComponentNames
 >
 
-const filterSongName= "FilterSong"
+const filterSongName = "FilterSong"
 export const FilterSongHtmlAttributesConfiguration: FilterSongHtmlAttributesConfigurationType = {
     SearchTitleInput: { Label: `Search For Title`, Placeholder: `Enter Title`, Data_TestId: `${filterSongName}_SearchTitle`, ControlId: `${filterSongName}_SearchTitle` },
     SearchArtistInput: { Label: `Search For Artist`, Placeholder: `Enter Artist`, Data_TestId: `${filterSongName}_SearchArtist`, ControlId: `${filterSongName}_SearchArtist` },
@@ -60,12 +76,12 @@ export const FilterBandHtmlAttributesConfiguration: ConfigurationItemCollection<
 
 type FilterBandSongComponentNames = FilterSongComponentNames;
 export type FilterBandSongHtmlAttributesConfigurationType = ConfigurationItemCollection<
-FormHtmlAttributesDefinition,
-FilterBandSongComponentNames
+    FormHtmlAttributesDefinition,
+    FilterBandSongComponentNames
 >
 
-const filterBandSongName= "FilterBandSong"
-export const FilterBandSongHtmlAttributesConfiguration:FilterBandSongHtmlAttributesConfigurationType  = {
+const filterBandSongName = "FilterBandSong"
+export const FilterBandSongHtmlAttributesConfiguration: FilterBandSongHtmlAttributesConfigurationType = {
     SearchTitleInput: { Label: `Search For Title`, Placeholder: `Enter Title`, Data_TestId: `${filterBandSongName}_SearchTitle`, ControlId: `${filterBandSongName}_SearchTitle` },
     SearchArtistInput: { Label: `Search For Artist`, Placeholder: `Enter Artist`, Data_TestId: `${filterBandSongName}_SearchArtist`, ControlId: `${filterBandSongName}_SearchArtist` },
     SearchGenreInput: { Label: `Search For Genre`, Placeholder: `Enter Genre`, Data_TestId: `${filterBandSongName}_SearchGenre`, ControlId: `${filterBandSongName}_SearchGenre` },

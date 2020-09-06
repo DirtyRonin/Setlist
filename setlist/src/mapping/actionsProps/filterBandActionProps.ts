@@ -12,7 +12,7 @@ export class FilterBandActionProps implements IFilterBandActionProps {
         this.catalogId = bandCatalogId
     }
 
-    public static Default(bandCatalogId: string): IFilterBandActionProps {
+    public static Default(bandCatalogId: string = ""): IFilterBandActionProps {
 
         const filter: IBandFilter = {
             Title: ""
