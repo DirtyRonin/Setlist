@@ -4,7 +4,7 @@ import { Droppable } from "react-beautiful-dnd";
 import { Form, FormControlProps, Col, Row, Navbar, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { ISongCatalog, IFilterSongActionProps, INextLinkActionProps, IModal, IModalSong, CatalogType, ModalTypes } from "../../models";
+import { ISongCatalog, IFilterSongActionProps, INextLinkActionProps, IModal, IModalSong, CatalogTypes, ModalTypes, IComponentOrderActionProps, IComponentOrder, DisplayIn } from "../../models";
 import { FilterSongActionProps, Song } from "../../mapping";
 import { SongCatalogHtmlAttributesConfiguration } from "../../Configuration";
 import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
@@ -27,7 +27,8 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
         songlist,
         fetchSongCatalog,
         fetchSongCatalogNextLink,
-        setModal,
+        popCatalogsOrder,
+        pushCatalogsOrder,
         showModal
     } = props;
 
@@ -55,12 +56,20 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
         const modal: IModalSong = {
             show: elements[songCatalogDef.ShowAddSongCheckBox.ControlId].checked,
             catalogId: songlist.Id,
-            catalogType: CatalogType.Song,
+            catalogType: CatalogTypes["Song Catalog"],
             type: "New",
             value: Song.EmptySong()
         }
 
-        setModal(modal)
+        const order:  IComponentOrderActionProps = {
+            ComponentOrder:{
+                value:modal,
+                id:modal.catalogId,
+                displayIn: DisplayIn.Modal
+            } as IComponentOrder
+        }
+
+        pushCatalogsOrder(order)
     }
 
     return (
@@ -114,7 +123,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                             >
                                                 {Array.from(songlist.Values.values()).map((song, index) => (
                                                     <SongCatalogNodeComponent
-                                                        setSongModal={setModal}
+                                                        pushCatalogsOrder={pushCatalogsOrder}
                                                         songListId={songlist.Id}
                                                         key={song.Id}
                                                         song={song}

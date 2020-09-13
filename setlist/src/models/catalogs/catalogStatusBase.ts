@@ -1,4 +1,4 @@
-import { CatalogType } from "."
+import {  CatalogTypes } from "."
 
 export enum CatalogStatusTypes {
     None = "None",
@@ -8,7 +8,7 @@ export enum CatalogStatusTypes {
 
 export interface ICatalogStatus {
     type: CatalogStatusTypes
-    catalogType: CatalogType
+    catalogType: CatalogTypes
     catalogId: string
 }
 
@@ -18,7 +18,7 @@ export interface IChildCatalogStatus extends ICatalogStatus {
 
 export const defaultCatalogStatus: ICatalogStatus = {
     type: CatalogStatusTypes.None,
-    catalogType: CatalogType.None,
+    catalogType: CatalogTypes.None,
     catalogId: ""
 }
 

@@ -1,5 +1,5 @@
-import { CatalogType } from "..";
-import { checkServerIdentity } from "tls";
+import { CatalogTypes, Catalog, IContainerProps } from "..";
+import { IOwnBandCatalogProps } from "../../store/containers/catalogs/BandCatalogContainer";
 
 export type ModalTypes = "None" | "New" | "Edit" | "Remove" | "Read" | "Add"
 export const ModalTypes = {
@@ -11,17 +11,23 @@ export const ModalTypes = {
     Add: "Add"
 } as const;
 
+export interface IReferencedCatalog extends IContainerProps {
+    catalogType: CatalogTypes
+}
+
 export interface IModal {
     show: boolean
     type: ModalTypes
     catalogId: string
-    catalogType: CatalogType
+    catalogType: CatalogTypes
+    referencedCatalog?: IOwnBandCatalogProps  /*IReferencedCatalog*/
 }
 
 export const defaultModal: IModal = {
     show: false,
     type: ModalTypes.None,
     catalogId: "",
-    catalogType: CatalogType.None,
+    catalogType: CatalogTypes.None,
+    referencedCatalog: undefined
 }
 

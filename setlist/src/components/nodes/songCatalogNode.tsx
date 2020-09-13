@@ -2,8 +2,10 @@ import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Draggable } from "react-beautiful-dnd";
 
-import { ISong, IModal, ModalTypes, IModalSong, CatalogType } from "../../models";
+import { ISong, IModal, ModalTypes, IModalSong, CatalogTypes, IComponentOrderActionProps, DisplayIn, IComponentOrder, IReferencedCatalog } from "../../models";
 import { SongNodeContainer } from "../../styles";
+import { BandCatalog } from "../../mapping";
+import { IOwnBandCatalogProps } from "../../store/containers/catalogs/BandCatalogContainer";
 
 
 
@@ -11,25 +13,42 @@ export interface ISongNodeProps {
     song: ISong;
     index: number;
     songListId: string;
-    setSongModal(props: IModal): void
+    pushCatalogsOrder(props: IComponentOrderActionProps): void
 }
 
 const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const { song,
         index,
         songListId,
-        setSongModal
+        pushCatalogsOrder: pushCatalogsOrder
     } = props;
 
     const createModal = (type: ModalTypes) => {
         const modal: IModalSong = {
             show: true,
             catalogId: songListId,
-            catalogType: CatalogType.Song,
+            catalogType: CatalogTypes["Song Catalog"],
             type,
-            value: song
+            value: song,
+            referencedCatalog: {
+                
+                bandCatalogId: BandCatalog.CatalogId,
+                ownNodeProps:{
+                    song,
+                    songCatalogId:songListId
+                }
+            } as IOwnBandCatalogProps
         }
-        setSongModal(modal)
+
+        const order: IComponentOrderActionProps = {
+            ComponentOrder: {
+                value: modal,
+                id: modal.catalogId,
+                displayIn: DisplayIn.Modal
+            } as IComponentOrder
+        }
+
+        pushCatalogsOrder(order)
     }
 
     const handleShowEditSong = () => createModal(ModalTypes.Edit)
@@ -45,8 +64,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                 <Container>
                     <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                         <Row>
-                            <Col xs="10" >
-
+                            <Col xs="6" >
                                 <Row>
                                     <Col>
                                         <label>{song.Title}</label>
@@ -58,21 +76,23 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                                     </Col>
                                 </Row>
                             </Col >
-                            <Col xs='2' >
-
-                                <Button variant="secondary" onClick={handleShowAddSong}>...</Button>
-
-                                {/* <Row>
-                                    <Col sm="4">
+                            <Col xs='6' >
+                                <Row>
+                                    <Col xs="6">
                                         <Button variant="secondary" onClick={handleShowReadSong}>{ModalTypes.Read}</Button>
                                     </Col>
-                                    <Col sm="4">
+                                    <Col xs="6">
                                         <Button variant="secondary" onClick={handleShowEditSong}>{ModalTypes.Edit}</Button>
                                     </Col>
-                                    <Col sm="4">
+                                </Row>
+                                <Row>
+                                    <Col xs="6">
                                         <Button variant="secondary" onClick={handleShowDeleteSong}>{ModalTypes.Remove}</Button>
                                     </Col>
-                                </Row> */}
+                                    <Col xs="6">
+                                        <Button variant="secondary" onClick={handleShowAddSong}>...</Button>
+                                    </Col>
+                                </Row>
                             </Col>
 
                         </Row>

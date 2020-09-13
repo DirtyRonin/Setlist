@@ -4,19 +4,21 @@ import { Modal, Button } from "react-bootstrap"
 
 export interface IAddToCatalogModalComponent {
     modal: IModalSong
-    setModal(props: IModal): void
+    popCatalogsOrder(): void
     executeSongModalAction(props: ISongEntityActionProps): void
     BandCatalogComponent: JSX.Element
 }
 
+
+
 export const AddToCatalogModalComponent = (props: IAddToCatalogModalComponent) => {
-    const { modal, setModal, executeSongModalAction, BandCatalogComponent } = props
+    const { modal, popCatalogsOrder, executeSongModalAction, BandCatalogComponent } = props
 
     const handleCloseModal = () => {
-        setModal(defaultModal);
+        popCatalogsOrder();
     }
 
-    return <Modal show={true} >
+    return <Modal show={true} onHide={handleCloseModal}>
         <Modal.Dialog>
             <Modal.Header closeButton>
                 <Modal.Title>Test</Modal.Title>

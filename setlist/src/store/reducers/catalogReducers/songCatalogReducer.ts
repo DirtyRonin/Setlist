@@ -5,8 +5,8 @@ import { ActionType, getType } from "typesafe-actions";
 import * as actions from "../../actions/catalogActions/songCatalogActions"
 import * as common from "../../actions/commonActions"
 
-import { ISongCatalog } from "../../../models";
-import {  SongCatalog, FilterSongActionProps } from "../../../mapping";
+import { ISongCatalog, NodeTypes } from "../../../models";
+import { SongCatalog, FilterSongActionProps } from "../../../mapping";
 
 export type SongCatalogActions = ActionType<typeof common & typeof actions>;
 
@@ -15,9 +15,9 @@ export interface ISongCatalogState {
 }
 
 const defaultActionProps = FilterSongActionProps.Default(SongCatalog.CatalogId)
-const initial: ISongCatalogState ={
-    songCatalog : SongCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" },{ ShowAddSong: false })
-} 
+const initial: ISongCatalogState = {
+    songCatalog: SongCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, { ShowAddSong: false }, NodeTypes.Initial)
+}
 
 export default combineReducers<ISongCatalogState, SongCatalogActions>({
     songCatalog: (state = initial.songCatalog, action) => {

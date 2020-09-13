@@ -5,15 +5,15 @@ import { connect } from 'react-redux';
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
 import * as Action from '../actions';
-import { createEmptySongCatalog, createEmptyBandCatalog } from '../../service';
-import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, ICatalog, Catalog } from '../../models';
+import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, Catalog, IComponentOrderActionProps } from '../../models';
 import { bandModalActions } from '../../models/modals/modelBand';
-import { StateType } from 'typesafe-actions';
 
-import catalogsReducer from "../reducers/catalogReducers"
 
 interface IAppConnectedDispatch {
     setCatalogState(catalogState: ICatalogState): void
+
+    pushCatalogsOrder(props: IComponentOrderActionProps): void
+    popCatalogsOrder(): void
 
     fetchBandSongCatalog(props: IFilterBandSongActionProps): void
     fetchBandCatalog(props: IFilterBandActionProps): void
@@ -54,6 +54,9 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
     return {
         setCatalogState: (catalogState: ICatalogState) => dispatch(Action.setCatalogState(catalogState)),
 
+        pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Action.pushComponentOrder.request(props)),
+        popCatalogsOrder: () => dispatch(Action.popComponentOrder.request()),
+
         fetchBandSongCatalog: (props: IFilterBandSongActionProps) => dispatch(Action.fetchBandSongCatalog.request(props)),
         fetchBandCatalog: (props: IFilterBandActionProps) => dispatch(Action.fetchBandCatalog.request(props)),
         fetchSongCatalog: (props: IFilterSongActionProps) => dispatch(Action.fetchSongCatalog.request(props)),
@@ -90,7 +93,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         },
         bandSongModalActionsProvider: {
             None: () => { },
-            New: (props: IEntityActionProps) => { } /*dispatch(Action.addBandSongToCatalog.request(props))*/,
+            New: () => { } /*dispatch(Action.addBandSongToCatalog.request(props))*/,
             Edit: (props: IEntityActionProps) => dispatch(Action.addBandSongToCatalog.request(props)),
             Remove: (props: IEntityActionProps) => dispatch(Action.addBandSongToCatalog.request(props)),
             Read: () => dispatch(Action.readBandSongInCatalog()),

@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Draggable } from "react-beautiful-dnd";
 
-import { IBandSong, IModal, ModalTypes, IModalSong, CatalogType } from "../../models";
+import { IBandSong, IModal, ModalTypes } from "../../models";
 import { SongNodeContainer } from "../../styles";
 
 

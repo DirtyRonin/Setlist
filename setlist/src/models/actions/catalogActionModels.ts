@@ -1,4 +1,4 @@
-import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter, CatalogType } from "..";
+import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter,  CatalogTypes, DisplayIn, NodeTypes } from "..";
 
 interface IFilterActionPropsBase<T> {
     catalogId: string;
@@ -28,8 +28,10 @@ export interface IBandSongEntityActionProps extends IEntityActionProps {
 
 export interface IStatusCatalogActionProps {
     show: boolean
-    catalogType: CatalogType;
+    catalogType: CatalogTypes;
     catalogId: string;
+    displayIn: DisplayIn;
+    nodeType: NodeTypes
 }
 
 export interface IStatusSongCatalogActionProps extends IStatusCatalogActionProps { }

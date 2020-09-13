@@ -1,23 +1,43 @@
-export interface ICatalog<TValue,SFilter,ROptions>{
-    CatalogType: CatalogType;
-    Filter:SFilter
+import { IEntityActionProps } from ".."
+
+export interface ICatalog<TValue, SFilter, ROptions> {
+    CatalogType: CatalogTypes;
+    Filter: SFilter
     Id: string;
     Title: string;
     Refresh: boolean;
-    Values:Map<string,TValue>;
-    OData:ODataProps;
+    Values: Map<string, TValue>;
+    OData: ODataProps;
     CatalogOptions: ROptions;
+    NodeType: NodeTypes;
 }
 
-export interface ODataProps{
-    Context:string
-    Count:number
-    NextLink:string
+export interface ODataProps {
+    Context: string
+    Count: number
+    NextLink: string
 }
 
-export enum CatalogType {
-    Song = "Song Catalog",
-    Band = "Band Catalog",
-    BandSong = "BandSong Catalog",
-    None = "None"
+export interface IContainerProps {
+    catalogId: string
+    addToCatalog?: any
+    executeNodeAction?:(props: IEntityActionProps) => void 
 }
+
+export type CatalogTypes = "Song Catalog" | "Band Catalog" | "BandSong Catalog" | "None"
+export const CatalogTypes: Record<CatalogTypes, CatalogTypes> = {
+    "Song Catalog": "Song Catalog",
+    "Band Catalog": "Band Catalog",
+    "BandSong Catalog": "BandSong Catalog",
+    "None":"None"
+} as const
+
+
+export type NodeTypes = 'Edit'| 'Add'| 'Initial'
+export const NodeTypes: Record<NodeTypes, NodeTypes> = {
+    Edit: 'Edit',
+    Add: 'Add',
+    Initial: 'Initial'
+} as const
+
+

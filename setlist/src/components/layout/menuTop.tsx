@@ -1,12 +1,12 @@
 import React from "react";
 import { Button, Navbar, Nav, Form, FormControl, Col, FormControlProps } from "react-bootstrap";
-import { IStatusSongCatalogActionProps, CatalogType, IStatusBandCatalogActionProps } from "../../models";
+import { IStatusSongCatalogActionProps, CatalogTypes, IStatusBandCatalogActionProps, DisplayIn, IComponentOrder, NodeTypes } from "../../models";
 import { SongCatalog, BandCatalog } from "../../mapping";
 import { DropDownFilterComponent } from "./DropDownFilter";
 import DropDownFilter from "../../store/subStores/subContainers/DropDownFilterContainer"
 
 export interface IMenuTopProps {
-    catalogsOrder: string[]
+    componentsOrder: IComponentOrder[]
     openSongsCatalog(props: IStatusSongCatalogActionProps): void
     closeSongsCatalog(props: IStatusSongCatalogActionProps): void
     openBandsCatalog(props: IStatusBandCatalogActionProps): void
@@ -17,7 +17,7 @@ export interface IMenuTopProps {
 const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
 
     const {
-        catalogsOrder,
+        componentsOrder,
         closeSongsCatalog,
         openSongsCatalog,
         openBandsCatalog,
@@ -27,17 +27,20 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
     const songCatalogMenuId = `MenuId_${SongCatalog.CatalogId}`
     const bandCatalogMenuId = `MenuId_${BandCatalog.CatalogId}`
 
-    const isSongCatalogOpen = catalogsOrder.includes(SongCatalog.CatalogId)
-    const isBandCatalogOpen = catalogsOrder.includes(BandCatalog.CatalogId)
+
+    const isCatalogOpen = (catalogId: string): boolean =>
+        componentsOrder[-1] && componentsOrder[-1].id === catalogId
 
 
+    const isSongCatalogOpen = isCatalogOpen(SongCatalog.CatalogId)
+    const isBandCatalogOpen = isCatalogOpen(BandCatalog.CatalogId)
 
     const handleSongCatalogStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
 
         const elements: any = (event.target as any).form.elements;
         const show: boolean = elements[songCatalogMenuId].checked
 
-        const props: IStatusSongCatalogActionProps = { show, catalogType: CatalogType.Song,catalogId: SongCatalog.CatalogId}
+        const props: IStatusSongCatalogActionProps = { show, catalogType: CatalogTypes["Song Catalog"], catalogId: SongCatalog.CatalogId, displayIn: DisplayIn.Main, nodeType: NodeTypes.Edit }
         if (props.show) {
             openSongsCatalog(props)
         }
@@ -51,7 +54,7 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
         const elements: any = (event.target as any).form.elements;
         const show: boolean = elements[bandCatalogMenuId].checked
 
-        const props: IStatusBandCatalogActionProps = { show, catalogType: CatalogType.Band,catalogId : BandCatalog.CatalogId }
+        const props: IStatusBandCatalogActionProps = { show, catalogType: CatalogTypes["Band Catalog"], catalogId: BandCatalog.CatalogId, displayIn: DisplayIn.Main, nodeType: NodeTypes.Edit }
         if (props.show) {
             openBandsCatalog(props)
         }
@@ -66,7 +69,7 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Form inline>
-                    <DropDownFilter  />
+                    <DropDownFilter />
                     <Form.Row>
                         <Form.Group as={Col} controlId={songCatalogMenuId}  >
                             <Form.Check type="switch" checked={isSongCatalogOpen} label="Songs" onChange={handleSongCatalogStatus} />

@@ -7,18 +7,18 @@ import { IsModalReadonly } from "../../Util";
 
 export interface IBandSongModalComponent {
     modal: IModalBandSong
-    setModal(props: IModal): void
+    popCatalogsOrder(): void
     executeBandSongModalAction(props: IBandSongEntityActionProps): void
 }
 
 export const BandSongModalComponent = (props: IBandSongModalComponent) => {
 
-    const { modal, setModal, executeBandSongModalAction } = props
+    const { modal, popCatalogsOrder: popCatalogsOrder, executeBandSongModalAction } = props
 
     const htmlConfig = BandSongModalHtmlAttributesConfiguration;
 
     const handleCloseModal = () => {
-        setModal(defaultModal);
+        popCatalogsOrder();
     }
 
     const hanldeOnClick = (event: React.FormEvent<FormControlProps>) => {

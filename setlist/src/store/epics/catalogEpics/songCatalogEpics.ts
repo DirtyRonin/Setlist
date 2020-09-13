@@ -7,7 +7,8 @@ import { CatalogActions } from "../../index"
 import { RootState } from "../../reducers";
 import * as Action from "../../actions";
 import { addSongToCatalog, fetchSongCatalog, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "../../actions";
-import { addSongToSongCatalogAsync , fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync, createEmptySongCatalog, closeSongCatalog, createEmptySongCatalog_New } from "../../../service";
+import { addSongToSongCatalogAsync, fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync, createEmptySongCatalog, closeSongCatalog, createEmptySongCatalog_New } from "../../../service";
+import { pushComponentsOrderService, popComponentsOrderService } from "../../../service/reducer/commonService";
 
 
 const openBandCatalogEpic_New: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
@@ -27,7 +28,7 @@ const openSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$,
     return action$.pipe(
         filter(isActionOf(Action.openSongsCatalog.request)),
         switchMap((action) =>
-            of(createEmptySongCatalog(action.payload,(state$.value as RootState).catalogReducers.catalogState)).pipe(
+            of(createEmptySongCatalog(action.payload, (state$.value as RootState).catalogReducers.catalogState)).pipe(
                 map(Action.openSongsCatalog.success),
                 catchError((error: Error) => of(Action.openSongsCatalog.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(Action.openSongsCatalog.cancel))))
@@ -40,7 +41,7 @@ const closeBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (act
     return action$.pipe(
         filter(isActionOf(Action.closeSongsCatalog.request)),
         switchMap((action) =>
-            of(closeSongCatalog(action.payload,(state$.value as RootState).catalogReducers.catalogState)).pipe(
+            of(closeSongCatalog(action.payload, (state$.value as RootState).catalogReducers.catalogState)).pipe(
                 map(Action.closeSongsCatalog.success),
                 catchError((error: Error) => of(Action.closeSongsCatalog.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(Action.closeSongsCatalog.cancel))))
@@ -117,10 +118,11 @@ export const songCatalogEpics = combineEpics(
     closeBandSongCatalogEpic,
     openSongCatalogEpic,
     addSongEpic,
-    editSongEpic, 
+    editSongEpic,
     deleteSongEpic,
     fetchSongCatalogNextLinkEpic,
     fetchSongCatalogsEpic,
     // filterSongEpic,
+    
 )
 

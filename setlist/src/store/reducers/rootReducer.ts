@@ -7,11 +7,13 @@ import bandCatalogReducers from "./catalogReducers/bandCatalogReducer"
 import songCatalogReducers from "./catalogReducers/songCatalogReducer"
 import dropDownFilterReducer from "../subStores/subReducers/DropDownFilterReducers"
 import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics } from "../epics"
+import { commonCatalogEpics } from '../epics/commonEpics';
 
 export const rootEpic = combineEpics(
   songCatalogEpics,
   bandCatalogEpics,
-  bandSongCatalogEpics
+  bandSongCatalogEpics,
+  commonCatalogEpics
 )
 
 export const rootReducer = combineReducers({

@@ -1,4 +1,4 @@
-import { Store, createStore, compose, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import {createLogger}  from 'redux-logger';
 import {  rootReducer, rootEpic, CatalogActions } from '.';
 import { createEpicMiddleware } from 'redux-observable';
@@ -9,7 +9,6 @@ export function storeSetup(initialState?: RootState) {
   const epicMiddleware = createEpicMiddleware<CatalogActions>();
 
   const middlewares = [
-    // add additional middleware like redux-thunk here
     loggerMiddleware,
     epicMiddleware
   ];

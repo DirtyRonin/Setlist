@@ -6,7 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 
 
-import { IModal, IBandCatalog, IFilterBandActionProps, INextLinkActionProps, ModalTypes, CatalogType, IStatusBandSongCatalogActionProps } from "../../models";
+import { IModal, IBandCatalog, IFilterBandActionProps, INextLinkActionProps, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, IComponentOrder, IComponentOrderActionProps } from "../../models";
 import { BandCatalogHtmlAttributesConfiguration } from "../../Configuration";
 import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
 import { FilterBandActionProps, Band } from "../../mapping";
@@ -14,21 +14,6 @@ import BandCatalogNodeComponent from "../nodes/bandCatalogNode";
 import { IModalBand } from "../../models/modals/modelBand";
 import { BandFilterComponent } from "../filters";
 import { BandCatalogProps } from "../../store/containers/catalogs/BandCatalogContainer";
-
-// export interface IBandCatalogProps {
-//     bandlist: IBandCatalog;
-//     showModal: boolean;
-//     openedCatalogs: string[];
-
-//     fetchBandCatalog(props: IFilterBandActionProps): void
-//     fetchCatalogNextLink: (props: INextLinkActionProps) => void
-
-//     openBandSongsCatalog(props : IStatusBandSongCatalogActionProps): void
-//     closeBandSongsCatalog(props : IStatusBandSongCatalogActionProps): void
-
-
-//     setModal(props: IModal): void
-// }
 
 const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
     const {
@@ -39,7 +24,11 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
         fetchBandCatalogNextLink,
         // openBandSongsCatalog,
         // closeBandSongsCatalog,
-        setModal
+        openBandSongsCatalog,
+        pushCatalogsOrder,
+        setModal,
+        addToBandSongsAction,
+        ownNodeProps
     } = props;
 
     useEffect(() => {
@@ -67,12 +56,20 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
         const modal: IModalBand = {
             show: elements[bandCatalogDef.ShowAddBandCheckBox.ControlId].checked,
             catalogId: bandlist.Id,
-            catalogType: CatalogType.Band,
+            catalogType: CatalogTypes["Band Catalog"],
             type: "New",
             value: Band.EmptyBand()
         }
 
-        setModal(modal)
+        const order:  IComponentOrderActionProps = {
+            ComponentOrder:{
+                value:modal,
+                id:modal.catalogId,
+                displayIn: DisplayIn.Modal
+            } as IComponentOrder
+        }
+
+        pushCatalogsOrder(order)
     }
 
     
@@ -132,6 +129,9 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                             >
                                                 {Array.from(bandlist.Values.values()).map((band, index) => (
                                                     <BandCatalogNodeComponent
+                                                    openBandSongsCatalog={openBandSongsCatalog}
+                                                    addToBandSongsAction={addToBandSongsAction}
+                                                    ownNodeProps={ownNodeProps}
                                                     band={band}
                                                     index={index}
                                                     catalogId={bandlist.Id}

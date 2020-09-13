@@ -1,24 +1,25 @@
 import React from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 import { SongModalHtmlAttributesConfiguration } from "../../Configuration";
-import { IModal, ModalTypes, defaultModal, ISongEntityActionProps, ISong, IModalSong } from "../../models";
+import { ModalTypes, ISongEntityActionProps, ISong, IModalSong } from "../../models";
 import { Song } from "../../mapping";
-import { IsModalReadonly } from "../../Util";
+import { IsModalReadonly, IsCatalog } from "../../Util";
 
 export interface ISongModalComponent {
     modal: IModalSong
-    setModal(props: IModal): void
+    popCatalogsOrder(): void
     executeSongModalAction(props: ISongEntityActionProps): void
+    catalog?: JSX.Element
 }
 
 export const SongModalComponent = (props: ISongModalComponent) => {
 
-    const { modal, setModal, executeSongModalAction } = props
+    const { modal, popCatalogsOrder, executeSongModalAction, catalog } = props
 
     const songDef = SongModalHtmlAttributesConfiguration;
 
     const handleCloseModal = () => {
-        setModal(defaultModal);
+        popCatalogsOrder();
     }
 
     const hanldeOnClick = (event: React.FormEvent<FormControlProps>) => {
@@ -50,32 +51,47 @@ export const SongModalComponent = (props: ISongModalComponent) => {
     const IsReadonly = IsModalReadonly(modal.type)
 
     return <Modal show={modal.show} onHide={handleCloseModal}>
-        <Modal.Dialog>
+        <Modal.Dialog >
             <Modal.Header closeButton>
                 <Modal.Title>{modal.type}</Modal.Title>
             </Modal.Header>
-            <Form onSubmit={hanldeOnClick} method="GET">
-                <Modal.Body>
-                    <Form.Row>
-                        <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
-                            <Form.Label>{songDef.Title.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Title} placeholder={songDef.Title.Placeholder}></Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
-                            <Form.Label>{songDef.Artist.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Artist} placeholder={songDef.Artist.Placeholder}></Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
-                            <Form.Label>{songDef.Genre.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Genre} placeholder={songDef.Genre.Placeholder}></Form.Control>
-                        </Form.Group>
-                    </Form.Row>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                    <Button variant="primary" type="submit" >{modal.type}</Button>
-                </Modal.Footer>
-            </Form>
+            {/* Entity Edit */}
+            {/* Add Entity to this Catalog */}
+            {IsCatalog(modal.type) && catalog !== null &&
+                <div>
+                    <Modal.Body>
+                        {catalog}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                    </Modal.Footer>
+                </div>
+            }
+            {!IsCatalog(modal.type) &&
+                <Form onSubmit={hanldeOnClick} method="GET">
+                    <Modal.Body>
+                        <Form.Row>
+                            <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
+                                <Form.Label>{songDef.Title.Label}</Form.Label>
+                                <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Title} placeholder={songDef.Title.Placeholder}></Form.Control>
+                            </Form.Group>
+                            <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
+                                <Form.Label>{songDef.Artist.Label}</Form.Label>
+                                <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Artist} placeholder={songDef.Artist.Placeholder}></Form.Control>
+                            </Form.Group>
+                            <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
+                                <Form.Label>{songDef.Genre.Label}</Form.Label>
+                                <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Genre} placeholder={songDef.Genre.Placeholder}></Form.Control>
+                            </Form.Group>
+                        </Form.Row>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                        <Button variant="primary" type="submit" >{modal.type}</Button>
+                    </Modal.Footer>
+                </Form>}
+
+
         </Modal.Dialog>
     </Modal>
 }

@@ -1,27 +1,28 @@
-import { ISong, CatalogType, ISongCatalog, ISongFilter, ODataProps, ISongCatalogOptions } from "../../models";
+import { ISong, CatalogTypes, ISongCatalog, ISongFilter, ODataProps, ISongCatalogOptions, NodeTypes } from "../../models";
 import { CatalogBase } from "./catalogBase";
 
 export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOptions> implements ISongCatalog {
 
-    private constructor(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, refresh?: boolean, songs: Map<string, ISong> = new Map<string, ISong>()) {
+    private constructor(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions,nodeType: NodeTypes = NodeTypes.Initial, refresh?: boolean, songs: Map<string, ISong> = new Map<string, ISong>()) {
         super(
             SongCatalog.CatalogId,
-            CatalogType.Song.toString(),
-            CatalogType.Song,
+            CatalogTypes["Song Catalog"].toString(),
+            CatalogTypes["Song Catalog"],
             filter,
             oData,
             options,
+            nodeType,
             refresh,
             songs,
         )
     }
 
-    public static Create(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, songs: Map<string, ISong> = new Map<string, ISong>()): ISongCatalog {
-        return new SongCatalog(filter, oData, options, false, songs)
+    public static Create(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions,nodeType: NodeTypes, songs: Map<string, ISong> = new Map<string, ISong>()): ISongCatalog {
+        return new SongCatalog(filter, oData, options,nodeType, false, songs)
     }
 
-    public static CreateAndUpdate(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, songs: Map<string, ISong> = new Map<string, ISong>()): ISongCatalog {
-        return new SongCatalog(filter, oData, options, true, songs)
+    public static CreateAndUpdate(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions,nodeType: NodeTypes, songs: Map<string, ISong> = new Map<string, ISong>()): ISongCatalog {
+        return new SongCatalog(filter, oData, options,nodeType, true, songs)
     }
 
     public static AddValues(songCatalog: ISongCatalog, addSongs: ISong[]): ISongCatalog {
@@ -41,5 +42,5 @@ export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOpt
         return newSongCatalog;
     }
 
-    public static CatalogId: string = `${CatalogType.Song.toString()}_id`
+    public static CatalogId: string = `${CatalogTypes["Song Catalog"].toString()}_id`
 }

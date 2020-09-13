@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IModal, Catalog, IEntityActionProps, IStatusSongCatalogActionProps, ISongCatalog } from "../../../models";
+import { IFilterSongActionProps, INextLinkActionProps, IModal, Catalog, IEntityActionProps, IStatusSongCatalogActionProps, ISongCatalog, IComponentOrderActionProps, IComponentOrder } from "../../../models";
 import { ICatalogState } from "../..";
 
 export const openSongCatalog_New = createAsyncAction(
