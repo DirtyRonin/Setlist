@@ -8,4 +8,4 @@ export interface IModalSong extends IModal {
 // export type SongModalTypes = ModalTypes | "Add"
 // export const SongModalTypes = { ...ModalTypes, Add: "Add" as const }
 
-export type songModalActions = Record<ModalTypes, (props: IEntityActionProps) => void>
+export type songModalActions = Record<ModalTypes, (props: ISongEntityActionProps) => void>

@@ -148,11 +148,6 @@ export const App = (props: AppProps): JSX.Element => {
         return components
     }
 
-
-
-
-
-
     return (
         <div>
             <Container fluid>

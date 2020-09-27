@@ -29,8 +29,12 @@ export const SongModalComponent = (props: ISongModalComponent) => {
 
         const song = GetSongForModalType(modal.type, elements)
 
-        if (modal.catalogId)
+        if (modal.catalogId) {
             executeSongModalAction({ value: song, catalogId: modal.catalogId } as ISongEntityActionProps)
+            
+            if (modal.type !== "New")
+                handleCloseModal()
+        }
     };
 
     const GetSongForModalType = (type: ModalTypes, elements: any) => {

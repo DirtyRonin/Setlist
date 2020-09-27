@@ -1,4 +1,4 @@
-import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter,  CatalogTypes, DisplayIn, NodeTypes } from "..";
+import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter,  CatalogTypes, DisplayIn, NodeTypes, ODataProps } from "..";
 
 interface IFilterActionPropsBase<T> {
     catalogId: string;
@@ -45,4 +45,14 @@ export interface INextLinkActionProps {
     catalogId: string;
     nextLink: string,
 }
+
+export interface IFilterActionResultBase<T> {
+    Values: Map<string, T>;
+    OData: ODataProps;
+}
+
+export interface IFilterSongActionResult extends IFilterActionResultBase<ISong> { }
+
+
+
 

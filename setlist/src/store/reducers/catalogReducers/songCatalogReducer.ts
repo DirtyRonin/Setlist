@@ -3,34 +3,83 @@ import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
 
 import * as actions from "../../actions/catalogActions/songCatalogActions"
-import * as common from "../../actions/commonActions"
 
-import { ISongCatalog, NodeTypes } from "../../../models";
-import { SongCatalog, FilterSongActionProps } from "../../../mapping";
+import { ISongCatalog } from "../../../models";
+import { SongCatalog } from "../../../mapping";
 
-export type SongCatalogActions = ActionType<typeof common & typeof actions>;
+import { MapHelper } from "../../../Util"
+
+export type SongCatalogActions = ActionType<typeof actions>;
 
 export interface ISongCatalogState {
     songCatalog: ISongCatalog;
 }
 
-const defaultActionProps = FilterSongActionProps.Default(SongCatalog.CatalogId)
 const initial: ISongCatalogState = {
-    songCatalog: SongCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, { ShowAddSong: false }, NodeTypes.Initial)
+    songCatalog: SongCatalog.Create()
 }
 
 export default combineReducers<ISongCatalogState, SongCatalogActions>({
     songCatalog: (state = initial.songCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openSongCatalog_New.success):
-                return action.payload
+            case getType(actions.openSongsCatalog.success):
+                return {
+                    ...state,
+                    Refresh: true
+                }
+            case getType(actions.closeSongsCatalog.success):
+                return initial.songCatalog
+            case getType(actions.setSongFilter):
+                return {
+                    ...state,
+                    Filter: action.payload.filter,
+                    Refresh: action.payload.refresh
+                }
+
+            case getType(actions.fetchSongCatalog.request):
+                return {
+                    ...state,
+                    Refresh: false
+                }
             case getType(actions.fetchSongCatalog.success):
-                return action.payload
+                return {
+                    ...state,
+                    Values: action.payload.Values,
+                    OData: action.payload.OData
+                }
             case getType(actions.fetchSongCatalogNextLink.success):
-                return action.payload
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddMap(action.payload.Values)
+                        .GetMap(),
+                    OData: action.payload.OData
+                }
+            case getType(actions.addSongToCatalog.success):
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddAsFirst(action.payload.Id, action.payload)
+                        .GetMap()
+                }
+            case getType(actions.editSongInCatalog.success):
+                return {
+                    ...state,
+                    Values: state.Values.set(action.payload.Id, action.payload)
+                }
+            case getType(actions.deleteSongInCatalog.success): {
+                const { Values } = state
+                Values.delete(action.payload)
+
+                return {
+                    ...state,
+                    Values
+                }
+            }
 
             default:
                 return state;
         }
     }
 })
+

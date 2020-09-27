@@ -12,29 +12,27 @@ import * as Common from '../../actions/commonActions';
 
 interface IConnectedDispatch {
     initBandCatalog(): void
+    setSongFilter(props: IFilterSongActionProps): void
     fetchSongCatalog(props: IFilterSongActionProps): void
     fetchSongCatalogNextLink: (props: INextLinkActionProps) => void
     pushCatalogsOrder(props: IComponentOrderActionProps): void
-    popCatalogsOrder(): void
 }
 
 export interface IOwnProps { catalogId: string }
 
 interface IState extends IOwnProps{
     showModal: boolean;
-    songlist: ISongCatalog;
+    songCatalog: ISongCatalog;
 }
 
 export type SongCatalogProps = IConnectedDispatch & IState
-
-
 
 const mapStateToProps = (state: RootState, ownProps: IOwnProps): IState => {
     const { catalogId } = ownProps
 
     return {
         showModal: state.catalogReducers.catalogState.modal.show,
-        songlist: state.songCatalogReducers.songCatalog,
+        songCatalog: state.songCatalogReducers.songCatalog,
         catalogId: catalogId
     }
 }
@@ -44,7 +42,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     fetchSongCatalog: (props: IFilterSongActionProps) => dispatch(Action.fetchSongCatalog.request(props)),
     fetchSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchSongCatalogNextLink.request(props)),
     pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),
-    popCatalogsOrder: () => dispatch(Common.popComponentOrder.request()),
+    setSongFilter:(props: IFilterSongActionProps) => dispatch(Action.setSongFilter(props))
 })
 
 const SongCatalog = (props: SongCatalogProps) => {

@@ -4,7 +4,7 @@ import { Droppable } from "react-beautiful-dnd";
 import { Form, FormControlProps, Col, Row, Navbar, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { ISongCatalog, IFilterSongActionProps, INextLinkActionProps, IModal, IModalSong, CatalogTypes, ModalTypes, IComponentOrderActionProps, IComponentOrder, DisplayIn } from "../../models";
+import { INextLinkActionProps, IModalSong, CatalogTypes, IComponentOrderActionProps, IComponentOrder, DisplayIn } from "../../models";
 import { FilterSongActionProps, Song } from "../../mapping";
 import { SongCatalogHtmlAttributesConfiguration } from "../../Configuration";
 import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
@@ -12,37 +12,28 @@ import { SongFilterComponent } from "../filters";
 import SongCatalogNodeComponent from "../nodes/songCatalogNode";
 import { SongCatalogProps } from "../../store/containers/catalogs/SongCatalogContainer";
 
-// export interface ISongCatalogProps {
-//     songlist: ISongCatalog;
-//     showModal: boolean;
-
-//     fetchSongCatalog(props: IFilterSongActionProps): void
-//     fetchSongCatalogNextLink: (props: INextLinkActionProps) => void
-
-//     setModal(props: IModal): void
-// }
-
 const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     const {
-        songlist,
+        songCatalog,
+        setSongFilter,
         fetchSongCatalog,
         fetchSongCatalogNextLink,
-        popCatalogsOrder,
         pushCatalogsOrder,
         showModal
     } = props;
 
     useEffect(() => {
-        const filter = FilterSongActionProps.CreateFromSongCatalog(songlist)
-
-        fetchSongCatalog(filter)
-    }, []);
+        if (songCatalog.Refresh) {
+            const filter = FilterSongActionProps.CreateFromSongCatalog(songCatalog)
+            fetchSongCatalog(filter)
+        }
+    }, [songCatalog.Refresh]);
 
 
     const songCatalogDef = SongCatalogHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        const { Id, OData } = songlist
+        const { Id, OData } = songCatalog
         const actionProps: INextLinkActionProps = { catalogId: Id, nextLink: OData.NextLink }
 
         setTimeout(() => {
@@ -55,16 +46,16 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
 
         const modal: IModalSong = {
             show: elements[songCatalogDef.ShowAddSongCheckBox.ControlId].checked,
-            catalogId: songlist.Id,
+            catalogId: songCatalog.Id,
             catalogType: CatalogTypes["Song Catalog"],
             type: "New",
             value: Song.EmptySong()
         }
 
-        const order:  IComponentOrderActionProps = {
-            ComponentOrder:{
-                value:modal,
-                id:modal.catalogId,
+        const order: IComponentOrderActionProps = {
+            ComponentOrder: {
+                value: modal,
+                id: modal.catalogId,
                 displayIn: DisplayIn.Modal
             } as IComponentOrder
         }
@@ -77,23 +68,23 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
         <Container fluid>
             <Row>
                 <Col >
-                    <ContainerCss data-testid={songlist.Id}>
+                    <ContainerCss data-testid={songCatalog.Id}>
                         <Row>
                             <Col>
-                                <Droppable droppableId={songlist.Id}>
+                                <Droppable droppableId={songCatalog.Id}>
                                     {provided => (
                                         <NodeListCss id={songCatalogDef.NodeList.ControlId} ref={provided.innerRef} {...provided.droppableProps}>
                                             <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                                <Navbar.Brand >{songlist.Title}</Navbar.Brand>
+                                                <Navbar.Brand >{songCatalog.Title}</Navbar.Brand>
                                                 <Navbar.Toggle aria-controls={songCatalogDef.Navbar.ControlId} />
                                                 <Navbar.Collapse id={songCatalogDef.Navbar.ControlId}>
                                                     <Row>
                                                         <Col sm="6">
                                                             <SongFilterCss>
                                                                 <SongFilterComponent
-                                                                    CatalogId={songlist.Id}
-                                                                    Filter={songlist.Filter}
-                                                                    FetchSongCatalog={fetchSongCatalog}
+                                                                    CatalogId={songCatalog.Id}
+                                                                    Filter={songCatalog.Filter}
+                                                                    FetchSongCatalog={setSongFilter}
                                                                 />
                                                             </SongFilterCss>
                                                         </Col>
@@ -110,9 +101,9 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                                 </Navbar.Collapse>
                                             </Navbar>
                                             <InfiniteScroll
-                                                dataLength={songlist.Values.size}
+                                                dataLength={songCatalog.Values.size}
                                                 next={handleScrollDown}
-                                                hasMore={songlist.Values.size < songlist.OData.Count}
+                                                hasMore={songCatalog.Values.size < songCatalog.OData.Count}
                                                 loader={<h4>Loading...</h4>}
                                                 endMessage={
                                                     <p style={{ textAlign: 'center' }}>
@@ -121,10 +112,10 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                                 }
                                                 scrollableTarget={songCatalogDef.NodeList.ControlId}
                                             >
-                                                {Array.from(songlist.Values.values()).map((song, index) => (
+                                                {Array.from(songCatalog.Values.values()).map((song, index) => (
                                                     <SongCatalogNodeComponent
                                                         pushCatalogsOrder={pushCatalogsOrder}
-                                                        songListId={songlist.Id}
+                                                        songListId={songCatalog.Id}
                                                         key={song.Id}
                                                         song={song}
                                                         index={index}
@@ -136,7 +127,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                         </NodeListCss>
                                     )}
                                 </Droppable>
-                                {songlist.OData.Count}
+                                {songCatalog.OData.Count}
                             </Col>
                         </Row>
                     </ContainerCss>

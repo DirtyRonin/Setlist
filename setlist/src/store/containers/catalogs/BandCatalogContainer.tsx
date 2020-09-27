@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import BandCatalogComponent from '../../../components/catalogs/bandCatalog';
 
 import { RootState } from '../..';
-import { IFilterBandActionProps, INextLinkActionProps, IModal, IBandCatalog, Catalog, IComponentOrderActionProps, IContainerProps, IEntityActionProps, ISong, IBandSongEntityActionProps, IStatusBandSongCatalogActionProps } from '../../../models';
+import { IFilterBandActionProps, INextLinkActionProps, IModal, IBandCatalog, Catalog, IComponentOrderActionProps, IContainerProps, IEntityActionProps, ISong, IBandSongEntityActionProps, IStatusBandSongCatalogActionProps, IComponentOrder } from '../../../models';
 import * as Action from '../../actions/catalogActions/bandCatalogActions';
 import * as Common from '../../actions/commonActions';
 import * as bandSongAction from '../../actions/bandSongCatalogActions'
@@ -19,14 +19,6 @@ interface IConnectedDispatch {
     addToBandSongsAction:(props: IBandSongEntityActionProps) => void
 }
 
-interface IState extends IOwnBandCatalogProps {
-    bandlist: IBandCatalog;
-    showModal: boolean;
-    openedCatalogs: string[];
-}
-
-export type BandCatalogProps = IConnectedDispatch & IState
-
 export interface IOwnBandCatalogProps{
     bandCatalogId:string
     ownNodeProps? : {
@@ -35,11 +27,19 @@ export interface IOwnBandCatalogProps{
     }
 }
 
+interface IState extends IOwnBandCatalogProps {
+    bandlist: IBandCatalog;
+    showModal: boolean;
+    openedCatalogs: IComponentOrder[];
+}
+
+export type BandCatalogProps = IConnectedDispatch & IState
+
 const mapStateToProps = (state: RootState, containerProps: IOwnBandCatalogProps): IState =>
     ({
         bandlist: state.bandCatalogReducers.bandState.bandCatalog,
         showModal: state.catalogReducers.catalogState.modal.show,
-        openedCatalogs: state.catalogReducers.catalogState.catalogsOrder,
+        openedCatalogs: state.catalogReducers.catalogState.componentsOrder,
         bandCatalogId: containerProps.bandCatalogId,
         ownNodeProps:containerProps.ownNodeProps,
     });
@@ -52,7 +52,6 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     setModal: (props: IModal) => dispatch(Common.setModal(props)),
     addToBandSongsAction:(props:IBandSongEntityActionProps) => dispatch(bandSongAction.addBandSongToCatalog.request(props)),
     openBandSongsCatalog:(props: IStatusBandSongCatalogActionProps) => dispatch(bandSongAction.openBandSongsCatalog.request(props)),
-
 })
 
 const BandCatalog = (props: BandCatalogProps) => (

@@ -4,9 +4,7 @@ import { Droppable } from "react-beautiful-dnd";
 import { Col, Row, Navbar, Container, FormControlProps, Form } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-
-
-import { IModal, IBandCatalog, IFilterBandActionProps, INextLinkActionProps, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, IComponentOrder, IComponentOrderActionProps } from "../../models";
+import { INextLinkActionProps, CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps } from "../../models";
 import { BandCatalogHtmlAttributesConfiguration } from "../../Configuration";
 import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
 import { FilterBandActionProps, Band } from "../../mapping";

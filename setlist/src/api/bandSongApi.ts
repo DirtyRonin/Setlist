@@ -1,9 +1,7 @@
 import Axios, { AxiosResponse } from "axios";
-import { EndpointConfiguration, defaultHeader, BandSongsEndPointDefinition } from "../Configuration";
-import { ISong, IOdataWrapper } from "../models";
+import { defaultHeader } from "../Configuration";
+import { IOdataWrapper } from "../models";
 import { IBandSongResource } from "../resource";
-
-const bandSongsEndpoint = EndpointConfiguration.Bandsongs;
 
 export const GetBandSongsRequestAsync = async (url: string): Promise<IOdataWrapper<IBandSongResource>> => {
 
@@ -21,9 +19,8 @@ export const GetBandSongsRequestAsync = async (url: string): Promise<IOdataWrapp
     return Odata;
 }
 
-export const CreateBandSongRequestAsync = async (bandSong: IBandSongResource): Promise<AxiosResponse<IBandSongResource>> => {
-    //maybe edit type to remove prop Song
-    return await Axios.post<IBandSongResource>(bandSongsEndpoint.GetEndpointUrl!(), bandSong, {
+export const CreateBandSongRequestAsync = async (url: string, bandSong: IBandSongResource): Promise<AxiosResponse<IBandSongResource>> => {
+    return await Axios.post<IBandSongResource>(url, bandSong, {
         headers: defaultHeader
     });
 }

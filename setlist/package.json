@@ -9,12 +9,12 @@
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
+    "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "@types/jest": "^24.9.0",
+    "@types/jest": "^24.9.1",
     "@types/node": "^12.12.54",
     "@types/react": "^16.9.48",
-    "@types/react-beautiful-dnd": "^11.0.4",
+    "@types/react-beautiful-dnd": "^11.0.5",
     "@types/react-bootstrap": "^0.32.22",
     "@types/react-dom": "^16.9.8",
     "@types/react-infinite-scroll-component": "^4.2.5",
@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@types/lodash.orderby": "^4.6.6",
-    "@types/styled-components": "^4.4.2",
+    "@types/styled-components": "^4.4.3",
     "lodash.orderby": "^4.6.0"
   }
 }

@@ -1,9 +1,10 @@
+import { FilterSongActionProps } from "..";
 import { ISong, CatalogTypes, ISongCatalog, ISongFilter, ODataProps, ISongCatalogOptions, NodeTypes } from "../../models";
 import { CatalogBase } from "./catalogBase";
 
 export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOptions> implements ISongCatalog {
 
-    private constructor(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions,nodeType: NodeTypes = NodeTypes.Initial, refresh?: boolean, songs: Map<string, ISong> = new Map<string, ISong>()) {
+    private constructor(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, nodeType: NodeTypes = NodeTypes.Initial, refresh?: boolean, songs: Map<string, ISong> = new Map<string, ISong>()) {
         super(
             SongCatalog.CatalogId,
             CatalogTypes["Song Catalog"].toString(),
@@ -17,29 +18,24 @@ export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOpt
         )
     }
 
-    public static Create(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions,nodeType: NodeTypes, songs: Map<string, ISong> = new Map<string, ISong>()): ISongCatalog {
-        return new SongCatalog(filter, oData, options,nodeType, false, songs)
-    }
+    private static Default = (
+        refresh: boolean,
+        options: ISongCatalogOptions = { ShowAddSong: false },
+        nodeType: NodeTypes = NodeTypes.Initial
+    ): SongCatalog =>
+        new SongCatalog(
+            FilterSongActionProps.Default(SongCatalog.CatalogId).filter,
+            { NextLink: "", Count: 0, Context: "" },
+            options,
+            nodeType,
+            refresh,
+            new Map<string, ISong>()
+        )
 
-    public static CreateAndUpdate(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions,nodeType: NodeTypes, songs: Map<string, ISong> = new Map<string, ISong>()): ISongCatalog {
-        return new SongCatalog(filter, oData, options,nodeType, true, songs)
-    }
+    public static Create = (): ISongCatalog => SongCatalog.Default(false)
 
-    public static AddValues(songCatalog: ISongCatalog, addSongs: ISong[]): ISongCatalog {
-        const currentCatalog = { ...songCatalog };
-        addSongs.forEach(newSong => currentCatalog.Values.set(newSong.Id, newSong))
-
-        return currentCatalog
-    }
-
-    public static UpdateOData(songCatalog: ISongCatalog, oData: ODataProps): ISongCatalog {
-        const newSongCatalog = { ...songCatalog, OData: oData }
-        return newSongCatalog;
-    }
-    
-    public static UpdateFilter(songCatalog: ISongCatalog, filter: ISongFilter): ISongCatalog {
-        const newSongCatalog = { ...songCatalog, Filter: filter }
-        return newSongCatalog;
+    public static CreateAndUpdate(options?: ISongCatalogOptions, nodeType?: NodeTypes): ISongCatalog {
+        return SongCatalog.Default(true,options,nodeType)
     }
 
     public static CatalogId: string = `${CatalogTypes["Song Catalog"].toString()}_id`

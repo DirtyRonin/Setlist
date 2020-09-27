@@ -1,18 +1,21 @@
 import React from "react";
 import { Container, Row, Col, Button, FormControlProps, Form } from "react-bootstrap";
 import { Draggable } from "react-beautiful-dnd";
+
 import { SongNodeContainer } from "../../styles";
-import { IBand, IModal, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, NodeTypes, IBandEntityActionProps, IEntityActionProps, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrderActionProps, IComponentOrder, IBandSongCatalog } from "../../models";
+import { IBand, IModal, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, NodeTypes, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder } from "../../models";
 import { IModalBand } from "../../models/modals/modelBand";
 import { BandCatalogNodeHtmlAttributesConfiguration } from "../../Configuration";
 import { BandSongCatalog, BandSong } from "../../mapping";
 import { GUID_EMPTY } from "../../Util";
+import { CreateBandSongAsync } from "../../service";
+import { AsyncButtonComponent } from "../common/asyncButton";
 
 export interface IBandNodeProps {
     band: IBand;
     index: number;
     catalogId: string;
-    openedCatalogs: string[];
+    openedCatalogs: IComponentOrder[];
     ownNodeProps?: {
         songCatalogId: string
         song: ISong
@@ -84,12 +87,15 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
 
     }
 
+    const createBandSong = (): IBandSong =>
+        ownNodeProps ? { ...BandSong.EmptyBandSong(), Id: GUID_EMPTY, BandId: band.Id, SongId: ownNodeProps.song.Id } as IBandSong : {} as IBandSong
+
     const handleShowEditSong = () => createModal(ModalTypes.Edit)
     const handleShowReadSong = () => createModal(ModalTypes.Read)
     const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
 
     const uniqueNodeId = `${catalogId}-${band.Id}-${index}`
-    const showBandSongCatalog = openedCatalogs.includes(BandSongCatalog.GetCatalogId(band.Id))
+    const showBandSongCatalog = openedCatalogs.some( catalog=> catalog.id === BandSongCatalog.GetCatalogId(band.Id))
 
     return (
         <Draggable draggableId={uniqueNodeId} index={index}>
@@ -124,6 +130,9 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
                                 ownNodeProps && <div>
                                     <Col>
                                         <Button variant="secondary" onClick={handleAddSongToCatalog}>Hinzufügen</Button>
+                                    </Col>
+                                    <Col>
+                                        <AsyncButtonComponent asyncExecute={CreateBandSongAsync} value={createBandSong()} defaultState='INITIAL' />
                                     </Col>
                                 </div>
                             }

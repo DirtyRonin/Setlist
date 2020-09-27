@@ -57,8 +57,6 @@ action$.pipe(
     )
 );
 
-
-
 const addBandSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
     return action$.pipe(
         filter(isActionOf(Action.addBandSongToCatalog.request)),

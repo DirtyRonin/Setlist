@@ -1,8 +1,12 @@
 import validator from "validator";
+import { nameof } from "ts-simple-nameof"
+
 import { EndpointConfiguration } from "../../Configuration";
 import { IBandSong, IOdataWrapper } from "../../models";
 import { GetBandSongsRequestAsync, CreateBandSongRequestAsync } from "../../api";
 import { BandSong } from "../../mapping";
+
+const bandSongsEndpoint = EndpointConfiguration.Bandsongs;
 
 export const ReadBandSongsAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<IBandSong>> => {
 
@@ -32,7 +36,8 @@ export const ReadBandSongsAsync = async (filterOrNextLink: string): Promise<IOda
 export const CreateBandSongAsync = async (bandSong: IBandSong): Promise<IBandSong> => {
     const resource = BandSong.ToResource(bandSong)
 
-    const result = await CreateBandSongRequestAsync(resource)
+    const url =`${bandSongsEndpoint.GetEndpointUrl!()}?$expand=${nameof<IBandSong>(x => x.Song)}`
+    const result = await CreateBandSongRequestAsync(url,resource)
 
     return BandSong.FromResource(result.data)
 }
