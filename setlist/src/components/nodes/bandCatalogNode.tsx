@@ -3,7 +3,7 @@ import { Container, Row, Col, Button, FormControlProps, Form } from "react-boots
 import { Draggable } from "react-beautiful-dnd";
 
 import { SongNodeContainer } from "../../styles";
-import { IBand, IModal, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, NodeTypes, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder } from "../../models";
+import { IBand, IModal, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, NodeTypes, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder, IComponentOrderActionProps } from "../../models";
 import { IModalBand } from "../../models/modals/modelBand";
 import { BandCatalogNodeHtmlAttributesConfiguration } from "../../Configuration";
 import { BandSongCatalog, BandSong } from "../../mapping";
@@ -15,7 +15,8 @@ export interface IBandNodeProps {
     band: IBand;
     index: number;
     catalogId: string;
-    openedCatalogs: IComponentOrder[];
+    pushCatalogsOrder(props: IComponentOrderActionProps): void
+    // openedCatalogs: IComponentOrder[];
     ownNodeProps?: {
         songCatalogId: string
         song: ISong
@@ -26,9 +27,9 @@ export interface IBandNodeProps {
 
     // openBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
     // closeBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
-    // pushCatalogsOrder: (props: IComponentOrderActionProps) => void
+    pushCatalogsOrder: (props: IComponentOrderActionProps) => void
     addToBandSongsAction(props: IBandSongEntityActionProps): void
-    setModal(props: IModal): void
+    // setModal(props: IModal): void
     openBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
 }
 
@@ -37,10 +38,11 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
         band,
         index,
         catalogId,
-        openedCatalogs,
+        pushCatalogsOrder,
+        // openedCatalogs,
         openBandSongsCatalog,
         // closeBandSongsCatalog,
-        setModal,
+        // setModal,
         addToBandSongsAction,
         ownNodeProps
 
@@ -56,8 +58,18 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
             catalogType: CatalogTypes["Band Catalog"],
             type,
             value: band
+        
         }
-        setModal(modal)
+
+        const order: IComponentOrderActionProps = {
+            ComponentOrder: {
+                value: modal,
+                id: modal.catalogId,
+                displayIn: DisplayIn.Modal
+            } as IComponentOrder
+        }
+
+        pushCatalogsOrder(order)
     }
 
     const concatUniqueID = (htmlElementId: string): string => `${htmlElementId}_${band.Id}`
@@ -95,7 +107,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
     const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
 
     const uniqueNodeId = `${catalogId}-${band.Id}-${index}`
-    const showBandSongCatalog = openedCatalogs.some( catalog=> catalog.id === BandSongCatalog.GetCatalogId(band.Id))
+    // const showBandSongCatalog = openedCatalogs.some( catalog=> catalog.id === BandSongCatalog.GetCatalogId(band.Id))
 
     return (
         <Draggable draggableId={uniqueNodeId} index={index}>
@@ -111,7 +123,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
                                     <Form onChange={handleShowBandSongCatalog}>
                                         <Form.Row>
                                             <Form.Group as={Col} controlId={concatUniqueID(bandCatalogNodeDef.ShowBandSongCatalogCheckBox.ControlId)}>
-                                                <Form.Check type="switch" checked={showBandSongCatalog} label={bandCatalogNodeDef.ShowBandSongCatalogCheckBox.Label} />
+                                                {/* <Form.Check type="switch" checked={showBandSongCatalog} label={bandCatalogNodeDef.ShowBandSongCatalogCheckBox.Label} /> */}
                                             </Form.Group>
                                         </Form.Row>
                                     </Form>

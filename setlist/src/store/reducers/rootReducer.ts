@@ -5,7 +5,7 @@ import { StateType } from "typesafe-actions";
 import catalogReducers from "./catalogReducers"
 import bandCatalogReducers from "./catalogReducers/bandCatalogReducer"
 import songCatalogReducers from "./catalogReducers/songCatalogReducer"
-import dropDownFilterReducer from "../subStores/subReducers/DropDownFilterReducers"
+import dropDownFilterReducer from "./layoutReducers/GlobalBandFilterReducers"
 import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics } from "../epics"
 import { commonCatalogEpics } from '../epics/commonEpics';
 

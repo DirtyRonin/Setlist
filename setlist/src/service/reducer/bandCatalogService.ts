@@ -1,35 +1,41 @@
 import { ICatalogState } from "../../store";
 import { FilterBandActionProps, BandCatalog } from "../../mapping";
 import { IHashTable, QueryBuilder, IsMiminumStringLength, HashTableHelper } from "../../Util";
-import { Catalog, IFilterBandActionProps, IBand, IBandCatalog, INextLinkActionProps, IEntityActionProps, IBandEntityActionProps, IStatusBandCatalogActionProps, IComponentOrder } from "../../models";
+import { Catalog, IFilterBandActionProps, IBand, IBandCatalog, INextLinkActionProps, IEntityActionProps, IBandEntityActionProps, IStatusBandCatalogActionProps, IComponentOrder, NodeTypes, DisplayIn, IFilterBandActionResult } from "../../models";
 import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 import { nameof } from "ts-simple-nameof";
 import { ReadBandsAsync, CreateBandAsync, UpdateBandAsync, DeleteBandAsync } from "..";
 
-export const createEmptyBandCatalog_New = (catalogs: IHashTable<Catalog>): IBandCatalog => {
-    const catalog = HashTableHelper.Do(catalogs).FindLastOrDefault()
-    const defaultActionProps = FilterBandActionProps.Default(catalog.Id)
-    return BandCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, {}, catalog.NodeType);
-}
+// export const createEmptyBandCatalog_New = (catalogs: IHashTable<Catalog>): IBandCatalog => {
+//     const catalog = HashTableHelper.Do(catalogs).FindLastOrDefault()
+//     const defaultActionProps = FilterBandActionProps.Default(catalog.Id)
+//     return BandCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, {}, catalog.NodeType);
+// }
 
-export const createEmptyBandCatalog = (props: IStatusBandCatalogActionProps, catalogState: ICatalogState): ICatalogState => {
-    const { componentsOrder } = catalogState
-    const { catalogId, displayIn, nodeType } = props
+export const createEmptyBandCatalog = (): IComponentOrder => ({
+    id: BandCatalog.CatalogId,
+    displayIn: DisplayIn.Main,
+    value: BandCatalog.CreateAndUpdate(NodeTypes.Edit)
+})
 
-    const defaultActionProps = FilterBandActionProps.Default(BandCatalog.CatalogId)
+// export const createEmptyBandCatalog = (props: IStatusBandCatalogActionProps, catalogState: ICatalogState): ICatalogState => {
+//     const { componentsOrder } = catalogState
+//     const { catalogId, displayIn, nodeType } = props
 
-    const bandCatalog = BandCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, {}, nodeType);
+//     const defaultActionProps = FilterBandActionProps.Default(BandCatalog.CatalogId)
 
-    const newComponentsOrder: IComponentOrder[] = [...componentsOrder]
+//     const bandCatalog = BandCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, {}, nodeType);
 
-    newComponentsOrder.push({
-        id: catalogId,
-        displayIn,
-        value: bandCatalog
-    } as IComponentOrder)
+//     const newComponentsOrder: IComponentOrder[] = [...componentsOrder]
 
-    return { ...catalogState, componentsOrder: newComponentsOrder } as ICatalogState
-}
+//     newComponentsOrder.push({
+//         id: catalogId,
+//         displayIn,
+//         value: bandCatalog
+//     } as IComponentOrder)
+
+//     return { ...catalogState, componentsOrder: newComponentsOrder } as ICatalogState
+// }
 
 export const closeBandCatalog = (props: IStatusBandCatalogActionProps, catalogState: ICatalogState): ICatalogState => {
 
@@ -42,10 +48,9 @@ export const closeBandCatalog = (props: IStatusBandCatalogActionProps, catalogSt
     return { ...catalogState, componentsOrder: newComponentsOrder } as ICatalogState
 }
 
-export const fetchBandCatalogAsync = async (props: IFilterBandActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
-    if (catalogs == null) { throw ("catalogs are null") }
+export const fetchBandCatalogAsync = async (props: IFilterBandActionProps): Promise<IFilterBandActionResult> => {
 
-    const { filter: Filter, catalogId: BandCatalogId } = props
+    const { filter: Filter } = props
     let query = new QueryBuilder().count()
 
     const filters: FilterBuilder[] = []
@@ -62,27 +67,23 @@ export const fetchBandCatalogAsync = async (props: IFilterBandActionProps, catal
 
     const filter = query.toQuery()
 
-    const { NextLink, Values, Context, Count } = await ReadBandsAsync(filter);
-
-    const prevBandCatalog = { ...catalogs[BandCatalogId] } as IBandCatalog
-
-    const mappedValues = Values?.reduce((map, band) => {
-        map.set(band.Id, band)
-        return map
-    }, new Map<string, IBand>())
-
-    return BandCatalog.Create(Filter, { NextLink, Context, Count }, prevBandCatalog.CatalogOptions, prevBandCatalog.NodeType, mappedValues);
+    return await GetFilterBandActionResult(filter)
 }
 
-export const fetchBandCatalogNextLinkAsync = async (props: INextLinkActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
-    if (catalogs == null) { throw ("catalogs are null") }
+export const fetchBandCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterBandActionResult> =>
+    await GetFilterBandActionResult(props.nextLink)
 
-    const { NextLink, Values, Context, Count } = await ReadBandsAsync(props.nextLink);
 
-    const prevBandCatalog = { ...catalogs[props.catalogId] } as IBandCatalog
+const GetFilterBandActionResult = async (filterQuery: string): Promise<IFilterBandActionResult> => {
+    const { NextLink, Values, Context, Count } = await ReadBandsAsync(filterQuery);
 
-    let newBandCatalog = BandCatalog.AddValues(prevBandCatalog, Values);
-    return BandCatalog.UpdateOData(newBandCatalog, { NextLink, Context, Count })
+    return {
+        Values: Values?.reduce((map, band) => {
+            map.set(band.Id, band)
+            return map
+        }, new Map<string, IBand>()),
+        OData: { NextLink, Context, Count }
+    }
 }
 
 export const addBandToBandCatalogAsync = async (props: IEntityActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {

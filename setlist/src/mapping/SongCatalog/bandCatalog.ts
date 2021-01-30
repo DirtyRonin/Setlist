@@ -1,4 +1,5 @@
 import { CatalogTypes, IBandCatalog, IBand, ODataProps, IBandFilter, IBandCatalogOptions, NodeTypes } from "../../models";
+import { FilterBandActionProps } from "../actionsProps";
 import { CatalogBase } from "./catalogBase";
 
 export class BandCatalog extends CatalogBase<IBand, IBandFilter, IBandCatalogOptions> implements IBandCatalog {
@@ -16,13 +17,24 @@ export class BandCatalog extends CatalogBase<IBand, IBandFilter, IBandCatalogOpt
         )
     }
 
-    public static Create(filter: IBandFilter, oData: ODataProps, options: IBandCatalogOptions, nodeType: NodeTypes, bands?: Map<string, IBand>): IBandCatalog {
-        return new BandCatalog(filter, oData, options, nodeType, false, bands)
-    }
+    private static Default = (
+        refresh: boolean,
+        options: IBandCatalogOptions = { },
+        nodeType: NodeTypes = NodeTypes.Initial
+    ): BandCatalog => 
+        new BandCatalog(
+            FilterBandActionProps.Default(BandCatalog.CatalogId).filter,
+            { NextLink: "", Count: 0, Context: "" },
+            options,
+            nodeType,
+            refresh,
+            new Map<string, IBand>()
+        )
 
-    public static CreateAndUpdate(filter: IBandFilter, oData: ODataProps, options: IBandCatalogOptions, nodeType: NodeTypes, bands?: Map<string, IBand>): IBandCatalog {
-        return new BandCatalog(filter, oData, options, nodeType, true, bands)
-    }
+    public static Create = (): IBandCatalog => BandCatalog.Default(false)
+
+    public static CreateAndUpdate = (nodeType?: NodeTypes, options?: IBandCatalogOptions): IBandCatalog => 
+        BandCatalog.Default(true, options, nodeType)
 
     public static AddValues(bandCatalog: IBandCatalog, addBands: IBand[]): IBandCatalog {
         const currentCatalog = { ...bandCatalog };

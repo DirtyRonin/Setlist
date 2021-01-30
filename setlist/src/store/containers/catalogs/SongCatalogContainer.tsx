@@ -11,7 +11,6 @@ import * as Common from '../../actions/commonActions';
 
 
 interface IConnectedDispatch {
-    initBandCatalog(): void
     setSongFilter(props: IFilterSongActionProps): void
     fetchSongCatalog(props: IFilterSongActionProps): void
     fetchSongCatalogNextLink: (props: INextLinkActionProps) => void
@@ -38,7 +37,6 @@ const mapStateToProps = (state: RootState, ownProps: IOwnProps): IState => {
 }
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch => ({
-    initBandCatalog: () => dispatch(Action.openSongCatalog_New.request()),
     fetchSongCatalog: (props: IFilterSongActionProps) => dispatch(Action.fetchSongCatalog.request(props)),
     fetchSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchSongCatalogNextLink.request(props)),
     pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),

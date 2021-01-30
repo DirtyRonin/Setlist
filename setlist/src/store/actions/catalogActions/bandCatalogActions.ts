@@ -1,20 +1,20 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { IFilterBandActionProps, Catalog, INextLinkActionProps, IEntityActionProps, IStatusBandCatalogActionProps, IBandCatalog } from "../../../models";
+import { IFilterBandActionProps, Catalog, INextLinkActionProps, IEntityActionProps, IStatusBandCatalogActionProps, IBandCatalog, IComponentOrder, IFilterBandActionResult } from "../../../models";
 import { ICatalogState } from "../..";
 
-export const openBandsCatalog_New = createAsyncAction(
-    `OPEN_BANDCATALOG_NEW_REQUEST`,
-    `OPEN_BANDCATALOG_NEW_SUCCESS`,
-    `OPEN_BANDCATALOG_NEW_FAILURE`,
-    `OPEN_BANDCATALOG_NEW_CANCEL`,
-)<void, IBandCatalog, Error, string>();
+// export const openBandsCatalog_New = createAsyncAction(
+//     `OPEN_BANDCATALOG_NEW_REQUEST`,
+//     `OPEN_BANDCATALOG_NEW_SUCCESS`,
+//     `OPEN_BANDCATALOG_NEW_FAILURE`,
+//     `OPEN_BANDCATALOG_NEW_CANCEL`,
+// )<void, IBandCatalog, Error, string>();
 
 export const openBandsCatalog = createAsyncAction(
     `OPEN_BANDCATALOG_REQUEST`,
     `OPEN_BANDCATALOG_SUCCESS`,
     `OPEN_BANDCATALOG_FAILURE`,
     `OPEN_BANDCATALOG_CANCEL`,
-)<IStatusBandCatalogActionProps, ICatalogState, Error, string>();
+)<void, IComponentOrder, Error, string>();
 
 export const closeBandsCatalog = createAsyncAction(
     `CLOSE_BANDCATALOG_REQUEST`,
@@ -28,14 +28,14 @@ export const fetchBandCatalog = createAsyncAction(
     "FETCH_BANDCATALOG_SUCCESS",
     "FETCH_BANDCATALOG_FAILURE",
     "FETCH_BANDCATALOG_CANCEL",
-)<IFilterBandActionProps,Catalog,Error,string>();
+)<IFilterBandActionProps,IFilterBandActionResult,Error,string>();
 
 export const fetchBandCatalogNextLink = createAsyncAction(
     "FETCH_BANDCATALOG_NEXTLINK_REQUEST",
     "FETCH_BANDCATALOG_NEXTLINK_SUCCESS",
     "FETCH_BANDCATALOG_NEXTLINK_FAILURE",
     "FETCH_BANDCATALOG_NEXTLINK_CANCEL",
-)<INextLinkActionProps,Catalog,Error,string>();
+)<INextLinkActionProps,IFilterBandActionResult,Error,string>();
 /*
 export const setSongCatalogFilter = createAsyncAction(
     "SET_SONGCATALOG_FILTER_REQUEST",
@@ -70,3 +70,7 @@ export const deleteBandInCatalog= createAsyncAction(
 export const readBandInCatalog= createAction(
     "READ_BAND_REQUEST",
 )();
+
+export const setBandFilter= createAction(
+    "SET_BAND_FILTER",
+)<IFilterBandActionProps>();

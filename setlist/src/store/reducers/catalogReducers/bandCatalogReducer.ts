@@ -2,8 +2,9 @@ import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
 import * as actions from "../../actions/catalogActions/bandCatalogActions"
 import * as common from "../../actions/commonActions"
-import { IBandCatalog, NodeTypes } from "../../../models";
-import { FilterBandActionProps, BandCatalog } from "../../../mapping";
+import { IBandCatalog } from "../../../models";
+import { BandCatalog } from "../../../mapping";
+import { MapHelper } from "../../../Util";
 
 export type BandCatalogActions = ActionType<typeof common & typeof actions>;
 
@@ -11,28 +12,46 @@ export interface IBandCatalogState {
     bandCatalog: IBandCatalog;
 }
 
-export type BandState = {
-    bandState: IBandCatalogState
+const initial: IBandCatalogState = {
+    bandCatalog: BandCatalog.Create()
 }
 
-const defaultActionProps = FilterBandActionProps.Default()
-const initial: BandState = {
-    bandState: {
-        bandCatalog: BandCatalog.CreateAndUpdate(defaultActionProps.filter, { NextLink: "", Count: 0, Context: "" }, {}, NodeTypes.Initial)
-    }
-}
-
-export default combineReducers<BandState, BandCatalogActions>({
-    bandState: (state = initial.bandState, action) => {
+export default combineReducers<IBandCatalogState, BandCatalogActions>({
+    bandCatalog: (state = initial.bandCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openBandsCatalog_New.success):
-                return { ...state, bandCatalog: action.payload }
-            case getType(actions.fetchBandCatalog.success):
-                return { ...state, bandCatalog: action.payload }
-            case getType(actions.fetchBandCatalogNextLink.success):
-                return { ...state, bandCatalog: action.payload }
+            case getType(actions.openBandsCatalog.success):
+                return {
+                    ...state,
+                    Refresh: true
+                }
             case getType(actions.closeBandsCatalog.success):
-                return initial.bandState
+                return initial.bandCatalog
+            case getType(actions.setBandFilter):
+                return {
+                    ...state,
+                    Filter: action.payload.filter,
+                    Refresh: action.payload.refresh
+                }
+
+            case getType(actions.fetchBandCatalog.request):
+                return {
+                    ...state,
+                    Refresh: false
+                }
+            case getType(actions.fetchBandCatalog.success):
+                return {
+                    ...state,
+                    Values: action.payload.Values,
+                    OData: action.payload.OData
+                }
+            case getType(actions.fetchBandCatalogNextLink.success):
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddMap(action.payload.Values)
+                        .GetMap(),
+                    OData: action.payload.OData
+                }
             default:
                 return state;
         }

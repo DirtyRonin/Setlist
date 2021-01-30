@@ -52,6 +52,7 @@ export interface IFilterActionResultBase<T> {
 }
 
 export interface IFilterSongActionResult extends IFilterActionResultBase<ISong> { }
+export interface IFilterBandActionResult extends IFilterActionResultBase<IBand> { }
 
 
 

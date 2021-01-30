@@ -6,17 +6,11 @@ import { SongCatalog } from "../../mapping";
 import { QueryBuilder, IsMiminumStringLength } from "../../Util";
 import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 
-export const createEmptySongCatalog = (): IComponentOrder => {
-
-    const id = SongCatalog.CatalogId
-    const songCatalog = SongCatalog.CreateAndUpdate(undefined, NodeTypes.Edit);
-
-    return {
-        id,
-        displayIn: DisplayIn.Main,
-        value: songCatalog
-    }
-};
+export const createEmptySongCatalog = (): IComponentOrder => ({
+    id: SongCatalog.CatalogId,
+    displayIn: DisplayIn.Main,
+    value: SongCatalog.CreateAndUpdate(NodeTypes.Edit)
+});
 
 export const closeSongCatalog = (): string => SongCatalog.CatalogId
 
@@ -57,7 +51,7 @@ export const fetchSongCatalogAsync = async (props: IFilterSongActionProps): Prom
 export const fetchSongCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterSongActionResult> =>
     await GetFilterSongActionResult(props.nextLink)
 
-const GetFilterSongActionResult = async (filterQuery: string) => {
+const GetFilterSongActionResult = async (filterQuery: string): Promise<IFilterSongActionResult> => {
     const { NextLink, Values, Context, Count } = await ReadSongsAsync(filterQuery);
 
     return {

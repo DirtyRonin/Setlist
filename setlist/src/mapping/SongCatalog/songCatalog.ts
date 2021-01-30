@@ -34,9 +34,8 @@ export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOpt
 
     public static Create = (): ISongCatalog => SongCatalog.Default(false)
 
-    public static CreateAndUpdate(options?: ISongCatalogOptions, nodeType?: NodeTypes): ISongCatalog {
-        return SongCatalog.Default(true,options,nodeType)
-    }
+    public static CreateAndUpdate = (nodeType?: NodeTypes, options?: ISongCatalogOptions,): ISongCatalog =>
+        SongCatalog.Default(true, options, nodeType)
 
     public static CatalogId: string = `${CatalogTypes["Song Catalog"].toString()}_id`
 }

@@ -5,11 +5,11 @@ import { FormControl, Dropdown, FormControlProps } from "react-bootstrap";
 import React from "react";
 import { DropDownMenuContainer } from "../../styles";
 import { IHashTable } from "../../Util";
-import { DropDownFilterProps } from "../../store/subStores/subContainers/DropDownFilterContainer"
+import { GlobalBandFilterProps } from "../../store/containers/layoutContainers/GlobalBandFilterContainer"
 
 
 
-export const DropDownFilterComponent = (props: DropDownFilterProps) => {
+export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
 
     const {userId}= props
     const filterValues:IHashTable<string>  = {}

@@ -3,31 +3,30 @@ import { combineEpics, Epic } from "redux-observable";
 import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 import { isActionOf } from "typesafe-actions";
 import { from, of } from "rxjs";
-import { fetchBandCatalogAsync, fetchBandCatalogNextLinkAsync, addBandToBandCatalogAsync, editBandInCatalogAsync, deleteBandInCatalogAsync, createEmptyBandCatalog, closeBandCatalog, createEmptyBandCatalog_New } from "../../../service";
+import { fetchBandCatalogAsync, fetchBandCatalogNextLinkAsync, addBandToBandCatalogAsync, editBandInCatalogAsync, deleteBandInCatalogAsync, createEmptyBandCatalog, closeBandCatalog } from "../../../service";
 import * as Action from "../../actions/";
 import { CatalogActions, RootState } from "../..";
 import { fetchBandCatalog, fetchBandCatalogNextLink, addBandToCatalog, editBandInCatalog, deleteBandInCatalog } from "../../actions";
-import { BandCatalogActions } from "../../reducers/catalogReducers/bandCatalogReducer";
 
 
-const openBandCatalogEpic_New: Epic<BandCatalogActions, BandCatalogActions, any> = (action$, state$) => {
-    return action$.pipe(
-        filter(isActionOf(Action.openBandsCatalog_New.request)),
-        switchMap(() =>
-            of(createEmptyBandCatalog_New((state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
-                map(Action.openBandsCatalog_New.success),
-                catchError((error: Error) => of(Action.openBandsCatalog_New.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(Action.openBandsCatalog_New.cancel))))
-            )
-        )
-    );
-}
+// const openBandCatalogEpic_New: Epic<BandCatalogActions, BandCatalogActions, any> = (action$, state$) => {
+//     return action$.pipe(
+//         filter(isActionOf(Action.openBandsCatalog_New.request)),
+//         switchMap(() =>
+//             of(createEmptyBandCatalog_New((state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+//                 map(Action.openBandsCatalog_New.success),
+//                 catchError((error: Error) => of(Action.openBandsCatalog_New.failure(error))),
+//                 takeUntil(action$.pipe(filter(isActionOf(Action.openBandsCatalog_New.cancel))))
+//             )
+//         )
+//     );
+// }
 
-const openBandCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
+const openBandCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
     return action$.pipe(
         filter(isActionOf(Action.openBandsCatalog.request)),
-        switchMap((action) =>
-            of(createEmptyBandCatalog(action.payload, (state$.value as RootState).catalogReducers.catalogState)).pipe(
+        switchMap(() =>
+            of(createEmptyBandCatalog()).pipe(
                 map(Action.openBandsCatalog.success),
                 catchError((error: Error) => of(Action.openBandsCatalog.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(Action.openBandsCatalog.cancel))))
@@ -50,11 +49,11 @@ const closeBandCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$
 }
 
 
-const fetchBandCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
+const fetchBandCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
     action$.pipe(
         filter(isActionOf(fetchBandCatalog.request)),
         switchMap(action =>
-            from(fetchBandCatalogAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+            from(fetchBandCatalogAsync(action.payload)).pipe(
                 map(fetchBandCatalog.success),
                 catchError((error: Error) => of(fetchBandCatalog.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(fetchBandCatalog.cancel))))
@@ -62,11 +61,11 @@ const fetchBandCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action
         )
     );
 
-const fetchBandCatalogNextLinkEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) =>
+const fetchBandCatalogNextLinkEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
     action$.pipe(
         filter(isActionOf(fetchBandCatalogNextLink.request)),
         switchMap(action =>
-            from(fetchBandCatalogNextLinkAsync(action.payload, (state$.value as RootState).catalogReducers.catalogState.catalogs)).pipe(
+            from(fetchBandCatalogNextLinkAsync(action.payload)).pipe(
                 map(fetchBandCatalogNextLink.success),
                 catchError((error: Error) => of(fetchBandCatalogNextLink.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(fetchBandCatalogNextLink.cancel))))
@@ -121,5 +120,5 @@ export const bandCatalogEpics = combineEpics(
     editBandEpic,
     openBandCatalogEpic,
     closeBandCatalogEpic,
-    openBandCatalogEpic_New
+    // openBandCatalogEpic_New
 )

@@ -22,12 +22,12 @@ const initial: ISongCatalogState = {
 export default combineReducers<ISongCatalogState, SongCatalogActions>({
     songCatalog: (state = initial.songCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openSongsCatalog.success):
+            case getType(actions.openThisSongCatalog):
                 return {
                     ...state,
                     Refresh: true
                 }
-            case getType(actions.closeSongsCatalog.success):
+            case getType(actions.closeThisSongCatalog):
                 return initial.songCatalog
             case getType(actions.setSongFilter):
                 return {

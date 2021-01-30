@@ -1,9 +1,8 @@
 import React from "react";
-import { Button, Navbar, Nav, Form, FormControl, Col, FormControlProps } from "react-bootstrap";
+import { Button, Navbar, Nav, Form, FormControl, Col } from "react-bootstrap";
 import { IStatusSongCatalogActionProps, CatalogTypes, IStatusBandCatalogActionProps, DisplayIn, IComponentOrder, NodeTypes } from "../../models";
 import { SongCatalog, BandCatalog } from "../../mapping";
-import { DropDownFilterComponent } from "./DropDownFilter";
-import DropDownFilter from "../../store/subStores/subContainers/DropDownFilterContainer"
+import GlobalBandFilter from "../../store/containers/layoutContainers/GlobalBandFilterContainer"
 
 export interface IMenuTopProps {
     componentsOrder: IComponentOrder[]
@@ -69,7 +68,7 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Form inline>
-                    <DropDownFilter />
+                    <GlobalBandFilter />
                     <Form.Row>
                         <Form.Group as={Col} controlId={songCatalogMenuId}  >
                             <Form.Check type="switch" checked={isSongCatalogOpen} label="Songs" onChange={handleSongCatalogStatus} />

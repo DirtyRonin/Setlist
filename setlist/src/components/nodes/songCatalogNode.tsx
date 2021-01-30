@@ -20,7 +20,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const { song,
         index,
         songListId,
-        pushCatalogsOrder: pushCatalogsOrder
+        pushCatalogsOrder,
     } = props;
 
     const createModal = (type: ModalTypes) => {

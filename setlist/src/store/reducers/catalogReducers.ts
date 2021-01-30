@@ -36,32 +36,13 @@ export default combineReducers<CatalogState, CatalogActions>({
         switch (action.type) {
             case getType(catalogActions.setCatalogState): return setCatalogState(state, action.payload)
 
-            case getType(catalogActions.fetchBandCatalog.success): return updateCatalog(state, action.payload)
-            case getType(catalogActions.fetchBandCatalogNextLink.success): return updateCatalog(state, action.payload)
             case getType(catalogActions.addBandToCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.deleteBandInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.editBandInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.readBandInCatalog): return setModal(state, defaultModal)
-            case getType(catalogActions.openBandsCatalog.success): return setCatalogState(state, action.payload)
             case getType(catalogActions.closeBandsCatalog.success): return setCatalogState(state, action.payload)
            
             case getType(catalogActions.readSongInCatalog): return setModal(state, defaultModal)
-            case getType(catalogActions.openSongsCatalog.success):
-                return {
-                    ...state,
-                    componentsOrder: [...state.componentsOrder, action.payload]
-                }
-            case getType(catalogActions.closeSongsCatalog.success):
-                {
-                    const { componentsOrder } = state
-                    const newComponentsOrder = componentsOrder.filter(order => order.id !== action.payload)
-
-                    return {
-                        ...state,
-                        componentsOrder: newComponentsOrder
-                    }
-                }
-
 
             case getType(catalogActions.fetchBandSongCatalog.success): {
                 const { componentsOrder } = state

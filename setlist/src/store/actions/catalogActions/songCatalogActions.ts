@@ -1,27 +1,26 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { IFilterSongActionProps, INextLinkActionProps, IModal, Catalog, IEntityActionProps, IStatusSongCatalogActionProps, ISongCatalog, IComponentOrderActionProps, IComponentOrder, ISong, IFilterSongActionResult, ISongEntityActionProps } from "../../../models";
-import { ICatalogState } from "../..";
+import { IFilterSongActionProps, INextLinkActionProps, Catalog, IComponentOrder, ISong, IFilterSongActionResult, ISongEntityActionProps } from "../../../models";
 
-export const openSongCatalog_New = createAsyncAction(
-    `OPEN_SONGCATALOG_NEW_REQUEST`,
-    `OPEN_SONGCATALOG_NEW_SUCCESS`,
-    `OPEN_SONGCATALOG_NEW_FAILURE`,
-    `OPEN_SONGCATALOG_NEW_CANCEL`,
-)<void, ISongCatalog, Error, string>();
+export const openThisSongCatalog = createAction(
+    "OPEN_THIS_SONG_CATALOG",
+)();
+export const closeThisSongCatalog = createAction(
+    "CLOSE_THIS_SONG_CATALOG",
+)();
 
-export const openSongsCatalog = createAsyncAction(
-    `OPEN_SONGCATALOG_REQUEST`,
-    `OPEN_SONGCATALOG_SUCCESS`,
-    `OPEN_SONGCATALOG_FAILURE`,
-    `OPEN_SONGCATALOG_CANCEL`,
-)<void, IComponentOrder, Error, string>();
+// export const openSongsCatalog = createAsyncAction(
+//     `OPEN_SONGCATALOG_REQUEST`,
+//     `OPEN_SONGCATALOG_SUCCESS`,
+//     `OPEN_SONGCATALOG_FAILURE`,
+//     `OPEN_SONGCATALOG_CANCEL`,
+// )<void, IComponentOrder, Error, string>();
 
-export const closeSongsCatalog = createAsyncAction(
-    `CLOSE_SONGCATALOG_REQUEST`,
-    `CLOSE_SONGCATALOG_SUCCESS`,
-    `CLOSE_SONGCATALOG_FAILURE`,
-    `CLOSE_SONGCATALOG_CANCEL`,
-)<void, string, Error, string>();
+// export const closeSongsCatalog = createAsyncAction(
+//     `CLOSE_SONGCATALOG_REQUEST`,
+//     `CLOSE_SONGCATALOG_SUCCESS`,
+//     `CLOSE_SONGCATALOG_FAILURE`,
+//     `CLOSE_SONGCATALOG_CANCEL`,
+// )<void, string, Error, string>();
 
 export const fetchSongCatalog = createAsyncAction(
     "FETCH_SONGCATALOG_REQUEST",

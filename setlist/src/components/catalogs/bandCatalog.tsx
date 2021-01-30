@@ -15,31 +15,34 @@ import { BandCatalogProps } from "../../store/containers/catalogs/BandCatalogCon
 
 const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
     const {
-        bandlist,
+        bandcatalog,
+        setBandFilter,
         showModal,
-        openedCatalogs,
+        // openedCatalogs,
         fetchBandCatalog,
         fetchBandCatalogNextLink,
         // openBandSongsCatalog,
         // closeBandSongsCatalog,
         openBandSongsCatalog,
         pushCatalogsOrder,
-        setModal,
+        // setModal,
         addToBandSongsAction,
         ownNodeProps
     } = props;
 
     useEffect(() => {
-        const filter = FilterBandActionProps.CreateFromCatalog(bandlist)
+        if (bandcatalog.Refresh) {
+            const filter = FilterBandActionProps.CreateFromCatalog(bandcatalog)
+            fetchBandCatalog(filter)
+        }
 
-        fetchBandCatalog(filter)
-    }, []);
+    }, [bandcatalog.Refresh]);
 
 
     const bandCatalogDef = BandCatalogHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        const { Id, OData } = bandlist
+        const { Id, OData } = bandcatalog
         const actionProps: INextLinkActionProps = { catalogId: Id, nextLink: OData.NextLink }
 
         setTimeout(() => {
@@ -53,16 +56,16 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
 
         const modal: IModalBand = {
             show: elements[bandCatalogDef.ShowAddBandCheckBox.ControlId].checked,
-            catalogId: bandlist.Id,
+            catalogId: bandcatalog.Id,
             catalogType: CatalogTypes["Band Catalog"],
             type: "New",
             value: Band.EmptyBand()
         }
 
-        const order:  IComponentOrderActionProps = {
-            ComponentOrder:{
-                value:modal,
-                id:modal.catalogId,
+        const order: IComponentOrderActionProps = {
+            ComponentOrder: {
+                value: modal,
+                id: modal.catalogId,
                 displayIn: DisplayIn.Modal
             } as IComponentOrder
         }
@@ -70,21 +73,21 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
         pushCatalogsOrder(order)
     }
 
-    
+
 
     return (
 
         <Container fluid>
             <Row>
                 <Col >
-                    <ContainerCss data-testid={bandlist.Id}>
+                    <ContainerCss data-testid={bandcatalog.Id}>
                         <Row>
                             <Col>
-                                <Droppable droppableId={bandlist.Id}>
+                                <Droppable droppableId={bandcatalog.Id}>
                                     {provided => (
                                         <NodeListCss id={bandCatalogDef.NodeList.ControlId} ref={provided.innerRef} {...provided.droppableProps}>
                                             <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                                <Navbar.Brand >{bandlist.Title}</Navbar.Brand>
+                                                <Navbar.Brand >{bandcatalog.Title}</Navbar.Brand>
 
                                                 <Navbar.Toggle aria-controls={bandCatalogDef.Navbar.ControlId} />
                                                 <Navbar.Collapse id={bandCatalogDef.Navbar.ControlId}>
@@ -92,9 +95,9 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                                         <Col sm="6">
                                                             <SongFilterCss>
                                                                 <BandFilterComponent
-                                                                    CatalogId={bandlist.Id}
-                                                                    Filter={bandlist.Filter}
-                                                                    FetchBandCatalog={fetchBandCatalog}
+                                                                    CatalogId={bandcatalog.Id}
+                                                                    Filter={bandcatalog.Filter}
+                                                                    FetchBandCatalog={setBandFilter}
                                                                 />
                                                             </SongFilterCss>
                                                         </Col>
@@ -106,7 +109,7 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                                                     </Form.Group>
                                                                 </Form.Row>
                                                             </Form>
-                                                            
+
                                                         </Col>
                                                     </Row>
                                                 </Navbar.Collapse>
@@ -114,9 +117,9 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                             </Navbar>
 
                                             <InfiniteScroll
-                                                dataLength={bandlist.Values.size}
+                                                dataLength={bandcatalog.Values.size}
                                                 next={handleScrollDown}
-                                                hasMore={bandlist.Values.size < bandlist.OData.Count}
+                                                hasMore={bandcatalog.Values.size < bandcatalog.OData.Count}
                                                 loader={<h4>Loading...</h4>}
                                                 endMessage={
                                                     <p style={{ textAlign: 'center' }}>
@@ -125,19 +128,20 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                                 }
                                                 scrollableTarget={bandCatalogDef.NodeList.ControlId}
                                             >
-                                                {Array.from(bandlist.Values.values()).map((band, index) => (
+                                                {Array.from(bandcatalog.Values.values()).map((band, index) => (
                                                     <BandCatalogNodeComponent
-                                                    openBandSongsCatalog={openBandSongsCatalog}
-                                                    addToBandSongsAction={addToBandSongsAction}
-                                                    ownNodeProps={ownNodeProps}
-                                                    band={band}
-                                                    index={index}
-                                                    catalogId={bandlist.Id}
-                                                    openedCatalogs = {openedCatalogs}
-                                                    // openBandSongsCatalog = {openBandSongsCatalog}
-                                                    // closeBandSongsCatalog = {closeBandSongsCatalog}
-                                                    setModal={setModal}
-                                                    key={band.Id}
+                                                        openBandSongsCatalog={openBandSongsCatalog}
+                                                        addToBandSongsAction={addToBandSongsAction}
+                                                        pushCatalogsOrder= {pushCatalogsOrder}
+                                                        ownNodeProps={ownNodeProps}
+                                                        // openedCatalogs={openedCatalogs}
+                                                        // openBandSongsCatalog = {openBandSongsCatalog}
+                                                        // closeBandSongsCatalog = {closeBandSongsCatalog}
+                                                        // setModal={setModal}
+                                                        catalogId={bandcatalog.Id}
+                                                        key={band.Id}
+                                                        band={band}
+                                                        index={index}
                                                     />
                                                 ))}
                                             </InfiniteScroll>
@@ -146,7 +150,7 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                         </NodeListCss>
                                     )}
                                 </Droppable>
-                                {bandlist.OData.Count}
+                                {bandcatalog.OData.Count}
                             </Col>
                         </Row>
 

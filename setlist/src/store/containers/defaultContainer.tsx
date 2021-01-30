@@ -26,7 +26,7 @@ interface IAppConnectedDispatch {
     openSongsCatalog(): void
     closeSongsCatalog(): void
 
-    openBandsCatalog(props: IStatusBandCatalogActionProps): void
+    openBandsCatalog(): void
     closeBandsCatalog(props: IStatusBandCatalogActionProps): void
 
     openBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
@@ -65,10 +65,10 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         fetchBandCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchBandCatalogNextLink.request(props)),
         fetchBandSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchBandSongCatalogNextLink.request(props)),
 
-        openSongsCatalog: () => dispatch(Action.openSongsCatalog.request()),
-        closeSongsCatalog: () => dispatch(Action.closeSongsCatalog.request()),
+        openSongsCatalog: () => dispatch(Action.openThisSongCatalog()),
+        closeSongsCatalog: () => dispatch(Action.closeThisSongCatalog()),
 
-        openBandsCatalog: (props: IStatusBandCatalogActionProps) => dispatch(Action.openBandsCatalog.request(props)),
+        openBandsCatalog: () => dispatch(Action.openBandsCatalog.request()),
         closeBandsCatalog: (props: IStatusBandCatalogActionProps) => dispatch(Action.closeBandsCatalog.request(props)),
 
         openBandSongsCatalog: (props: IStatusBandSongCatalogActionProps) => dispatch(Action.openBandSongsCatalog.request(props)),

@@ -10,6 +10,10 @@ export const setModal = createAction(
     "SET_MODAL"
 )<IModal>();
 
+export const pushComponent = createAction(
+    "PUSH_COMPONENT"
+)<IComponentOrder>();
+
 export const pushComponentOrder = createAsyncAction(
     "PUSH_COMMON_COMPONENTORDER_REQUEST",
     "PUSH_COMMON_COMPONENTORDER_SUCCESS",

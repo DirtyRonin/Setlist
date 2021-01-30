@@ -1,39 +1,47 @@
 import { Epic, combineEpics } from "redux-observable";
-import { from, of } from "rxjs";
-import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
+import { concat, EMPTY, empty, from, merge, Observable, of, Subject } from "rxjs";
+import { filter, switchMap, map, catchError, takeUntil, mergeMap, concatMap, every, finalize, take, mapTo } from "rxjs/operators";
 import { isActionOf } from "typesafe-actions";
 
-import { CatalogActions } from "../../index"
+import { CatalogActions, RootState } from "../../index"
 import * as Action from "../../actions";
+
 import { addSongToCatalog, fetchSongCatalog, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "../../actions";
 import { addSongToSongCatalogAsync, fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync, createEmptySongCatalog, closeSongCatalog } from "../../../service";
+import { DisplayIn, IComponentOrderActionProps } from "../../../models";
 
+const openSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
 
-const openSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
+    const songCatalog = (state$.value as RootState).songCatalogReducers.songCatalog
+
+    const asComponentOrderActionProp: IComponentOrderActionProps = {
+        ComponentOrder: {
+            id: songCatalog.Id,
+            displayIn: DisplayIn.Main,
+            value: songCatalog
+        }
+    }
+
     return action$.pipe(
-        filter(isActionOf(Action.openSongsCatalog.request)),
-        switchMap(() =>
-            of(createEmptySongCatalog()).pipe(
-                map(Action.openSongsCatalog.success),
-                catchError((error: Error) => of(Action.openSongsCatalog.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(Action.openSongsCatalog.cancel))))
-            )
+        filter(isActionOf(Action.openThisSongCatalog)),
+        mergeMap(() =>
+            merge(of(asComponentOrderActionProp).pipe(
+                map(Action.pushComponentOrder.request)
+            ))
+
         )
-    );
+    )
 }
 
-const closeBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
-    return action$.pipe(
-        filter(isActionOf(Action.closeSongsCatalog.request)),
-        switchMap(() =>
-            of(closeSongCatalog()).pipe(
-                map(Action.closeSongsCatalog.success),
-                catchError((error: Error) => of(Action.closeSongsCatalog.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(Action.closeSongsCatalog.cancel))))
-            )
+const closeSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
+    action$.pipe(
+        filter(isActionOf(Action.closeThisSongCatalog)),
+        mergeMap(() =>
+            merge(of(EMPTY).pipe(
+                map(() => Action.popComponentOrder.request())
+            ))
         )
-    );
-}
+    )
 
 const fetchSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
     action$.pipe(
@@ -100,8 +108,8 @@ const deleteSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
 
 
 export const songCatalogEpics = combineEpics(
-    closeBandSongCatalogEpic,
     openSongCatalogEpic,
+    closeSongCatalogEpic,
     addSongEpic,
     editSongEpic,
     deleteSongEpic,
