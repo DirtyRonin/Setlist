@@ -1,29 +1,21 @@
 import * as React from 'react';
 import { connect } from "react-redux";
-import { combineReducers } from 'redux';
 import { GlobalBandFilterComponent } from '../../../components/layout/globalBandFilter';
 
 import { IUser } from '../../../models';
-import { StateType } from 'typesafe-actions';
 
-import GlobalBandFilterReducer, { IGlobalBandFilterState } from '../../reducers/layoutReducers/GlobalBandFilterReducers';
-import CatalogReducer from "../../reducers/catalogReducers"
+import { IGlobalBandFilterState } from '../../reducers/layoutReducers/GlobalBandFilterReducers';
 import { RootState } from '../..';
-
-export const rootGlobalBandFilterReducer = combineReducers({
-    GlobalBandFilterReducer,
-    CatalogReducer
-  });
-  
-  export type RootGlobalBandFilterState = StateType<typeof rootGlobalBandFilterReducer>;
+import * as Action from '../../actions/catalogActions/bandSongCatalogActions';
 
 interface IGlobalBandFilterConnectedDispatch {
-
+    openBandSongsCatalog(bandId: string): void
+    closeBandSongsCatalog(): void
 }
 
 interface IGlobalBandFilterProps {
     GlobalBandFilter: IGlobalBandFilterState;
-    userId: IUser
+    user: IUser
 }
 
 export type GlobalBandFilterProps = IGlobalBandFilterProps & IGlobalBandFilterConnectedDispatch
@@ -31,11 +23,14 @@ export type GlobalBandFilterProps = IGlobalBandFilterProps & IGlobalBandFilterCo
 const mapStateToProps = (state: RootState): IGlobalBandFilterProps =>
     ({
         GlobalBandFilter: state.dropDownFilterReducer.GlobalBandFilterState,
-        userId: state.catalogReducers.catalogState.user
+        user: state.userReducers.user
     } as IGlobalBandFilterProps);
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IGlobalBandFilterConnectedDispatch => {
-    return {}
+    return {
+        openBandSongsCatalog: (bandId: string) => dispatch(Action.openBandSongsCatalog(bandId)),
+        closeBandSongsCatalog: () => dispatch(Action.closeBandSongsCatalog()),
+    }
 }
 
 const GlobalBandFilter = (props: GlobalBandFilterProps) => (

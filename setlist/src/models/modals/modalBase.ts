@@ -1,14 +1,14 @@
-import { CatalogTypes, Catalog, IContainerProps } from "..";
-import { IOwnBandCatalogProps } from "../../store/containers/catalogs/BandCatalogContainer";
+import { CatalogTypes, Catalog, IContainerProps, IBand, ISong } from "..";
 
-export type ModalTypes = "None" | "New" | "Edit" | "Remove" | "Read" | "Add"
+export type ModalTypes = "None" | "New" | "Edit" | "Remove" | "Read" | "Add" | "ShowCatalog"
 export const ModalTypes = {
     None: "None",
     New: "New",
     Edit: "Edit",
     Remove: "Remove",
     Read: "Read",
-    Add: "Add"
+    Add: "Add",
+    ShowCatalog: "ShowCatalog"
 } as const;
 
 export interface IReferencedCatalog extends IContainerProps {
@@ -20,7 +20,8 @@ export interface IModal {
     type: ModalTypes
     catalogId: string
     catalogType: CatalogTypes
-    referencedCatalog?: IOwnBandCatalogProps  /*IReferencedCatalog*/
+    catalogInModal: CatalogTypes
+    value?: ISong | IBand
 }
 
 export const defaultModal: IModal = {
@@ -28,6 +29,7 @@ export const defaultModal: IModal = {
     type: ModalTypes.None,
     catalogId: "",
     catalogType: CatalogTypes.None,
-    referencedCatalog: undefined
+    catalogInModal: CatalogTypes["None"]
 }
+
 

@@ -19,12 +19,12 @@ const initial: IBandCatalogState = {
 export default combineReducers<IBandCatalogState, BandCatalogActions>({
     bandCatalog: (state = initial.bandCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openBandsCatalog.success):
+            case getType(actions.openBandsCatalog):
                 return {
                     ...state,
                     Refresh: true
                 }
-            case getType(actions.closeBandsCatalog.success):
+            case getType(actions.closeBandsCatalog):
                 return initial.bandCatalog
             case getType(actions.setBandFilter):
                 return {

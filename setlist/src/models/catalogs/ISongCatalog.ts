@@ -13,11 +13,4 @@ export interface ISongCatalogOptions {
     ShowAddSong: boolean
 }
 
-
-
 export interface ISongCatalog extends ICatalog<ISong, ISongFilter, ISongCatalogOptions> { }
-
-
-export interface ISetCatalog extends ISongCatalog {
-    BandId: string;
-}

@@ -1,42 +1,44 @@
 import React, { useEffect } from "react";
-import { Col, Row, Navbar, Container, FormControlProps, Form } from "react-bootstrap";
+import { Col, Row, Navbar, Container } from "react-bootstrap";
 import { Droppable } from "react-beautiful-dnd";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { IBandSongCatalog, IModal, IFilterBandActionProps, INextLinkActionProps } from "../../models";
+import { INextLinkActionProps } from "../../models";
 import { FilterBandSongActionProps } from "../../mapping";
 import { BandSongCatalogHtmlAttributesConfiguration } from "../../Configuration";
 import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
 import { BandSongFilterComponent } from "../filters/bandSongFilter";
 import BandSongCatalogNodeComponent from "../nodes/bandSongCatalogNode";
+import { BandSongCatalogProps } from "../../store/containers/catalogs/BandSongCatalogContainer";
 
 
 
-export interface IBandSongCatalogProps{
-    bandSongCatalog : IBandSongCatalog;
-    showModal: boolean;
-    setModal(props: IModal): void
+// export interface IBandSongCatalogProps{
+//     bandSongCatalog : IBandSongCatalog;
+//     showModal: boolean;
+//     setModal(props: IModal): void
 
-    fetchBandSongCatalog(props: IFilterBandActionProps): void
-    fetchBandSongCatalogNextLink: (props: INextLinkActionProps) => void
-}
+//     fetchBandSongCatalog(props: IFilterBandActionProps): void
+//     fetchBandSongCatalogNextLink: (props: INextLinkActionProps) => void
+// }
 
-const BandSongCatalogComponent = (props : IBandSongCatalogProps) : JSX.Element => {
+const BandSongCatalogComponent = (props : BandSongCatalogProps) : JSX.Element => {
 
     const {
         bandSongCatalog,
-        showModal,
-        setModal,
-        // openedCatalogs,
+        setBandSongFilter,
         fetchBandSongCatalog,
-        fetchBandSongCatalogNextLink
+        fetchBandSongCatalogNextLink,
+        pushCatalogsOrder
     } = props
 
     useEffect(() => {
-        const filter = FilterBandSongActionProps.CreateFromCatalog(bandSongCatalog)
-
-        fetchBandSongCatalog(filter)
-    }, []);
+        if(bandSongCatalog.Refresh){
+            const filter = FilterBandSongActionProps.CreateFromCatalog(bandSongCatalog)
+            fetchBandSongCatalog(filter)
+        }
+        
+    }, [bandSongCatalog.Refresh]);
 
     const bandSongCatalogDef = BandSongCatalogHtmlAttributesConfiguration;
 
@@ -72,7 +74,7 @@ const BandSongCatalogComponent = (props : IBandSongCatalogProps) : JSX.Element =
                                                                 <BandSongFilterComponent
                                                                     bandId={bandSongCatalog.BandId}
                                                                     Filter={bandSongCatalog.Filter}
-                                                                    fetchBandSongCatalog={fetchBandSongCatalog}
+                                                                    fetchBandSongCatalog={setBandSongFilter}
                                                                 />
                                                             </SongFilterCss>
                                                         </Col>
@@ -108,7 +110,7 @@ const BandSongCatalogComponent = (props : IBandSongCatalogProps) : JSX.Element =
                                                     bandSong={bandSong}
                                                     index={index}
                                                     bandSongCatalogId={bandSongCatalog.Id}
-                                                    setModal={setModal}
+                                                    pushCatalogsOrder={pushCatalogsOrder}
                                                     key={bandSong.Id}
                                                     />
                                                 ))}

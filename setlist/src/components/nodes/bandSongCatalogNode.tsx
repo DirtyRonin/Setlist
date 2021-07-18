@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Draggable } from "react-beautiful-dnd";
 
-import { IBandSong, IModal, ModalTypes } from "../../models";
+import { IBandSong, IComponentOrderActionProps, IModal, ModalTypes } from "../../models";
 import { SongNodeContainer } from "../../styles";
 
 
@@ -11,14 +11,15 @@ export interface IBandSongNodeProps {
     bandSong: IBandSong;
     index: number;
     bandSongCatalogId: string;
-    setModal(props: IModal): void
+    pushCatalogsOrder(props: IComponentOrderActionProps): void
 }
 
 const BandSongCatalogNodeComponent = (props: IBandSongNodeProps): JSX.Element => {
-    const { bandSong,
+    const { 
+        bandSong,
         index,
         bandSongCatalogId,
-        setModal
+        pushCatalogsOrder
     } = props;
 
     const createModal = (type :ModalTypes) =>{

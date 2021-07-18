@@ -1,6 +1,15 @@
-import { IEntityAttributes, ISongAttributes } from "./IEntityAttributes";
 
-export interface ISong extends ISongAttributes,IEntityAttributes{ }
+export interface ISong {
+    Id: string;
+    Title: string;
+    Artist: string;
+    OriginalKey: string;
+    Evergreen: boolean;
+    Nineties: boolean;
+    // PlayTime: string;
+    Genre: string;
+    Comment: string;
+ }
 
 
    

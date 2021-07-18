@@ -5,7 +5,7 @@ import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 
 import * as Action from "../actions/commonActions"
 import { RootState, CatalogActions } from "..";
-import { pushComponentsOrderService, popComponentsOrderService } from "../../service/reducer/commonService";
+import { pushComponentsOrderService, popComponentsOrderService } from "../../service/epicServices/commonService";
 
 
 

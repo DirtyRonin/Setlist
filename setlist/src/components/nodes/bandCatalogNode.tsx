@@ -17,10 +17,13 @@ export interface IBandNodeProps {
     catalogId: string;
     pushCatalogsOrder(props: IComponentOrderActionProps): void
     // openedCatalogs: IComponentOrder[];
-    ownNodeProps?: {
-        songCatalogId: string
-        song: ISong
-    }
+    // ownNodeProps?: {
+    //     songCatalogId: string
+    //     song: ISong
+    // },
+    selectedNode?: ISong
+
+
 
 
     // addValueToCatalog(props: IBandEntityActionProps): void
@@ -30,7 +33,7 @@ export interface IBandNodeProps {
     pushCatalogsOrder: (props: IComponentOrderActionProps) => void
     addToBandSongsAction(props: IBandSongEntityActionProps): void
     // setModal(props: IModal): void
-    openBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
+    openBandSongsCatalog(bandId:string): void
 }
 
 const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
@@ -44,7 +47,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
         // closeBandSongsCatalog,
         // setModal,
         addToBandSongsAction,
-        ownNodeProps
+        selectedNode
 
         // addValueToCatalog: addToThisCatalog
     } = props;
@@ -57,8 +60,8 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
             catalogId,
             catalogType: CatalogTypes["Band Catalog"],
             type,
-            value: band
-        
+            value: band,
+            catalogInModal:CatalogTypes["None"]
         }
 
         const order: IComponentOrderActionProps = {
@@ -84,14 +87,15 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
 
         const props: IStatusBandSongCatalogActionProps = { show, bandId: band.Id, catalogType: CatalogTypes["BandSong Catalog"], catalogId, displayIn: DisplayIn.Main, nodeType: NodeTypes.Edit }
 
-        openBandSongsCatalog(props)
+        // openBandSongsCatalog(props)
+        openBandSongsCatalog(band.Id)
 
     }
 
     const handleAddSongToCatalog = () => {
 
-        if (ownNodeProps) {
-            const bandSong = { ...BandSong.EmptyBandSong(), Id: GUID_EMPTY, BandId: band.Id, SongId: ownNodeProps.song.Id } as IBandSong
+        if (selectedNode) {
+            const bandSong = { ...BandSong.EmptyBandSong(), Id: GUID_EMPTY, BandId: band.Id, SongId: selectedNode.Id } as IBandSong
             // catalogId: 'Band Song Catalog Id'
             addToBandSongsAction({ value: bandSong, catalogId: BandSongCatalog.GetCatalogId(band.Id) } as IBandSongEntityActionProps)
         }
@@ -100,11 +104,12 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
     }
 
     const createBandSong = (): IBandSong =>
-        ownNodeProps ? { ...BandSong.EmptyBandSong(), Id: GUID_EMPTY, BandId: band.Id, SongId: ownNodeProps.song.Id } as IBandSong : {} as IBandSong
+        selectedNode ? { ...BandSong.EmptyBandSong(), Id: GUID_EMPTY, BandId: band.Id, SongId: selectedNode.Id } as IBandSong : {} as IBandSong
 
-    const handleShowEditSong = () => createModal(ModalTypes.Edit)
-    const handleShowReadSong = () => createModal(ModalTypes.Read)
-    const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
+    const handleShowEditBand = () => createModal(ModalTypes.Edit)
+    const handleShowReadBand = () => createModal(ModalTypes.Read)
+    const handleShowDeleteBand = () => createModal(ModalTypes.Remove)
+    const handleShowBandSongs = () => createModal(ModalTypes.ShowCatalog)
 
     const uniqueNodeId = `${catalogId}-${band.Id}-${index}`
     // const showBandSongCatalog = openedCatalogs.some( catalog=> catalog.id === BandSongCatalog.GetCatalogId(band.Id))
@@ -118,7 +123,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
                             <Col >
                                 <label>{band.Title}</label>
                             </Col>
-                            {!ownNodeProps && <div>
+                            {!selectedNode && <div>
                                 <Col>
                                     <Form onChange={handleShowBandSongCatalog}>
                                         <Form.Row>
@@ -129,17 +134,20 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
                                     </Form>
                                 </Col>
                                 <Col>
-                                    <Button variant="secondary" onClick={handleShowReadSong}>{ModalTypes.Read}</Button>
+                                    <Button variant="secondary" onClick={handleShowReadBand}>{ModalTypes.Read}</Button>
                                 </Col>
                                 <Col>
-                                    <Button variant="secondary" onClick={handleShowEditSong}>{ModalTypes.Edit}</Button>
+                                    <Button variant="secondary" onClick={handleShowEditBand}>{ModalTypes.Edit}</Button>
                                 </Col>
                                 <Col>
-                                    <Button variant="secondary" onClick={handleShowDeleteSong}>{ModalTypes.Remove}</Button>
+                                    <Button variant="secondary" onClick={handleShowDeleteBand}>{ModalTypes.Remove}</Button>
+                                </Col>
+                                <Col>
+                                    <Button variant="secondary" onClick={handleShowBandSongs}>{ModalTypes.ShowCatalog}</Button>
                                 </Col>
                             </div>
                             }{
-                                ownNodeProps && <div>
+                                selectedNode && <div>
                                     <Col>
                                         <Button variant="secondary" onClick={handleAddSongToCatalog}>Hinzufügen</Button>
                                     </Col>

@@ -1,21 +1,38 @@
 
 
+import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { FormControl, Dropdown, FormControlProps } from "react-bootstrap";
-import React from "react";
+
 import { DropDownMenuContainer } from "../../styles";
-import { IHashTable } from "../../Util";
+import { GUID_EMPTY, IHashTable, IsMiminumStringLength, QueryBuilder } from "../../Util";
 import { GlobalBandFilterProps } from "../../store/containers/layoutContainers/GlobalBandFilterContainer"
+import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
+import { nameof } from "ts-simple-nameof";
+import { IBand, IBandUser } from "../../models";
+import { ReadBandUsersAsync } from "../../service";
 
 
 
 export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
 
-    const {userId}= props
-    const filterValues:IHashTable<string>  = {}
 
+    const { user, openBandSongsCatalog } = props
     const [filter, setFilter] = useState("");
-    const [availableBands, setAvailableBands] = useState(['']);
+    const [bands, setBands] = useState({} as IHashTable<IBand>);
+    const [selectedBand, setSelectedBand] = useState({} as IBand);
+
+    useEffect(() => {
+        // check if current user has been fetched yet
+        if (user.id !== GUID_EMPTY)
+            fetchBandUsersAsync()
+    }, [filter, user]);
+
+    useEffect(() => {
+        // check if current user has been fetched yet
+        if (selectedBand.Id !== undefined)
+            openBandSongsCatalog(selectedBand.Id)
+    }, [selectedBand]);
 
     const inputRef = useRef<HTMLButtonElement>(null);
 
@@ -24,8 +41,11 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
 
     const Delegate_SetFilter = (event: React.ChangeEvent<FormControlElement>) => {
         setFilter(event.target.value)
-        //
-
+    }
+    const Delegate_OpenBandSongCatalog = (eventKey: string | null, e: React.SyntheticEvent<unknown>): void => {
+        if (eventKey) {
+            setSelectedBand(bands[eventKey])
+        }
     }
 
     const myToggle = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
@@ -46,26 +66,60 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
                     value={filter}
                 />
                 <ul className="list-unstyled">
-                    {React.Children.toArray(props.children).filter(
-                        (child) =>
-                            !filter || (child as any).props.children.toLowerCase().startsWith(filter),
-                    )}
+                    {React.Children.toArray(props.children)}
                 </ul>
             </DropDownMenuContainer>
         )
 
     });
 
+    const fetchBandUsersAsync = async (): Promise<void> => {
+
+        let query = new QueryBuilder().count()
+
+        const filters: FilterBuilder[] = []
+
+        const bandExpand = `${nameof<IBandUser>(x => x.Band)}`
+
+        filters.push(new FilterBuilder().filterGuidExpression(nameof<IBandUser>(x => x.UserId), 'eq', user.id))
+
+        if (IsMiminumStringLength(filter)) {
+            filters.push(new FilterBuilder().startsWithFilterExpression(`${bandExpand}/${nameof<IBand>(x => x.Title)}`, filter))
+        }
+
+        // example expand and filter
+        // https://stackoverflow.com/questions/51525409/odata-multiple-expands-and-filter
+        // e.g. https://localhost:5001/odata/BandSongs/?$expand=Song&$filter=song/title eq 'No Limit'
+        if (filters.length) {
+            query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
+        }
+
+        query = query.orderBy(`${bandExpand}/${nameof<IBand>(x => x.Title)}`)
+
+        query.expand(bandExpand)
+
+        const url = query.toQuery()
+
+        const result = await ReadBandUsersAsync(url);
+
+        const hashBands = result.Values.reduce((acc, cur) => {
+            acc[cur.Band.Title] = cur.Band;
+            return acc;
+        }, {} as IHashTable<IBand>);
+
+        setBands(hashBands)
+    }
+
     return (
         <div>
             <Dropdown>
                 <Dropdown.Toggle as={myToggle} id="dropdown-custom-components">
-                    Select Band
+                    {selectedBand.Title !== undefined ? `${selectedBand.Title}` : 'Select Band'}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu as={myMenu} onChange={Delegate_SetFilter} >
-                    { Object.keys(filterValues).map(filterKey =>
-                        <Dropdown.Item eventKey={filterKey}>{filterValues[filterKey]}</Dropdown.Item>
+                    {Object.keys(bands).map(bandId =>
+                        <Dropdown.Item onSelect={Delegate_OpenBandSongCatalog} eventKey={bandId}>{bands[bandId].Title}</Dropdown.Item>
                     )}
                 </Dropdown.Menu>
             </Dropdown>

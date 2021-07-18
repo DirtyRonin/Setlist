@@ -12,8 +12,6 @@ export const createEmptySongCatalog = (): IComponentOrder => ({
     value: SongCatalog.CreateAndUpdate(NodeTypes.Edit)
 });
 
-export const closeSongCatalog = (): string => SongCatalog.CatalogId
-
 export const fetchSongCatalogAsync = async (props: IFilterSongActionProps): Promise<IFilterSongActionResult> => {
     const { filter: Filter } = props
     let query = new QueryBuilder().count()

@@ -1,2 +1,2 @@
-export * from "./api/index"
-export * from "./reducer/index"
+export * from "./apiServices/index"
+export * from "./epicServices/index"

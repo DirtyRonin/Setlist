@@ -7,7 +7,6 @@ import { FilterBandSongActionProps } from "../../mapping";
 import { IsFilterableString } from "../../Util";
 import { SongFilterTemplate } from "./songFilterTemplate";
 
-
 export interface IBandSongFilterProps {
     bandId: string;
     Filter: IBandSongFilter;

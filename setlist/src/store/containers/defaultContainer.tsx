@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
 import * as Action from '../actions';
-import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, Catalog, IComponentOrderActionProps, ISongEntityActionProps } from '../../models';
+import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, Catalog, IComponentOrderActionProps, ISongEntityActionProps, IUser } from '../../models';
 import { bandModalActions } from '../../models/modals/modelBand';
 
 
@@ -27,28 +27,31 @@ interface IAppConnectedDispatch {
     closeSongsCatalog(): void
 
     openBandsCatalog(): void
-    closeBandsCatalog(props: IStatusBandCatalogActionProps): void
+    closeBandsCatalog(): void
 
-    openBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
-    closeBandSongsCatalog(props: IStatusBandSongCatalogActionProps): void
+    openBandSongsCatalog(bandId: string): void
+    closeBandSongsCatalog(): void
 
     setModal(props: IModal): void
     songModalActionsProvider: songModalActions
     bandModalActionsProvider: bandModalActions
     bandSongModalActionsProvider: bandSongModalActions
+
+    getUser(props: string): void
 }
 
 interface IStateProps {
     catalogState: ICatalogState;
-    openCatalog: Catalog;
+    userState: IUser
 }
 
 export type AppProps = IStateProps & IAppConnectedDispatch;
 
 const mapStateToProps = (state: RootState): IStateProps =>
-    ({
-        catalogState: state.catalogReducers.catalogState,
-    } as IStateProps);
+({
+    catalogState: state.catalogReducers.catalogState,
+    userState: state.userReducers.user
+} as IStateProps);
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatch => {
     return {
@@ -68,11 +71,11 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         openSongsCatalog: () => dispatch(Action.openThisSongCatalog()),
         closeSongsCatalog: () => dispatch(Action.closeThisSongCatalog()),
 
-        openBandsCatalog: () => dispatch(Action.openBandsCatalog.request()),
-        closeBandsCatalog: (props: IStatusBandCatalogActionProps) => dispatch(Action.closeBandsCatalog.request(props)),
+        openBandsCatalog: () => dispatch(Action.openBandsCatalog()),
+        closeBandsCatalog: () => dispatch(Action.closeBandsCatalog()),
 
-        openBandSongsCatalog: (props: IStatusBandSongCatalogActionProps) => dispatch(Action.openBandSongsCatalog.request(props)),
-        closeBandSongsCatalog: (props: IStatusBandSongCatalogActionProps) => dispatch(Action.closeBandSongsCatalog.request(props)),
+        openBandSongsCatalog: (bandId: string) => dispatch(Action.openBandSongsCatalog(bandId)),
+        closeBandSongsCatalog: () => dispatch(Action.closeBandSongsCatalog()),
 
         setModal: (props: IModal) => dispatch(Action.setModal(props)),
         songModalActionsProvider: {
@@ -82,6 +85,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
             Remove: (props: ISongEntityActionProps) => dispatch(Action.deleteSongInCatalog.request(props)),
             Add: () => { },
             Read: () => dispatch(Action.readSongInCatalog()),
+            ShowCatalog: () => { }
         },
         bandModalActionsProvider: {
             None: () => { },
@@ -90,6 +94,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
             Remove: (props: IEntityActionProps) => dispatch(Action.deleteBandInCatalog.request(props)),
             Read: () => dispatch(Action.readBandInCatalog()),
             Add: () => { },
+            ShowCatalog: () => { }
         },
         bandSongModalActionsProvider: {
             None: () => { },
@@ -98,7 +103,10 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
             Remove: (props: IEntityActionProps) => dispatch(Action.addBandSongToCatalog.request(props)),
             Read: () => dispatch(Action.readBandSongInCatalog()),
             Add: () => { },
+            ShowCatalog: () => { }
         },
+
+        getUser: (props: string) => dispatch(Action.getUser.request(props)),
     };
 };
 

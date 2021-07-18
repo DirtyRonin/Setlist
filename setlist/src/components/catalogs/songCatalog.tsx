@@ -49,7 +49,8 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
             catalogId: songCatalog.Id,
             catalogType: CatalogTypes["Song Catalog"],
             type: "New",
-            value: Song.EmptySong()
+            value: Song.EmptySong(),
+            catalogInModal:CatalogTypes["None"]
         }
 
         const order: IComponentOrderActionProps = {

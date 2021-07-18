@@ -2,6 +2,15 @@ import { createAsyncAction, createAction } from "typesafe-actions";
 import { IFilterBandActionProps, Catalog, INextLinkActionProps, IEntityActionProps, IStatusBandCatalogActionProps, IBandCatalog, IComponentOrder, IFilterBandActionResult } from "../../../models";
 import { ICatalogState } from "../..";
 
+export const openBandsCatalog = createAction(
+    "OPEN_BAND_CATALOG",
+)();
+export const closeBandsCatalog = createAction(
+    "CLOSE_BAND_CATALOG",
+)();
+
+
+
 // export const openBandsCatalog_New = createAsyncAction(
 //     `OPEN_BANDCATALOG_NEW_REQUEST`,
 //     `OPEN_BANDCATALOG_NEW_SUCCESS`,
@@ -9,19 +18,19 @@ import { ICatalogState } from "../..";
 //     `OPEN_BANDCATALOG_NEW_CANCEL`,
 // )<void, IBandCatalog, Error, string>();
 
-export const openBandsCatalog = createAsyncAction(
-    `OPEN_BANDCATALOG_REQUEST`,
-    `OPEN_BANDCATALOG_SUCCESS`,
-    `OPEN_BANDCATALOG_FAILURE`,
-    `OPEN_BANDCATALOG_CANCEL`,
-)<void, IComponentOrder, Error, string>();
+// export const openBandsCatalog = createAsyncAction(
+//     `OPEN_BANDCATALOG_REQUEST`,
+//     `OPEN_BANDCATALOG_SUCCESS`,
+//     `OPEN_BANDCATALOG_FAILURE`,
+//     `OPEN_BANDCATALOG_CANCEL`,
+// )<void, IComponentOrder, Error, string>();
 
-export const closeBandsCatalog = createAsyncAction(
-    `CLOSE_BANDCATALOG_REQUEST`,
-    `CLOSE_BANDCATALOG_SUCCESS`,
-    `CLOSE_BANDCATALOG_FAILURE`,
-    `CLOSE_BANDCATALOG_CANCEL`,
-)<IStatusBandCatalogActionProps, ICatalogState, Error, string>();
+// export const closeBandsCatalog = createAsyncAction(
+//     `CLOSE_BANDCATALOG_REQUEST`,
+//     `CLOSE_BANDCATALOG_SUCCESS`,
+//     `CLOSE_BANDCATALOG_FAILURE`,
+//     `CLOSE_BANDCATALOG_CANCEL`,
+// )<IStatusBandCatalogActionProps, ICatalogState, Error, string>();
 
 export const fetchBandCatalog = createAsyncAction(
     "FETCH_BANDCATALOG_REQUEST",

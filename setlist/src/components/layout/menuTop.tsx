@@ -6,10 +6,12 @@ import GlobalBandFilter from "../../store/containers/layoutContainers/GlobalBand
 
 export interface IMenuTopProps {
     componentsOrder: IComponentOrder[]
-    openSongsCatalog(props: IStatusSongCatalogActionProps): void
-    closeSongsCatalog(props: IStatusSongCatalogActionProps): void
-    openBandsCatalog(props: IStatusBandCatalogActionProps): void
-    closeBandsCatalog(props: IStatusBandCatalogActionProps): void
+    openSongsCatalog(): void
+    closeSongsCatalog(): void
+    openBandsCatalog(): void
+    closeBandsCatalog(): void
+
+    
 
 }
 
@@ -41,10 +43,10 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
 
         const props: IStatusSongCatalogActionProps = { show, catalogType: CatalogTypes["Song Catalog"], catalogId: SongCatalog.CatalogId, displayIn: DisplayIn.Main, nodeType: NodeTypes.Edit }
         if (props.show) {
-            openSongsCatalog(props)
+            openSongsCatalog()
         }
         else {
-            closeSongsCatalog(props);
+            closeSongsCatalog();
         }
     }
 
@@ -55,10 +57,10 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
 
         const props: IStatusBandCatalogActionProps = { show, catalogType: CatalogTypes["Band Catalog"], catalogId: BandCatalog.CatalogId, displayIn: DisplayIn.Main, nodeType: NodeTypes.Edit }
         if (props.show) {
-            openBandsCatalog(props)
+            openBandsCatalog()
         }
         else {
-            closeBandsCatalog(props);
+            closeBandsCatalog();
         }
     }
 

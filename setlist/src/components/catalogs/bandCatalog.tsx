@@ -27,7 +27,7 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
         pushCatalogsOrder,
         // setModal,
         addToBandSongsAction,
-        ownNodeProps
+        selectedNode
     } = props;
 
     useEffect(() => {
@@ -59,7 +59,8 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
             catalogId: bandcatalog.Id,
             catalogType: CatalogTypes["Band Catalog"],
             type: "New",
-            value: Band.EmptyBand()
+            value: Band.EmptyBand(),
+            catalogInModal:CatalogTypes["None"]
         }
 
         const order: IComponentOrderActionProps = {
@@ -133,7 +134,7 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                                         openBandSongsCatalog={openBandSongsCatalog}
                                                         addToBandSongsAction={addToBandSongsAction}
                                                         pushCatalogsOrder= {pushCatalogsOrder}
-                                                        ownNodeProps={ownNodeProps}
+                                                        selectedNode={selectedNode}
                                                         // openedCatalogs={openedCatalogs}
                                                         // openBandSongsCatalog = {openBandSongsCatalog}
                                                         // closeBandSongsCatalog = {closeBandSongsCatalog}

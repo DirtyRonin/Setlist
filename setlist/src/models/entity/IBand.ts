@@ -1,3 +1,4 @@
-import { IEntityAttributes } from "./IEntityAttributes";
-
-export interface IBand extends IEntityAttributes{ }
+export interface IBand {
+    Id: string;
+    Title: string;
+}

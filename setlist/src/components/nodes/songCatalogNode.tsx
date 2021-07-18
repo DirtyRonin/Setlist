@@ -5,7 +5,6 @@ import { Draggable } from "react-beautiful-dnd";
 import { ISong, IModal, ModalTypes, IModalSong, CatalogTypes, IComponentOrderActionProps, DisplayIn, IComponentOrder, IReferencedCatalog } from "../../models";
 import { SongNodeContainer } from "../../styles";
 import { BandCatalog } from "../../mapping";
-import { IOwnBandCatalogProps } from "../../store/containers/catalogs/BandCatalogContainer";
 
 
 
@@ -23,21 +22,14 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
         pushCatalogsOrder,
     } = props;
 
-    const createModal = (type: ModalTypes) => {
+    const createModal = (type: ModalTypes, catalogInModal : CatalogTypes = CatalogTypes["None"]) => {
         const modal: IModalSong = {
             show: true,
             catalogId: songListId,
             catalogType: CatalogTypes["Song Catalog"],
             type,
             value: song,
-            referencedCatalog: {
-                
-                bandCatalogId: BandCatalog.CatalogId,
-                ownNodeProps:{
-                    song,
-                    songCatalogId:songListId
-                }
-            } as IOwnBandCatalogProps
+            catalogInModal
         }
 
         const order: IComponentOrderActionProps = {
@@ -54,7 +46,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const handleShowEditSong = () => createModal(ModalTypes.Edit)
     const handleShowReadSong = () => createModal(ModalTypes.Read)
     const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
-    const handleShowAddSong = () => createModal(ModalTypes.Add)
+    const handleShowAddSong = () => createModal(ModalTypes.Add,CatalogTypes["Band Catalog"])
 
     const uniqueNodeId = `${songListId}-${song.Id}-${index}`
 

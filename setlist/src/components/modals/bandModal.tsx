@@ -1,25 +1,25 @@
 import React from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 import { BandModalHtmlAttributesConfiguration } from "../../Configuration";
-import { IModal, ModalTypes, defaultModal, IBandEntityActionProps, IBand} from "../../models";
+import { IModal, ModalTypes, defaultModal, IBandEntityActionProps, IBand } from "../../models";
 import { Band } from "../../mapping";
 import { IModalBand } from "../../models/modals/modelBand";
-import { IsModalReadonly } from "../../Util";
+import { IsCatalog, IsModalReadonly } from "../../Util";
 
 export interface IBandModalComponent {
     modal: IModalBand
     popCatalogsOrder(): void
     executeBandModalAction(props: IBandEntityActionProps): void
+    catalog?: JSX.Element
 }
 
 export const BandModalComponent = (props: IBandModalComponent) => {
 
-    const { modal, popCatalogsOrder, executeBandModalAction } = props
+    const { modal, popCatalogsOrder, executeBandModalAction, catalog } = props
 
     const bandModalDef = BandModalHtmlAttributesConfiguration;
 
     const handleCloseModal = () => {
-        console.log('peter')
         popCatalogsOrder();
     }
 
@@ -32,9 +32,12 @@ export const BandModalComponent = (props: IBandModalComponent) => {
 
         if (modal.catalogId)
             executeBandModalAction({ value: band, catalogId: modal.catalogId } as IBandEntityActionProps)
+
+        if (modal.type !== "New")
+            handleCloseModal()
     };
 
-    const GetBandForModalType = (type: ModalTypes, elements: any):IBand => {
+    const GetBandForModalType = (type: ModalTypes, elements: any): IBand => {
         const band = {
             ...Band.EmptyBand(),
             Title: elements[bandModalDef.Title.ControlId].value,
@@ -54,6 +57,7 @@ export const BandModalComponent = (props: IBandModalComponent) => {
             <Modal.Header closeButton>
                 <Modal.Title>{modal.type}</Modal.Title>
             </Modal.Header>
+
             <Form onSubmit={hanldeOnClick} method="GET">
                 <Modal.Body>
                     <Form.Row>

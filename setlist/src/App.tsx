@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 
 import styled from "styled-components";
-import { CatalogTypes, IModalSong, IBandSongCatalog, IModalBandSong, DisplayIn, Catalog, IModal, ModalTypes, IComponentOrder, IReferencedCatalog, IEntityActionProps } from "./models";
+import { CatalogTypes, IModalSong, IModalBandSong, DisplayIn, Catalog, IModal, ModalTypes, IComponentOrder, IBand, ISong, ICatalog, IBandSongCatalog } from "./models";
 
 
 import { AppProps } from "./store";
@@ -13,12 +13,12 @@ import { IModalBand } from "./models/modals/modelBand";
 import { BandModalComponent } from "./components/modals/bandModal";
 
 import { BandSongModalComponent } from "./components/modals/bandSongModal";
-import BandSongCatalogComponent from "./components/catalogs/bandSongCatalog";
 import MenuTopComponent from "./components/layout/menuTop";
-import BandCatalogContainer, { IOwnBandCatalogProps } from "./store/containers/catalogs/BandCatalogContainer"
+import BandCatalogContainer from "./store/containers/catalogs/BandCatalogContainer"
 import SongCatalogContainer from "./store/containers/catalogs/SongCatalogContainer"
-import { AddToCatalogModalComponent } from "./components/modals/addToCatalogModal";
-import { SongCatalog } from "./mapping";
+import { CatalogModalComponent } from "./components/modals/catalogModal";
+import BandSongCatalogContainer from "./store/containers/catalogs/BandSongCatalogContainer";
+import { GUID_EMPTY } from "./Util";
 
 const AppContainer = styled.div`
     display: flex;
@@ -46,22 +46,63 @@ export const App = (props: AppProps): JSX.Element => {
         closeBandsCatalog,
 
         popCatalogsOrder,
-        setModal
+        setModal,
 
-
+        userState,
+        getUser
     } = props;
 
     useEffect(() => {
+        getUser(userState.name)
     }, []);
 
     const onDragEnd = (): void => { };
 
-    const IsBandCatalogContainer = (value: any): value is IOwnBandCatalogProps => true
+    // const IsBandCatalogContainer = (value: any): value is IOwnBandCatalogProps => true
 
-    const GetComponent = (refProps: IOwnBandCatalogProps): JSX.Element => {
-        if (IsBandCatalogContainer(refProps)) {
-            return <BandCatalogContainer bandCatalogId={refProps.bandCatalogId} ownNodeProps={refProps.ownNodeProps} />
-        } else { return <div></div> }
+    const IsModal = (value: IModal | Catalog): value is IModal =>
+        (value as IModal).catalogInModal !== undefined
+
+
+
+    const GetComponent = (value: IModal | Catalog): JSX.Element => {
+
+        if (IsModal(value)) {
+            if (value.catalogInModal === CatalogTypes["Song Catalog"]) {
+                return <SongCatalogContainer />
+            }
+            else if (value.catalogInModal === CatalogTypes["Band Catalog"]) {
+                return <BandCatalogContainer selectedNode={value.value as ISong} />
+            }
+            // else if (value.catalogInModal === CatalogTypes["BandSong Catalog"]) {
+            //     const bandId = ""
+            //     return <BandSongCatalogContainer selectedNode={undefined} bandId={bandId} />
+            // }
+
+            return <div></div>
+
+        }
+
+        if (!IsModal(value)) {
+            if (value.CatalogType === CatalogTypes["Song Catalog"]) {
+                return <SongCatalogContainer />
+            }
+            else if (value.CatalogType === CatalogTypes["Band Catalog"]) {
+                return <BandCatalogContainer selectedNode={undefined} />
+            }
+            else if (value.CatalogType === CatalogTypes["BandSong Catalog"]) {
+                const bandId = (value as IBandSongCatalog).BandId
+                return <BandSongCatalogContainer selectedNode={undefined}  />
+            }
+
+            return <div></div>
+
+        }
+
+
+
+        return <div></div>
+
     }
 
     const findLatestComponentOrder = (displayType: DisplayIn): IComponentOrder | undefined =>
@@ -72,52 +113,50 @@ export const App = (props: AppProps): JSX.Element => {
     const renderComponents = (): JSX.Element[] => {
         const components: JSX.Element[] = []
 
+        /* open and close catalogs */
         const newestCatalogComponent = findLatestComponentOrder(DisplayIn.Main)
         if (newestCatalogComponent) {
             const catalog = newestCatalogComponent.value as Catalog
+            components.push(GetComponent(catalog));
 
-            if (catalog.CatalogType === CatalogTypes["Song Catalog"]) {
-                components.push(<SongCatalogContainer catalogId={catalog.Id} />);
-            }
-            else if (catalog.CatalogType === CatalogTypes["Band Catalog"]) {
-                components.push(GetComponent({bandCatalogId: catalog.Id , ownNodeProps: undefined }));
-            }
-            else if (catalog.CatalogType === CatalogTypes["BandSong Catalog"]) {
-                components.push(
-                    <BandSongCatalogComponent
-                        fetchBandSongCatalog={fetchBandSongCatalog}
-                        fetchBandSongCatalogNextLink={fetchBandSongCatalogNextLink}
-                        key={catalog.Id}
-                        showModal={modal.show}
-                        bandSongCatalog={catalog as IBandSongCatalog}
-                        setModal={setModal}
-                    />
-                )
-            }
+            // if (catalog.CatalogType === CatalogTypes["Song Catalog"]) {
+            //     components.push(GetComponent(catalog.CatalogType));
+            // }
+            // else if (catalog.CatalogType === CatalogTypes["Band Catalog"]) {
+            //     components.push(GetComponent({ ownNodeProps: undefined }));
+            // }
+            // else if (catalog.CatalogType === CatalogTypes["BandSong Catalog"]) {
+            //     components.push(
+            //         <BandSongCatalogComponent
+            //             fetchBandSongCatalog={fetchBandSongCatalog}
+            //             fetchBandSongCatalogNextLink={fetchBandSongCatalogNextLink}
+            //             key={catalog.Id}
+            //             showModal={modal.show}
+            //             bandSongCatalog={catalog as IBandSongCatalog}
+            //             setModal={setModal}
+            //         />
+            //     )
+            // }
         }
 
+        /* open and close modals */
         if (components.length === 1) {
             const newestModalComponent = findLatestComponentOrder(DisplayIn.Modal)
             if (newestModalComponent) {
                 const modal = newestModalComponent.value as IModal
-                if (modal.type === ModalTypes.Add && modal.referencedCatalog) {
+
+                // if a catalog should be opened in a modal
+                if (modal.catalogInModal !== CatalogTypes["None"]) {
                     components.push(
-                        <SongModalComponent
-                            catalog={GetComponent(modal.referencedCatalog)}
-                            modal={modal as IModalSong}
+                        <CatalogModalComponent
+                            catalog={GetComponent(modal)}
+                            modal={modal}
                             popCatalogsOrder={popCatalogsOrder}
-                            executeSongModalAction={songModalActionsProvider[modal.type]}
                         />
-
-
-                        // <AddToCatalogModalComponent
-                        //     BandCatalogComponent={<BandCatalogContainer />}
-                        //     modal={modal as IModalSong}
-                        //     popCatalogsOrder={popCatalogsOrder}
-                        //     executeSongModalAction={songModalActionsProvider[modal.type]}
-                        // />
                     )
                 }
+                // edit, remove or read a node from a catalog
+
                 else if (modal.catalogType === CatalogTypes["Song Catalog"]) {
                     components.push(<SongModalComponent
                         modal={modal as IModalSong}
@@ -153,8 +192,10 @@ export const App = (props: AppProps): JSX.Element => {
             <Container fluid>
                 <MenuTopComponent
                     componentsOrder={componentsOrder}
+
                     openSongsCatalog={openSongsCatalog}
                     closeSongsCatalog={closeSongsCatalog}
+
                     openBandsCatalog={openBandsCatalog}
                     closeBandsCatalog={closeBandsCatalog}
                 />

@@ -1,3 +1,4 @@
+import { filter } from "rxjs/operators";
 import { IFilterBandSongActionProps, IBandSongFilter, IBandSongCatalog } from "../../models";
 import { BandSongCatalog } from "../SongCatalog";
 
@@ -32,8 +33,10 @@ export class FilterBandSongActionProps implements IFilterBandSongActionProps {
     }
 
     public static CreateFromCatalog(catalog: IBandSongCatalog) {
-        const { Id, Filter, Refresh } = catalog
-        return new FilterBandSongActionProps(Id, Filter, Refresh)
+        const { Filter, Refresh, BandId } = catalog
+        const newfilter = { ...Filter, BandId }
+
+        return  FilterBandSongActionProps.Create(BandId, newfilter, Refresh)
     }
 
     public static CatalogId = (bandId: string): string => BandSongCatalog.GetCatalogId(bandId)

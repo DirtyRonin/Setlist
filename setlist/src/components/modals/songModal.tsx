@@ -31,7 +31,7 @@ export const SongModalComponent = (props: ISongModalComponent) => {
 
         if (modal.catalogId) {
             executeSongModalAction({ value: song, catalogId: modal.catalogId } as ISongEntityActionProps)
-            
+
             if (modal.type !== "New")
                 handleCloseModal()
         }
@@ -59,41 +59,29 @@ export const SongModalComponent = (props: ISongModalComponent) => {
             <Modal.Header closeButton>
                 <Modal.Title>{modal.type}</Modal.Title>
             </Modal.Header>
-            {/* Entity Edit */}
-            {/* Add Entity to this Catalog */}
-            {IsCatalog(modal.type) && catalog !== null &&
-                <div>
-                    <Modal.Body>
-                        {catalog}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                    </Modal.Footer>
-                </div>
-            }
-            {!IsCatalog(modal.type) &&
-                <Form onSubmit={hanldeOnClick} method="GET">
-                    <Modal.Body>
-                        <Form.Row>
-                            <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
-                                <Form.Label>{songDef.Title.Label}</Form.Label>
-                                <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Title} placeholder={songDef.Title.Placeholder}></Form.Control>
-                            </Form.Group>
-                            <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
-                                <Form.Label>{songDef.Artist.Label}</Form.Label>
-                                <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Artist} placeholder={songDef.Artist.Placeholder}></Form.Control>
-                            </Form.Group>
-                            <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
-                                <Form.Label>{songDef.Genre.Label}</Form.Label>
-                                <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Genre} placeholder={songDef.Genre.Placeholder}></Form.Control>
-                            </Form.Group>
-                        </Form.Row>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                        <Button variant="primary" type="submit" >{modal.type}</Button>
-                    </Modal.Footer>
-                </Form>}
+
+            <Form onSubmit={hanldeOnClick} method="GET">
+                <Modal.Body>
+                    <Form.Row>
+                        <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
+                            <Form.Label>{songDef.Title.Label}</Form.Label>
+                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Title} placeholder={songDef.Title.Placeholder}></Form.Control>
+                        </Form.Group>
+                        <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
+                            <Form.Label>{songDef.Artist.Label}</Form.Label>
+                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Artist} placeholder={songDef.Artist.Placeholder}></Form.Control>
+                        </Form.Group>
+                        <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
+                            <Form.Label>{songDef.Genre.Label}</Form.Label>
+                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={modal.value.Genre} placeholder={songDef.Genre.Placeholder}></Form.Control>
+                        </Form.Group>
+                    </Form.Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                    <Button variant="primary" type="submit" >{modal.type}</Button>
+                </Modal.Footer>
+            </Form>
 
 
         </Modal.Dialog>

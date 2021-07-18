@@ -12,7 +12,6 @@ export interface ICatalogState {
     catalogsOrder: string[];
     componentsOrder: IComponentOrder[];
     modal: IModal
-    user: IUser
     openCatalog: Catalog;
 }
 
@@ -26,7 +25,6 @@ export const defaultCatalog: CatalogState = {
         catalogsOrder: [] as string[],
         catalogs: {} as IHashTable<Catalog>,
         modal: defaultModal,
-        user: { userId: "Admin" } as IUser,
         openCatalog: {} as Catalog
     }
 }
@@ -40,26 +38,25 @@ export default combineReducers<CatalogState, CatalogActions>({
             case getType(catalogActions.deleteBandInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.editBandInCatalog.success): return updateCatalogByModal(state, action.payload)
             case getType(catalogActions.readBandInCatalog): return setModal(state, defaultModal)
-            case getType(catalogActions.closeBandsCatalog.success): return setCatalogState(state, action.payload)
            
             case getType(catalogActions.readSongInCatalog): return setModal(state, defaultModal)
 
-            case getType(catalogActions.fetchBandSongCatalog.success): {
-                const { componentsOrder } = state
-                if (componentsOrder && componentsOrder.length > 0) {
-                    componentsOrder.filter(order => order.id === action.payload.Id && order.displayIn === DisplayIn.Main).forEach(
-                        order => order.value = action.payload
-                    )
-                    return { ...state, componentsOrder }
-                } else {
-                    return state
-                }
+            // case getType(catalogActions.fetchBandSongCatalog.success): {
+            //     const { componentsOrder } = state
+            //     if (componentsOrder && componentsOrder.length > 0) {
+            //         componentsOrder.filter(order => order.id === action.payload.Id && order.displayIn === DisplayIn.Main).forEach(
+            //             order => order.value = action.payload
+            //         )
+            //         return { ...state, componentsOrder }
+            //     } else {
+            //         return state
+            //     }
 
-            }
-            case getType(catalogActions.fetchBandSongCatalogNextLink.success): return updateCatalog(state, action.payload)
-            // case getType(catalogActions.addBandSongToCatalog.success): return updateCatalogByModal(state, action.payload)
-            case getType(catalogActions.openBandSongsCatalog.success): return setCatalogState(state, action.payload)
-            case getType(catalogActions.closeBandSongsCatalog.success): return setCatalogState(state, action.payload)
+            // }
+            // case getType(catalogActions.fetchBandSongCatalogNextLink.success): return updateCatalog(state, action.payload)
+            // // case getType(catalogActions.addBandSongToCatalog.success): return updateCatalogByModal(state, action.payload)
+            // case getType(catalogActions.openBandSongsCatalog.success): return setCatalogState(state, action.payload)
+            // case getType(catalogActions.closeBandSongsCatalog.success): return setCatalogState(state, action.payload)
 
 
             case getType(catalogActions.setModal): return setModal(state, action.payload)

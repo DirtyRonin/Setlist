@@ -1,13 +1,13 @@
 import { Epic, combineEpics } from "redux-observable";
-import { concat, EMPTY, empty, from, merge, Observable, of, Subject } from "rxjs";
-import { filter, switchMap, map, catchError, takeUntil, mergeMap, concatMap, every, finalize, take, mapTo } from "rxjs/operators";
+import { EMPTY, from, merge, of } from "rxjs";
+import { filter, switchMap, map, catchError, takeUntil, mergeMap } from "rxjs/operators";
 import { isActionOf } from "typesafe-actions";
 
 import { CatalogActions, RootState } from "../../index"
 import * as Action from "../../actions";
 
 import { addSongToCatalog, fetchSongCatalog, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "../../actions";
-import { addSongToSongCatalogAsync, fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync, createEmptySongCatalog, closeSongCatalog } from "../../../service";
+import { addSongToSongCatalogAsync, fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync } from "../../../service";
 import { DisplayIn, IComponentOrderActionProps } from "../../../models";
 
 const openSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
