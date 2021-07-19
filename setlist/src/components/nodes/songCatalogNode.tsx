@@ -2,9 +2,8 @@ import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Draggable } from "react-beautiful-dnd";
 
-import { ISong, IModal, ModalTypes, IModalSong, CatalogTypes, IComponentOrderActionProps, DisplayIn, IComponentOrder, IReferencedCatalog } from "../../models";
+import { ISong, ModalTypes, IModalSong, CatalogTypes, IComponentOrderActionProps, DisplayIn, IComponentOrder } from "../../models";
 import { SongNodeContainer } from "../../styles";
-import { BandCatalog } from "../../mapping";
 
 
 
