@@ -1,7 +1,7 @@
 import { ICatalogState } from "../../store";
 import { FilterBandActionProps, BandCatalog } from "../../mapping";
 import { IHashTable, QueryBuilder, IsMiminumStringLength, HashTableHelper } from "../../Util";
-import { Catalog, IFilterBandActionProps, IBand, IBandCatalog, INextLinkActionProps, IEntityActionProps, IBandEntityActionProps, IStatusBandCatalogActionProps, IComponentOrder, NodeTypes, DisplayIn, IFilterBandActionResult } from "../../models";
+import { Catalog, IFilterBandActionProps, IBand, IBandCatalog, INextLinkActionProps, IEntityActionProps, IBandEntityActionProps, IStatusBandCatalogActionProps, IComponentOrder, DisplayIn, IFilterBandActionResult } from "../../models";
 import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 import { nameof } from "ts-simple-nameof";
 import { ReadBandsAsync, CreateBandAsync, UpdateBandAsync, DeleteBandAsync } from "..";
@@ -15,9 +15,10 @@ import { ReadBandsAsync, CreateBandAsync, UpdateBandAsync, DeleteBandAsync } fro
 export const createEmptyBandCatalog = (): IComponentOrder => ({
     id: BandCatalog.CatalogId,
     displayIn: DisplayIn.Main,
-    value: BandCatalog.CreateAndUpdate(NodeTypes.Edit)
+    value: BandCatalog.CreateAndUpdate()
 })
 
+// deprecated
 // export const createEmptyBandCatalog = (props: IStatusBandCatalogActionProps, catalogState: ICatalogState): ICatalogState => {
 //     const { componentsOrder } = catalogState
 //     const { catalogId, displayIn, nodeType } = props
@@ -37,6 +38,7 @@ export const createEmptyBandCatalog = (): IComponentOrder => ({
 //     return { ...catalogState, componentsOrder: newComponentsOrder } as ICatalogState
 // }
 
+// deprecated
 export const closeBandCatalog = (props: IStatusBandCatalogActionProps, catalogState: ICatalogState): ICatalogState => {
 
     const { componentsOrder } = catalogState

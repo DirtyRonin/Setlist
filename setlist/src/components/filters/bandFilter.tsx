@@ -10,13 +10,11 @@ import { IsFilterableString } from "../../Util";
 export interface IBandFilterProps {
     CatalogId: string;
     Filter: IBandFilter;
-    FetchBandCatalog(props: IFilterBandActionProps): void
+    setBandFilter(props: IFilterBandActionProps): void
 }
 
 export const BandFilterComponent = (props: IBandFilterProps) => {
-    const { Filter, CatalogId, FetchBandCatalog } = props;
-
-    const htmlConfig = FilterBandHtmlAttributesConfiguration;
+    const { Filter, CatalogId, setBandFilter } = props;
 
     const { SearchTitleInput } = FilterBandHtmlAttributesConfiguration
 
@@ -34,7 +32,7 @@ export const BandFilterComponent = (props: IBandFilterProps) => {
         bandFilter.refresh = IsFilterableString(Filter.Title, bandFilter.filter.Title) ? true : false
 
         if (bandFilter.refresh) {
-            FetchBandCatalog(bandFilter)
+            setBandFilter(bandFilter)
         }
     }
 

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
 import * as Action from '../actions';
-import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, Catalog, IComponentOrderActionProps, ISongEntityActionProps, IUser } from '../../models';
+import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, Catalog, IComponentOrderActionProps, ISongEntityActionProps, IUser, setlistModalActions, ISetlistEntityActionProps } from '../../models';
 import { bandModalActions } from '../../models/modals/modelBand';
 
 
@@ -32,10 +32,14 @@ interface IAppConnectedDispatch {
     openBandSongsCatalog(bandId: string): void
     closeBandSongsCatalog(): void
 
+    openSetlistCatalog(): void
+    closeSetlistCatalog(): void
+
     setModal(props: IModal): void
     songModalActionsProvider: songModalActions
     bandModalActionsProvider: bandModalActions
     bandSongModalActionsProvider: bandSongModalActions
+    setlistModalActionsProvider: setlistModalActions
 
     getUser(props: string): void
 }
@@ -77,6 +81,9 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         openBandSongsCatalog: (bandId: string) => dispatch(Action.openBandSongsCatalog(bandId)),
         closeBandSongsCatalog: () => dispatch(Action.closeBandSongsCatalog()),
 
+        openSetlistCatalog: () => dispatch(Action.openSetlistsCatalog()),
+        closeSetlistCatalog: () => dispatch(Action.closeSetlistsCatalog()),
+
         setModal: (props: IModal) => dispatch(Action.setModal(props)),
         songModalActionsProvider: {
             None: () => { },
@@ -100,8 +107,17 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
             None: () => { },
             New: () => { } /*dispatch(Action.addBandSongToCatalog.request(props))*/,
             Edit: (props: IEntityActionProps) => dispatch(Action.addBandSongToCatalog.request(props)),
-            Remove: (props: IEntityActionProps) => dispatch(Action.addBandSongToCatalog.request(props)),
+            Remove: (props: IEntityActionProps) => {},
             Read: () => dispatch(Action.readBandSongInCatalog()),
+            Add: () => { },
+            ShowCatalog: () => { }
+        },
+        setlistModalActionsProvider: {
+            None: () => { },
+            New: (props: ISetlistEntityActionProps) => dispatch(Action.addSetListToCatalog.request(props)),
+            Edit: (props: ISetlistEntityActionProps) => {},
+            Remove: (props: ISetlistEntityActionProps) => {},
+            Read: () => dispatch(Action.readSetlistInCatalog()),
             Add: () => { },
             ShowCatalog: () => { }
         },

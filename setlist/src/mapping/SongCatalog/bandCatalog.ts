@@ -1,9 +1,9 @@
-import { CatalogTypes, IBandCatalog, IBand, ODataProps, IBandFilter, IBandCatalogOptions, NodeTypes } from "../../models";
+import { CatalogTypes, IBandCatalog, IBand, ODataProps, IBandFilter, IBandCatalogOptions } from "../../models";
 import { FilterBandActionProps } from "../actionsProps";
 import { CatalogBase } from "./catalogBase";
 
 export class BandCatalog extends CatalogBase<IBand, IBandFilter, IBandCatalogOptions> implements IBandCatalog {
-    private constructor(filter: IBandFilter, oData: ODataProps, options: IBandCatalogOptions, nodeType: NodeTypes = NodeTypes.Initial, refresh?: boolean, bands?: Map<string, IBand>) {
+    private constructor(filter: IBandFilter, oData: ODataProps, options: IBandCatalogOptions, refresh?: boolean, bands?: Map<string, IBand>) {
         super(
             BandCatalog.CatalogId,
             CatalogTypes["Band Catalog"].toString(),
@@ -11,7 +11,6 @@ export class BandCatalog extends CatalogBase<IBand, IBandFilter, IBandCatalogOpt
             filter,
             oData,
             options,
-            nodeType,
             refresh,
             bands,
         )
@@ -19,22 +18,20 @@ export class BandCatalog extends CatalogBase<IBand, IBandFilter, IBandCatalogOpt
 
     private static Default = (
         refresh: boolean,
-        options: IBandCatalogOptions = { },
-        nodeType: NodeTypes = NodeTypes.Initial
-    ): BandCatalog => 
+        options: IBandCatalogOptions = {},
+    ): BandCatalog =>
         new BandCatalog(
             FilterBandActionProps.Default(BandCatalog.CatalogId).filter,
             { NextLink: "", Count: 0, Context: "" },
             options,
-            nodeType,
             refresh,
             new Map<string, IBand>()
         )
 
     public static Create = (): IBandCatalog => BandCatalog.Default(false)
 
-    public static CreateAndUpdate = (nodeType?: NodeTypes, options?: IBandCatalogOptions): IBandCatalog => 
-        BandCatalog.Default(true, options, nodeType)
+    public static CreateAndUpdate = (options?: IBandCatalogOptions): IBandCatalog =>
+        BandCatalog.Default(true, options)
 
     public static AddValues(bandCatalog: IBandCatalog, addBands: IBand[]): IBandCatalog {
         const currentCatalog = { ...bandCatalog };

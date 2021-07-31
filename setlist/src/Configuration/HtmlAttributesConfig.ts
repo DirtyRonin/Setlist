@@ -131,3 +131,33 @@ export const BandSongCatalogHtmlAttributesConfiguration: ConfigurationItemCollec
     Navbar: { Label: "", Placeholder: "", Data_TestId: "BandSongCatalog_Options_responsiveNavbar", ControlId: "BandSongCatalog_Options_responsiveNavbar" },
     NodeList: { Label: "", Placeholder: "", Data_TestId: "BandSongCatalog_NodeList", ControlId: "BandSongCatalog_NodeList" },
 }
+
+type SetlistCatalogComponentNames = "ShowAddSetlistCheckBox" | "Navbar" | "NodeList"
+
+export const SetlistCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    SetlistCatalogComponentNames
+> = {
+    ShowAddSetlistCheckBox:{ Label: "Add Setlist", Placeholder: "", Data_TestId: "SetlistCatalog_ShowAddSetlist", ControlId: "SetlistCatalog_ShowAddSetlist" },
+    Navbar: { Label: "", Placeholder: "", Data_TestId: "SetlistCatalog_Options_responsiveNavbar", ControlId: "SetlistCatalog_Options_responsiveNavbar" },
+    NodeList: { Label: "", Placeholder: "", Data_TestId: "SetlistCatalog_NodeList", ControlId: "SetlistCatalog_NodeList" },
+}
+
+type SetlistModalNodeHtmlComponentNames = "Title" | "Comment";
+
+export const SetlistModalHtmlAttributesConfiguration: Record<
+SetlistModalNodeHtmlComponentNames,
+    FormHtmlAttributesDefinition
+> = {
+    Title: { Label: "Title", Placeholder: "Enter Title", Data_TestId: "SetlistModal_Title", ControlId: "SetlistModal_Title" },
+    Comment: { Label: "Comment", Placeholder: "Enter Comment", Data_TestId: "SetlistModal_Comment", ControlId: "SetlistModal_Comment" },
+};
+
+type SetlistBandComponentNames = "SearchTitleInput";
+
+export const FilterSetlistHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    SetlistBandComponentNames
+> = {
+    SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterBand_SearchTitle", ControlId: "FilterBand_SearchTitle" },
+}

@@ -9,7 +9,7 @@ export interface ICatalog<TValue, SFilter, ROptions> {
     Values: Map<string, TValue>;
     OData: ODataProps;
     CatalogOptions: ROptions;
-    NodeType: NodeTypes;
+    // NodeType: NodeTypes;
 }
 
 export interface ODataProps {
@@ -21,23 +21,24 @@ export interface ODataProps {
 export interface IContainerProps {
     catalogId: string
     addToCatalog?: any
-    executeNodeAction?:(props: IEntityActionProps) => void 
+    executeNodeAction?: (props: IEntityActionProps) => void
 }
 
-export type CatalogTypes = "Song Catalog" | "Band Catalog" | "BandSong Catalog" | "None"
+export type CatalogTypes = "Song Catalog" | "Band Catalog" | "BandSong Catalog" | "Setlist Catalog" | "None"
 export const CatalogTypes: Record<CatalogTypes, CatalogTypes> = {
     "Song Catalog": "Song Catalog",
     "Band Catalog": "Band Catalog",
     "BandSong Catalog": "BandSong Catalog",
-    "None":"None"
+    "Setlist Catalog": "Setlist Catalog",
+    "None": "None"
 } as const
 
 
-export type NodeTypes = 'Edit'| 'Add'| 'Initial'
-export const NodeTypes: Record<NodeTypes, NodeTypes> = {
-    Edit: 'Edit',
-    Add: 'Add',
-    Initial: 'Initial'
-} as const
+// export type NodeTypes = 'Edit' | 'Add' | 'Initial'
+// export const NodeTypes: Record<NodeTypes, NodeTypes> = {
+//     Edit: 'Edit',
+//     Add: 'Add',
+//     Initial: 'Initial'
+// } as const
 
 

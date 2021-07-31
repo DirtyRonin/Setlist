@@ -1,4 +1,5 @@
 export * from "./songCatalogService"
 export * from "./bandCatalogService"
 export * from "./bandSongCatalogService"
+export * from "./setlistCatalogService"
 export * from "./userEpicServices"

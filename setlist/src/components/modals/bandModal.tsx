@@ -1,21 +1,20 @@
 import React from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 import { BandModalHtmlAttributesConfiguration } from "../../Configuration";
-import { IModal, ModalTypes, defaultModal, IBandEntityActionProps, IBand } from "../../models";
+import { ModalTypes, IBandEntityActionProps, IBand } from "../../models";
 import { Band } from "../../mapping";
 import { IModalBand } from "../../models/modals/modelBand";
-import { IsCatalog, IsModalReadonly } from "../../Util";
+import { IsModalReadonly } from "../../Util";
 
 export interface IBandModalComponent {
     modal: IModalBand
     popCatalogsOrder(): void
     executeBandModalAction(props: IBandEntityActionProps): void
-    catalog?: JSX.Element
 }
 
 export const BandModalComponent = (props: IBandModalComponent) => {
 
-    const { modal, popCatalogsOrder, executeBandModalAction, catalog } = props
+    const { modal, popCatalogsOrder, executeBandModalAction } = props
 
     const bandModalDef = BandModalHtmlAttributesConfiguration;
 

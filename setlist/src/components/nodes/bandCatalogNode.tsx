@@ -3,7 +3,7 @@ import { Container, Row, Col, Button, FormControlProps, Form } from "react-boots
 import { Draggable } from "react-beautiful-dnd";
 
 import { SongNodeContainer } from "../../styles";
-import { IBand, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, NodeTypes, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder, IComponentOrderActionProps } from "../../models";
+import { IBand, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder, IComponentOrderActionProps } from "../../models";
 import { IModalBand } from "../../models/modals/modelBand";
 import { BandCatalogNodeHtmlAttributesConfiguration } from "../../Configuration";
 import { BandSongCatalog, BandSong } from "../../mapping";

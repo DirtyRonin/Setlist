@@ -1,4 +1,4 @@
-import { Catalog, IFilterBandSongActionProps, IBandSong, IBandSongCatalog, ISong, INextLinkActionProps, IEntityActionProps, IBandSongEntityActionProps, IComponentOrder, DisplayIn, NodeTypes, IFilterBandSongActionResult } from "../../models";
+import { Catalog, IFilterBandSongActionProps, IBandSong, IBandSongCatalog, ISong, INextLinkActionProps, IEntityActionProps, IBandSongEntityActionProps, IComponentOrder, DisplayIn, IFilterBandSongActionResult } from "../../models";
 import { BandSongCatalog } from "../../mapping";
 import { IHashTable, QueryBuilder, IsMiminumStringLength } from "../../Util";
 import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
@@ -8,7 +8,7 @@ import { ReadBandSongsAsync, CreateBandSongAsync } from "..";
 export const createEmptyBandSongCatalog = (bandId: string): IComponentOrder => ({
     id: BandSongCatalog.GetCatalogId(bandId),
     displayIn: DisplayIn.Main,
-    value: BandSongCatalog.CreateAndUpdate(bandId, NodeTypes.Edit)
+    value: BandSongCatalog.CreateAndUpdate(bandId)
 });
 
 

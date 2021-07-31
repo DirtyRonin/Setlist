@@ -7,8 +7,8 @@ export class MapHelper<K, V>{
     }
 
     public static Create = <K, V>(map: Map<K, V>) => {
-        const uitl = new MapHelper<K, V>(map)
-        return uitl
+        const mapHelper = new MapHelper<K, V>(map)
+        return mapHelper
     }
 
     public AddMap = (nextMap: Map<K, V>): this => {

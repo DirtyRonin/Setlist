@@ -15,7 +15,7 @@ export type NameDefinition = {
     Name: string;
 };
 
-type EndpointFieldNames = "Songs" | "Bandsongs" | "Bands" | "Sets" | "SetSongs" | "Users" | "BandUsers";
+type EndpointFieldNames = "Songs" | "Bandsongs" | "Bands" | "Sets" | "SetSongs" | "Users" | "BandUsers" | "Setlist";
 
 export const EndpointPartialTypeDefinition: ConfigurationItemCollection<NameDefinition, EndpointFieldNames> = {
     Songs: { Name: "Songs" },
@@ -25,6 +25,7 @@ export const EndpointPartialTypeDefinition: ConfigurationItemCollection<NameDefi
     SetSongs: { Name: "SetSongs" },
     Users: { Name: "Users" },
     BandUsers: { Name: "BandUsers" },
+    Setlist: { Name: "Setlists" },
 };
 
 export type EndPointDefinition = NameDefinition & {
@@ -65,6 +66,10 @@ export const EndpointConfiguration: ConfigurationItemCollection<
     BandUsers: {
         Name: EndpointPartialTypeDefinition.BandUsers.Name,
         GetEndpointUrl: () => GetEndpointURL(EndpointPartialTypeDefinition.BandUsers.Name)
+    } as EndPointDefinition,
+    Setlist: {
+        Name: EndpointPartialTypeDefinition.Setlist.Name,
+        GetEndpointUrl: () => GetEndpointURL(EndpointPartialTypeDefinition.Setlist.Name)
     } as EndPointDefinition,
     
 

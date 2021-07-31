@@ -1,5 +1,5 @@
 import React from "react"
-import { Form, Row, Col, InputGroup, Button, FormControlProps, Navbar } from "react-bootstrap";
+import { Form, Col } from "react-bootstrap";
 import { FilterSongHtmlAttributesConfigurationType } from "../../Configuration";
 
 export const SongFilterTemplate = (html : FilterSongHtmlAttributesConfigurationType) => {

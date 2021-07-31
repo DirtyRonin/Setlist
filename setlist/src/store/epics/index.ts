@@ -1,4 +1,5 @@
 export * from "./catalogEpics/songCatalogEpics"
 export * from "./catalogEpics/bandCatalogEpics"
+export * from "./catalogEpics/setlistCatalogEpics"
 export * from "./bandSongCatalogEpics"
 export * from "./userEpics"

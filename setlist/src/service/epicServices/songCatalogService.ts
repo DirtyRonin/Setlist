@@ -1,6 +1,6 @@
 import { nameof } from "ts-simple-nameof"
 
-import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IComponentOrder, NodeTypes, IFilterSongActionResult, DisplayIn } from "../../models";
+import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IComponentOrder,  IFilterSongActionResult, DisplayIn } from "../../models";
 import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "..";
 import { SongCatalog } from "../../mapping";
 import { QueryBuilder, IsMiminumStringLength } from "../../Util";
@@ -9,7 +9,7 @@ import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 export const createEmptySongCatalog = (): IComponentOrder => ({
     id: SongCatalog.CatalogId,
     displayIn: DisplayIn.Main,
-    value: SongCatalog.CreateAndUpdate(NodeTypes.Edit)
+    value: SongCatalog.CreateAndUpdate()
 });
 
 export const fetchSongCatalogAsync = async (props: IFilterSongActionProps): Promise<IFilterSongActionResult> => {

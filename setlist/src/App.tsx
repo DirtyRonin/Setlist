@@ -4,7 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { DragDropContext } from "react-beautiful-dnd";
 
 import styled from "styled-components";
-import { CatalogTypes, IModalSong, IModalBandSong, DisplayIn, Catalog, IModal, ModalTypes, IComponentOrder, IBand, ISong, ICatalog, IBandSongCatalog } from "./models";
+import { CatalogTypes, IModalSong, IModalBandSong, DisplayIn, Catalog, IModal, ModalTypes, IComponentOrder, IBand, ISong, ICatalog, IBandSongCatalog, IModalSetlist } from "./models";
 
 
 import { AppProps } from "./store";
@@ -19,6 +19,8 @@ import SongCatalogContainer from "./store/containers/catalogs/SongCatalogContain
 import { CatalogModalComponent } from "./components/modals/catalogModal";
 import BandSongCatalogContainer from "./store/containers/catalogs/BandSongCatalogContainer";
 import { GUID_EMPTY } from "./Util";
+import SetlistCatalogContainer from "./store/containers/catalogs/SetlistCatalogContainer";
+import { SetlistModalComponent } from "./components/modals/setlistModal";
 
 const AppContainer = styled.div`
     display: flex;
@@ -35,6 +37,7 @@ export const App = (props: AppProps): JSX.Element => {
         songModalActionsProvider,
         bandModalActionsProvider,
         bandSongModalActionsProvider,
+        setlistModalActionsProvider,
 
         fetchBandSongCatalog,
         fetchBandSongCatalogNextLink,
@@ -44,6 +47,9 @@ export const App = (props: AppProps): JSX.Element => {
 
         openBandsCatalog,
         closeBandsCatalog,
+
+        openSetlistCatalog,
+        closeSetlistCatalog,
 
         popCatalogsOrder,
         setModal,
@@ -78,7 +84,9 @@ export const App = (props: AppProps): JSX.Element => {
             //     const bandId = ""
             //     return <BandSongCatalogContainer selectedNode={undefined} bandId={bandId} />
             // }
-
+            else if (value.catalogInModal === CatalogTypes["Setlist Catalog"]) {
+                return <SetlistCatalogContainer />
+            }
             return <div></div>
 
         }
@@ -93,6 +101,9 @@ export const App = (props: AppProps): JSX.Element => {
             else if (value.CatalogType === CatalogTypes["BandSong Catalog"]) {
                 const bandId = (value as IBandSongCatalog).BandId
                 return <BandSongCatalogContainer selectedNode={undefined}  />
+            }
+            else if (value.CatalogType === CatalogTypes["Setlist Catalog"]) {
+                return <SetlistCatalogContainer />
             }
 
             return <div></div>
@@ -179,6 +190,13 @@ export const App = (props: AppProps): JSX.Element => {
                         executeBandSongModalAction={bandSongModalActionsProvider[modal.type]}
                     />)
                 }
+                else if (modal.catalogType === CatalogTypes["Setlist Catalog"]) {
+                    components.push(<SetlistModalComponent
+                        modal={modal as IModalSetlist}
+                        popCatalogsOrder={popCatalogsOrder}
+                        executeSetlistModalAction={setlistModalActionsProvider[modal.type]}
+                    />)
+                }
 
             }
 
@@ -198,6 +216,11 @@ export const App = (props: AppProps): JSX.Element => {
 
                     openBandsCatalog={openBandsCatalog}
                     closeBandsCatalog={closeBandsCatalog}
+
+                    openSetlistCatalog={openSetlistCatalog}
+                    closeSetlistCatalog={closeSetlistCatalog}
+
+
                 />
                 <Row>
                     <Col md={1}></Col>

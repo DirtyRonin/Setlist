@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Navbar, Nav, Form, FormControl, Col } from "react-bootstrap";
-import { IStatusSongCatalogActionProps, CatalogTypes, IStatusBandCatalogActionProps, DisplayIn, IComponentOrder, NodeTypes } from "../../models";
-import { SongCatalog, BandCatalog } from "../../mapping";
+import { IStatusSongCatalogActionProps, CatalogTypes, IStatusBandCatalogActionProps, DisplayIn, IComponentOrder } from "../../models";
+import { SongCatalog, BandCatalog, SetlistCatalog } from "../../mapping";
 import GlobalBandFilter from "../../store/containers/layoutContainers/GlobalBandFilterContainer"
 
 export interface IMenuTopProps {
@@ -10,9 +10,8 @@ export interface IMenuTopProps {
     closeSongsCatalog(): void
     openBandsCatalog(): void
     closeBandsCatalog(): void
-
-    
-
+    openSetlistCatalog(): void
+    closeSetlistCatalog(): void
 }
 
 const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
@@ -23,10 +22,13 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
         openSongsCatalog,
         openBandsCatalog,
         closeBandsCatalog,
+        openSetlistCatalog,
+        closeSetlistCatalog
     } = props
 
     const songCatalogMenuId = `MenuId_${SongCatalog.CatalogId}`
     const bandCatalogMenuId = `MenuId_${BandCatalog.CatalogId}`
+    const setlistCatalogMenuId = `MenuId_${SetlistCatalog.CatalogId}`
 
 
     const isCatalogOpen = (catalogId: string): boolean =>
@@ -35,13 +37,14 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
 
     const isSongCatalogOpen = isCatalogOpen(SongCatalog.CatalogId)
     const isBandCatalogOpen = isCatalogOpen(BandCatalog.CatalogId)
+    const isSetlistCatalogOpen = isCatalogOpen(SetlistCatalog.CatalogId)
 
     const handleSongCatalogStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
 
         const elements: any = (event.target as any).form.elements;
         const show: boolean = elements[songCatalogMenuId].checked
 
-        const props: IStatusSongCatalogActionProps = { show, catalogType: CatalogTypes["Song Catalog"], catalogId: SongCatalog.CatalogId, displayIn: DisplayIn.Main, nodeType: NodeTypes.Edit }
+        const props: IStatusSongCatalogActionProps = { show, catalogType: CatalogTypes["Song Catalog"], catalogId: SongCatalog.CatalogId, displayIn: DisplayIn.Main }
         if (props.show) {
             openSongsCatalog()
         }
@@ -55,12 +58,25 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
         const elements: any = (event.target as any).form.elements;
         const show: boolean = elements[bandCatalogMenuId].checked
 
-        const props: IStatusBandCatalogActionProps = { show, catalogType: CatalogTypes["Band Catalog"], catalogId: BandCatalog.CatalogId, displayIn: DisplayIn.Main, nodeType: NodeTypes.Edit }
+        const props: IStatusBandCatalogActionProps = { show, catalogType: CatalogTypes["Band Catalog"], catalogId: BandCatalog.CatalogId, displayIn: DisplayIn.Main }
         if (props.show) {
             openBandsCatalog()
         }
         else {
             closeBandsCatalog();
+        }
+    }
+
+    const handleSetlistCatalogStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
+
+        const elements: any = (event.target as any).form.elements;
+        const show: boolean = elements[setlistCatalogMenuId].checked
+
+        if (show) {
+            openSetlistCatalog()
+        }
+        else {
+            closeSetlistCatalog();
         }
     }
 
@@ -79,6 +95,11 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
                     <Form.Row>
                         <Form.Group as={Col} controlId={bandCatalogMenuId}  >
                             <Form.Check type="switch" checked={isBandCatalogOpen} label="Bands" onChange={handleBandCatalogStatus} />
+                        </Form.Group>
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Group as={Col} controlId={setlistCatalogMenuId}  >
+                            <Form.Check type="switch" checked={isSetlistCatalogOpen} label="Setlist" onChange={handleSetlistCatalogStatus} />
                         </Form.Group>
                     </Form.Row>
 
