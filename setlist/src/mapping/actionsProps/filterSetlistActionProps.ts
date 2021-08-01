@@ -1,4 +1,3 @@
-import { filter } from "rxjs/operators";
 import { IFilterSetlistActionProps, ISetlistCatalog, ISetlistFilter } from "../../models";
 
 export class FilterSetlistActionProps implements IFilterSetlistActionProps {
@@ -12,7 +11,10 @@ export class FilterSetlistActionProps implements IFilterSetlistActionProps {
         this.refresh = refresh
     }
 
-    public static Default = (setlistCatalogId: string = ""): IFilterSetlistActionProps => 
+    public static Create = ({ setlistCatalogId, filter, refresh }: { setlistCatalogId: string; filter: ISetlistFilter; refresh: boolean; }): IFilterSetlistActionProps =>
+        new FilterSetlistActionProps({ setlistCatalogId, filter, refresh })
+
+    public static Default = (setlistCatalogId: string = ""): IFilterSetlistActionProps =>
         FilterSetlistActionProps.Create(
             {
                 setlistCatalogId,
@@ -21,9 +23,6 @@ export class FilterSetlistActionProps implements IFilterSetlistActionProps {
                 },
                 refresh: true
             })
-
-    public static Create = ({ setlistCatalogId, filter, refresh }: { setlistCatalogId: string; filter: ISetlistFilter; refresh: boolean; }): IFilterSetlistActionProps =>
-        new FilterSetlistActionProps({ setlistCatalogId, filter, refresh })
 
     public static CreateFromCatalog = (setlistCatalog: ISetlistCatalog): IFilterSetlistActionProps => {
         const { Id, Filter, Refresh } = setlistCatalog;

@@ -159,5 +159,26 @@ export const FilterSetlistHtmlAttributesConfiguration: ConfigurationItemCollecti
     FormHtmlAttributesDefinition,
     SetlistBandComponentNames
 > = {
-    SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterBand_SearchTitle", ControlId: "FilterBand_SearchTitle" },
+    SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterSetlist_SearchTitle", ControlId: "FilterSetlist_SearchTitle" },
+}
+
+
+type SetlistSongCatalogComponentNames = "ShowAddSetlistSongCheckBox" | "Navbar" | "NodeList"
+
+export const SetlistSongCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    SetlistSongCatalogComponentNames
+> = {
+    ShowAddSetlistSongCheckBox:{ Label: "Add SetlistSong", Placeholder: "", Data_TestId: "SetlistSongCatalog_ShowAddSetlistSong", ControlId: "SetlistSongCatalog_ShowAddSetlistSong" },
+    Navbar: { Label: "", Placeholder: "", Data_TestId: "SetlistSongCatalog_Options_responsiveNavbar", ControlId: "SetlistSongCatalog_Options_responsiveNavbar" },
+    NodeList: { Label: "", Placeholder: "", Data_TestId: "SetlistSongCatalog_NodeList", ControlId: "SetlistSongCatalog_NodeList" },
+}
+
+type SetlistSongBandComponentNames = "SearchTitleInput";
+
+export const FilterSetlistSongHtmlAttributesConfiguration: ConfigurationItemCollection<
+FormHtmlAttributesDefinition,
+SetlistSongBandComponentNames
+> = {
+SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterSetlistSong_SearchTitle", ControlId: "FilterSetlistSong_SearchTitle" },
 }

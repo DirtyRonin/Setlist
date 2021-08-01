@@ -3,8 +3,7 @@ import { nameof } from "ts-simple-nameof"
 import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IComponentOrder,  IFilterSongActionResult, DisplayIn } from "../../models";
 import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "..";
 import { SongCatalog } from "../../mapping";
-import { QueryBuilder, IsMiminumStringLength } from "../../Util";
-import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
+import { QueryBuilder, IsMiminumStringLength,FilterBuilder } from "../../Util";
 
 export const createEmptySongCatalog = (): IComponentOrder => ({
     id: SongCatalog.CatalogId,

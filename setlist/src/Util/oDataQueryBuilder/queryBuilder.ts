@@ -9,7 +9,7 @@ import { QueryFragment } from './queryFragment';
 type filterExpressionType = string | number | boolean | Date;
 
 
-export default class FilterBuilder {
+export class FilterBuilder {
     private fragments: QueryFragment[] = [];
 
     concatInValues = (values: filterExpressionType[]): string =>

@@ -21,6 +21,7 @@ import BandSongCatalogContainer from "./store/containers/catalogs/BandSongCatalo
 import { GUID_EMPTY } from "./Util";
 import SetlistCatalogContainer from "./store/containers/catalogs/SetlistCatalogContainer";
 import { SetlistModalComponent } from "./components/modals/setlistModal";
+import SetlistSongCatalogContainer from "./store/containers/catalogs/SetlistSongCatalogContainer";
 
 const AppContainer = styled.div`
     display: flex;
@@ -50,6 +51,9 @@ export const App = (props: AppProps): JSX.Element => {
 
         openSetlistCatalog,
         closeSetlistCatalog,
+
+        openSetlistSongCatalog,
+        closeSetlistSongCatalog,
 
         popCatalogsOrder,
         setModal,
@@ -87,6 +91,9 @@ export const App = (props: AppProps): JSX.Element => {
             else if (value.catalogInModal === CatalogTypes["Setlist Catalog"]) {
                 return <SetlistCatalogContainer />
             }
+            else if (value.catalogInModal === CatalogTypes["SetlistSong Catalog"]) {
+                return <SetlistSongCatalogContainer />
+            }
             return <div></div>
 
         }
@@ -104,6 +111,9 @@ export const App = (props: AppProps): JSX.Element => {
             }
             else if (value.CatalogType === CatalogTypes["Setlist Catalog"]) {
                 return <SetlistCatalogContainer />
+            }
+            else if (value.CatalogType === CatalogTypes["SetlistSong Catalog"]) {
+                return <SetlistSongCatalogContainer />
             }
 
             return <div></div>
@@ -219,6 +229,9 @@ export const App = (props: AppProps): JSX.Element => {
 
                     openSetlistCatalog={openSetlistCatalog}
                     closeSetlistCatalog={closeSetlistCatalog}
+
+                    openSetlistSongCatalog={openSetlistSongCatalog}
+                    closeSetlistSongCatalog={closeSetlistSongCatalog}
 
 
                 />

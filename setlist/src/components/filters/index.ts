@@ -1,3 +1,5 @@
 export * from "./songFilter"
 export * from "./bandFilter"
+export * from "./bandSongFilter"
 export * from "./setlistFilter"
+export * from "./setlistSongFilter"

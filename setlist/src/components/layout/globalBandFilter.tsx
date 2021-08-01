@@ -5,9 +5,8 @@ import { useState, useRef } from "react";
 import { FormControl, Dropdown, FormControlProps } from "react-bootstrap";
 
 import { DropDownMenuContainer } from "../../styles";
-import { GUID_EMPTY, IHashTable, IsMiminumStringLength, QueryBuilder } from "../../Util";
+import { GUID_EMPTY, IHashTable, IsMiminumStringLength, QueryBuilder,FilterBuilder } from "../../Util";
 import { GlobalBandFilterProps } from "../../store/containers/layoutContainers/GlobalBandFilterContainer"
-import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 import { nameof } from "ts-simple-nameof";
 import { IBand, IBandUser } from "../../models";
 import { ReadBandUsersAsync } from "../../service";

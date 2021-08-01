@@ -35,6 +35,9 @@ interface IAppConnectedDispatch {
     openSetlistCatalog(): void
     closeSetlistCatalog(): void
 
+    openSetlistSongCatalog(): void
+    closeSetlistSongCatalog(): void
+
     setModal(props: IModal): void
     songModalActionsProvider: songModalActions
     bandModalActionsProvider: bandModalActions
@@ -84,6 +87,9 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         openSetlistCatalog: () => dispatch(Action.openSetlistsCatalog()),
         closeSetlistCatalog: () => dispatch(Action.closeSetlistsCatalog()),
 
+        openSetlistSongCatalog: () => dispatch(Action.openSetlistSongCatalog()),
+        closeSetlistSongCatalog: () => dispatch(Action.closeSetlistSongCatalog()),
+
         setModal: (props: IModal) => dispatch(Action.setModal(props)),
         songModalActionsProvider: {
             None: () => { },
@@ -107,7 +113,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
             None: () => { },
             New: () => { } /*dispatch(Action.addBandSongToCatalog.request(props))*/,
             Edit: (props: IEntityActionProps) => dispatch(Action.addBandSongToCatalog.request(props)),
-            Remove: (props: IEntityActionProps) => {},
+            Remove: (props: IEntityActionProps) => { },
             Read: () => dispatch(Action.readBandSongInCatalog()),
             Add: () => { },
             ShowCatalog: () => { }
@@ -115,8 +121,8 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         setlistModalActionsProvider: {
             None: () => { },
             New: (props: ISetlistEntityActionProps) => dispatch(Action.addSetListToCatalog.request(props)),
-            Edit: (props: ISetlistEntityActionProps) => {},
-            Remove: (props: ISetlistEntityActionProps) => {},
+            Edit: (props: ISetlistEntityActionProps) => { },
+            Remove: (props: ISetlistEntityActionProps) => { },
             Read: () => dispatch(Action.readSetlistInCatalog()),
             Add: () => { },
             ShowCatalog: () => { }

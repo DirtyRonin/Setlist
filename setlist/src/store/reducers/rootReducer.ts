@@ -7,9 +7,10 @@ import bandCatalogReducers from "./catalogReducers/bandCatalogReducer"
 import songCatalogReducers from "./catalogReducers/songCatalogReducer"
 import bandSongCatalogReducers from "./catalogReducers/bandSongCatalogReducer"
 import setlistCatalogReducers from "./catalogReducers/setlistCatalogReducer"
+import setlistSongCatalogReducers from "./catalogReducers/setlistSongCatalogReducer"
 import userReducers from "./userReducer"
 import dropDownFilterReducer from "./layoutReducers/GlobalBandFilterReducers"
-import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics, userEpics, setlistCatalogEpics } from "../epics"
+import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics, userEpics, setlistCatalogEpics,setlistSongCatalogEpics } from "../epics"
 import { commonCatalogEpics } from '../epics/commonEpics';
 
 export const rootEpic = combineEpics(
@@ -17,6 +18,7 @@ export const rootEpic = combineEpics(
   bandCatalogEpics,
   bandSongCatalogEpics,
   setlistCatalogEpics,
+  setlistSongCatalogEpics,
   commonCatalogEpics,
   userEpics
 )
@@ -27,6 +29,7 @@ export const rootReducer = combineReducers({
   songCatalogReducers,
   bandSongCatalogReducers,
   setlistCatalogReducers,
+  setlistSongCatalogReducers,
   dropDownFilterReducer,
   userReducers
 });

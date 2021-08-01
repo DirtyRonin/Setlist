@@ -1,9 +1,8 @@
-import { Catalog, IFilterBandSongActionProps, IBandSong, IBandSongCatalog, ISong, INextLinkActionProps, IEntityActionProps, IBandSongEntityActionProps, IComponentOrder, DisplayIn, IFilterBandSongActionResult } from "../../models";
+import { IFilterBandSongActionProps, IBandSong, ISong, INextLinkActionProps, IComponentOrder, DisplayIn, IFilterBandSongActionResult } from "../../models";
 import { BandSongCatalog } from "../../mapping";
-import { IHashTable, QueryBuilder, IsMiminumStringLength } from "../../Util";
-import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
+import {  QueryBuilder, IsMiminumStringLength,FilterBuilder } from "../../Util";
 import { nameof } from "ts-simple-nameof";
-import { ReadBandSongsAsync, CreateBandSongAsync } from "..";
+import { ReadBandSongsAsync } from "..";
 
 export const createEmptyBandSongCatalog = (bandId: string): IComponentOrder => ({
     id: BandSongCatalog.GetCatalogId(bandId),

@@ -1,5 +1,5 @@
 import { IModal, ModalTypes } from ".";
-import { IEntityActionProps, ISetlist, ISetlistEntityActionProps } from "..";
+import { ISetlist, ISetlistEntityActionProps } from "..";
 
 export interface IModalSetlist extends IModal {
     value: ISetlist

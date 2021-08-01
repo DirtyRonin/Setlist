@@ -1,8 +1,7 @@
 import { ICatalogState } from "../../store";
 import { FilterBandActionProps, BandCatalog } from "../../mapping";
-import { IHashTable, QueryBuilder, IsMiminumStringLength, HashTableHelper } from "../../Util";
+import { IHashTable, QueryBuilder, IsMiminumStringLength, FilterBuilder } from "../../Util";
 import { Catalog, IFilterBandActionProps, IBand, IBandCatalog, INextLinkActionProps, IEntityActionProps, IBandEntityActionProps, IStatusBandCatalogActionProps, IComponentOrder, DisplayIn, IFilterBandActionResult } from "../../models";
-import FilterBuilder from "../../Util/oDataQueryBuilder/queryBuilder";
 import { nameof } from "ts-simple-nameof";
 import { ReadBandsAsync, CreateBandAsync, UpdateBandAsync, DeleteBandAsync } from "..";
 
