@@ -15,7 +15,7 @@ export type NameDefinition = {
     Name: string;
 };
 
-type EndpointFieldNames = "Songs" | "Bandsongs" | "Bands" | "Sets" | "SetSongs" | "Users" | "BandUsers" | "Setlist" | "SetlistSong";
+type EndpointFieldNames = "Songs" | "Bandsongs" | "Bands" | "Sets" | "SetSongs" | "Users" | "BandUsers" | "Setlist" | "SetlistSong" | "Locations" | "CustomEvents";
 
 export const EndpointPartialTypeDefinition: ConfigurationItemCollection<NameDefinition, EndpointFieldNames> = {
     Songs: { Name: "Songs" },
@@ -27,6 +27,8 @@ export const EndpointPartialTypeDefinition: ConfigurationItemCollection<NameDefi
     BandUsers: { Name: "BandUsers" },
     Setlist: { Name: "Setlists" },
     SetlistSong: { Name: "SetlistSongs" },
+    Locations: { Name: "Locations" },
+    CustomEvents: { Name: "CustomEvents" },
 };
 
 export type EndPointDefinition = NameDefinition & {
@@ -76,6 +78,14 @@ export const EndpointConfiguration: ConfigurationItemCollection<
         Name: EndpointPartialTypeDefinition.SetlistSong.Name,
         GetEndpointUrl: () => GetEndpointURL(EndpointPartialTypeDefinition.SetlistSong.Name)
     } as EndPointDefinition,
-    
+    Locations: {
+        Name: EndpointPartialTypeDefinition.Locations.Name,
+        GetEndpointUrl: () => GetEndpointURL(EndpointPartialTypeDefinition.Locations.Name)
+    } as EndPointDefinition,
+    CustomEvents: {
+        Name: EndpointPartialTypeDefinition.CustomEvents.Name,
+        GetEndpointUrl: () => GetEndpointURL(EndpointPartialTypeDefinition.CustomEvents.Name)
+    } as EndPointDefinition,
+
 
 };

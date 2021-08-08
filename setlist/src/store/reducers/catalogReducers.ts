@@ -66,6 +66,10 @@ export default combineReducers<CatalogState, CatalogActions>({
                 return {
                     ...state, componentsOrder: action.payload
                 }
+            case getType(catalogActions.pushCatalogComponentOrder.success):
+                return {
+                    ...state, componentsOrder: action.payload
+                }
 
             case getType(catalogActions.popComponentOrder.success):
                 return {

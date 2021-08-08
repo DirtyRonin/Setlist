@@ -1,4 +1,4 @@
-import { CatalogTypes, Catalog, IContainerProps, IBand, ISong, ISetlistSong } from "..";
+import { CatalogTypes, Catalog, IContainerProps, IBand, ISong, ISetlistSong, ILocation } from "..";
 
 export type ModalTypes = "None" | "New" | "Edit" | "Remove" | "Read" | "Add" | "ShowCatalog"
 export const ModalTypes = {
@@ -21,7 +21,7 @@ export interface IModal {
     catalogId: string
     catalogType: CatalogTypes
     catalogInModal: CatalogTypes
-    value?: ISong | IBand | ISetlistSong
+    value?: ISong | IBand | ISetlistSong | ILocation
 }
 
 export const defaultModal: IModal = {

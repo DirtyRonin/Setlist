@@ -8,6 +8,9 @@ export const openBandsCatalog = createAction(
 export const closeBandsCatalog = createAction(
     "CLOSE_BAND_CATALOG",
 )();
+export const refreshBandsCatalog = createAction(
+    "REFRESH_BAND_CATALOG",
+)();
 
 
 

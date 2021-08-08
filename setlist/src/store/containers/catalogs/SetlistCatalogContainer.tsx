@@ -12,7 +12,7 @@ interface IConnectedDispatch {
     setSetlistFilter:(props: IFilterSetlistActionProps) => void
     fetchSetlistCatalog: (props: IFilterSetlistActionProps) => void
     fetchSetlistCatalogNextLink: (props: INextLinkActionProps) => void
-    pushCatalogsOrder: (props: IComponentOrderActionProps) => void
+    pushCatalogsOrder: (props: IComponentOrderActionProps) => void,
 }
 
 interface IState {
@@ -32,7 +32,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     setSetlistFilter: (props: IFilterSetlistActionProps) => dispatch(SetlistAction.setSetlistFilter(props)),
     pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),
     fetchSetlistCatalog:(props: IFilterSetlistActionProps) => dispatch(SetlistAction.fetchSetlistCatalog.request(props)),
-    fetchSetlistCatalogNextLink:(props : INextLinkActionProps) => dispatch(SetlistAction.fetchSetlistCatalogNextLink.request(props))
+    fetchSetlistCatalogNextLink:(props : INextLinkActionProps) => dispatch(SetlistAction.fetchSetlistCatalogNextLink.request(props)),
 })
 
 const SetlistCatalog = (props: SetlistCatalogProps) => (

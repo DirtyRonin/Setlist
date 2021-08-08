@@ -1,9 +1,16 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { Draggable } from "react-beautiful-dnd";
 
 import { ISong, ModalTypes, IModalSong, CatalogTypes, IComponentOrderActionProps, DisplayIn, IComponentOrder } from "../../models";
 import { SongNodeContainer } from "../../styles";
+
+import {
+    Menu,
+    MenuItem,
+    MenuDivider,
+    MenuHeader
+} from '@szhsin/react-menu';
+// import '@szhsin/react-menu/dist/index.css';
 
 
 
@@ -21,7 +28,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
         pushCatalogsOrder,
     } = props;
 
-    const createModal = (type: ModalTypes, catalogInModal : CatalogTypes = CatalogTypes["None"]) => {
+    const createModal = (type: ModalTypes, catalogInModal: CatalogTypes = CatalogTypes["None"]) => {
         const modal: IModalSong = {
             show: true,
             catalogId: songListId,
@@ -45,52 +52,43 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const handleShowEditSong = () => createModal(ModalTypes.Edit)
     const handleShowReadSong = () => createModal(ModalTypes.Read)
     const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
-    const handleShowAddSong = () => createModal(ModalTypes.Add,CatalogTypes["Band Catalog"])
+    const handleShowAddSong = () => createModal(ModalTypes.Add, CatalogTypes["Band Catalog"])
 
     const uniqueNodeId = `${songListId}-${song.Id}-${index}`
 
     return (
-        <Draggable draggableId={uniqueNodeId} index={index}>
-            {provided => (
-                <Container>
-                    <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+        <Container>
+            <SongNodeContainer >
+                <Row>
+                    <Col xs="8" >
                         <Row>
-                            <Col xs="6" >
-                                <Row>
-                                    <Col>
-                                        <label>{song.Title}</label>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <label>{song.Artist}</label>
-                                    </Col>
-                                </Row>
-                            </Col >
-                            <Col xs='6' >
-                                <Row>
-                                    <Col xs="6">
-                                        <Button variant="secondary" onClick={handleShowReadSong}>{ModalTypes.Read}</Button>
-                                    </Col>
-                                    <Col xs="6">
-                                        <Button variant="secondary" onClick={handleShowEditSong}>{ModalTypes.Edit}</Button>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs="6">
-                                        <Button variant="secondary" onClick={handleShowDeleteSong}>{ModalTypes.Remove}</Button>
-                                    </Col>
-                                    <Col xs="6">
-                                        <Button variant="secondary" onClick={handleShowAddSong}>...</Button>
-                                    </Col>
-                                </Row>
+                            <Col>
+                                <label>{song.Title}</label>
                             </Col>
-
                         </Row>
-                    </SongNodeContainer>
-                </Container>
-            )}
-        </Draggable>
+                        <Row>
+                            <Col>
+                                <label>{song.Artist}</label>
+                            </Col>
+                        </Row>
+                    </Col >
+                    <Col xs='4' >
+                        <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
+                            <MenuItem value="AddBand" onClick={handleShowAddSong} >Add to Band Song</MenuItem>
+                            <MenuItem value="AddSong"  >Add to Setlist</MenuItem>
+
+                            <MenuDivider />
+
+                            <MenuHeader>Edit</MenuHeader>
+                            <MenuItem value="Read" onClick={handleShowReadSong} >{ModalTypes.Read}</MenuItem>
+                            <MenuItem value="Edit" onClick={handleShowEditSong} >{ModalTypes.Edit}</MenuItem>
+                            <MenuItem value="Remove" onClick={handleShowDeleteSong} >{ModalTypes.Remove}</MenuItem>
+                        </Menu>
+                    </Col>
+
+                </Row>
+            </SongNodeContainer>
+        </Container>
     );
 };
 

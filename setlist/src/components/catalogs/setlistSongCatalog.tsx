@@ -1,6 +1,5 @@
 import React from "react";
 import { useEffect } from "react";
-import { Droppable } from "react-beautiful-dnd";
 import { Col, Container, Navbar, Row, Form, FormControlProps } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { SetlistSongCatalogHtmlAttributesConfiguration } from "../../Configuration";
@@ -40,26 +39,24 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                     <ContainerCss data-testid={setlistSongCatalog.Id}>
                         <Row>
                             <Col>
-                                <Droppable droppableId={setlistSongCatalog.Id}>
-                                    {provided => (
-                                        <NodeListCss id={setlistSongCatalogDef.NodeList.ControlId} ref={provided.innerRef} {...provided.droppableProps}>
-                                            <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                                <Navbar.Brand >{setlistSongCatalog.Title}</Navbar.Brand>
+                                <NodeListCss id={setlistSongCatalogDef.NodeList.ControlId} >
+                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
+                                        <Navbar.Brand >{setlistSongCatalog.Title}</Navbar.Brand>
 
-                                                <Navbar.Toggle aria-controls={setlistSongCatalogDef.Navbar.ControlId} />
-                                                <Navbar.Collapse id={setlistSongCatalogDef.Navbar.ControlId}>
-                                                    <Row>
-                                                        <Col sm="6">
-                                                            <SongFilterCss>
-                                                                <SetlistSongFilterComponent
-                                                                    CatalogId={setlistSongCatalog.Id}
-                                                                    Filter={setlistSongCatalog.Filter}
-                                                                    setSetlistSongFilter={setSetlistSongFilter}
-                                                                />
-                                                            </SongFilterCss>
-                                                        </Col>
-                                                        <Col sm="6">
-                                                            {/* <Form onChange={handleShowAddSetlist}>
+                                        <Navbar.Toggle aria-controls={setlistSongCatalogDef.Navbar.ControlId} />
+                                        <Navbar.Collapse id={setlistSongCatalogDef.Navbar.ControlId}>
+                                            <Row>
+                                                <Col sm="6">
+                                                    <SongFilterCss>
+                                                        <SetlistSongFilterComponent
+                                                            CatalogId={setlistSongCatalog.Id}
+                                                            Filter={setlistSongCatalog.Filter}
+                                                            setSetlistSongFilter={setSetlistSongFilter}
+                                                        />
+                                                    </SongFilterCss>
+                                                </Col>
+                                                <Col sm="6">
+                                                    {/* <Form onChange={handleShowAddSetlist}>
                                                                 <Form.Row>
                                                                     <Form.Group as={Col} controlId={setlistSongCatalogDef.ShowAddSetlistCheckBox.ControlId}>
                                                                         <Form.Check type="switch" checked={showModal} label={setlistSongCatalogDef.ShowAddSetlistCheckBox.Label} />
@@ -67,39 +64,35 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                                                                 </Form.Row>
                                                             </Form> */}
 
-                                                        </Col>
-                                                    </Row>
-                                                </Navbar.Collapse>
+                                                </Col>
+                                            </Row>
+                                        </Navbar.Collapse>
 
-                                            </Navbar>
+                                    </Navbar>
 
-                                            <InfiniteScroll
-                                                dataLength={setlistSongCatalog.Values.size}
-                                                next={handleScrollDown}
-                                                hasMore={setlistSongCatalog.Values.size < setlistSongCatalog.OData.Count}
-                                                loader={<h4>Loading...</h4>}
-                                                endMessage={
-                                                    <p style={{ textAlign: 'center' }}>
-                                                        <b>Yay! You have seen it all</b>
-                                                    </p>
-                                                }
-                                                scrollableTarget={setlistSongCatalogDef.NodeList.ControlId}
-                                            >
-                                                {Array.from(setlistSongCatalog.Values.values()).map((setlistSong, index) => (
-                                                    <SetlistSongCatalogNodeComponent
-                                                        setlistSong={setlistSong}
-                                                        index={index}
-                                                        catalogId={setlistSongCatalog.Id}
-                                                        pushCatalogsOrder={pushCatalogsOrder}
-                                                        key={setlistSong.Id}
-                                                    />
-                                                ))}
-                                            </InfiniteScroll>
-
-                                            {provided.placeholder}
-                                        </NodeListCss>
-                                    )}
-                                </Droppable>
+                                    <InfiniteScroll
+                                        dataLength={setlistSongCatalog.Values.size}
+                                        next={handleScrollDown}
+                                        hasMore={setlistSongCatalog.Values.size < setlistSongCatalog.OData.Count}
+                                        loader={<h4>Loading...</h4>}
+                                        endMessage={
+                                            <p style={{ textAlign: 'center' }}>
+                                                <b>Yay! You have seen it all</b>
+                                            </p>
+                                        }
+                                        scrollableTarget={setlistSongCatalogDef.NodeList.ControlId}
+                                    >
+                                        {Array.from(setlistSongCatalog.Values.values()).map((setlistSong, index) => (
+                                            <SetlistSongCatalogNodeComponent
+                                                setlistSong={setlistSong}
+                                                index={index}
+                                                catalogId={setlistSongCatalog.Id}
+                                                pushCatalogsOrder={pushCatalogsOrder}
+                                                key={setlistSong.Id}
+                                            />
+                                        ))}
+                                    </InfiniteScroll>
+                                </NodeListCss>
                                 {setlistSongCatalog.OData.Count}
                             </Col>
                         </Row>

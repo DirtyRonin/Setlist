@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 
-import { Droppable } from "react-beautiful-dnd";
 import { Form, FormControlProps, Col, Row, Navbar, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -19,6 +18,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
         fetchSongCatalog,
         fetchSongCatalogNextLink,
         pushCatalogsOrder,
+
         showModal
     } = props;
 
@@ -50,7 +50,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
             catalogType: CatalogTypes["Song Catalog"],
             type: "New",
             value: Song.EmptySong(),
-            catalogInModal:CatalogTypes["None"]
+            catalogInModal: CatalogTypes["None"]
         }
 
         const order: IComponentOrderActionProps = {
@@ -72,62 +72,56 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                     <ContainerCss data-testid={songCatalog.Id}>
                         <Row>
                             <Col>
-                                <Droppable droppableId={songCatalog.Id}>
-                                    {provided => (
-                                        <NodeListCss id={songCatalogDef.NodeList.ControlId} ref={provided.innerRef} {...provided.droppableProps}>
-                                            <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                                <Navbar.Brand >{songCatalog.Title}</Navbar.Brand>
-                                                <Navbar.Toggle aria-controls={songCatalogDef.Navbar.ControlId} />
-                                                <Navbar.Collapse id={songCatalogDef.Navbar.ControlId}>
-                                                    <Row>
-                                                        <Col sm="6">
-                                                            <SongFilterCss>
-                                                                <SongFilterComponent
-                                                                    CatalogId={songCatalog.Id}
-                                                                    Filter={songCatalog.Filter}
-                                                                    FetchSongCatalog={setSongFilter}
-                                                                />
-                                                            </SongFilterCss>
-                                                        </Col>
-                                                        <Col sm="6">
-                                                            <Form onChange={handleShowAddSong}>
-                                                                <Form.Row>
-                                                                    <Form.Group as={Col} controlId={songCatalogDef.ShowAddSongCheckBox.ControlId}>
-                                                                        <Form.Check type="switch" checked={showModal} label={songCatalogDef.ShowAddSongCheckBox.Label} />
-                                                                    </Form.Group>
-                                                                </Form.Row>
-                                                            </Form>
-                                                        </Col>
-                                                    </Row>
-                                                </Navbar.Collapse>
-                                            </Navbar>
-                                            <InfiniteScroll
-                                                dataLength={songCatalog.Values.size}
-                                                next={handleScrollDown}
-                                                hasMore={songCatalog.Values.size < songCatalog.OData.Count}
-                                                loader={<h4>Loading...</h4>}
-                                                endMessage={
-                                                    <p style={{ textAlign: 'center' }}>
-                                                        <b>Yay! You have seen it all</b>
-                                                    </p>
-                                                }
-                                                scrollableTarget={songCatalogDef.NodeList.ControlId}
-                                            >
-                                                {Array.from(songCatalog.Values.values()).map((song, index) => (
-                                                    <SongCatalogNodeComponent
-                                                        pushCatalogsOrder={pushCatalogsOrder}
-                                                        songListId={songCatalog.Id}
-                                                        key={song.Id}
-                                                        song={song}
-                                                        index={index}
-                                                    />
-                                                ))}
-                                            </InfiniteScroll>
-
-                                            {provided.placeholder}
-                                        </NodeListCss>
-                                    )}
-                                </Droppable>
+                                <NodeListCss id={songCatalogDef.NodeList.ControlId} >
+                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
+                                        <Navbar.Brand >{songCatalog.Title}</Navbar.Brand>
+                                        <Navbar.Toggle aria-controls={songCatalogDef.Navbar.ControlId} />
+                                        <Navbar.Collapse id={songCatalogDef.Navbar.ControlId}>
+                                            <Row>
+                                                <Col sm="6">
+                                                    <SongFilterCss>
+                                                        <SongFilterComponent
+                                                            CatalogId={songCatalog.Id}
+                                                            Filter={songCatalog.Filter}
+                                                            FetchSongCatalog={setSongFilter}
+                                                        />
+                                                    </SongFilterCss>
+                                                </Col>
+                                                <Col sm="6">
+                                                    <Form onChange={handleShowAddSong}>
+                                                        <Form.Row>
+                                                            <Form.Group as={Col} controlId={songCatalogDef.ShowAddSongCheckBox.ControlId}>
+                                                                <Form.Check type="switch" checked={showModal} label={songCatalogDef.ShowAddSongCheckBox.Label} />
+                                                            </Form.Group>
+                                                        </Form.Row>
+                                                    </Form>
+                                                </Col>
+                                            </Row>
+                                        </Navbar.Collapse>
+                                    </Navbar>
+                                    <InfiniteScroll
+                                        dataLength={songCatalog.Values.size}
+                                        next={handleScrollDown}
+                                        hasMore={songCatalog.Values.size < songCatalog.OData.Count}
+                                        loader={<h4>Loading...</h4>}
+                                        endMessage={
+                                            <p style={{ textAlign: 'center' }}>
+                                                <b>Yay! You have seen it all</b>
+                                            </p>
+                                        }
+                                        scrollableTarget={songCatalogDef.NodeList.ControlId}
+                                    >
+                                        {Array.from(songCatalog.Values.values()).map((song, index) => (
+                                            <SongCatalogNodeComponent
+                                                pushCatalogsOrder={pushCatalogsOrder}
+                                                songListId={songCatalog.Id}
+                                                key={song.Id}
+                                                song={song}
+                                                index={index}
+                                            />
+                                        ))}
+                                    </InfiniteScroll>
+                                </NodeListCss>
                                 {songCatalog.OData.Count}
                             </Col>
                         </Row>

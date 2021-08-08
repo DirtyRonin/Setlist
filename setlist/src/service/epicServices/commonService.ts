@@ -8,6 +8,14 @@ export const pushComponentsOrderService = (props: IComponentOrderActionProps,cat
     return newComponentsOrder
 }
 
+export const pushCatalogComponentsOrderService = (props: IComponentOrderActionProps): IComponentOrder[] => {
+    
+    // when using an empty empty array, all other catalogs will be closed
+    const newComponentsOrder:IComponentOrder[] = [props.ComponentOrder]
+    
+    return newComponentsOrder
+}
+
 export const popComponentsOrderService = (catalogState : ICatalogState): IComponentOrder[] => {
     const {componentsOrder} = catalogState
     const newComponentsOrder:IComponentOrder[] = [...componentsOrder]

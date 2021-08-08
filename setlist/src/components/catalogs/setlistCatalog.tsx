@@ -1,8 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
-import { Col, Container, Navbar, Row ,Form, FormControlProps} from "react-bootstrap";
+import { Col, Container, Navbar, Row, Form, FormControlProps } from "react-bootstrap";
 
-import { Droppable } from "react-beautiful-dnd";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { SetlistCatalogHtmlAttributesConfiguration } from "../../Configuration";
@@ -23,7 +22,8 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
         setSetlistFilter,
         fetchSetlistCatalog,
         fetchSetlistCatalogNextLink,
-        pushCatalogsOrder
+        pushCatalogsOrder,
+
     } = props;
 
     useEffect(() => {
@@ -54,7 +54,7 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
             catalogType: CatalogTypes["Setlist Catalog"],
             type: "New",
             value: Setlist.EmptySetlist(),
-            catalogInModal:CatalogTypes["None"]
+            catalogInModal: CatalogTypes["None"]
         }
 
         const order: IComponentOrderActionProps = {
@@ -76,66 +76,60 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
                     <ContainerCss data-testid={setlistCatalog.Id}>
                         <Row>
                             <Col>
-                                <Droppable droppableId={setlistCatalog.Id}>
-                                    {provided => (
-                                        <NodeListCss id={setlistCatalogDef.NodeList.ControlId} ref={provided.innerRef} {...provided.droppableProps}>
-                                            <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                                <Navbar.Brand >{setlistCatalog.Title}</Navbar.Brand>
+                                <NodeListCss id={setlistCatalogDef.NodeList.ControlId} >
+                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
+                                        <Navbar.Brand >{setlistCatalog.Title}</Navbar.Brand>
 
-                                                <Navbar.Toggle aria-controls={setlistCatalogDef.Navbar.ControlId} />
-                                                <Navbar.Collapse id={setlistCatalogDef.Navbar.ControlId}>
-                                                    <Row>
-                                                        <Col sm="6">
-                                                            <SongFilterCss>
-                                                                <SetlistFilterComponent
-                                                                    CatalogId={setlistCatalog.Id}
-                                                                    Filter={setlistCatalog.Filter}
-                                                                    setSetlistFilter={setSetlistFilter}
-                                                                />
-                                                            </SongFilterCss>
-                                                        </Col>
-                                                        <Col sm="6">
-                                                            <Form onChange={handleShowAddSetlist}>
-                                                                <Form.Row>
-                                                                    <Form.Group as={Col} controlId={setlistCatalogDef.ShowAddSetlistCheckBox.ControlId}>
-                                                                        <Form.Check type="switch" checked={showModal} label={setlistCatalogDef.ShowAddSetlistCheckBox.Label} />
-                                                                    </Form.Group>
-                                                                </Form.Row>
-                                                            </Form>
+                                        <Navbar.Toggle aria-controls={setlistCatalogDef.Navbar.ControlId} />
+                                        <Navbar.Collapse id={setlistCatalogDef.Navbar.ControlId}>
+                                            <Row>
+                                                <Col sm="6">
+                                                    <SongFilterCss>
+                                                        <SetlistFilterComponent
+                                                            CatalogId={setlistCatalog.Id}
+                                                            Filter={setlistCatalog.Filter}
+                                                            setSetlistFilter={setSetlistFilter}
+                                                        />
+                                                    </SongFilterCss>
+                                                </Col>
+                                                <Col sm="6">
+                                                    <Form onChange={handleShowAddSetlist}>
+                                                        <Form.Row>
+                                                            <Form.Group as={Col} controlId={setlistCatalogDef.ShowAddSetlistCheckBox.ControlId}>
+                                                                <Form.Check type="switch" checked={showModal} label={setlistCatalogDef.ShowAddSetlistCheckBox.Label} />
+                                                            </Form.Group>
+                                                        </Form.Row>
+                                                    </Form>
 
-                                                        </Col>
-                                                    </Row>
-                                                </Navbar.Collapse>
+                                                </Col>
+                                            </Row>
+                                        </Navbar.Collapse>
 
-                                            </Navbar>
+                                    </Navbar>
 
-                                            <InfiniteScroll
-                                                dataLength={setlistCatalog.Values.size}
-                                                next={handleScrollDown}
-                                                hasMore={setlistCatalog.Values.size < setlistCatalog.OData.Count}
-                                                loader={<h4>Loading...</h4>}
-                                                endMessage={
-                                                    <p style={{ textAlign: 'center' }}>
-                                                        <b>Yay! You have seen it all</b>
-                                                    </p>
-                                                }
-                                                scrollableTarget={setlistCatalogDef.NodeList.ControlId}
-                                            >
-                                                {Array.from(setlistCatalog.Values.values()).map((setlist, index) => (
-                                                    <SetlistCatalogNodeComponent
-                                                        setlist={setlist}
-                                                        index={index}
-                                                        catalogId={setlistCatalog.Id}
-                                                        pushCatalogsOrder={pushCatalogsOrder}
-                                                        key={setlist.Id}
-                                                    />
-                                                ))}
-                                            </InfiniteScroll>
-
-                                            {provided.placeholder}
-                                        </NodeListCss>
-                                    )}
-                                </Droppable>
+                                    <InfiniteScroll
+                                        dataLength={setlistCatalog.Values.size}
+                                        next={handleScrollDown}
+                                        hasMore={setlistCatalog.Values.size < setlistCatalog.OData.Count}
+                                        loader={<h4>Loading...</h4>}
+                                        endMessage={
+                                            <p style={{ textAlign: 'center' }}>
+                                                <b>Yay! You have seen it all</b>
+                                            </p>
+                                        }
+                                        scrollableTarget={setlistCatalogDef.NodeList.ControlId}
+                                    >
+                                        {Array.from(setlistCatalog.Values.values()).map((setlist, index) => (
+                                            <SetlistCatalogNodeComponent
+                                                setlist={setlist}
+                                                index={index}
+                                                catalogId={setlistCatalog.Id}
+                                                pushCatalogsOrder={pushCatalogsOrder}
+                                                key={setlist.Id}
+                                            />
+                                        ))}
+                                    </InfiniteScroll>
+                                </NodeListCss>
                                 {setlistCatalog.OData.Count}
                             </Col>
                         </Row>

@@ -1,7 +1,7 @@
 import { ICatalogState } from "../../store";
 import { FilterBandActionProps, BandCatalog } from "../../mapping";
 import { IHashTable, QueryBuilder, IsMiminumStringLength, FilterBuilder } from "../../Util";
-import { Catalog, IFilterBandActionProps, IBand, IBandCatalog, INextLinkActionProps, IEntityActionProps, IBandEntityActionProps, IStatusBandCatalogActionProps, IComponentOrder, DisplayIn, IFilterBandActionResult } from "../../models";
+import { Catalog, IFilterBandActionProps, IBand, IBandCatalog, INextLinkActionProps, IEntityActionProps, IBandEntityActionProps, IStatusBandCatalogActionProps, IComponentOrder, DisplayIn, IFilterBandActionResult, IBandSong } from "../../models";
 import { nameof } from "ts-simple-nameof";
 import { ReadBandsAsync, CreateBandAsync, UpdateBandAsync, DeleteBandAsync } from "..";
 
@@ -55,6 +55,11 @@ export const fetchBandCatalogAsync = async (props: IFilterBandActionProps): Prom
     let query = new QueryBuilder().count()
 
     const filters: FilterBuilder[] = []
+
+    
+
+    // const expand = `bandsong`
+    // filters.push(new FilterBuilder().filterGuidExpression(`${expand}/${nameof<IBandSong>(x => x.BandId)}`,'eq', Filter.Title))
 
     if (IsMiminumStringLength(Filter.Title)) {
         filters.push(new FilterBuilder().containsFilterExpression(nameof<IBand>(x => x.Title), Filter.Title))

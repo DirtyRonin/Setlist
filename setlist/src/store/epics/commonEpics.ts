@@ -5,7 +5,7 @@ import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 
 import * as Action from "../actions/commonActions"
 import { RootState, CatalogActions } from "..";
-import { pushComponentsOrderService, popComponentsOrderService } from "../../service/epicServices/commonService";
+import { pushComponentsOrderService, popComponentsOrderService, pushCatalogComponentsOrderService } from "../../service/epicServices/commonService";
 
 
 
@@ -17,6 +17,19 @@ const pushComponentOrder: Epic<CatalogActions, CatalogActions, any> = (action$, 
                 map(Action.pushComponentOrder.success),
                 catchError((error: Error) => of(Action.pushComponentOrder.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(Action.pushComponentOrder.cancel))))
+            )
+        )
+    );
+}
+
+const pushCatalogComponentOrder: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
+    return action$.pipe(
+        filter(isActionOf(Action.pushCatalogComponentOrder.request)),
+        switchMap((action) =>
+            of(pushCatalogComponentsOrderService(action.payload)).pipe(
+                map(Action.pushCatalogComponentOrder.success),
+                catchError((error: Error) => of(Action.pushCatalogComponentOrder.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.pushCatalogComponentOrder.cancel))))
             )
         )
     );
@@ -37,5 +50,6 @@ const popComponentOrder: Epic<CatalogActions, CatalogActions, any> = (action$, s
 
 export const commonCatalogEpics = combineEpics(
     pushComponentOrder,
+    pushCatalogComponentOrder,
     popComponentOrder
 )

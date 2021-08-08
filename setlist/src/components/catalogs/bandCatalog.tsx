@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 
-import { Droppable } from "react-beautiful-dnd";
 import { Col, Row, Navbar, Container, FormControlProps, Form } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -60,7 +59,7 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
             catalogType: CatalogTypes["Band Catalog"],
             type: "New",
             value: Band.EmptyBand(),
-            catalogInModal:CatalogTypes["None"]
+            catalogInModal: CatalogTypes["None"]
         }
 
         const order: IComponentOrderActionProps = {
@@ -84,82 +83,72 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                     <ContainerCss data-testid={bandcatalog.Id}>
                         <Row>
                             <Col>
-                                <Droppable droppableId={bandcatalog.Id}>
-                                    {provided => (
-                                        <NodeListCss id={bandCatalogDef.NodeList.ControlId} ref={provided.innerRef} {...provided.droppableProps}>
-                                            <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                                <Navbar.Brand >{bandcatalog.Title}</Navbar.Brand>
+                                <NodeListCss id={bandCatalogDef.NodeList.ControlId} >
+                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
+                                        <Navbar.Brand >{bandcatalog.Title}</Navbar.Brand>
 
-                                                <Navbar.Toggle aria-controls={bandCatalogDef.Navbar.ControlId} />
-                                                <Navbar.Collapse id={bandCatalogDef.Navbar.ControlId}>
-                                                    <Row>
-                                                        <Col sm="6">
-                                                            <SongFilterCss>
-                                                                <BandFilterComponent
-                                                                    CatalogId={bandcatalog.Id}
-                                                                    Filter={bandcatalog.Filter}
-                                                                    setBandFilter={setBandFilter}
-                                                                />
-                                                            </SongFilterCss>
-                                                        </Col>
-                                                        <Col sm="6">
-                                                            <Form onChange={handleShowAddBand}>
-                                                                <Form.Row>
-                                                                    <Form.Group as={Col} controlId={bandCatalogDef.ShowAddBandCheckBox.ControlId}>
-                                                                        <Form.Check type="switch" checked={showModal} label={bandCatalogDef.ShowAddBandCheckBox.Label} />
-                                                                    </Form.Group>
-                                                                </Form.Row>
-                                                            </Form>
+                                        <Navbar.Toggle aria-controls={bandCatalogDef.Navbar.ControlId} />
+                                        <Navbar.Collapse id={bandCatalogDef.Navbar.ControlId}>
+                                            <Row>
+                                                <Col sm="6">
+                                                    <SongFilterCss>
+                                                        <BandFilterComponent
+                                                            CatalogId={bandcatalog.Id}
+                                                            Filter={bandcatalog.Filter}
+                                                            setBandFilter={setBandFilter}
+                                                        />
+                                                    </SongFilterCss>
+                                                </Col>
+                                                <Col sm="6">
+                                                    <Form onChange={handleShowAddBand}>
+                                                        <Form.Row>
+                                                            <Form.Group as={Col} controlId={bandCatalogDef.ShowAddBandCheckBox.ControlId}>
+                                                                <Form.Check type="switch" checked={showModal} label={bandCatalogDef.ShowAddBandCheckBox.Label} />
+                                                            </Form.Group>
+                                                        </Form.Row>
+                                                    </Form>
 
-                                                        </Col>
-                                                    </Row>
-                                                </Navbar.Collapse>
+                                                </Col>
+                                            </Row>
+                                        </Navbar.Collapse>
 
-                                            </Navbar>
+                                    </Navbar>
 
-                                            <InfiniteScroll
-                                                dataLength={bandcatalog.Values.size}
-                                                next={handleScrollDown}
-                                                hasMore={bandcatalog.Values.size < bandcatalog.OData.Count}
-                                                loader={<h4>Loading...</h4>}
-                                                endMessage={
-                                                    <p style={{ textAlign: 'center' }}>
-                                                        <b>Yay! You have seen it all</b>
-                                                    </p>
-                                                }
-                                                scrollableTarget={bandCatalogDef.NodeList.ControlId}
-                                            >
-                                                {Array.from(bandcatalog.Values.values()).map((band, index) => (
-                                                    <BandCatalogNodeComponent
-                                                        openBandSongsCatalog={openBandSongsCatalog}
-                                                        addToBandSongsAction={addToBandSongsAction}
-                                                        pushCatalogsOrder= {pushCatalogsOrder}
-                                                        selectedNode={selectedNode}
-                                                        // openedCatalogs={openedCatalogs}
-                                                        // openBandSongsCatalog = {openBandSongsCatalog}
-                                                        // closeBandSongsCatalog = {closeBandSongsCatalog}
-                                                        // setModal={setModal}
-                                                        catalogId={bandcatalog.Id}
-                                                        key={band.Id}
-                                                        band={band}
-                                                        index={index}
-                                                    />
-                                                ))}
-                                            </InfiniteScroll>
-
-                                            {provided.placeholder}
-                                        </NodeListCss>
-                                    )}
-                                </Droppable>
+                                    <InfiniteScroll
+                                        dataLength={bandcatalog.Values.size}
+                                        next={handleScrollDown}
+                                        hasMore={bandcatalog.Values.size < bandcatalog.OData.Count}
+                                        loader={<h4>Loading...</h4>}
+                                        endMessage={
+                                            <p style={{ textAlign: 'center' }}>
+                                                <b>Yay! You have seen it all</b>
+                                            </p>
+                                        }
+                                        scrollableTarget={bandCatalogDef.NodeList.ControlId}
+                                    >
+                                        {Array.from(bandcatalog.Values.values()).map((band, index) => (
+                                            <BandCatalogNodeComponent
+                                                openBandSongsCatalog={openBandSongsCatalog}
+                                                addToBandSongsAction={addToBandSongsAction}
+                                                pushCatalogsOrder={pushCatalogsOrder}
+                                                selectedNode={selectedNode}
+                                                // openedCatalogs={openedCatalogs}
+                                                // openBandSongsCatalog = {openBandSongsCatalog}
+                                                // closeBandSongsCatalog = {closeBandSongsCatalog}
+                                                // setModal={setModal}
+                                                catalogId={bandcatalog.Id}
+                                                key={band.Id}
+                                                band={band}
+                                                index={index}
+                                            />
+                                        ))}
+                                    </InfiniteScroll>
+                                </NodeListCss>
                                 {bandcatalog.OData.Count}
                             </Col>
                         </Row>
-
-
                     </ContainerCss>
                 </Col>
-
-
             </Row>
         </Container>
 

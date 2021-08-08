@@ -24,13 +24,15 @@ export interface IContainerProps {
     executeNodeAction?: (props: IEntityActionProps) => void
 }
 
-export type CatalogTypes = "Song Catalog" | "Band Catalog" | "BandSong Catalog" | "Setlist Catalog" | "SetlistSong Catalog" | "None"
+export type CatalogTypes = "Song Catalog" | "Band Catalog" | "BandSong Catalog" | "Setlist Catalog" | "SetlistSong Catalog" | "Location Catalog" | "CustomEvent Catalog" | "None"
 export const CatalogTypes: Record<CatalogTypes, CatalogTypes> = {
     "Song Catalog": "Song Catalog",
     "Band Catalog": "Band Catalog",
     "BandSong Catalog": "BandSong Catalog",
     "Setlist Catalog": "Setlist Catalog",
     "SetlistSong Catalog": "SetlistSong Catalog",
+    "Location Catalog":"Location Catalog",
+    "CustomEvent Catalog" : "CustomEvent Catalog",
     "None": "None"
 } as const
 

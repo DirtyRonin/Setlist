@@ -182,3 +182,25 @@ SetlistSongBandComponentNames
 > = {
 SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterSetlistSong_SearchTitle", ControlId: "FilterSetlistSong_SearchTitle" },
 }
+
+type LocationCatalogComponentNames = "ShowAddLocationCheckBox" | "Navbar" | "NodeList"
+
+export const LocationCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    LocationCatalogComponentNames
+> = {
+    ShowAddLocationCheckBox:{ Label: "Add Location", Placeholder: "", Data_TestId: "LocationCatalog_ShowAddLocation", ControlId: "LocationCatalog_ShowAddLocation" },
+    Navbar: { Label: "", Placeholder: "", Data_TestId: "LocationCatalog_Options_responsiveNavbar", ControlId: "LocationCatalog_Options_responsiveNavbar" },
+    NodeList: { Label: "", Placeholder: "", Data_TestId: "LocationCatalog_NodeList", ControlId: "LocationCatalog_NodeList" },
+}
+
+type CustomEventCatalogComponentNames = "ShowAddCustomEventCheckBox" | "Navbar" | "NodeList"
+
+export const CustomEventCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    CustomEventCatalogComponentNames
+> = {
+    ShowAddCustomEventCheckBox:{ Label: "Add CustomEvent", Placeholder: "", Data_TestId: "CustomEventCatalog_ShowAddCustomEvent", ControlId: "CustomEventCatalog_ShowAddCustomEvent" },
+    Navbar: { Label: "", Placeholder: "", Data_TestId: "CustomEventCatalog_Options_responsiveNavbar", ControlId: "CustomEventCatalog_Options_responsiveNavbar" },
+    NodeList: { Label: "", Placeholder: "", Data_TestId: "CustomEventCatalog_NodeList", ControlId: "CustomEventCatalog_NodeList" },
+}

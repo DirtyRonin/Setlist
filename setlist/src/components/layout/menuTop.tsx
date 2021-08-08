@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Navbar, Nav, Form, FormControl, Col } from "react-bootstrap";
 import { IStatusSongCatalogActionProps, CatalogTypes, IStatusBandCatalogActionProps, DisplayIn, IComponentOrder } from "../../models";
-import { SongCatalog, BandCatalog, SetlistCatalog, SetlistSongCatalog } from "../../mapping";
+import { SongCatalog, BandCatalog, SetlistCatalog, SetlistSongCatalog, LocationCatalog, CustomEventCatalog } from "../../mapping";
 import GlobalBandFilter from "../../store/containers/layoutContainers/GlobalBandFilterContainer"
 
 export interface IMenuTopProps {
@@ -14,6 +14,10 @@ export interface IMenuTopProps {
     closeSetlistCatalog(): void
     openSetlistSongCatalog(): void
     closeSetlistSongCatalog(): void
+    openLocationCatalog(): void
+    closeLocationCatalog(): void
+    openCustomEventCatalog(): void
+    closeCustomEventCatalog(): void
 }
 
 const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
@@ -27,13 +31,18 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
         openSetlistCatalog,
         closeSetlistCatalog,
         openSetlistSongCatalog,
-        closeSetlistSongCatalog
+        closeSetlistSongCatalog,
+        openLocationCatalog,
+        closeLocationCatalog,
+        openCustomEventCatalog,
+        closeCustomEventCatalog,
     } = props
 
     const songCatalogMenuId = `MenuId_${SongCatalog.CatalogId}`
     const bandCatalogMenuId = `MenuId_${BandCatalog.CatalogId}`
     const setlistCatalogMenuId = `MenuId_${SetlistCatalog.CatalogId}`
     const setlistSongCatalogMenuId = `MenuId_${SetlistSongCatalog.CatalogId}`
+    const locationCatalogMenuId = `MenuId_${LocationCatalog.CatalogId}`
 
 
     const isCatalogOpen = (catalogId: string): boolean =>
@@ -44,6 +53,8 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
     const isBandCatalogOpen = isCatalogOpen(BandCatalog.CatalogId)
     const isSetlistCatalogOpen = isCatalogOpen(SetlistCatalog.CatalogId)
     const isSetlistSongCatalogOpen = isCatalogOpen(SetlistSongCatalog.CatalogId)
+    const isLocationCatalogOpen = isCatalogOpen(LocationCatalog.CatalogId)
+    const isCustomEventCatalogOpen = isCatalogOpen(CustomEventCatalog.CatalogId)
 
     const handleSongCatalogStatus = (event: React.ChangeEvent<HTMLInputElement>): void => {
 
@@ -99,6 +110,14 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
         }
     }
 
+    const handleLocationClick = (event: any): void => openLocationCatalog()
+    const handleCustomEventClick = (event: any): void => openCustomEventCatalog()
+
+
+
+
+
+
     return (
         <Navbar bg="light" expand="lg">
             <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
@@ -126,6 +145,9 @@ const MenuTopComponent = (props: IMenuTopProps): JSX.Element => {
                             <Form.Check type="switch" checked={isSetlistSongCatalogOpen} label="SetlistSong" onChange={handleSetlistSongCatalogStatus} />
                         </Form.Group>
                     </Form.Row>
+
+                    <Button variant="outline-success" onClick={handleLocationClick}>Locations</Button>
+                    <Button variant="outline-success" onClick={handleCustomEventClick}>CustomEvent</Button>
 
                 </Form>
                 <Nav className="mr-auto">

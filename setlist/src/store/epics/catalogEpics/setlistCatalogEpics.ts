@@ -25,7 +25,7 @@ const openSetlistCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (actio
         filter(isActionOf(Action.openSetlistsCatalog)),
         mergeMap(() =>
             merge(of(asComponentOrderActionProp).pipe(
-                map(Action.pushComponentOrder.request)
+                map(Action.pushCatalogComponentOrder.request)
             ))
         )
     )

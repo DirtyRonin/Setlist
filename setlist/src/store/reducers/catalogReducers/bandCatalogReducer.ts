@@ -26,6 +26,11 @@ export default combineReducers<IBandCatalogState, BandCatalogActions>({
                 }
             case getType(actions.closeBandsCatalog):
                 return initial.bandCatalog
+            case getType(actions.refreshBandsCatalog):
+                return {
+                    ...state,
+                    Refresh: true
+                }
             case getType(actions.setBandFilter):
                 return {
                     ...state,

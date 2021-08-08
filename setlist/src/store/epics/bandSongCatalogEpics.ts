@@ -24,7 +24,7 @@ const openBandSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (acti
         filter(isActionOf(Action.openBandSongsCatalog)),
         mergeMap((action) =>
             merge(of(asComponentOrderActionProp(action.payload)).pipe(
-                map(Action.pushComponentOrder.request)
+                map(Action.pushCatalogComponentOrder.request)
             ))
 
         )

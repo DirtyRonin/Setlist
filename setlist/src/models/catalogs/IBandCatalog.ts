@@ -3,6 +3,7 @@ import { IBand } from "..";
 
 export interface IBandFilter {
     Title: string;
+    
 }
 
 export interface IBandCatalogOptions{}

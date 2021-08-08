@@ -28,6 +28,7 @@ interface IAppConnectedDispatch {
 
     openBandsCatalog(): void
     closeBandsCatalog(): void
+    refreshBandsCatalog():void
 
     openBandSongsCatalog(bandId: string): void
     closeBandSongsCatalog(): void
@@ -37,6 +38,12 @@ interface IAppConnectedDispatch {
 
     openSetlistSongCatalog(): void
     closeSetlistSongCatalog(): void
+
+    openLocationCatalog(): void
+    closeLocationCatalog(): void
+
+    openCustomEventCatalog(): void
+    closeCustomEventCatalog(): void
 
     setModal(props: IModal): void
     songModalActionsProvider: songModalActions
@@ -80,6 +87,8 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
 
         openBandsCatalog: () => dispatch(Action.openBandsCatalog()),
         closeBandsCatalog: () => dispatch(Action.closeBandsCatalog()),
+        refreshBandsCatalog: () => dispatch(Action.refreshBandsCatalog()),
+        
 
         openBandSongsCatalog: (bandId: string) => dispatch(Action.openBandSongsCatalog(bandId)),
         closeBandSongsCatalog: () => dispatch(Action.closeBandSongsCatalog()),
@@ -89,6 +98,12 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
 
         openSetlistSongCatalog: () => dispatch(Action.openSetlistSongCatalog()),
         closeSetlistSongCatalog: () => dispatch(Action.closeSetlistSongCatalog()),
+
+        openLocationCatalog: () => dispatch(Action.openLocationCatalog()),
+        closeLocationCatalog: () => dispatch(Action.closeLocationCatalog()),
+
+        openCustomEventCatalog: () => dispatch(Action.openCustomEventCatalog()),
+        closeCustomEventCatalog: () => dispatch(Action.closeCustomEventCatalog()),
 
         setModal: (props: IModal) => dispatch(Action.setModal(props)),
         songModalActionsProvider: {

@@ -25,7 +25,7 @@ const openSetlistSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (a
         filter(isActionOf(Action.openSetlistSongCatalog)),
         mergeMap(() =>
             merge(of(asComponentOrderActionProp).pipe(
-                map(Action.pushComponentOrder.request)
+                map(Action.pushCatalogComponentOrder.request)
             ))
         )
     )

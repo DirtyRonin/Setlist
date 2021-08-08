@@ -1,5 +1,5 @@
-import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter,  CatalogTypes, DisplayIn, ODataProps, ISetlistFilter, ISetlistSongFilter } from "..";
-import { ISetlist, ISetlistSong } from "../entity";
+import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter,  CatalogTypes, DisplayIn, ODataProps, ISetlistFilter, ISetlistSongFilter, ILocationFilter, ICustomEventFilter } from "..";
+import { ICustomEvent, ILocation, ISetlist, ISetlistSong } from "../entity";
 
 interface IFilterActionPropsBase<T> {
     catalogId: string;
@@ -13,10 +13,12 @@ export interface IFilterBandActionProps extends IFilterActionPropsBase<IBandFilt
 export interface IFilterBandSongActionProps extends IFilterActionPropsBase<IBandSongFilter> { }
 export interface IFilterSetlistActionProps extends IFilterActionPropsBase<ISetlistFilter> { }
 export interface IFilterSetlistSongActionProps extends IFilterActionPropsBase<ISetlistSongFilter> { }
+export interface IFilterLocationActionProps extends IFilterActionPropsBase<ILocationFilter> { }
+export interface IFilterCustomEventActionProps extends IFilterActionPropsBase<ICustomEventFilter> { }
 
 export interface IEntityActionProps {
     catalogId: string;
-    value: ISong | IBand | IBandSong | ISetlist | ISetlistSong
+    value: ISong | IBand | IBandSong | ISetlist | ISetlistSong | ILocation | ICustomEvent
 }
 export interface ISongEntityActionProps extends IEntityActionProps {
     value: ISong
@@ -24,7 +26,6 @@ export interface ISongEntityActionProps extends IEntityActionProps {
 export interface IBandEntityActionProps extends IEntityActionProps {
     value: IBand
 }
-
 export interface IBandSongEntityActionProps extends IEntityActionProps {
     value: IBandSong
 }
@@ -33,6 +34,12 @@ export interface ISetlistEntityActionProps extends IEntityActionProps {
 }
 export interface ISetlistSongEntityActionProps extends IEntityActionProps {
     value: ISetlistSong
+}
+export interface ILocationEntityActionProps extends IEntityActionProps {
+    value: ILocation
+}
+export interface ICustomEventEntityActionProps extends IEntityActionProps {
+    value: ICustomEvent
 }
 
 export interface IStatusCatalogActionProps {
@@ -64,6 +71,8 @@ export interface IFilterBandActionResult extends IFilterActionResultBase<IBand> 
 export interface IFilterBandSongActionResult extends IFilterActionResultBase<IBandSong> { }
 export interface IFilterSetlistActionResult extends IFilterActionResultBase<ISetlist> { }
 export interface IFilterSetlistSongActionResult extends IFilterActionResultBase<ISetlistSong> { }
+export interface IFilterLocationActionResult extends IFilterActionResultBase<ILocation> { }
+export interface IFilterCustomEventActionResult extends IFilterActionResultBase<ICustomEvent> { }
 
 
 

@@ -1,10 +1,15 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { Draggable } from "react-beautiful-dnd";
 
 import { CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps, IModalSetlistSong, ISetlistSong, ModalTypes } from "../../models";
 import { SongNodeContainer } from "../../styles";
 
+import {
+    Menu,
+    MenuItem,
+    MenuDivider,
+    MenuHeader
+} from '@szhsin/react-menu';
 export interface ISetlistSongNodeProps {
     setlistSong: ISetlistSong;
     index: number;
@@ -49,12 +54,35 @@ const SetlistSongCatalogNodeComponent = (props: ISetlistSongNodeProps): JSX.Elem
     const uniqueNodeId = `${catalogId}-${setlistSong.Id}-${index}`
 
     return (
-        <Draggable draggableId={uniqueNodeId} index={index}>
-            {provided => (
-                <Container>
-                    <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+        <Container>
+            <SongNodeContainer >
+                <Row>
+                    <Col xs="8" >
                         <Row>
-                            <Col >
+                            <Col>
+                                <label>{setlistSong.Song.Title}</label>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <label>{setlistSong.Song.Artist}</label>
+                            </Col>
+                        </Row>
+                    </Col >
+                    <Col xs='4' >
+                        <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
+                            <MenuItem value="AddBand" >Add Something</MenuItem>
+
+                            <MenuDivider />
+
+                            <MenuHeader>Edit</MenuHeader>
+                            <MenuItem value="Read" onClick={handleShowReadSetlistSong} >{ModalTypes.Read}</MenuItem>
+                            <MenuItem value="Edit" onClick={handleShowEditSetlistSong} >{ModalTypes.Edit}</MenuItem>
+                            <MenuItem value="Remove" onClick={handleShowDeleteSetlistSong} >{ModalTypes.Remove}</MenuItem>
+                        </Menu>
+                    </Col>
+
+                    {/* <Col >
                                 <label>{setlistSong.Song.Title} - {setlistSong.Song.Artist}</label>
                             </Col>
                             <Col></Col>
@@ -66,12 +94,10 @@ const SetlistSongCatalogNodeComponent = (props: ISetlistSongNodeProps): JSX.Elem
                             </Col>
                             <Col>
                                 <Button variant="secondary" onClick={handleShowDeleteSetlistSong}>{ModalTypes.Remove}</Button>
-                            </Col>
-                        </Row>
-                    </SongNodeContainer>
-                </Container>
-            )}
-        </Draggable>
+                            </Col> */}
+                </Row>
+            </SongNodeContainer>
+        </Container>
     );
 };
 

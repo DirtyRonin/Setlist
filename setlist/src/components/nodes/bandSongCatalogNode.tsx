@@ -1,11 +1,15 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { Draggable } from "react-beautiful-dnd";
 
 import { IBandSong, IComponentOrderActionProps, IModal, ModalTypes } from "../../models";
 import { SongNodeContainer } from "../../styles";
 
-
+import {
+    Menu,
+    MenuItem,
+    MenuDivider,
+    MenuHeader
+} from '@szhsin/react-menu';
 
 export interface IBandSongNodeProps {
     bandSong: IBandSong;
@@ -15,14 +19,14 @@ export interface IBandSongNodeProps {
 }
 
 const BandSongCatalogNodeComponent = (props: IBandSongNodeProps): JSX.Element => {
-    const { 
+    const {
         bandSong,
         index,
         bandSongCatalogId,
         pushCatalogsOrder
     } = props;
 
-    const createModal = (type :ModalTypes) =>{
+    const createModal = (type: ModalTypes) => {
         // const modal: IModalSong = {
         //     show: true,
         //     catalogId: bandSongCatalogId,
@@ -40,12 +44,32 @@ const BandSongCatalogNodeComponent = (props: IBandSongNodeProps): JSX.Element =>
     const uniqueNodeId = `${bandSongCatalogId}-${bandSong.Id}-${index}`
 
     return (
-        <Draggable draggableId={uniqueNodeId} index={index}>
-            {provided => (
-                <Container>
-                    <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+        <Container>
+            <SongNodeContainer >
+                <Row>
+
+                    <Col xs="8" >
                         <Row>
-                            <Col >
+                            <Col>
+                                <label>{bandSong.Song.Title} - {bandSong.Song.Artist}</label>
+                            </Col>
+                        </Row>
+
+                    </Col >
+                    <Col xs='4' >
+                        <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
+                            <MenuItem value="AddBand"  >Add to Setlist*</MenuItem>
+
+                            <MenuDivider />
+
+                            <MenuHeader>Edit</MenuHeader>
+                            <MenuItem value="Read" onClick={handleShowReadSong} >{ModalTypes.Read}</MenuItem>
+                            <MenuItem value="Edit" onClick={handleShowEditSong} >{ModalTypes.Edit}</MenuItem>
+                            <MenuItem value="Remove" onClick={handleShowDeleteSong} >{ModalTypes.Remove}</MenuItem>
+                        </Menu>
+                    </Col>
+
+                    {/* <Col >
                                 <label>{bandSong.Song.Title} - {bandSong.Song.Artist}</label>
                             </Col>
                             <Col></Col>
@@ -57,12 +81,10 @@ const BandSongCatalogNodeComponent = (props: IBandSongNodeProps): JSX.Element =>
                             </Col>
                             <Col>
                                 <Button variant="secondary" onClick={handleShowDeleteSong}>{ModalTypes.Remove}</Button>
-                            </Col>
-                        </Row>
-                    </SongNodeContainer>
-                </Container>
-            )}
-        </Draggable>
+                            </Col> */}
+                </Row>
+            </SongNodeContainer>
+        </Container>
     );
 };
 

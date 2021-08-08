@@ -1,6 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Button, FormControlProps, Form } from "react-bootstrap";
-import { Draggable } from "react-beautiful-dnd";
+import {
+    Menu,
+    MenuItem,
+    MenuDivider,
+    MenuHeader
+} from '@szhsin/react-menu';
 
 import { SongNodeContainer } from "../../styles";
 import { IBand, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder, IComponentOrderActionProps } from "../../models";
@@ -17,9 +22,9 @@ export interface IBandNodeProps {
     catalogId: string;
     pushCatalogsOrder(props: IComponentOrderActionProps): void
     selectedNode?: ISong
-    
+
     addToBandSongsAction(props: IBandSongEntityActionProps): void
-    openBandSongsCatalog(bandId:string): void
+    openBandSongsCatalog(bandId: string): void
 }
 
 const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
@@ -42,7 +47,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
             catalogType: CatalogTypes["Band Catalog"],
             type,
             value: band,
-            catalogInModal:CatalogTypes["None"]
+            catalogInModal: CatalogTypes["None"]
         }
 
         const order: IComponentOrderActionProps = {
@@ -83,46 +88,40 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
     // const showBandSongCatalog = openedCatalogs.some( catalog=> catalog.id === BandSongCatalog.GetCatalogId(band.Id))
 
     return (
-        <Draggable draggableId={uniqueNodeId} index={index}>
-            {provided => (
-                <Container>
-                    <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                        <Row>
-                            <Col >
-                                <label>{band.Title}</label>
-                            </Col>
-                            {!selectedNode && <div>
+        <Container>
+            <SongNodeContainer >
+                <Row>
+                    <Col xs="8">
+                        <label>{band.Title}</label>
+                    </Col >
+                    <Col xs="4">
+                        {!selectedNode && <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
+                            <MenuItem value="AddBand" onClick={handleShowBandSongsCatalog} >Show Band Songs</MenuItem>
+                            <MenuItem value="AddBand" onClick={handleShowBandSongsModal} >Show Band Songs</MenuItem>
+
+                            <MenuDivider />
+
+                            <MenuHeader>Edit</MenuHeader>
+                            <MenuItem value="Read" onClick={handleShowReadBand} >{ModalTypes.Read}</MenuItem>
+                            <MenuItem value="Edit" onClick={handleShowEditBand} >{ModalTypes.Edit}</MenuItem>
+                            <MenuItem value="Remove" onClick={handleShowDeleteBand} >{ModalTypes.Remove}</MenuItem>
+                        </Menu>}
+                        {
+                            selectedNode && <div>
                                 <Col>
-                                    <Button variant="secondary" onClick={handleShowReadBand}>{ModalTypes.Read}</Button>
+                                    <Button variant="secondary" onClick={handleAddSongToCatalog}>Hinzufügen</Button>
                                 </Col>
                                 <Col>
-                                    <Button variant="secondary" onClick={handleShowEditBand}>{ModalTypes.Edit}</Button>
-                                </Col>
-                                <Col>
-                                    <Button variant="secondary" onClick={handleShowDeleteBand}>{ModalTypes.Remove}</Button>
-                                </Col>
-                                <Col>
-                                    <Button variant="secondary" onClick={handleShowBandSongsCatalog}>Show Band Songs Catalog</Button>
-                                </Col>
-                                <Col>
-                                    <Button variant="secondary" onClick={handleShowBandSongsModal}>Show Band Songs Modal</Button>
+                                    <AsyncButtonComponent asyncExecute={CreateBandSongAsync} value={createBandSong()} defaultState='INITIAL' />
                                 </Col>
                             </div>
-                            }{
-                                selectedNode && <div>
-                                    <Col>
-                                        <Button variant="secondary" onClick={handleAddSongToCatalog}>Hinzufügen</Button>
-                                    </Col>
-                                    <Col>
-                                        <AsyncButtonComponent asyncExecute={CreateBandSongAsync} value={createBandSong()} defaultState='INITIAL' />
-                                    </Col>
-                                </div>
-                            }
-                        </Row>
-                    </SongNodeContainer>
-                </Container>
-            )}
-        </Draggable>
+                        }
+
+                    </Col>
+
+                </Row>
+            </SongNodeContainer>
+        </Container>
     );
 };
 

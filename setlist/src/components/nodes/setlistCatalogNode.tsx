@@ -1,9 +1,15 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { Draggable } from "react-beautiful-dnd";
 
 import { SongNodeContainer } from "../../styles";
 import { CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps, IModalSetlist, ISetlist, ModalTypes } from "../../models";
+
+import {
+    Menu,
+    MenuItem,
+    MenuDivider,
+    MenuHeader
+} from '@szhsin/react-menu';
 
 export interface ISetlistNodeProps {
     setlist: ISetlist;
@@ -19,18 +25,18 @@ const SetlistCatalogNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
         setlist,
         index,
         catalogId,
-        
+
         pushCatalogsOrder
     } = props;
 
-    const createModal = (type : ModalTypes) => {
+    const createModal = (type: ModalTypes) => {
         const modal: IModalSetlist = {
             show: true,
             catalogId,
             catalogType: CatalogTypes["Setlist Catalog"],
             type,
             value: setlist,
-            catalogInModal:CatalogTypes["None"]
+            catalogInModal: CatalogTypes["None"]
         }
 
         const order: IComponentOrderActionProps = {
@@ -51,31 +57,50 @@ const SetlistCatalogNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
     const uniqueNodeId = `${catalogId}-${setlist.Id}-${index}`
 
     return (
+        <Container>
+            <SongNodeContainer >
+                <Row>
+                    <Col xs="8" >
+                        <Row>
+                            <Col>
+                                <label>{setlist.Title}</label>
+                            </Col>
+                        </Row>
+                    </Col >
+                    <Col xs='4' >
+                        <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
+                            <MenuItem value="AddSong"  >Add Song *</MenuItem>
+                            <MenuItem value="AddBandSong"  >Add Song from Band *</MenuItem>
 
-    <Draggable draggableId={uniqueNodeId} index={index}>
-        {provided => (
-            <Container>
-                <SongNodeContainer {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                    <Row>
-                        <Col >
-                            <label>{setlist.Title}</label>
+                            <MenuDivider />
+
+                            <MenuHeader>Edit</MenuHeader>
+                            <MenuItem value="Read" onClick={handleShowReadSetlist} >{ModalTypes.Read}*</MenuItem>
+                            <MenuItem value="Edit" onClick={handleShowEditSetlist} >{ModalTypes.Edit}*</MenuItem>
+                            <MenuItem value="Remove" onClick={handleShowDeleteSetlist} >{ModalTypes.Remove}*</MenuItem>
+                        </Menu>
+                    </Col>
+
+
+
+
+                    {/* <Col >
+                        <label>{setlist.Title}</label>
+                    </Col>
+                    <div>
+                        <Col>
+                            <Button variant="secondary" onClick={handleShowReadSetlist}>{ModalTypes.Read}</Button>
                         </Col>
-                        <div>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowReadSetlist}>{ModalTypes.Read}</Button>
-                            </Col>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowEditSetlist}>{ModalTypes.Edit}</Button>
-                            </Col>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowDeleteSetlist}>{ModalTypes.Remove}</Button>
-                            </Col>
-                        </div>
-                    </Row>
-                </SongNodeContainer>
-            </Container>
-        )}
-    </Draggable>
+                        <Col>
+                            <Button variant="secondary" onClick={handleShowEditSetlist}>{ModalTypes.Edit}</Button>
+                        </Col>
+                        <Col>
+                            <Button variant="secondary" onClick={handleShowDeleteSetlist}>{ModalTypes.Remove}</Button>
+                        </Col>
+                    </div> */}
+                </Row>
+            </SongNodeContainer>
+        </Container>
     )
 }
 

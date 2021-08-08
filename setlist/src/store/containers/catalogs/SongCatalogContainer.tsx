@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     fetchSongCatalog: (props: IFilterSongActionProps) => dispatch(Action.fetchSongCatalog.request(props)),
     fetchSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchSongCatalogNextLink.request(props)),
     pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),
-    setSongFilter: (props: IFilterSongActionProps) => dispatch(Action.setSongFilter(props))
+    setSongFilter: (props: IFilterSongActionProps) => dispatch(Action.setSongFilter(props)),
 })
 
 const SongCatalog = (props: SongCatalogProps) => {
