@@ -83,7 +83,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                                         <SongFilterComponent
                                                             CatalogId={songCatalog.Id}
                                                             Filter={songCatalog.Filter}
-                                                            FetchSongCatalog={setSongFilter}
+                                                            setSongFilter={setSongFilter}
                                                         />
                                                     </SongFilterCss>
                                                 </Col>

@@ -4,18 +4,17 @@ import { Form, Row, Col, InputGroup, Button, FormControlProps, Navbar } from "re
 import { FilterSongHtmlAttributesConfiguration } from "../../Configuration"
 import { ISongFilter, IFilterSongActionProps } from "../../models";
 import { IsFilterableString } from "../../Util";
-import { AlignRightCss } from "../../styles";
 import { FilterSongActionProps } from "../../mapping";
 import { SongFilterTemplate } from "./songFilterTemplate";
 
 export interface ISongFilterProps {
     CatalogId: string;
     Filter: ISongFilter;
-    FetchSongCatalog(props: IFilterSongActionProps): void
+    setSongFilter(props: IFilterSongActionProps): void
 }
 
 export const SongFilterComponent = (props: ISongFilterProps) => {
-    const { Filter, CatalogId, FetchSongCatalog } = props;
+    const { Filter, CatalogId, setSongFilter } = props;
 
     const htmlConfig = FilterSongHtmlAttributesConfiguration;
 
@@ -43,7 +42,7 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
                                 false
 
         if (songFilter.refresh) {
-            FetchSongCatalog(songFilter)
+            setSongFilter(songFilter)
         }
     }
 

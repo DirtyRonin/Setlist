@@ -23,7 +23,7 @@ const openSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$,
     }
 
     return action$.pipe(
-        filter(isActionOf(Action.openThisSongCatalog)),
+        filter(isActionOf(Action.openSongCatalog)),
         mergeMap(() =>
             merge(of(asComponentOrderActionProp).pipe(
                 map(Action.pushCatalogComponentOrder.request)
@@ -35,7 +35,7 @@ const openSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$,
 
 const closeSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
     action$.pipe(
-        filter(isActionOf(Action.closeThisSongCatalog)),
+        filter(isActionOf(Action.closeSongCatalog)),
         mergeMap(() =>
             merge(of(EMPTY).pipe(
                 map(() => Action.popComponentOrder.request())

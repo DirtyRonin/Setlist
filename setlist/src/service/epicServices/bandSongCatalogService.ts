@@ -1,8 +1,8 @@
-import { IFilterBandSongActionProps, IBandSong, ISong, INextLinkActionProps, IComponentOrder, DisplayIn, IFilterBandSongActionResult } from "../../models";
+import { IFilterBandSongActionProps, IBandSong, ISong, INextLinkActionProps, IComponentOrder, DisplayIn, IFilterBandSongActionResult, IBandSongEntityActionProps } from "../../models";
 import { BandSongCatalog } from "../../mapping";
 import {  QueryBuilder, IsMiminumStringLength,FilterBuilder } from "../../Util";
 import { nameof } from "ts-simple-nameof";
-import { ReadBandSongsAsync } from "..";
+import { CreateBandSongAsync, ReadBandSongsAsync } from "..";
 
 export const createEmptyBandSongCatalog = (bandId: string): IComponentOrder => ({
     id: BandSongCatalog.GetCatalogId(bandId),
@@ -100,6 +100,11 @@ const GetFilterSongActionResult = async (filterQuery: string): Promise<IFilterBa
 
 export const fetchBandSongCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterBandSongActionResult> =>
     await GetFilterSongActionResult(props.nextLink)
+
+export const NewBandSong = async (props: IBandSongEntityActionProps): Promise<IBandSong> =>
+    await CreateBandSongAsync(props.value)
+
+
 
 // export const fetchBandSongCatalogNextLinkAsync = async (props: INextLinkActionProps, catalogs: IHashTable<Catalog>): Promise<Catalog> => {
 //     if (catalogs == null) { throw ("catalogs are null") }

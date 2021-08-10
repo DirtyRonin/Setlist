@@ -1,8 +1,8 @@
 import { IModal, ModalTypes } from ".";
-import { IEntityActionProps, IBandSong } from "..";
+import { IBandSong, IBandSongEntityActionProps } from "..";
 
 export interface IModalBandSong extends IModal {
     value : IBandSong
 }
 
-export type bandSongModalActions = Record<keyof typeof ModalTypes, (props: IEntityActionProps) => void>
+export type bandSongModalActions = Record<keyof typeof ModalTypes, (props: IBandSongEntityActionProps) => void>

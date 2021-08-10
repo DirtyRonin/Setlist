@@ -21,18 +21,19 @@ export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
     bandSongCatalog: (state = initial.bandSongCatalog, action) => {
         switch (action.type) {
             case getType(actions.openBandSongsCatalog):
-                return { ...state, 
+                return {
+                    ...state,
                     Refresh: true,
-                    BandId: action.payload 
+                    BandId: action.payload
                 }
             case getType(actions.closeBandSongsCatalog):
                 return initial.bandSongCatalog
-                case getType(actions.setBandSongFilter):
-                    return {
-                        ...state,
-                        Filter: action.payload.filter,
-                        Refresh:action.payload.refresh
-                    }
+            case getType(actions.setBandSongFilter):
+                return {
+                    ...state,
+                    Filter: action.payload.filter,
+                    Refresh: action.payload.refresh
+                }
 
             case getType(actions.fetchBandSongCatalog.request):
                 return { ...state, Refresh: false }
@@ -49,6 +50,13 @@ export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
                         .AddMap(action.payload.Values)
                         .GetMap(),
                     OData: action.payload.OData
+                }
+            case getType(actions.addBandSongToCatalog.success):
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddAsFirst(action.payload.Id, action.payload)
+                        .GetMap()
                 }
             default:
                 return state;

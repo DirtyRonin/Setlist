@@ -1,12 +1,13 @@
 import React from "react";
-import { Store } from 'redux';
 import ReactDOM from "react-dom";
+
+import _ from 'lodash'
 
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as serviceWorker from "./serviceWorker";
-import { storeSetup, defaultCatalog } from "./store";
+import { storeSetup } from "./store";
 import { Provider } from "react-redux";
 import DefaultApp from "./store/containers/defaultContainer"
 import { initFontAwesomeLib } from "./styles";

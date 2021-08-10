@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
-import {createLogger}  from 'redux-logger';
-import {  rootReducer, rootEpic, CatalogActions } from '.';
+import { createLogger } from 'redux-logger';
+import { rootReducer, rootEpic, CatalogActions } from '.';
 import { createEpicMiddleware } from 'redux-observable';
 import { RootState } from './reducers';
 
@@ -13,7 +13,7 @@ export function storeSetup(initialState?: RootState) {
     epicMiddleware
   ];
 
-  const configureStore = createStore(rootReducer,initialState,applyMiddleware(...middlewares));
+  const configureStore = createStore(rootReducer, initialState, applyMiddleware(...middlewares));
 
   epicMiddleware.run(rootEpic)
 

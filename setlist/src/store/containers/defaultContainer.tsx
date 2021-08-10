@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
 import * as Action from '../actions';
-import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, Catalog, IComponentOrderActionProps, ISongEntityActionProps, IUser, setlistModalActions, ISetlistEntityActionProps } from '../../models';
+import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, Catalog, IComponentOrderActionProps, ISongEntityActionProps, IUser, setlistModalActions, ISetlistEntityActionProps, IBandSongEntityActionProps } from '../../models';
 import { bandModalActions } from '../../models/modals/modelBand';
 
 
@@ -82,8 +82,8 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         fetchBandCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchBandCatalogNextLink.request(props)),
         fetchBandSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchBandSongCatalogNextLink.request(props)),
 
-        openSongsCatalog: () => dispatch(Action.openThisSongCatalog()),
-        closeSongsCatalog: () => dispatch(Action.closeThisSongCatalog()),
+        openSongsCatalog: () => dispatch(Action.openSongCatalog()),
+        closeSongsCatalog: () => dispatch(Action.closeSongCatalog()),
 
         openBandsCatalog: () => dispatch(Action.openBandsCatalog()),
         closeBandsCatalog: () => dispatch(Action.closeBandsCatalog()),
@@ -127,8 +127,8 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
         bandSongModalActionsProvider: {
             None: () => { },
             New: () => { } /*dispatch(Action.addBandSongToCatalog.request(props))*/,
-            Edit: (props: IEntityActionProps) => dispatch(Action.addBandSongToCatalog.request(props)),
-            Remove: (props: IEntityActionProps) => { },
+            Edit: (props: IBandSongEntityActionProps) => dispatch(Action.addBandSongToCatalog.request(props)),
+            Remove: (props: IBandSongEntityActionProps) => { },
             Read: () => dispatch(Action.readBandSongInCatalog()),
             Add: () => { },
             ShowCatalog: () => { }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Button, FormControlProps, Form } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import {
     Menu,
     MenuItem,
@@ -8,7 +8,7 @@ import {
 } from '@szhsin/react-menu';
 
 import { SongNodeContainer } from "../../styles";
-import { IBand, ModalTypes, CatalogTypes, IStatusBandSongCatalogActionProps, DisplayIn, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder, IComponentOrderActionProps } from "../../models";
+import { IBand, ModalTypes, CatalogTypes, DisplayIn, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder, IComponentOrderActionProps } from "../../models";
 import { IModalBand } from "../../models/modals/modelBand";
 import { BandCatalogNodeHtmlAttributesConfiguration } from "../../Configuration";
 import { BandSongCatalog, BandSong } from "../../mapping";
