@@ -44,6 +44,7 @@
     "validator": "^13.6.0"
   },
   "scripts": {
+    "hot": "webpack-dev-server",
     "dev": "npx webpack serve --config webpack.config.js --mode development",
     "start": "react-scripts start",
     "build": "react-scripts build",

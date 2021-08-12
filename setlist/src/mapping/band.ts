@@ -1,44 +1,41 @@
-import { IBand, IBandSong } from "../models";
-import { IBandResource } from "../resource";
-import { GUID_EMPTY } from "../Util";
+import { IBand, IBandSong, IBandUser } from "models";
+import { IBandResource } from "resource";
+import { GUID_EMPTY } from "Util";
+import { BandSong } from "./bandSong";
 // import { BandSong } from ".";
 
 export class Band implements IBand {
 
     Id: string;
     Title: string;
-    // BandSongs: Map<string, IBandSong>;
+    BandSongs: Map<string, IBandSong>;
+    BandUsers: Map<string, IBandUser>;
 
-    private constructor(title: string, /*bandSongs: Map<string, IBandSong> = new Map(),*/ id: string = GUID_EMPTY) {
+    private constructor({ title, bandSongs = new Map(), bandUsers = new Map(), id = GUID_EMPTY }: { title: string; bandSongs?: Map<string, IBandSong>; bandUsers?: Map<string, IBandUser>; id?: string; }) {
         this.Title = title
         this.Id = id;
-        // this.BandSongs = bandSongs
+        this.BandSongs = bandSongs
+        this.BandUsers = bandUsers
     }
 
-    public static Create(title: string, /*bandSongs?: Map<string, IBandSong>,*/ id?: string): IBand {
-        return new Band(title, /*bandSongs,*/ id)
+    public static Create(title: string, bandSongs?: Map<string, IBandSong>, bandUsers?: Map<string, IBandUser>, id?: string): IBand {
+        return new Band({ title, bandUsers, bandSongs, id })
     }
 
     public static ToResource(song: IBand): IBandResource {
-        const { Title, /*BandSongs,*/ Id } = song;
-        return { Title, /*BandSongs: Array.from(BandSongs.values()),*/ Id } as IBandResource
+        const { Title, Id } = song;
+        return { Title, Id } as IBandResource
     }
 
-    // public static ToResource(song: ISong): ISongResource {
-    //     const { Title, Artist, OriginalKey, Evergreen,Nineties, Genre, Comment, Id } = song;
-    //     return { Title, Artist, OriginalKey, Evergreen,Nineties, Genre, Comment, Id } as ISongResource
-    // }
-
-
     public static FromResource(resource: IBandResource): IBand {
-        const { Title, /*BandSongs,*/ Id } = resource;
+        const { Title, Id, BandSongs } = resource;
 
-        /*const bandSongs = BandSongs?.reduce((map, song) => {
-            map.set(song.Id, BandSong.FromResource(song))
-            return map
-        }, new Map<string, IBandSong>())*/
+        const bandSongs = BandSongs?.reduce((newMap, _) => {
+            newMap.set(_.Id, BandSong.FromResource(_))
+            return newMap
+        }, new Map<string, IBandSong>());
 
-        return new Band(Title,/* bandSongs,*/ Id)
+        return new Band({ title: Title, id: Id, bandSongs })
     }
 
     public static EmptyBand(): IBand {

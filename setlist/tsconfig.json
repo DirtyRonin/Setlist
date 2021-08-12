@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "Web", // auf Web gesetzt, damit webpack die page reloaden kann
     "module": "commonjs",
     "jsx": "react",
     "sourceMap": true,
@@ -11,5 +11,22 @@
     "strict": true,
     "noImplicitAny": true,
     "allowJs": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true /* Skip type checking of declaration files. */,
+    "baseUrl": "src",
+    "paths": {
+      // "@/*":["*"],
+      // "api/*":["api/*"],
+      // "assets/*":["assets/*"],
+      // "components/*":["components/*"],
+      // "configuration/*":["configuration/*"],
+      // "mapping/*":["mapping/*"],
+      // "models/*":["models/*"],
+      // "resource/*":["resource/*"],
+      // "service/*":["service/*"],
+      // "styles/*":["styles/*"],
+      // "store/*":["store/*"],
+      // "util/*":["util/*"],
+    }
   }
 }

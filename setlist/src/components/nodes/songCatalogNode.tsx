@@ -52,7 +52,8 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const handleShowEditSong = () => createModal(ModalTypes.Edit)
     const handleShowReadSong = () => createModal(ModalTypes.Read)
     const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
-    const handleShowAddSong = () => createModal(ModalTypes.Add, CatalogTypes["Band Catalog"])
+    const handleAddSongToBand = () => createModal(ModalTypes.Add, CatalogTypes["Band Catalog"])
+    const handleAddSongToSetlist = () => createModal(ModalTypes.Add, CatalogTypes["Setlist Catalog"])
 
     const uniqueNodeId = `${songListId}-${song.Id}-${index}`
 
@@ -74,8 +75,8 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                     </Col >
                     <Col xs='4' >
                         <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
-                            <MenuItem value="AddBand" onClick={handleShowAddSong} >Add to Band Song</MenuItem>
-                            <MenuItem value="AddSong"  >Add to Setlist</MenuItem>
+                            <MenuItem value="AddToBand" onClick={handleAddSongToBand} >Add to Band Song</MenuItem>
+                            <MenuItem value="AddToSetlist" onClick={handleAddSongToSetlist}  >Add to Setlist</MenuItem>
 
                             <MenuDivider />
 

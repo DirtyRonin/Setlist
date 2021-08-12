@@ -1,4 +1,5 @@
-import Axios from "axios";
+import Axios, { AxiosResponse } from "axios";
+
 import { defaultHeader } from "../Configuration";
 import { IOdataWrapper } from "../models";
 import { ISetlistSongResource } from "../resource";
@@ -17,4 +18,10 @@ export const GetSetlistSongRequestAsync = async (url: string): Promise<IOdataWra
     }
 
     return Odata;
+}
+
+export const CreateSetlistSongRequestAsync = async (url: string, setlistSong: ISetlistSongResource): Promise<AxiosResponse<ISetlistSongResource>> => {
+    return await Axios.post<ISetlistSongResource>(url, setlistSong, {
+        headers: defaultHeader
+    });
 }

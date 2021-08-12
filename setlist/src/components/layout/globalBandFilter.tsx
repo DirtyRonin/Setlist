@@ -1,11 +1,10 @@
 
 
-import React, { useEffect } from "react";
-import { useState, useRef } from "react";
+import React, { useEffect, useState,  forwardRef } from "react";
 import { FormControl, Dropdown, FormControlProps } from "react-bootstrap";
 
 import { DropDownMenuContainer } from "../../styles";
-import { GUID_EMPTY, IHashTable, IsMiminumStringLength, QueryBuilder,FilterBuilder } from "../../Util";
+import { GUID_EMPTY, IHashTable, IsMiminumStringLength, QueryBuilder, FilterBuilder } from "../../Util";
 import { GlobalBandFilterProps } from "../../store/containers/layoutContainers/GlobalBandFilterContainer"
 import { nameof } from "ts-simple-nameof";
 import { IBand, IBandUser } from "../../models";
@@ -33,8 +32,6 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
             openBandSongsCatalog(selectedBand.Id)
     }, [selectedBand]);
 
-    const inputRef = useRef<HTMLButtonElement>(null);
-
     type ButtonProps = React.ComponentPropsWithoutRef<'button'>
     type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
@@ -47,13 +44,13 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
         }
     }
 
-    const myToggle = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
+    const myToggle = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
         <Dropdown.Toggle type="button" ref={ref} className="ToggleMenu" >
             {props.children}
         </Dropdown.Toggle>
     ));
 
-    const myMenu = React.forwardRef<HTMLInputElement, FormControlProps>((props, ref) => {
+    const myMenu = forwardRef<HTMLInputElement, FormControlProps>((props, ref) => {
 
         return (
             <DropDownMenuContainer ref={ref} className={props.className} id="beast">

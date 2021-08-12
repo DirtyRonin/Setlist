@@ -26,7 +26,7 @@ export class Song {
         this.Id = id;
     }
 
-    public static Create(title: string, artist: string, originalKey: string, evergreen: boolean,nineties:boolean, genre: string, comment: string, id?: string): ISong {
+    public static Create({ title, artist, originalKey, evergreen, nineties, genre, comment, id }: { title: string; artist: string; originalKey: string; evergreen: boolean; nineties: boolean; genre: string; comment: string; id?: string; }): ISong {
         const song = new Song(title, artist, originalKey, evergreen,nineties, genre, comment, id)
         const { Title, Artist, OriginalKey: Key, Id } = song
 
@@ -40,18 +40,11 @@ export class Song {
 
     public static FromResource(resource: ISongResource): ISong {
         const { Title, Artist, OriginalKey, Evergreen,Nineties, Genre, Comment, Id } = resource;
-        return Song.Create(Title, Artist, OriginalKey, Evergreen,Nineties, Genre, Comment, Id)
+        return Song.Create({ title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id })
     }
 
     public static EmptySong(): ISong {
        return Song.Create(
-            "",
-            "",
-            "",
-            false,
-            false,
-            "no genre",
-            "no comment"
-        )
+           { title: "", artist: "", originalKey: "", evergreen: false, nineties: false, genre: "no genre", comment: "no comment" }        )
     }
 }

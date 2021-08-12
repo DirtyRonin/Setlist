@@ -11,7 +11,7 @@ export class BandSong implements IBandSong {
     Id: string;
     Title: string;
 
-    constructor(title: string, popularity: number, song: ISong, id: string = GUID_EMPTY, songId: string = GUID_EMPTY, bandId: string = GUID_EMPTY,) {
+    constructor({ title, popularity, song, id = GUID_EMPTY, songId = GUID_EMPTY, bandId = GUID_EMPTY }: { title: string; popularity: number; song: ISong; id?: string; songId?: string; bandId?: string; },) {
         this.Title = title
         this.Id = id;
         this.Popularity = popularity;
@@ -20,32 +20,38 @@ export class BandSong implements IBandSong {
         this.Song = song;
     }
 
-    public static Create(title: string, popularity: number, song: ISong, id?: string, songId?: string, bandId?: string): IBandSong {
-        const bandSong = new BandSong(title, popularity, song, songId, bandId, id)
+    public static Create({ title, popularity, song, id, songId, bandId }: { title: string; popularity: number; song: ISong; id?: string; songId?: string; bandId?: string; }): IBandSong {
+        const bandSong = new BandSong({ title, popularity, song, id, songId, bandId })
         const { Title, Id, SongId, Song, BandId, Popularity } = bandSong
 
         return { Title, Id, SongId, Song, BandId, Popularity } as IBandSong
     }
 
     public static ToResource(bandSong: IBandSong): IBandSongResource {
-        const { Popularity, Song, Id, SongId, BandId } = bandSong;
+        const { Popularity, Id, SongId, BandId } = bandSong;
         return { Id, BandId, SongId, Popularity } as IBandSongResource
     }
 
     public static FromResource(resource: IBandSongResource): IBandSong {
-        const { Id, BandId, SongId, Song, Popularity } = resource;
-        return BandSong.Create(Song.Title, Popularity, Song, Id, SongId, BandId)
+        const { Id, BandId, SongId, Song: resourceSong, Popularity } = resource;
+
+        const song = resourceSong !== undefined && resourceSong !== null ? Song.FromResource(resourceSong) : Song.EmptySong()
+
+        return BandSong.Create(
+            {
+                title: song.Title,
+                popularity: Popularity,
+                song,
+                id: Id,
+                songId: SongId,
+                bandId: BandId
+            }
+        )
     }
 
     public static EmptyBandSong(): IBandSong {
         return BandSong.Create(
-            "",
-            0,
-            Song.EmptySong(),
-            "",
-            "",
-            ""
-        )
+            { title: "", popularity: 0, song: Song.EmptySong(), id: "", songId: "", bandId: "" })
     }
 
 

@@ -13,7 +13,7 @@ import { CatalogModalComponent } from "./components/modals/catalogModal";
 import { SetlistModalComponent } from "./components/modals/setlistModal";
 import MenuTopComponent from "./components/layout/menuTop";
 
-import { AppProps } from "./store";
+import { AppProps } from "store";
 import BandCatalogContainer from "./store/containers/catalogs/BandCatalogContainer"
 import SongCatalogContainer from "./store/containers/catalogs/SongCatalogContainer"
 import BandSongCatalogContainer from "./store/containers/catalogs/BandSongCatalogContainer";
@@ -28,6 +28,8 @@ import '@szhsin/react-menu/dist/index.css';
 import Loader from "./components/common/loader"
 import PrivateRoute from "./components/common/privateRoute"
 import Sidebar from './components/common/sidebar'
+import AddSongToBand from "./components/modals/AddItemTo/band/AddSongToBand";
+import AddSongToSetlistModal from "./components/modals/AddItemTo/setlist/AddSongToSetlistModal";
 
 const Login = React.lazy(() => import('./components/login'))
 const Main = React.lazy(() => import('./components/main'))
@@ -103,16 +105,22 @@ export const App = (props: AppProps): JSX.Element => {
                 return <SongCatalogContainer />
             }
             else if (value.catalogInModal === CatalogTypes["Band Catalog"]) {
-                //get bands where song is missing and belongs to current user
-                refreshBandsCatalog()
-                return <BandCatalogContainer selectedNode={value.value as ISong} />
+                return value.type === ModalTypes.Add ? <AddSongToBand
+                    song={value.value as ISong}
+                    userId={userState.id}
+                /> : <div></div>
             }
             // else if (value.catalogInModal === CatalogTypes["BandSong Catalog"]) {
             //     const bandId = ""
             //     return <BandSongCatalogContainer selectedNode={undefined} bandId={bandId} />
             // }
             else if (value.catalogInModal === CatalogTypes["Setlist Catalog"]) {
-                return <SetlistCatalogContainer />
+                return value.type === ModalTypes.Add ? <AddSongToSetlistModal
+                    song={value.value as ISong}
+                /> : <div></div>
+
+
+                
             }
             else if (value.catalogInModal === CatalogTypes["SetlistSong Catalog"]) {
                 return <SetlistSongCatalogContainer />

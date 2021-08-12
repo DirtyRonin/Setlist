@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Button } from "react-bootstrap"
 
-export type ButtonState = 'INITIAL' | 'SUCCESS'
+export type ButtonState = 'INITIAL' | 'SUCCESS' | 'Already Existing'
 type ButtonActionStates = ButtonState | 'REQUEST' | 'FAILURE' | 'CANCEL'
 
 export interface IAsyncButtonProps<T> {
@@ -17,7 +17,7 @@ export const AsyncButtonComponent = <T extends {}>(props: IAsyncButtonProps<T>) 
     const [buttonState, setButtonState] = useState<ButtonActionStates>(defaultState)
 
     const handleOnClick = () => {
-        if (buttonState !== 'REQUEST' && buttonState !== 'SUCCESS') {
+        if (buttonState !== 'REQUEST' && buttonState !== 'SUCCESS' &&  buttonState !== 'Already Existing') {
             setButtonState('REQUEST')
 
             asyncExecute(value)
@@ -28,10 +28,7 @@ export const AsyncButtonComponent = <T extends {}>(props: IAsyncButtonProps<T>) 
                         console.log(e)
                         setButtonState('FAILURE')
                     })
-
-
         }
-
     }
 
     return <div>
@@ -39,3 +36,5 @@ export const AsyncButtonComponent = <T extends {}>(props: IAsyncButtonProps<T>) 
     </div>
 
 }
+
+export default AsyncButtonComponent

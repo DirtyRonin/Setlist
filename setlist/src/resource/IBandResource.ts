@@ -1,7 +1,8 @@
-import { IBandSongResource } from ".";
+import { IBandSongResource, IBandUserResource } from ".";
 
 export interface IBandResource {
     Id: string;
     Title: string;
-    // BandSongs?: IBandSongResource[]
+    BandSongs?: IBandSongResource[]
+    BandUsers?: IBandUserResource[]
 }
