@@ -4,7 +4,7 @@ import { Col, Container, Navbar, Row, Form, FormControlProps } from "react-boots
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { LocationCatalogHtmlAttributesConfiguration } from "../../Configuration";
-import { FilterLocationActionProps,Location } from "../../mapping";
+import { FilterLocationActionProps, Location } from "../../mapping";
 import { CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps, IModalLocation } from "../../models";
 import { LocationCatalogProps } from "../../store/containers/catalogs/LocationCatalogContainer";
 import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
@@ -20,6 +20,11 @@ const LocationCatalogComponent = (props: LocationCatalogProps): JSX.Element => {
         pushCatalogsOrder,
         fetchLocationCatalog
     } = props;
+
+    useEffect(() => {
+        const filter = FilterLocationActionProps.CreateFromCatalog(locationCatalog)
+        fetchLocationCatalog(filter)
+    }, [])
 
     useEffect(() => {
         if (locationCatalog.Refresh) {

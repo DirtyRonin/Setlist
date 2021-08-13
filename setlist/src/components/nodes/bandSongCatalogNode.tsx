@@ -1,7 +1,8 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
-import { IBandSong, IComponentOrderActionProps, IModal, ModalTypes } from "../../models";
+import { CatalogTypes, DisplayIn, IBandSong, IComponentOrder, IComponentOrderActionProps, ModalTypes } from "models";
+import { IModalBandSong } from "models/modals";
 import { SongNodeContainer } from "../../styles";
 
 import {
@@ -26,20 +27,31 @@ const BandSongCatalogNodeComponent = (props: IBandSongNodeProps): JSX.Element =>
         pushCatalogsOrder
     } = props;
 
-    const createModal = (type: ModalTypes) => {
-        // const modal: IModalSong = {
-        //     show: true,
-        //     catalogId: bandSongCatalogId,
-        //     catalogType: CatalogType.Song,
-        //     type,
-        //     value: bandSong
-        // }
-        // setModal(modal)
+    const createModal = (type: ModalTypes, catalogInModal: CatalogTypes = CatalogTypes["None"]) => {
+        const modal: IModalBandSong = {
+            show: true,
+            catalogId: bandSongCatalogId,
+            catalogType: CatalogTypes["BandSong Catalog"],
+            type,
+            value: bandSong,
+            catalogInModal
+        }
+
+        const order: IComponentOrderActionProps = {
+            ComponentOrder: {
+                value: modal,
+                id: modal.catalogId,
+                displayIn: DisplayIn.Modal
+            } as IComponentOrder
+        }
+
+        pushCatalogsOrder(order)
     }
 
     const handleShowEditSong = () => createModal("Edit")
     const handleShowReadSong = () => createModal("Read")
     const handleShowDeleteSong = () => createModal("Remove")
+    const handleAddBandSongToSetlist = () => createModal(ModalTypes.Add, CatalogTypes["Setlist Catalog"])
 
     const uniqueNodeId = `${bandSongCatalogId}-${bandSong.Id}-${index}`
 
@@ -58,7 +70,8 @@ const BandSongCatalogNodeComponent = (props: IBandSongNodeProps): JSX.Element =>
                     </Col >
                     <Col xs='4' >
                         <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
-                            <MenuItem value="AddBand"  >Add to Setlist*</MenuItem>
+                            <MenuItem value="AddToSetlist" onClick={handleAddBandSongToSetlist}  >Add to Setlist</MenuItem>
+                            
 
                             <MenuDivider />
 

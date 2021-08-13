@@ -18,21 +18,16 @@ const Wrapper = styled.nav`
 `
 
 const itemsData = [
-  // {
-  //   name: 'Dashboard',
-  //   icon: IconDashboard(),
-  //   link: '/'
-  // },
+  {
+    name: 'Dashboard',
+    icon: IconDashboard(),
+    link: '/'
+  },
   // {
   //   name: 'Messages',
   //   icon: IconMessages(),
   //   link: '/messages'
   // },
-  {
-    name: 'Tasks',
-    icon: IconTasks(),
-    link: '/tasks'
-  },
   {
     name: 'Songs',
     icon: IconTasks(),
@@ -41,33 +36,28 @@ const itemsData = [
   {
     name: 'Bands',
     icon: IconTasks(),
-    link: '/Bands'
+    link: '/bands'
   },
   {
     name: 'Setlist',
     icon: IconTasks(),
-    link: '/Setlist'
+    link: '/setlist'
   },
   {
-    name: 'SetlistSong',
-    icon: IconTasks(),
-    link: '/SetlistSong'
+    name: 'Location',
+    icon: IconSchedule(),
+    link: '/location'
   },
-  // {
-  //   name: 'Schedule',
-  //   icon: IconSchedule(),
-  //   link: '/schedule'
-  // },
-  // {
-  //   name: 'Activity',
-  //   icon: IconActivity(),
-  //   link: '/activity'
-  // },
-  // {
-  //   name: 'Settings',
-  //   icon: IconSettings(),
-  //   link: '/settings'
-  // }
+  {
+    name: 'Custom Event',
+    icon: IconActivity(),
+    link: '/customevent'
+  },
+  {
+    name: 'Settings',
+    icon: IconSettings(),
+    link: '/settings'
+  }
 ]
 
 interface IItemProps {

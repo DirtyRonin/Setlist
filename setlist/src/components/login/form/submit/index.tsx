@@ -84,13 +84,13 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
 
   const renderRedirect = (): object | void => {
     if (redirect) {
-      return <Redirect to='/tasks' />
+      return <Redirect to='/' />
     }
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
-    if (!error.login && !error.password) {
+    if ( true /*!error.login && !error.password*/) {
       checkAuth({
         login: user.login,
         password: user.password
@@ -121,23 +121,23 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
     } else {
       name === 'login'
         ? setError(prevState => ({
-            ...prevState,
-            login: ''
-          }))
+          ...prevState,
+          login: ''
+        }))
         : setError(prevState => ({
-            ...prevState,
-            password: ''
-          }))
+          ...prevState,
+          password: ''
+        }))
     }
     name === 'login'
       ? setUser(prevState => ({
-          ...prevState,
-          login: value
-        }))
+        ...prevState,
+        login: value
+      }))
       : setUser(prevState => ({
-          ...prevState,
-          password: value
-        }))
+        ...prevState,
+        password: value
+      }))
   }
 
   return (
@@ -167,7 +167,9 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
       <InputSubmit
         type='submit'
         value='Sign in'
-        disabled={!!(error.login || error.password)}
+        //!!23 // TRUE
+        //!!"" // FALSE
+        disabled= {false} //{!!(error.login || error.password)}
       />
       {renderRedirect()}
     </form>

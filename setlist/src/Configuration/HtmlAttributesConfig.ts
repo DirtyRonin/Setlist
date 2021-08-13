@@ -227,3 +227,14 @@ export const AddSongToSetlistHtmlAttributesConfiguration: ConfigurationItemColle
     Navbar: { Label: "", Placeholder: "", Data_TestId: "AddSongToSetlist_Options_responsiveNavbar", ControlId: "AddSongToSetlist_Options_responsiveNavbar" },
     NodeList: { Label: "", Placeholder: "", Data_TestId: "AddSongToSetlist_NodeList", ControlId: "AddSongToSetlist_NodeList" },
 }
+
+type AddBandSongToSetlistComponentNames = "ShowAddSetlistCheckBox" | "Navbar" | "NodeList"
+
+export const AddBandSongToSetlistHtmlAttributesConfiguration: ConfigurationItemCollection<
+    FormHtmlAttributesDefinition,
+    AddBandSongToSetlistComponentNames
+> = {
+    ShowAddSetlistCheckBox: { Label: "Add Setlist", Placeholder: "", Data_TestId: "AddBandSongToSetlist_ShowAddSetlist", ControlId: "AddBandSongToSetlist_ShowAddSetlist" },
+    Navbar: { Label: "", Placeholder: "", Data_TestId: "AddBandSongToSetlist_Options_responsiveNavbar", ControlId: "AddBandSongToSetlist_Options_responsiveNavbar" },
+    NodeList: { Label: "", Placeholder: "", Data_TestId: "AddBandSongToSetlist_NodeList", ControlId: "AddBandSongToSetlist_NodeList" },
+}

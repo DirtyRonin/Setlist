@@ -26,8 +26,12 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
         pushCatalogsOrder,
         // setModal,
         addToBandSongsAction,
-        selectedNode
     } = props;
+
+    useEffect(() => {
+        const filter = FilterBandActionProps.CreateFromCatalog(bandcatalog)
+        fetchBandCatalog(filter)
+    }, []);
 
     useEffect(() => {
         if (bandcatalog.Refresh) {
@@ -131,7 +135,6 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                                 openBandSongsCatalog={openBandSongsCatalog}
                                                 addToBandSongsAction={addToBandSongsAction}
                                                 pushCatalogsOrder={pushCatalogsOrder}
-                                                selectedNode={selectedNode}
                                                 // openedCatalogs={openedCatalogs}
                                                 // openBandSongsCatalog = {openBandSongsCatalog}
                                                 // closeBandSongsCatalog = {closeBandSongsCatalog}

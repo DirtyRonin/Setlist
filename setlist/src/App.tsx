@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import styled from "styled-components";
-import { CatalogTypes, IModalSong, IModalBandSong, DisplayIn, Catalog, IModal, ModalTypes, IComponentOrder, IBand, ISong, ICatalog, IBandSongCatalog, IModalSetlist } from "./models";
+import { CatalogTypes, IModalSong, IModalBandSong, DisplayIn, Catalog, IModal, ModalTypes, IComponentOrder, IBand, ISong, ICatalog, IBandSongCatalog, IModalSetlist, IBandSong } from "models";
 
 
 import { SongModalComponent } from "./components/modals/songModal";
-import { IModalBand } from "./models/modals/modelBand";
+import { IModalBand } from "models/modals/modelBand";
 import { BandModalComponent } from "./components/modals/bandModal";
 import { BandSongModalComponent } from "./components/modals/bandSongModal";
 import { CatalogModalComponent } from "./components/modals/catalogModal";
@@ -25,14 +26,14 @@ import CustomEventCatalogContainer from "./store/containers/catalogs/CustomEvent
 import '@szhsin/react-menu/dist/index.css';
 
 
-import Loader from "./components/common/loader"
-import PrivateRoute from "./components/common/privateRoute"
-import Sidebar from './components/common/sidebar'
+import Loader from "components/common/loader"
+import PrivateRoute from "components/common/privateRoute"
+import Sidebar from 'components/common/sidebar'
 import AddSongToBand from "./components/modals/AddItemTo/band/AddSongToBand";
 import AddSongToSetlistModal from "./components/modals/AddItemTo/setlist/AddSongToSetlistModal";
+import AddBandSongToSetlistModal from "./components/modals/AddItemTo/setlist/AddBandSongToSetlistModal";
 
-const Login = React.lazy(() => import('./components/login'))
-const Main = React.lazy(() => import('./components/main'))
+const Login = React.lazy(() => import('components/login'))
 
 const AppContainer = styled.div`
     display: flex;
@@ -104,23 +105,25 @@ export const App = (props: AppProps): JSX.Element => {
             if (value.catalogInModal === CatalogTypes["Song Catalog"]) {
                 return <SongCatalogContainer />
             }
-            else if (value.catalogInModal === CatalogTypes["Band Catalog"]) {
-                return value.type === ModalTypes.Add ? <AddSongToBand
+            else if (value.catalogInModal === CatalogTypes["Band Catalog"] && value.type === ModalTypes.Add) {
+                return <AddSongToBand
                     song={value.value as ISong}
                     userId={userState.id}
-                /> : <div></div>
+                />
             }
-            // else if (value.catalogInModal === CatalogTypes["BandSong Catalog"]) {
-            //     const bandId = ""
-            //     return <BandSongCatalogContainer selectedNode={undefined} bandId={bandId} />
-            // }
-            else if (value.catalogInModal === CatalogTypes["Setlist Catalog"]) {
-                return value.type === ModalTypes.Add ? <AddSongToSetlistModal
+            else if (value.catalogInModal === CatalogTypes["BandSong Catalog"]) {
+                const bandId = (value.value as IBand).Id
+                return <BandSongCatalogContainer bandId={bandId} />
+            }
+            else if (value.catalogInModal === CatalogTypes["Setlist Catalog"] && value.type === ModalTypes.Add) {
+                return value.catalogType === CatalogTypes["Song Catalog"] ? <AddSongToSetlistModal
                     song={value.value as ISong}
+                /> : value.catalogType === CatalogTypes["BandSong Catalog"] ? <AddBandSongToSetlistModal
+                    bandSong={value.value as IBandSong}
                 /> : <div></div>
 
 
-                
+
             }
             else if (value.catalogInModal === CatalogTypes["SetlistSong Catalog"]) {
                 return <SetlistSongCatalogContainer />
@@ -140,11 +143,11 @@ export const App = (props: AppProps): JSX.Element => {
                 return <SongCatalogContainer />
             }
             else if (value.CatalogType === CatalogTypes["Band Catalog"]) {
-                return <BandCatalogContainer selectedNode={undefined} />
+                return <BandCatalogContainer  />
             }
             else if (value.CatalogType === CatalogTypes["BandSong Catalog"]) {
                 const bandId = (value as IBandSongCatalog).BandId
-                return <BandSongCatalogContainer selectedNode={undefined} />
+                return <BandSongCatalogContainer />
             }
             else if (value.CatalogType === CatalogTypes["Setlist Catalog"]) {
                 return <SetlistCatalogContainer />
@@ -260,7 +263,7 @@ export const App = (props: AppProps): JSX.Element => {
     const myAppHtml = (): JSX.Element =>
         <div>
             <Wrapper>
-                {/* <Sidebar /> */}
+                <Sidebar />
                 <Container fluid>
                     <MenuTopComponent
                         componentsOrder={componentsOrder}
@@ -296,9 +299,61 @@ export const App = (props: AppProps): JSX.Element => {
             </Wrapper>
         </div>
 
+    // return (
+    //     <div>
+    //         {myAppHtml()}
+    //     </div>
+    // )
+
     return (
-        <div>
-            {myAppHtml()}
-        </div>
+        <React.Suspense fallback={<Loader />}>
+            <Router>
+                <Switch>
+                    <PrivateRoute exact path='/'>
+                        {myAppHtml()}
+                    </PrivateRoute>
+                    <PrivateRoute path='/songs'>
+                        <Wrapper>
+                            <Sidebar />
+                            <SongCatalogContainer />
+                        </Wrapper>
+
+                    </PrivateRoute>
+                    <PrivateRoute path='/bands'>
+                        <Wrapper>
+                            <Sidebar />
+                            <BandCatalogContainer />
+                        </Wrapper>
+                    </PrivateRoute>
+                    <PrivateRoute path='/setlist'>
+                        <Wrapper>
+                            <Sidebar />
+                            <SetlistCatalogContainer />
+                        </Wrapper>
+                    </PrivateRoute>
+                    <PrivateRoute path='/location'>
+                        <Wrapper>
+                            <Sidebar />
+                            <LocationCatalogContainer />
+                        </Wrapper>
+                    </PrivateRoute>
+                    <PrivateRoute path='/customevent'>
+                        <Wrapper>
+                            <Sidebar />
+                            <CustomEventCatalogContainer />
+                        </Wrapper>
+                    </PrivateRoute>
+                    <PrivateRoute path='/settings'>
+                        <Wrapper>
+                            <Sidebar />
+                        </Wrapper>
+                    </PrivateRoute>
+                    <Route path='/login'>
+                        <Login />
+                    </Route>
+                </Switch>
+            </Router>
+            {/* <GlobalStyle /> */}
+        </React.Suspense>
     )
 };

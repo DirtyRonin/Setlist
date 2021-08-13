@@ -3,21 +3,22 @@ import { Container, Row, Col } from "react-bootstrap";
 
 import AsyncButtonComponent, { ButtonState } from "components/common/asyncButton";
 import { Song, SetlistSong } from "mapping";
-import { ISetlist, ISetlistSong, ISong, IBandSong } from "models";
+import { ISetlist, ISetlistSong, IBandSong } from "models";
 import { CreateSetlistSongAsync } from "service";
 import { SongNodeContainer } from "styles/songStyle";
 
-export interface IAddSongToSetlistModalNode {
+export interface IAddBandSongToSetlistModalNode {
     setlist: ISetlist
-    song: ISong
+    bandSong: IBandSong
 }
 
-const AddSongToSetlistModalNode = (props: IAddSongToSetlistModalNode) => {
+const AddSongToSetlistModalNode = (props: IAddBandSongToSetlistModalNode) => {
 
-    const { setlist, song } = props
+    const { setlist, bandSong, } = props
 
     const CreateNewSetlistSong: ISetlistSong = SetlistSong.Create({
-        songId: song.Id,
+        bandSongId: bandSong.Id,
+        songId: bandSong.SongId,
         song: Song.EmptySong(),
         setlistId: setlist.Id
     })

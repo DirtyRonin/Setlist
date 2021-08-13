@@ -24,6 +24,7 @@ import { BandSongCatalogProps } from "../../store/containers/catalogs/BandSongCa
 const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
 
     const {
+        bandId,
         bandSongCatalog,
         setBandSongFilter,
         fetchBandSongCatalog,

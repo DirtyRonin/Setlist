@@ -22,6 +22,12 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
         showModal
     } = props;
 
+    //initial refresh
+    useEffect(() => {
+        const filter = FilterSongActionProps.CreateFromSongCatalog(songCatalog)
+        fetchSongCatalog(filter)
+    }, []);
+
     useEffect(() => {
         if (songCatalog.Refresh) {
             const filter = FilterSongActionProps.CreateFromSongCatalog(songCatalog)

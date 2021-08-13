@@ -27,6 +27,11 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
     } = props;
 
     useEffect(() => {
+        const filter = FilterSetlistActionProps.CreateFromCatalog(setlistCatalog)
+        fetchSetlistCatalog(filter)
+    }, [])
+
+    useEffect(() => {
         if (setlistCatalog.Refresh) {
             const filter = FilterSetlistActionProps.CreateFromCatalog(setlistCatalog)
             fetchSetlistCatalog(filter)

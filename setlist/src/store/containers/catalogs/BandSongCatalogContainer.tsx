@@ -17,8 +17,8 @@ interface IConnectedDispatch {
 }
 
 export interface IAdditionalBandCatalogProps {
-    selectedNode: undefined
-    // bandId: string
+    // selectedNode: undefined
+    bandId?: string
 }
 
 interface IState extends IAdditionalBandCatalogProps {
@@ -28,14 +28,13 @@ interface IState extends IAdditionalBandCatalogProps {
 
 export type BandSongCatalogProps = IConnectedDispatch & IState
 
-const mapStateToProps = (state: RootState, additionalBandCatalogProps: IAdditionalBandCatalogProps): IState => {
-    const { selectedNode } = additionalBandCatalogProps
+const mapStateToProps = (state: RootState , additionalBandCatalogProps: IAdditionalBandCatalogProps): IState => {
+     const { bandId } = additionalBandCatalogProps
 
     return {
         showModal: state.catalogReducers.catalogState.modal.show,
         bandSongCatalog: state.bandSongCatalogReducers.bandSongCatalog,
-        selectedNode,
-        // bandId
+        bandId
         /* catalogId: catalogId */
     }
 }

@@ -22,6 +22,11 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
     } = props;
 
     useEffect(() => {
+            const filter = FilterCustomEventActionProps.CreateFromCatalog(customEventCatalog)
+            fetchCustomEventCatalog(filter)
+    }, [])
+
+    useEffect(() => {
         if (customEventCatalog.Refresh) {
             const filter = FilterCustomEventActionProps.CreateFromCatalog(customEventCatalog)
             fetchCustomEventCatalog(filter)
