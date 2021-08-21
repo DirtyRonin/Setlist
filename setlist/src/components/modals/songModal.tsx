@@ -1,25 +1,30 @@
 import React from "react"
+import { History } from 'history';
+
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 import { SongModalHtmlAttributesConfiguration } from "../../Configuration";
-import { ModalTypes, ISongEntityActionProps, ISong, IModalSong } from "../../models";
+import { ModalTypes, ISongEntityActionProps, ISong, IModalSong, IModal } from "../../models";
 import { Song } from "../../mapping";
 import { IsModalReadonly, IsCatalog } from "../../Util";
 
 export interface ISongModalComponent {
     modal: IModalSong
-    popCatalogsOrder(): void
+    // setModal(props: IModal): void
     executeSongModalAction(props: ISongEntityActionProps): void
-    catalog?: JSX.Element
+    history: History
 }
 
 export const SongModalComponent = (props: ISongModalComponent) => {
 
-    const { modal, popCatalogsOrder, executeSongModalAction, catalog } = props
+    const { modal, executeSongModalAction, history } = props
 
     const songDef = SongModalHtmlAttributesConfiguration;
 
-    const handleCloseModal = () => {
-        popCatalogsOrder();
+    const handleCloseModal = (event: React.FormEvent<FormControlProps>) => {
+        const newModal: IModalSong = { ...modal, show: false }
+        // setModal(newModal)
+
+        history.goBack()
     }
 
     const hanldeOnClick = (event: React.FormEvent<FormControlProps>) => {
@@ -33,7 +38,7 @@ export const SongModalComponent = (props: ISongModalComponent) => {
             executeSongModalAction({ value: song, catalogId: modal.catalogId } as ISongEntityActionProps)
 
             if (modal.type !== "New")
-                handleCloseModal()
+                handleCloseModal(event)
         }
     };
 
@@ -53,6 +58,7 @@ export const SongModalComponent = (props: ISongModalComponent) => {
     }
 
     const IsReadonly = IsModalReadonly(modal.type)
+
 
     return <Modal show={modal.show} onHide={handleCloseModal}>
         <Modal.Dialog >
@@ -87,3 +93,4 @@ export const SongModalComponent = (props: ISongModalComponent) => {
         </Modal.Dialog>
     </Modal>
 }
+

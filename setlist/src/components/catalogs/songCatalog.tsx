@@ -18,8 +18,11 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
         fetchSongCatalog,
         fetchSongCatalogNextLink,
         pushCatalogsOrder,
+        setModal,
 
-        showModal
+        showModal,
+        history
+
     } = props;
 
     //initial refresh
@@ -119,7 +122,9 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                     >
                                         {Array.from(songCatalog.Values.values()).map((song, index) => (
                                             <SongCatalogNodeComponent
-                                                pushCatalogsOrder={pushCatalogsOrder}
+                                                history={history}
+                                                // pushCatalogsOrder={pushCatalogsOrder}
+                                                setModal={setModal}
                                                 songListId={songCatalog.Id}
                                                 key={song.Id}
                                                 song={song}

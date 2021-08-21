@@ -1,4 +1,5 @@
 export * from "./commonActions"
+export * from "./modalActions"
 export * from "./catalogActions/bandCatalogActions"
 export * from "./catalogActions/songCatalogActions"
 export * from "./catalogActions/bandSongCatalogActions"

@@ -1,111 +1,58 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { History } from 'history';
 
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
 import * as Action from '../actions';
-import { IFilterSongActionProps, INextLinkActionProps, IModal, songModalActions, IFilterBandActionProps, IEntityActionProps, IStatusBandSongCatalogActionProps, IFilterBandSongActionProps, bandSongModalActions, IStatusSongCatalogActionProps, IStatusBandCatalogActionProps, Catalog, IComponentOrderActionProps, ISongEntityActionProps, IUser, setlistModalActions, ISetlistEntityActionProps, IBandSongEntityActionProps } from '../../models';
+import { songModalActions, IEntityActionProps, bandSongModalActions, ISongEntityActionProps, IUser, setlistModalActions, ISetlistEntityActionProps, IBandSongEntityActionProps } from '../../models';
 import { bandModalActions } from '../../models/modals/modelBand';
+
+import {IModelState} from "store/reducers/modalReducers"
 
 
 interface IAppConnectedDispatch {
-    setCatalogState(catalogState: ICatalogState): void
 
-    pushCatalogsOrder(props: IComponentOrderActionProps): void
     popCatalogsOrder(): void
+    getUser(props: string): void
 
-    fetchBandSongCatalog(props: IFilterBandSongActionProps): void
-    fetchBandCatalog(props: IFilterBandActionProps): void
-    fetchSongCatalog(props: IFilterSongActionProps): void
 
-    fetchSongCatalogNextLink(props: INextLinkActionProps): void
-    fetchBandCatalogNextLink(props: INextLinkActionProps): void
-    fetchBandSongCatalogNextLink(props: INextLinkActionProps): void
-
-    openSongsCatalog(): void
-    closeSongsCatalog(): void
-
-    openBandsCatalog(): void
-    closeBandsCatalog(): void
-    refreshBandsCatalog():void
-
-    openBandSongsCatalog(bandId: string): void
-    closeBandSongsCatalog(): void
-
-    openSetlistCatalog(): void
-    closeSetlistCatalog(): void
-
-    openSetlistSongCatalog(): void
-    closeSetlistSongCatalog(): void
-
-    openLocationCatalog(): void
-    closeLocationCatalog(): void
-
-    openCustomEventCatalog(): void
-    closeCustomEventCatalog(): void
-
-    setModal(props: IModal): void
     songModalActionsProvider: songModalActions
     bandModalActionsProvider: bandModalActions
     bandSongModalActionsProvider: bandSongModalActions
     setlistModalActionsProvider: setlistModalActions
 
-    getUser(props: string): void
+}
+interface IProps {
+    history: History
 }
 
-interface IStateProps {
+interface IStateProps extends IProps {
     catalogState: ICatalogState;
-    userState: IUser
+    userState: IUser;
+    modalState: IModelState
 }
+
+
 
 export type AppProps = IStateProps & IAppConnectedDispatch;
 
-const mapStateToProps = (state: RootState): IStateProps =>
-({
-    catalogState: state.catalogReducers.catalogState,
-    userState: state.userReducers.user
-} as IStateProps);
+const mapStateToProps = (state: RootState, props: IProps): IStateProps => {
+    return ({
+        catalogState: state.catalogReducers.catalogState,
+        userState: state.userReducers.user,
+        // i need modalstate here so the whole component will be updated - otherwise, only the modal withou the background will be rendered
+        modalState:state.modalReducers.modalState,
+        history: props.history
+    } as IStateProps)
+};
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatch => {
     return {
-        setCatalogState: (catalogState: ICatalogState) => dispatch(Action.setCatalogState(catalogState)),
 
-        pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Action.pushComponentOrder.request(props)),
         popCatalogsOrder: () => dispatch(Action.popComponentOrder.request()),
 
-        fetchBandSongCatalog: (props: IFilterBandSongActionProps) => dispatch(Action.fetchBandSongCatalog.request(props)),
-        fetchBandCatalog: (props: IFilterBandActionProps) => dispatch(Action.fetchBandCatalog.request(props)),
-        fetchSongCatalog: (props: IFilterSongActionProps) => dispatch(Action.fetchSongCatalog.request(props)),
-
-        fetchSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchSongCatalogNextLink.request(props)),
-        fetchBandCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchBandCatalogNextLink.request(props)),
-        fetchBandSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchBandSongCatalogNextLink.request(props)),
-
-        openSongsCatalog: () => dispatch(Action.openSongCatalog()),
-        closeSongsCatalog: () => dispatch(Action.closeSongCatalog()),
-
-        openBandsCatalog: () => dispatch(Action.openBandsCatalog()),
-        closeBandsCatalog: () => dispatch(Action.closeBandsCatalog()),
-        refreshBandsCatalog: () => dispatch(Action.refreshBandsCatalog()),
-        
-
-        openBandSongsCatalog: (bandId: string) => dispatch(Action.openBandSongsCatalog(bandId)),
-        closeBandSongsCatalog: () => dispatch(Action.closeBandSongsCatalog()),
-
-        openSetlistCatalog: () => dispatch(Action.openSetlistsCatalog()),
-        closeSetlistCatalog: () => dispatch(Action.closeSetlistsCatalog()),
-
-        openSetlistSongCatalog: () => dispatch(Action.openSetlistSongCatalog()),
-        closeSetlistSongCatalog: () => dispatch(Action.closeSetlistSongCatalog()),
-
-        openLocationCatalog: () => dispatch(Action.openLocationCatalog()),
-        closeLocationCatalog: () => dispatch(Action.closeLocationCatalog()),
-
-        openCustomEventCatalog: () => dispatch(Action.openCustomEventCatalog()),
-        closeCustomEventCatalog: () => dispatch(Action.closeCustomEventCatalog()),
-
-        setModal: (props: IModal) => dispatch(Action.setModal(props)),
         songModalActionsProvider: {
             None: () => { },
             New: (props: ISongEntityActionProps) => dispatch(Action.addSongToCatalog.request(props)),

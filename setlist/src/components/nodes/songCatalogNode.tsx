@@ -1,8 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { History } from "history";
 
-import { ISong, ModalTypes, IModalSong, CatalogTypes, IComponentOrderActionProps, DisplayIn, IComponentOrder } from "../../models";
-import { SongNodeContainer } from "../../styles";
+import { ISong, ModalTypes, IModalSong, CatalogTypes, IComponentOrderActionProps, DisplayIn, IComponentOrder, IModal, IModalActionsProps } from "models";
+import { DefaultNodeWrapperStyle, DefaultNodeImageStyle, DefaultLabelStyle } from "styles/defaultNodeStyle";
+
 
 import {
     Menu,
@@ -10,25 +13,31 @@ import {
     MenuDivider,
     MenuHeader
 } from '@szhsin/react-menu';
+import IconOval from "components/common/icons/common/oval";
 // import '@szhsin/react-menu/dist/index.css';
 
 
 
 export interface ISongNodeProps {
+    history: History
     song: ISong;
     index: number;
     songListId: string;
-    pushCatalogsOrder(props: IComponentOrderActionProps): void
+    setModal(props: IModalActionsProps): void
 }
 
 const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const { song,
         index,
         songListId,
-        pushCatalogsOrder,
+        setModal,
+        history
     } = props;
 
+
+
     const createModal = (type: ModalTypes, catalogInModal: CatalogTypes = CatalogTypes["None"]) => {
+
         const modal: IModalSong = {
             show: true,
             catalogId: songListId,
@@ -38,15 +47,13 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
             catalogInModal
         }
 
-        const order: IComponentOrderActionProps = {
-            ComponentOrder: {
-                value: modal,
-                id: modal.catalogId,
-                displayIn: DisplayIn.Modal
-            } as IComponentOrder
-        }
+        setModal({ modal, routePath: '/modal' })
 
-        pushCatalogsOrder(order)
+        history.push({
+            pathname: `/modal`,
+            // search:'?type=song'
+            state: { background: history.location }
+        })
     }
 
     const handleShowEditSong = () => createModal(ModalTypes.Edit)
@@ -58,38 +65,46 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const uniqueNodeId = `${songListId}-${song.Id}-${index}`
 
     return (
-        <Container>
-            <SongNodeContainer >
+
+        <DefaultNodeWrapperStyle >
+
+            <Container>
                 <Row>
-                    <Col xs="8" >
+                    <Col xs="10" >
                         <Row>
-                            <Col>
-                                <label>{song.Title}</label>
+                            <Col xs="3">
+                                <DefaultNodeImageStyle />
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <label>{song.Artist}</label>
+                            <Col xs="9">
+                                <Row>
+                                    <Col>
+                                        <DefaultLabelStyle>{song.Title}</DefaultLabelStyle>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <DefaultLabelStyle>{song.Artist}</DefaultLabelStyle>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </Col >
-                    <Col xs='4' >
-                        <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
+                    <Col xs='2' >
+                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
                             <MenuItem value="AddToBand" onClick={handleAddSongToBand} >Add to Band Song</MenuItem>
                             <MenuItem value="AddToSetlist" onClick={handleAddSongToSetlist}  >Add to Setlist</MenuItem>
-
                             <MenuDivider />
-
                             <MenuHeader>Edit</MenuHeader>
                             <MenuItem value="Read" onClick={handleShowReadSong} >{ModalTypes.Read}</MenuItem>
                             <MenuItem value="Edit" onClick={handleShowEditSong} >{ModalTypes.Edit}</MenuItem>
                             <MenuItem value="Remove" onClick={handleShowDeleteSong} >{ModalTypes.Remove}</MenuItem>
                         </Menu>
                     </Col>
-
                 </Row>
-            </SongNodeContainer>
-        </Container>
+            </Container>
+
+        </DefaultNodeWrapperStyle >
+
     );
 };
 

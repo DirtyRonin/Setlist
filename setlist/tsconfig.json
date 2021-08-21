@@ -14,19 +14,5 @@
     "moduleResolution": "node",
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "baseUrl": "src",
-    "paths": {
-      // "@/*":["*"],
-      // "api/*":["api/*"],
-      // "assets/*":["assets/*"],
-      // "components/*":["components/*"],
-      // "configuration/*":["configuration/*"],
-      // "mapping/*":["mapping/*"],
-      // "models/*":["models/*"],
-      // "resource/*":["resource/*"],
-      // "service/*":["service/*"],
-      // "styles/*":["styles/*"],
-      // "store/*":["store/*"],
-      // "util/*":["util/*"],
-    }
   }
 }

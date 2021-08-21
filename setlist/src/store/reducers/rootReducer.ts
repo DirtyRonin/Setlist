@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { StateType } from "typesafe-actions";
+import { connectRouter } from 'connected-react-router';
+import { History } from 'history'
 
 import catalogReducers from "./catalogReducers"
 import userReducers from "./userReducer"
@@ -11,12 +13,13 @@ import setlistCatalogReducers from "./catalogReducers/setlistCatalogReducer"
 import setlistSongCatalogReducers from "./catalogReducers/setlistSongCatalogReducer"
 import locationCatalogReducers from "./catalogReducers/locationCatalogReducer"
 import customEventCatalogReducers from "./catalogReducers/customEventCatalogReducer"
+import modalReducers from "store/reducers/modalReducers"
 
 import dropDownFilterReducer from "./layoutReducers/GlobalBandFilterReducers"
-import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics, userEpics, setlistCatalogEpics,setlistSongCatalogEpics, locationCatalogEpics,customEventCatalogEpics } from "../epics"
+import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics, userEpics, setlistCatalogEpics, setlistSongCatalogEpics, locationCatalogEpics, customEventCatalogEpics } from "../epics"
 import { commonCatalogEpics } from '../epics/commonEpics';
 
-import {auth} from "../auth/reducers"
+import { auth } from "../auth/reducers"
 
 export const rootEpic = combineEpics(
   songCatalogEpics,
@@ -27,11 +30,11 @@ export const rootEpic = combineEpics(
   commonCatalogEpics,
   locationCatalogEpics,
   customEventCatalogEpics,
-  
+
   userEpics
 )
 
-export const rootReducer = combineReducers({
+const reducers = {
   catalogReducers,
   bandCatalogReducers,
   songCatalogReducers,
@@ -42,8 +45,13 @@ export const rootReducer = combineReducers({
   customEventCatalogReducers,
   dropDownFilterReducer,
   auth,
+  userReducers,
+  modalReducers
+}
 
-  userReducers
-});
+export type RootState = StateType<typeof reducers>;
 
-export type RootState = StateType<typeof rootReducer>;
+export const rootReducer = (history: History) => combineReducers({
+  ...reducers,
+  router: connectRouter(history)
+})
