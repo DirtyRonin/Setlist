@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Router, Switch, Route, useLocation } from 'react-router-dom'
+import { ConnectedRouter } from 'connected-react-router'
 
 import styled from "styled-components";
 import { CatalogTypes, IModalSong, IModalBandSong, DisplayIn, Catalog, IModal, ModalTypes, IComponentOrder, IBand, ISong, ICatalog, IBandSongCatalog, IModalSetlist, IBandSong } from "models";
@@ -33,6 +34,9 @@ import AddSongToBand from "./components/modals/AddItemTo/band/AddSongToBand";
 import AddSongToSetlistModal from "./components/modals/AddItemTo/setlist/AddSongToSetlistModal";
 import AddBandSongToSetlistModal from "./components/modals/AddItemTo/setlist/AddBandSongToSetlistModal";
 
+import { Location } from "history"
+import ModalWrapper from "components/common/modalWrapper/modalWrapper";
+
 const Login = React.lazy(() => import('components/login'))
 
 const AppContainer = styled.div`
@@ -57,9 +61,7 @@ export const App = (props: AppProps): JSX.Element => {
         bandModalActionsProvider,
         bandSongModalActionsProvider,
         setlistModalActionsProvider,
-
-        fetchBandSongCatalog,
-        fetchBandSongCatalogNextLink,
+        history,
 
         closeSongsCatalog,
         openSongsCatalog,
@@ -84,7 +86,9 @@ export const App = (props: AppProps): JSX.Element => {
         setModal,
 
         userState,
-        getUser
+        getUser,
+
+
     } = props;
 
     useEffect(() => {
@@ -103,7 +107,8 @@ export const App = (props: AppProps): JSX.Element => {
 
         if (IsModal(value)) {
             if (value.catalogInModal === CatalogTypes["Song Catalog"]) {
-                return <SongCatalogContainer />
+                return <SongCatalogContainer
+                    history={history} />
             }
             else if (value.catalogInModal === CatalogTypes["Band Catalog"] && value.type === ModalTypes.Add) {
                 return <AddSongToBand
@@ -140,10 +145,11 @@ export const App = (props: AppProps): JSX.Element => {
 
         if (!IsModal(value)) {
             if (value.CatalogType === CatalogTypes["Song Catalog"]) {
-                return <SongCatalogContainer />
+                return <SongCatalogContainer
+                    history={history} />
             }
             else if (value.CatalogType === CatalogTypes["Band Catalog"]) {
-                return <BandCatalogContainer  />
+                return <BandCatalogContainer />
             }
             else if (value.CatalogType === CatalogTypes["BandSong Catalog"]) {
                 const bandId = (value as IBandSongCatalog).BandId
@@ -224,11 +230,19 @@ export const App = (props: AppProps): JSX.Element => {
                 // edit, remove or read a node from a catalog
 
                 else if (modal.catalogType === CatalogTypes["Song Catalog"]) {
-                    components.push(<SongModalComponent
-                        modal={modal as IModalSong}
-                        popCatalogsOrder={popCatalogsOrder}
-                        executeSongModalAction={songModalActionsProvider[modal.type]}
-                    />)
+                    components.push(
+                        // <SongModalComponent
+                        //     modal={modal as IModalSong}
+                        //     popCatalogsOrder={popCatalogsOrder}
+                        //     executeSongModalAction={songModalActionsProvider[modal.type]}
+                        // />
+                        <SongModalComponent
+                            modal={modal as IModalSong}
+                            // setModal={setModal}
+                            executeSongModalAction={songModalActionsProvider[modal.type]}
+                            history={history}
+                        />
+                    )
                 }
 
                 else if (modal.catalogType === CatalogTypes["Band Catalog"]) {
@@ -260,100 +274,64 @@ export const App = (props: AppProps): JSX.Element => {
         return components
     }
 
-    const myAppHtml = (): JSX.Element =>
-        <div>
-            <Wrapper>
-                <Sidebar />
-                <Container fluid>
-                    <MenuTopComponent
-                        componentsOrder={componentsOrder}
+    
 
-                        openSongsCatalog={openSongsCatalog}
-                        closeSongsCatalog={closeSongsCatalog}
+    //only set Switch.location when you want to render a background
+    //otherwise pass undefined to render main component
 
-                        openBandsCatalog={openBandsCatalog}
-                        closeBandsCatalog={closeBandsCatalog}
+    let background: Location | undefined = history.location.state?.background
 
-                        openSetlistCatalog={openSetlistCatalog}
-                        closeSetlistCatalog={closeSetlistCatalog}
+    // i used a second switch for the modals
+    //this can come in handy if i need to use a path in both switches
 
-                        openSetlistSongCatalog={openSetlistSongCatalog}
-                        closeSetlistSongCatalog={closeSetlistSongCatalog}
+    const modalSwitch = () => <div>
+        <Route path='/login'>
+            <Login />
+        </Route>
+        <Wrapper>
+            <Sidebar />
+            <Switch location={background}>
+                <PrivateRoute exact path='/'>
+                </PrivateRoute>
+                <PrivateRoute path='/songs'>
+                    <SongCatalogContainer
+                        history={history} />
+                </PrivateRoute>
+                <PrivateRoute path='/bands'>
+                    <BandCatalogContainer />
+                </PrivateRoute>
+                <PrivateRoute path='/setlist'>
+                    <SetlistCatalogContainer />
+                </PrivateRoute>
+                <PrivateRoute path='/location'>
+                    <LocationCatalogContainer />
+                </PrivateRoute>
+                <PrivateRoute path='/customevent'>
+                    <CustomEventCatalogContainer />
+                </PrivateRoute>
+                <PrivateRoute path='/settings'>
+                </PrivateRoute>
 
-                        openLocationCatalog={openLocationCatalog}
-                        closeLocationCatalog={closeLocationCatalog}
+            </Switch>
+            <Switch>
+                <ModalWrapper history={history} />
+            </Switch>
+        </Wrapper>
+    </div>
 
-                        openCustomEventCatalog={openCustomEventCatalog}
-                        closeCustomEventCatalog={closeCustomEventCatalog}
-                    />
-                    <Row>
-                        <Col md={1}></Col>
-                        <Col md={10}>
-                            <AppContainer >
-                                {renderComponents()}
-                            </AppContainer>
-                        </Col>
-                        <Col md={1}></Col>
-                    </Row>
-                </Container>
-            </Wrapper>
-        </div>
 
-    // return (
-    //     <div>
-    //         {myAppHtml()}
-    //     </div>
-    // )
+
 
     return (
-        <React.Suspense fallback={<Loader />}>
-            <Router>
-                <Switch>
-                    <PrivateRoute exact path='/'>
-                        {myAppHtml()}
-                    </PrivateRoute>
-                    <PrivateRoute path='/songs'>
-                        <Wrapper>
-                            <Sidebar />
-                            <SongCatalogContainer />
-                        </Wrapper>
 
-                    </PrivateRoute>
-                    <PrivateRoute path='/bands'>
-                        <Wrapper>
-                            <Sidebar />
-                            <BandCatalogContainer />
-                        </Wrapper>
-                    </PrivateRoute>
-                    <PrivateRoute path='/setlist'>
-                        <Wrapper>
-                            <Sidebar />
-                            <SetlistCatalogContainer />
-                        </Wrapper>
-                    </PrivateRoute>
-                    <PrivateRoute path='/location'>
-                        <Wrapper>
-                            <Sidebar />
-                            <LocationCatalogContainer />
-                        </Wrapper>
-                    </PrivateRoute>
-                    <PrivateRoute path='/customevent'>
-                        <Wrapper>
-                            <Sidebar />
-                            <CustomEventCatalogContainer />
-                        </Wrapper>
-                    </PrivateRoute>
-                    <PrivateRoute path='/settings'>
-                        <Wrapper>
-                            <Sidebar />
-                        </Wrapper>
-                    </PrivateRoute>
-                    <Route path='/login'>
-                        <Login />
-                    </Route>
-                </Switch>
-            </Router>
-            {/* <GlobalStyle /> */}
-        </React.Suspense>
+        <ConnectedRouter history={history} >
+            <React.Suspense fallback={<Loader />}>
+                <Router history={history}>
+                    {modalSwitch()}
+                </Router>
+                {/* <GlobalStyle /> */}
+            </React.Suspense>
+        </ConnectedRouter >
+
     )
 };
