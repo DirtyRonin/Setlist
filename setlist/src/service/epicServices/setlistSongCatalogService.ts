@@ -2,7 +2,7 @@ import { nameof } from "ts-simple-nameof"
 
 import { ReadSetlistSongAsync } from ".."
 import { IFilterSetlistSongActionProps, IFilterSetlistSongActionResult, ISetlistSong, ISong } from "../../models"
-import { FilterBuilder, IsMiminumStringLength, QueryBuilder } from "../../Util"
+import { FilterBuilder, IsMiminumStringLength, QueryBuilder } from "../../utils"
 
 export const fetchSetlistSongCatalogAsync = async (props: IFilterSetlistSongActionProps): Promise<IFilterSetlistSongActionResult> => {
 

@@ -1,7 +1,7 @@
 import { SetlistSong } from "mapping";
 import { ISetlist, ISetlistSong } from "../models";
 import { ISetlistResource } from "../resource";
-import { GUID_EMPTY } from "../Util";
+import { GUID_EMPTY } from "../utils";
 
 export class Setlist implements ISetlist {
     Id: string;

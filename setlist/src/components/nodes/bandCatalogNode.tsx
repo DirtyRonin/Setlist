@@ -1,4 +1,6 @@
 import React from "react";
+import {History} from 'history'
+
 import { Container, Row, Col, Button } from "react-bootstrap";
 import {
     Menu,
@@ -8,19 +10,17 @@ import {
 } from '@szhsin/react-menu';
 
 import { SongNodeContainer } from "../../styles";
-import { IBand, ModalTypes, CatalogTypes, DisplayIn, ISong, IBandSongEntityActionProps, IBandSong, IComponentOrder, IComponentOrderActionProps } from "../../models";
+import { IBand, ModalTypes, CatalogTypes, DisplayIn, IBandSongEntityActionProps, IComponentOrder, IComponentOrderActionProps, IModalActionsProps } from "models";
 import { IModalBand } from "../../models/modals/modelBand";
-import { BandCatalogNodeHtmlAttributesConfiguration } from "../../Configuration";
-import { BandSongCatalog, BandSong } from "../../mapping";
-import { GUID_EMPTY } from "../../Util";
-import { CreateBandSongAsync } from "../../service";
-import { AsyncButtonComponent } from "../common/asyncButton";
+import { BandCatalogNodeHtmlAttributesConfiguration } from "configuration";
 
 export interface IBandNodeProps {
     band: IBand;
     index: number;
     catalogId: string;
-    pushCatalogsOrder(props: IComponentOrderActionProps): void
+    history: History
+    
+    setModal(props: IModalActionsProps): void
 
     addToBandSongsAction(props: IBandSongEntityActionProps): void
     openBandSongsCatalog(bandId: string): void
@@ -31,7 +31,9 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
         band,
         index,
         catalogId,
-        pushCatalogsOrder,
+        setModal,
+        history,
+
         openBandSongsCatalog,
         addToBandSongsAction,
     } = props;
@@ -48,15 +50,13 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
             catalogInModal
         }
 
-        const order: IComponentOrderActionProps = {
-            ComponentOrder: {
-                value: modal,
-                id: modal.catalogId,
-                displayIn: DisplayIn.Modal
-            } as IComponentOrder
-        }
+        setModal({ modal, routePath: '/bandModal' })
 
-        pushCatalogsOrder(order)
+        history.push({
+            pathname: `/bandModal`,
+            // search:'?type=song',
+            state: { background: history.location }
+        })
     }
 
     const concatUniqueID = (htmlElementId: string): string => `${htmlElementId}_${band.Id}`

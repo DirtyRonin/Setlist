@@ -3,7 +3,7 @@ import { ActionType, getType } from "typesafe-actions";
 
 import { SetlistCatalog } from "../../../mapping";
 import { ISetlistCatalog } from "../../../models";
-import { MapHelper } from "../../../Util";
+import { MapHelper } from "../../../utils";
 
 import * as actions from "../../actions/catalogActions/setlistCatalogActions"
 import * as common from "../../actions/commonActions"

@@ -2,7 +2,7 @@ import { isThisTypeNode } from "typescript";
 import { Song } from ".";
 import { ISetlistSong, ISong } from "../models";
 import { ISetlistSongResource } from "../resource";
-import { GUID_EMPTY } from "../Util";
+import { GUID_EMPTY } from "../utils";
 
 export class SetlistSong implements ISetlistSong {
     Id: string;

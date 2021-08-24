@@ -2,9 +2,9 @@ import { createAction, createAsyncAction } from "typesafe-actions";
 import { ICatalogState } from "..";
 import { IModal, IComponentOrder, IComponentOrderActionProps } from "../../models";
 
-export const setModal = createAction(
-    "SET_MODAL"
-)<IModal>();
+// export const setModal = createAction(
+//     "SET_MODAL"
+// )<IModal>();
 
 export const pushComponent = createAction(
     "PUSH_COMPONENT"

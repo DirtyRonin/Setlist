@@ -17,6 +17,11 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
         bandcatalog,
         setBandFilter,
         showModal,
+
+        setModal,
+        history,
+
+
         // openedCatalogs,
         fetchBandCatalog,
         fetchBandCatalogNextLink,
@@ -134,8 +139,8 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                             <BandCatalogNodeComponent
                                                 openBandSongsCatalog={openBandSongsCatalog}
                                                 addToBandSongsAction={addToBandSongsAction}
-                                                pushCatalogsOrder={pushCatalogsOrder}
-                                                // openedCatalogs={openedCatalogs}
+                                                setModal={setModal}
+                                                history={history}
                                                 // openBandSongsCatalog = {openBandSongsCatalog}
                                                 // closeBandSongsCatalog = {closeBandSongsCatalog}
                                                 // setModal={setModal}

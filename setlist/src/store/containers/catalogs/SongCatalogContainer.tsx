@@ -36,7 +36,7 @@ export type SongCatalogProps = IConnectedDispatch & IState
 const mapStateToProps = (state: RootState, props: IProps): IState => {
 
     return {
-        showModal: state.catalogReducers.catalogState.modal.show,
+        showModal: state.modalReducers.modalState.showModal,
         songCatalog: state.songCatalogReducers.songCatalog,
         history:props.history
     }
@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     fetchSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchSongCatalogNextLink.request(props)),
     pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),
     setSongFilter: (props: IFilterSongActionProps) => dispatch(Action.setSongFilter(props)),
-    setModal:(props:IModalActionsProps) => dispatch(ModalActions.setModals(props))
+    setModal:(props:IModalActionsProps) => dispatch(ModalActions.setModal(props))
 })
 
 const SongCatalog = (props: SongCatalogProps) => {

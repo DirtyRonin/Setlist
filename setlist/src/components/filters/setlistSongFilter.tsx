@@ -4,7 +4,7 @@ import { FormControlProps, Form, Col } from "react-bootstrap";
 import { FilterSetlistSongHtmlAttributesConfiguration } from "../../Configuration";
 import { FilterSetlistSongActionProps } from "../../mapping";
 import { IFilterSetlistSongActionProps, ISetlistSongFilter } from "../../models";
-import { IsFilterableString } from "../../Util";
+import { IsFilterableString } from "../../utils";
 
 export interface ISetlistSongFilterProps {
     CatalogId: string;

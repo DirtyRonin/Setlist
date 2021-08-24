@@ -1,6 +1,6 @@
 import { IBand, IBandSong, IBandUser } from "models";
 import { IBandResource } from "resource";
-import { GUID_EMPTY } from "Util";
+import { GUID_EMPTY } from "utils";
 import { BandSong } from "./bandSong";
 // import { BandSong } from ".";
 

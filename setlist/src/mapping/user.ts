@@ -1,6 +1,6 @@
 import { IUser } from "../models";
 import { IUserResource } from "../resource";
-import { GUID_EMPTY } from "../Util";
+import { GUID_EMPTY } from "../utils";
 
 export class User implements IUser {
     id: string;

@@ -1,6 +1,6 @@
 import { ILocation } from "../models";
 import { ILocationResource } from "../resource";
-import { GUID_EMPTY } from "../Util";
+import { GUID_EMPTY } from "../utils";
 
 export class Location implements ILocation {
     

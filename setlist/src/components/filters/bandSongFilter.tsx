@@ -4,7 +4,7 @@ import { FormControlProps, Form, Col } from "react-bootstrap";
 import { IBandSongFilter, IFilterBandSongActionProps } from "../../models";
 import { FilterBandSongHtmlAttributesConfiguration } from "../../Configuration";
 import { FilterBandSongActionProps } from "../../mapping";
-import { IsFilterableString } from "../../Util";
+import { IsFilterableString } from "../../utils";
 import { SongFilterTemplate } from "./songFilterTemplate";
 
 export interface IBandSongFilterProps {

@@ -2,7 +2,7 @@ import { nameof } from "ts-simple-nameof"
 import { CreateSetlistAsync, ReadSetlistAsync } from ".."
 import { IFilterSetlistActionProps, IFilterSetlistActionResult, INextLinkActionProps, ISetlist, ISetlistEntityActionProps } from "../../models"
 
-import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../Util"
+import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../utils"
 
 
 export const fetchSetlistCatalogAsync = async (props: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {

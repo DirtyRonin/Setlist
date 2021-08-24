@@ -4,7 +4,7 @@ import * as actions from "../../actions/catalogActions/bandCatalogActions"
 import * as common from "../../actions/commonActions"
 import { IBandCatalog } from "../../../models";
 import { BandCatalog } from "../../../mapping";
-import { MapHelper } from "../../../Util";
+import { MapHelper } from "../../../utils";
 
 export type BandCatalogActions = ActionType<typeof common & typeof actions>;
 

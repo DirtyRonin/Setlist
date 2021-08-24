@@ -27,7 +27,7 @@ module.exports = {
       service: path.resolve(__dirname, 'src/service/'),
       styles: path.resolve(__dirname, 'src/styles/'),
       store: path.resolve(__dirname, 'src/store/'),
-      utils: path.resolve(__dirname, 'src/Util/'),
+      utils: path.resolve(__dirname, 'src/utils/'),
     }
   },
   target:'web',

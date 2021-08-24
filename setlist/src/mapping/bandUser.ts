@@ -1,6 +1,6 @@
 import { IBand, IBandUser } from "../models";
 import { IBandUserResource } from "../resource";
-import { GUID_EMPTY } from "../Util";
+import { GUID_EMPTY } from "../utils";
 import { Band } from "./band";
 
 export class BandUser implements IBandUser {

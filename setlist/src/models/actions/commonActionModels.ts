@@ -1,4 +1,3 @@
-import { IModal } from "models/modals";
 import { IComponentOrder } from "..";
 
 export interface IComponentOrderActionProps {
@@ -6,6 +5,5 @@ export interface IComponentOrderActionProps {
 }
 
 export interface IModalActionsProps{
-    modal:IModal,
-    routePath:string
+    showModal:boolean
 }

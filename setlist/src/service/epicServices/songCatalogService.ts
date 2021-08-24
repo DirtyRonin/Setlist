@@ -1,9 +1,9 @@
 import { nameof } from "ts-simple-nameof"
 
-import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IComponentOrder,  IFilterSongActionResult, DisplayIn } from "../../models";
+import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IComponentOrder, IFilterSongActionResult, DisplayIn } from "../../models";
 import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "..";
-import { SongCatalog } from "../../mapping";
-import { QueryBuilder, IsMiminumStringLength,FilterBuilder } from "../../Util";
+import { Song, SongCatalog } from "../../mapping";
+import { QueryBuilder, IsMiminumStringLength, FilterBuilder } from "../../utils";
 
 export const createEmptySongCatalog = (): IComponentOrder => ({
     id: SongCatalog.CatalogId,
@@ -68,4 +68,13 @@ export const editSongInCatalogAsync = async (props: ISongEntityActionProps): Pro
 
 export const deleteSongInCatalogAsync = async (props: ISongEntityActionProps): Promise<string> =>
     (await (DeleteSongAsync(props.value.Id))).Id
+
+export const fetchSongById = async (id: string): Promise<ISong> => {
+    let query = new QueryBuilder()
+    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<ISong>(x => x.Id), 'eq',id))
+    const filter = query.toQuery()
+
+    const song = (await GetFilterSongActionResult(filter)).Values.get(id) ?? Song.EmptySong()
+    return song
+}
 

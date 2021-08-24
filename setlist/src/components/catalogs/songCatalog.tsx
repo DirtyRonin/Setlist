@@ -1,15 +1,32 @@
 import React, { useEffect } from "react";
 
-import { Form, FormControlProps, Col, Row, Navbar, Container } from "react-bootstrap";
+import { Form, FormControlProps, Col, Row, Navbar, Container, Button } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { INextLinkActionProps, IModalSong, CatalogTypes, IComponentOrderActionProps, IComponentOrder, DisplayIn } from "../../models";
+import { INextLinkActionProps, IModalSong, CatalogTypes, IComponentOrderActionProps, IComponentOrder, DisplayIn, ModalTypes } from "models";
 import { FilterSongActionProps, Song } from "../../mapping";
 import { SongCatalogHtmlAttributesConfiguration } from "../../Configuration";
 import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
 import { SongFilterComponent } from "../filters";
 import SongCatalogNodeComponent from "../nodes/songCatalogNode";
 import { SongCatalogProps } from "../../store/containers/catalogs/SongCatalogContainer";
+import styled from "styled-components";
+
+const CatalogBody = styled.div`
+    height: 100%;
+    margin: 0;
+`
+
+const NodeWrapper = styled.div`
+min-height: 100%;
+margin-bottom: -50px;
+`
+const StickBottomButtonWrapper = styled.div`
+  height: 50px;
+`
+const NodeFooter = styled.div`
+  height: 50px;
+`
 
 const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     const {
@@ -51,26 +68,18 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     }
 
     const handleShowAddSong = (event: React.FormEvent<FormControlProps>) => {
-        const elements: any = (event.target as any).form.elements;
+        event.preventDefault();
+        setModal({ showModal: true })
 
-        const modal: IModalSong = {
-            show: elements[songCatalogDef.ShowAddSongCheckBox.ControlId].checked,
-            catalogId: songCatalog.Id,
-            catalogType: CatalogTypes["Song Catalog"],
-            type: "New",
-            value: Song.EmptySong(),
-            catalogInModal: CatalogTypes["None"]
-        }
+        const type: ModalTypes = ModalTypes.New
+        const pathName: string = '/songModal'
 
-        const order: IComponentOrderActionProps = {
-            ComponentOrder: {
-                value: modal,
-                id: modal.catalogId,
-                displayIn: DisplayIn.Modal
-            } as IComponentOrder
-        }
 
-        pushCatalogsOrder(order)
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}`,
+            state: { background: history.location }
+        })
     }
 
     return (
@@ -82,7 +91,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                         <Row>
                             <Col>
                                 <NodeListCss id={songCatalogDef.NodeList.ControlId} >
-                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
+                                    <Navbar sticky="top" collapseOnSelect expand={false} expanded={true} bg="light" variant="light">
                                         <Navbar.Brand >{songCatalog.Title}</Navbar.Brand>
                                         <Navbar.Toggle aria-controls={songCatalogDef.Navbar.ControlId} />
                                         <Navbar.Collapse id={songCatalogDef.Navbar.ControlId}>
@@ -91,23 +100,25 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                                     <SongFilterCss>
                                                         <SongFilterComponent
                                                             CatalogId={songCatalog.Id}
-                                                            Filter={songCatalog.Filter}
+                                                            filter={songCatalog.Filter}
                                                             setSongFilter={setSongFilter}
                                                         />
                                                     </SongFilterCss>
                                                 </Col>
                                                 <Col sm="6">
-                                                    <Form onChange={handleShowAddSong}>
+                                                    {/* <Form onChange={handleShowAddSong}>
                                                         <Form.Row>
                                                             <Form.Group as={Col} controlId={songCatalogDef.ShowAddSongCheckBox.ControlId}>
                                                                 <Form.Check type="switch" checked={showModal} label={songCatalogDef.ShowAddSongCheckBox.Label} />
                                                             </Form.Group>
                                                         </Form.Row>
-                                                    </Form>
+                                                    </Form> */}
+                                                    <Button variant="secondary" onClick={handleShowAddSong}>New Song</Button>
                                                 </Col>
                                             </Row>
                                         </Navbar.Collapse>
                                     </Navbar>
+
                                     <InfiniteScroll
                                         dataLength={songCatalog.Values.size}
                                         next={handleScrollDown}
@@ -120,6 +131,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                         }
                                         scrollableTarget={songCatalogDef.NodeList.ControlId}
                                     >
+
                                         {Array.from(songCatalog.Values.values()).map((song, index) => (
                                             <SongCatalogNodeComponent
                                                 history={history}
@@ -131,8 +143,13 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                                 index={index}
                                             />
                                         ))}
+
+
+
                                     </InfiniteScroll>
+
                                 </NodeListCss>
+                                <Button variant="secondary" >Close</Button>
                                 {songCatalog.OData.Count}
                             </Col>
                         </Row>

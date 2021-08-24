@@ -1,9 +1,9 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { History } from "history";
 
-import { ISong, ModalTypes, IModalSong, CatalogTypes, IComponentOrderActionProps, DisplayIn, IComponentOrder, IModal, IModalActionsProps } from "models";
+import { ISong, ModalTypes, IModalSong, CatalogTypes, IModalActionsProps } from "models";
 import { DefaultNodeWrapperStyle, DefaultNodeImageStyle, DefaultLabelStyle } from "styles/defaultNodeStyle";
 
 
@@ -13,8 +13,6 @@ import {
     MenuDivider,
     MenuHeader
 } from '@szhsin/react-menu';
-import IconOval from "components/common/icons/common/oval";
-// import '@szhsin/react-menu/dist/index.css';
 
 
 
@@ -36,31 +34,22 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
 
 
 
-    const createModal = (type: ModalTypes, catalogInModal: CatalogTypes = CatalogTypes["None"]) => {
+    const createModal = (type: ModalTypes, pathName: string = '/') => {
 
-        const modal: IModalSong = {
-            show: true,
-            catalogId: songListId,
-            catalogType: CatalogTypes["Song Catalog"],
-            type,
-            value: song,
-            catalogInModal
-        }
-
-        setModal({ modal, routePath: '/modal' })
+        setModal({ showModal: true })
 
         history.push({
-            pathname: `/modal`,
-            // search:'?type=song'
+            pathname: pathName,
+            search: `?$type=${type}&$id=${song.Id}`,
             state: { background: history.location }
         })
     }
 
-    const handleShowEditSong = () => createModal(ModalTypes.Edit)
-    const handleShowReadSong = () => createModal(ModalTypes.Read)
-    const handleShowDeleteSong = () => createModal(ModalTypes.Remove)
-    const handleAddSongToBand = () => createModal(ModalTypes.Add, CatalogTypes["Band Catalog"])
-    const handleAddSongToSetlist = () => createModal(ModalTypes.Add, CatalogTypes["Setlist Catalog"])
+    const handleShowEditSong = () => createModal(ModalTypes.Edit, '/songModal')
+    const handleShowReadSong = () => createModal(ModalTypes.Read, `/songModal`)
+    const handleShowDeleteSong = () => createModal(ModalTypes.Remove, `/songModal`)
+    const handleAddSongToBand = () => createModal(ModalTypes.Add, '/AddSongToBand')
+    const handleAddSongToSetlist = () => createModal(ModalTypes.Add, '/AddSongToSetlist')
 
     const uniqueNodeId = `${songListId}-${song.Id}-${index}`
 

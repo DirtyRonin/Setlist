@@ -14,7 +14,7 @@ export interface IAddBandSongToSetlistModalComponent {
     bandSong: IBandSong
 }
 
-const AddSongToSetlistModalComponent = (props: IAddBandSongToSetlistModalComponent): JSX.Element => {
+const AddBandSongToSetlistModalComponent = (props: IAddBandSongToSetlistModalComponent): JSX.Element => {
 
     const { bandSong } = props
 
@@ -130,4 +130,4 @@ const AddSongToSetlistModalComponent = (props: IAddBandSongToSetlistModalCompone
     );
 };
 
-export default AddSongToSetlistModalComponent;
+export default AddBandSongToSetlistModalComponent;

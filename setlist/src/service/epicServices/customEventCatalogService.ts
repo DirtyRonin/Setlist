@@ -2,7 +2,7 @@ import { nameof } from "ts-simple-nameof"
 import { ReadCustomEventAsync } from ".."
 import { IFilterCustomEventActionProps, IFilterCustomEventActionResult, ICustomEvent, INextLinkActionProps } from "../../models"
 
-import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../Util"
+import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../utils"
 
 export const fetchCustomEventCatalogAsync = async (props: IFilterCustomEventActionProps): Promise<IFilterCustomEventActionResult> => {
 

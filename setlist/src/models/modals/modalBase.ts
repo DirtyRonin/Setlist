@@ -1,6 +1,6 @@
 import { CatalogTypes, IContainerProps, IBand, ISong, ISetlistSong, ILocation, IBandSong, ISetlist, ICustomEvent } from "..";
 
-export type ModalTypes = "None" | "New" | "Edit" | "Remove" | "Read" | "Add" | "ShowCatalog"
+export type ModalTypes = "None" | "New" | "Edit" | "Remove" | "Read" | "Add" | "ShowCatalog" 
 export const ModalTypes = {
     None: "None",
     New: "New",
@@ -10,6 +10,8 @@ export const ModalTypes = {
     Add: "Add",
     ShowCatalog: "ShowCatalog"
 } as const;
+
+
 
 export interface IReferencedCatalog extends IContainerProps {
     catalogType: CatalogTypes

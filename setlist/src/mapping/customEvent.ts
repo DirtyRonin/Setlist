@@ -1,6 +1,6 @@
 import { ICustomEvent } from "../models";
 import { ICustomEventResource } from "../resource";
-import { GUID_EMPTY } from "../Util";
+import { GUID_EMPTY } from "../utils";
 
 export class CustomEvent implements ICustomEvent {
 

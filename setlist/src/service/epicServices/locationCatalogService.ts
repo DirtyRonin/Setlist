@@ -2,7 +2,7 @@ import { nameof } from "ts-simple-nameof"
 import { ReadLocationAsync } from ".."
 import { IFilterLocationActionProps, IFilterLocationActionResult, ILocation, INextLinkActionProps } from "../../models"
 
-import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../Util"
+import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../utils"
 
 export const fetchLocationCatalogAsync = async (props: IFilterLocationActionProps): Promise<IFilterLocationActionResult> => {
 

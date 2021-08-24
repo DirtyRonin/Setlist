@@ -4,23 +4,19 @@ import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 import { SetlistModalHtmlAttributesConfiguration } from "../../Configuration";
 import { Setlist } from "../../mapping";
 import { IModalSetlist, ISetlist, ISetlistEntityActionProps, ModalTypes } from "../../models";
-import { IsModalReadonly } from "../../Util";
+import { IsModalReadonly } from "../../utils";
 
 export interface ISetlistModalComponent {
     modal: IModalSetlist
-    popCatalogsOrder(): void
+    handleCloseModal():void
     executeSetlistModalAction(props: ISetlistEntityActionProps): void
 }
 
 export const SetlistModalComponent = (props: ISetlistModalComponent) => {
 
-    const { modal, popCatalogsOrder , executeSetlistModalAction } = props
+    const { modal, handleCloseModal , executeSetlistModalAction } = props
 
     const setlistModalDef = SetlistModalHtmlAttributesConfiguration
-
-    const handleCloseModal = () => {
-        popCatalogsOrder();
-    }
 
     const hanldeOnClick = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();

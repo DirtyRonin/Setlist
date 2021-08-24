@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
 import { IUser } from "../../models";
-import { GUID_EMPTY } from "../../Util";
+import { GUID_EMPTY } from "../../utils";
 
 import * as userActions  from "../actions/userActions";
 

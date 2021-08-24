@@ -1,6 +1,6 @@
 import { IFilterBandSongActionProps, IBandSong, ISong, INextLinkActionProps, IComponentOrder, DisplayIn, IFilterBandSongActionResult, IBandSongEntityActionProps } from "../../models";
 import { BandSongCatalog } from "../../mapping";
-import {  QueryBuilder, IsMiminumStringLength,FilterBuilder } from "../../Util";
+import {  QueryBuilder, IsMiminumStringLength,FilterBuilder } from "../../utils";
 import { nameof } from "ts-simple-nameof";
 import { CreateBandSongAsync, ReadBandSongsAsync } from "..";
 

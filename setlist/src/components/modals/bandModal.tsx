@@ -4,23 +4,19 @@ import { BandModalHtmlAttributesConfiguration } from "../../Configuration";
 import { ModalTypes, IBandEntityActionProps, IBand } from "../../models";
 import { Band } from "../../mapping";
 import { IModalBand } from "../../models/modals/modelBand";
-import { IsModalReadonly } from "../../Util";
+import { IsModalReadonly } from "../../utils";
 
 export interface IBandModalComponent {
     modal: IModalBand
-    popCatalogsOrder(): void
+    handleCloseModal():void
     executeBandModalAction(props: IBandEntityActionProps): void
 }
 
 export const BandModalComponent = (props: IBandModalComponent) => {
 
-    const { modal, popCatalogsOrder, executeBandModalAction } = props
+    const { modal, handleCloseModal, executeBandModalAction } = props
 
     const bandModalDef = BandModalHtmlAttributesConfiguration;
-
-    const handleCloseModal = () => {
-        popCatalogsOrder();
-    }
 
     const hanldeOnClick = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();

@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { History } from 'history';
+import { History, Location } from 'history';
 
 import { RootState, ICatalogState } from '../reducers';
 import { App } from '../../App';
@@ -19,7 +19,7 @@ interface IAppConnectedDispatch {
 
 
     songModalActionsProvider: songModalActions
-    bandModalActionsProvider: bandModalActions
+    // bandModalActionsProvider: bandModalActions
     bandSongModalActionsProvider: bandSongModalActions
     setlistModalActionsProvider: setlistModalActions
 
@@ -32,9 +32,12 @@ interface IStateProps extends IProps {
     catalogState: ICatalogState;
     userState: IUser;
     modalState: IModelState
+    location: Location<LocationState| undefined>
 }
 
-
+type LocationState ={
+    background : Location | undefined
+}
 
 export type AppProps = IStateProps & IAppConnectedDispatch;
 
@@ -44,7 +47,8 @@ const mapStateToProps = (state: RootState, props: IProps): IStateProps => {
         userState: state.userReducers.user,
         // i need modalstate here so the whole component will be updated - otherwise, only the modal withou the background will be rendered
         modalState:state.modalReducers.modalState,
-        history: props.history
+        history: props.history,
+        location : props.history.location
     } as IStateProps)
 };
 
@@ -62,15 +66,15 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatc
             Read: () => dispatch(Action.readSongInCatalog()),
             ShowCatalog: () => { }
         },
-        bandModalActionsProvider: {
-            None: () => { },
-            New: (props: IEntityActionProps) => dispatch(Action.addBandToCatalog.request(props)),
-            Edit: (props: IEntityActionProps) => dispatch(Action.editBandInCatalog.request(props)),
-            Remove: (props: IEntityActionProps) => dispatch(Action.deleteBandInCatalog.request(props)),
-            Read: () => dispatch(Action.readBandInCatalog()),
-            Add: () => { },
-            ShowCatalog: () => { }
-        },
+        // bandModalActionsProvider: {
+        //     None: () => { },
+        //     New: (props: IEntityActionProps) => dispatch(Action.addBandToCatalog.request(props)),
+        //     Edit: (props: IEntityActionProps) => dispatch(Action.editBandInCatalog.request(props)),
+        //     Remove: (props: IEntityActionProps) => dispatch(Action.deleteBandInCatalog.request(props)),
+        //     Read: () => dispatch(Action.readBandInCatalog()),
+        //     Add: () => { },
+        //     ShowCatalog: () => { }
+        // },
         bandSongModalActionsProvider: {
             None: () => { },
             New: () => { } /*dispatch(Action.addBandSongToCatalog.request(props))*/,

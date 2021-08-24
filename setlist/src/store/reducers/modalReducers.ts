@@ -7,7 +7,7 @@ import { IModal } from "models";
 export type ModalActions = ActionType<typeof ModalActions>;
 
 export interface IModelState {
-    modals: Map<string, IModal>
+    showModal:boolean
 }
 
 export type ModalState = {
@@ -16,17 +16,17 @@ export type ModalState = {
 
 
 export const InitialModals: IModelState = {
-    modals: new Map<string, IModal>()
+    showModal: false
 }
 
 export default combineReducers<ModalState, ModalActions>(
     {
         modalState: (state = InitialModals, action) => {
             switch (action.type) {
-                case getType(ModalActions.setModals):
+                case getType(ModalActions.setModal):
                     return {
                         ...state,
-                        modals: state.modals.set(action.payload.routePath, action.payload.modal)
+                        showModal: action.payload.showModal
                     }
 
                 default:

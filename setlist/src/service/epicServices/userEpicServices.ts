@@ -2,7 +2,7 @@ import { nameof } from "ts-simple-nameof"
 
 import { User } from "../../mapping";
 import { IUser } from "../../models";
-import { QueryBuilder, IsMiminumStringLength ,FilterBuilder} from "../../Util";
+import { QueryBuilder, IsMiminumStringLength ,FilterBuilder} from "../../utils";
 import { ReadUsersAsync } from "../apiServices/userService";
 
 export const fetchCurrentUser = async (userName: string): Promise<IUser> => {

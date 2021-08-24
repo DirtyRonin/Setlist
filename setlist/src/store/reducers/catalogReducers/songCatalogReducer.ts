@@ -7,7 +7,7 @@ import * as actions from "../../actions/catalogActions/songCatalogActions"
 import { ISongCatalog } from "../../../models";
 import { SongCatalog } from "../../../mapping";
 
-import { MapHelper } from "../../../Util"
+import { MapHelper } from "../../../utils"
 
 export type SongCatalogActions = ActionType<typeof actions>;
 

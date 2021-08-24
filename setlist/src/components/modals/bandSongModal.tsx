@@ -1,25 +1,23 @@
 import React from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 import { BandSongModalHtmlAttributesConfiguration } from "../../Configuration";
-import { IModal, ModalTypes, defaultModal, IModalSong, IBandSongEntityActionProps, IBandSong, IModalBandSong } from "../../models";
+import { ModalTypes, IBandSongEntityActionProps, IBandSong, IModalBandSong } from "../../models";
 import { BandSong } from "../../mapping";
-import { IsModalReadonly } from "../../Util";
+import { IsModalReadonly } from "../../utils";
 
 export interface IBandSongModalComponent {
     modal: IModalBandSong
-    popCatalogsOrder(): void
+    handleCloseModal():void
     executeBandSongModalAction(props: IBandSongEntityActionProps): void
 }
 
 export const BandSongModalComponent = (props: IBandSongModalComponent) => {
 
-    const { modal, popCatalogsOrder: popCatalogsOrder, executeBandSongModalAction } = props
+    const { modal, handleCloseModal, executeBandSongModalAction } = props
 
     const htmlConfig = BandSongModalHtmlAttributesConfiguration;
 
-    const handleCloseModal = () => {
-        popCatalogsOrder();
-    }
+    
 
     const hanldeOnClick = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();

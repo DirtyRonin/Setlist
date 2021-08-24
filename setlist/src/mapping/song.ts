@@ -1,8 +1,7 @@
 import { ISong } from "../models";
-import { GUID_EMPTY } from "../Util";
+import { GUID_EMPTY } from "../utils";
 import { ISongResource } from "../resource";
 
-//Nineties
 export class Song {
 
     Id: string;

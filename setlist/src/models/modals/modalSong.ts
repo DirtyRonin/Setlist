@@ -1,5 +1,5 @@
 import { IModal, ModalTypes } from ".";
-import { ISong, ISongEntityActionProps, IEntityActionProps } from "..";
+import { ISong, ISongEntityActionProps } from "..";
 
 export interface IModalSong extends IModal {
     value: ISong

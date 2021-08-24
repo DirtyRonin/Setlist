@@ -2,8 +2,8 @@ import { createAction } from "typesafe-actions";
 
 import { IModalActionsProps } from "models";
 
-const setModals = createAction(
+const setModal = createAction(
     "SET_MODALS"
 )<IModalActionsProps>();
 
-export default { setModals }
+export default { setModal }

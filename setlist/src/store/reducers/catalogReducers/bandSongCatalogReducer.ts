@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
 import { BandSongCatalog } from "../../../mapping";
 import { IBandSongCatalog } from "../../../models";
-import { MapHelper } from "../../../Util";
+import { MapHelper } from "../../../utils";
 
 import * as actions from "../../actions/catalogActions/bandSongCatalogActions"
 
