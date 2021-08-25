@@ -9,6 +9,7 @@ const SongCatalogContainer = React.lazy(() => import('store/containers/catalogs/
 const SetlistCatalogContainer = React.lazy(() => import('store/containers/catalogs/SetlistCatalogContainer'))
 const LocationCatalogContainer = React.lazy(() => import('store/containers/catalogs/LocationCatalogContainer'))
 const CustomEventCatalogContainer = React.lazy(() => import('store/containers/catalogs/CustomEventCatalogContainer'))
+const BandSongCatalogComponent = React.lazy(() => import('store/containers/catalogs/BandSongCatalogContainer'))
 const ModalWrapper = React.lazy(() => import('components/common/modalWrapper/modalWrapper'))
 
 import '@szhsin/react-menu/dist/index.css';
@@ -34,8 +35,8 @@ export const App = (props: AppProps): JSX.Element => {
         location,
         history,
         userState,
-        modalState:{showModal},
-        
+        modalState: { showModal },
+
         getUser,
     } = props;
 
@@ -77,10 +78,15 @@ export const App = (props: AppProps): JSX.Element => {
                         <PrivateRoute path='/customevent'>
                             <CustomEventCatalogContainer />
                         </PrivateRoute>
+                        <PrivateRoute path="/bandSongAsCatalog">
+                            <BandSongCatalogComponent
+                                history={history}
+                            />
+                        </PrivateRoute>
                         <PrivateRoute path='/settings'>
                         </PrivateRoute>
                     </Switch>
-                   {showModal && <Switch>
+                    {showModal && <Switch>
                         <ModalWrapper history={history} />
                     </Switch>}
                 </Wrapper>

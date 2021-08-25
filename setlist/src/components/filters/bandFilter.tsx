@@ -8,28 +8,27 @@ import { IsFilterableString } from "../../utils";
 
 
 export interface IBandFilterProps {
-    CatalogId: string;
-    Filter: IBandFilter;
+    filter: IBandFilter;
     setBandFilter(props: IFilterBandActionProps): void
 }
 
 export const BandFilterComponent = (props: IBandFilterProps) => {
-    const { Filter, CatalogId, setBandFilter } = props;
+    const { filter, setBandFilter } = props;
 
     const { SearchTitleInput } = FilterBandHtmlAttributesConfiguration
 
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
-        // event.preventDefault();
+        event.preventDefault();
 
         const elements: any = (event.target as any).form.elements;
 
-        const filter = {
+        const _filter = {
             Title: elements[SearchTitleInput.ControlId].value,
         }
 
-        const bandFilter = FilterBandActionProps.Create(CatalogId, filter, true)
+        const bandFilter = FilterBandActionProps.Create(_filter, true)
 
-        bandFilter.refresh = IsFilterableString(Filter.Title, bandFilter.filter.Title) ? true : false
+        bandFilter.refresh = IsFilterableString(filter.Title, bandFilter.filter.Title) ? true : false
 
         if (bandFilter.refresh) {
             setBandFilter(bandFilter)
@@ -41,7 +40,7 @@ export const BandFilterComponent = (props: IBandFilterProps) => {
         <Form onChange={handleFilter} >
             <Form.Row>
                 <Form.Group as={Col} controlId={SearchTitleInput.ControlId}>
-                    <Form.Control type="search" placeholder={SearchTitleInput.Placeholder} />
+                    <Form.Control type="search" defaultValue={filter.Title} placeholder={SearchTitleInput.Placeholder} />
                 </Form.Group>
             </Form.Row>
         </Form>

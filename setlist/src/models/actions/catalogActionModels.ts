@@ -2,7 +2,6 @@ import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter,  Ca
 import { ICustomEvent, ILocation, ISetlist, ISetlistSong } from "../entity";
 
 interface IFilterActionPropsBase<T> {
-    catalogId: string;
     filter: T
     refresh: boolean,
 }
@@ -17,7 +16,6 @@ export interface IFilterLocationActionProps extends IFilterActionPropsBase<ILoca
 export interface IFilterCustomEventActionProps extends IFilterActionPropsBase<ICustomEventFilter> { }
 
 export interface IEntityActionProps {
-    catalogId: string;
     value: ISong | IBand | IBandSong | ISetlist | ISetlistSong | ILocation | ICustomEvent
 }
 export interface ISongEntityActionProps extends IEntityActionProps {
@@ -45,7 +43,6 @@ export interface ICustomEventEntityActionProps extends IEntityActionProps {
 export interface IStatusCatalogActionProps {
     show: boolean
     catalogType: CatalogTypes;
-    catalogId: string;
     displayIn: DisplayIn;
 }
 
@@ -57,7 +54,6 @@ export interface IStatusBandSongCatalogActionProps extends IStatusCatalogActionP
 }
 
 export interface INextLinkActionProps {
-    catalogId: string;
     nextLink: string,
 }
 

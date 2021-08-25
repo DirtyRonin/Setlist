@@ -23,7 +23,7 @@ export const SongModalHtmlAttributesConfiguration: SongModalHtmlAttributesConfig
     Comment: { Label: "Comment", Placeholder: "Enter Comment", Data_TestId: "SongModal_Comment", ControlId: "SongModal_Comment" },
 };
 
-type BandSongModalNodeHtmlComponentNames = SongModalNodeHtmlComponentNames
+type BandSongModalNodeHtmlComponentNames = SongModalNodeHtmlComponentNames | 'Popularity'
 
 export type BandSongModalHtmlAttributesConfigurationType = Record<
     BandSongModalNodeHtmlComponentNames,
@@ -37,6 +37,7 @@ export const BandSongModalHtmlAttributesConfiguration: BandSongModalHtmlAttribut
     Evergreen: { Label: "Evergreen", Placeholder: "Enter Evergreen", Data_TestId: "BandSongModal_Evergreen", ControlId: "BandSongModal_Evergreen" },
     OriginalKey: { Label: "OriginalKey", Placeholder: "Enter OriginalKey", Data_TestId: "BandSongModal_OriginalKey", ControlId: "BandSongModal_OriginalKey" },
     Comment: { Label: "Comment", Placeholder: "Enter Comment", Data_TestId: "BandSongModal_Comment", ControlId: "BandSongModal_Comment" },
+    Popularity: { Label: "Popularity", Placeholder: "Enter Popularity", Data_TestId: "BandSongModal_Popularity", ControlId: "BandSongModal_Popularity" },
 };
 
 type BandModalNodeHtmlComponentNames = "Title";

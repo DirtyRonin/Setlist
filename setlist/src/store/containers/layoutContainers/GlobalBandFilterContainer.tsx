@@ -28,7 +28,7 @@ const mapStateToProps = (state: RootState): IGlobalBandFilterProps =>
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IGlobalBandFilterConnectedDispatch => {
     return {
-        openBandSongsCatalog: (bandId: string) => dispatch(Action.openBandSongsCatalog(bandId)),
+        openBandSongsCatalog: (bandId: string) => dispatch(Action.setBandIdForBandSong(bandId)),
         closeBandSongsCatalog: () => dispatch(Action.closeBandSongsCatalog()),
     }
 }

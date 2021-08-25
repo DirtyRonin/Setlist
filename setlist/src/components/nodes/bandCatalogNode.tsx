@@ -1,5 +1,5 @@
 import React from "react";
-import {History} from 'history'
+import { History } from 'history'
 
 import { Container, Row, Col, Button } from "react-bootstrap";
 import {
@@ -9,82 +9,76 @@ import {
     MenuHeader
 } from '@szhsin/react-menu';
 
-import { SongNodeContainer } from "../../styles";
-import { IBand, ModalTypes, CatalogTypes, DisplayIn, IBandSongEntityActionProps, IComponentOrder, IComponentOrderActionProps, IModalActionsProps } from "models";
-import { IModalBand } from "../../models/modals/modelBand";
-import { BandCatalogNodeHtmlAttributesConfiguration } from "configuration";
+import { DefaultLabelStyle, DefaultNodeImageStyle, DefaultNodeWrapperStyle } from "styles";
+import { IBand, ModalTypes, IModalActionsProps } from "models";
 
 export interface IBandNodeProps {
     band: IBand;
     index: number;
-    catalogId: string;
     history: History
-    
+
     setModal(props: IModalActionsProps): void
 
-    addToBandSongsAction(props: IBandSongEntityActionProps): void
-    openBandSongsCatalog(bandId: string): void
+    setBandIdForBandSong(bandId: string): void
 }
 
 const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
     const {
         band,
         index,
-        catalogId,
         setModal,
         history,
-
-        openBandSongsCatalog,
-        addToBandSongsAction,
+        setBandIdForBandSong,
     } = props;
 
-    const bandCatalogNodeDef = BandCatalogNodeHtmlAttributesConfiguration;
+    const createModal = (type: ModalTypes, pathName: string = '/', isModal: boolean = true) => {
 
-    const createModal = (type: ModalTypes, catalogInModal: CatalogTypes = CatalogTypes["None"]) => {
-        const modal: IModalBand = {
-            show: true,
-            catalogId,
-            catalogType: CatalogTypes["Band Catalog"],
-            type,
-            value: band,
-            catalogInModal
-        }
+        setModal({ showModal: true })
 
-        setModal({ modal, routePath: '/bandModal' })
+        if (type === ModalTypes.ShowCatalog)
+            setBandIdForBandSong(band.Id)
 
         history.push({
-            pathname: `/bandModal`,
-            // search:'?type=song',
-            state: { background: history.location }
+            pathname: pathName,
+            search: `?$type=${type}&$id=${band.Id}`,
+            state: isModal ? { background: history.location } : undefined //display as catalog in main window
         })
     }
 
-    const concatUniqueID = (htmlElementId: string): string => `${htmlElementId}_${band.Id}`
+    const handleShowEditBand = () => createModal(ModalTypes.Edit, `/bandModal`)
+    const handleShowReadBand = () => createModal(ModalTypes.Read, `/bandModal`)
+    const handleShowDeleteBand = () => createModal(ModalTypes.Remove, `/bandModal`)
+    const handleShowBandSongsCatalog = () => createModal(ModalTypes.ShowCatalog, '/bandSongAsCatalog', false)
 
-    const handleShowBandSongCatalog = () => {
-        openBandSongsCatalog(band.Id)
-    }
+    // // die variante als modal bleibt erstmal drinne, falls es dafür nochmal ne verwendung geben sollte (25.08.2021)
+    // const handleShowBandSongsModal = () => createModal(ModalTypes.ShowCatalog, '/bandSongAsModal')
 
-    const handleShowEditBand = () => createModal(ModalTypes.Edit)
-    const handleShowReadBand = () => createModal(ModalTypes.Read)
-    const handleShowDeleteBand = () => createModal(ModalTypes.Remove)
-    const handleShowBandSongsCatalog = () => handleShowBandSongCatalog()
-    const handleShowBandSongsModal = () => createModal(ModalTypes.ShowCatalog, CatalogTypes["BandSong Catalog"])
 
-    const uniqueNodeId = `${catalogId}-${band.Id}-${index}`
-    // const showBandSongCatalog = openedCatalogs.some( catalog=> catalog.id === BandSongCatalog.GetCatalogId(band.Id))
 
     return (
-        <Container>
-            <SongNodeContainer >
+
+        <DefaultNodeWrapperStyle >
+
+            <Container>
                 <Row>
-                    <Col xs="8">
-                        <label>{band.Title}</label>
+                    <Col xs="10" >
+                        <Row>
+                            <Col xs="3">
+                                <DefaultNodeImageStyle />
+                            </Col>
+                            <Col xs="9">
+                                <Row>
+                                    <Col>
+                                        <DefaultLabelStyle>{band.Title}</DefaultLabelStyle>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
                     </Col >
-                    <Col xs="4">
+                    <Col xs="2">
                         <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
                             <MenuItem value="AddBand" onClick={handleShowBandSongsCatalog} >Show Band Songs</MenuItem>
-                            <MenuItem value="AddBand" onClick={handleShowBandSongsModal} >Show Band Songs Modal</MenuItem>
+                            {/* <MenuItem value="AddBand" onClick={handleShowBandSongsModal} >Show Band Songs Modal</MenuItem> */}
 
                             <MenuDivider />
 
@@ -94,10 +88,11 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
                             <MenuItem value="Remove" onClick={handleShowDeleteBand} >{ModalTypes.Remove}</MenuItem>
                         </Menu>
                     </Col>
-
                 </Row>
-            </SongNodeContainer>
-        </Container>
+            </Container>
+
+        </DefaultNodeWrapperStyle >
+
     );
 };
 

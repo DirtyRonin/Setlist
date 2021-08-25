@@ -4,34 +4,28 @@ export class FilterSongActionProps implements IFilterSongActionProps {
 
     filter: ISongFilter;
     refresh: boolean;
-    catalogId: string
 
-    constructor(songCatalogId: string, filter: ISongFilter, refresh: boolean) {
+    constructor(filter: ISongFilter, refresh: boolean) {
         this.filter = filter
         this.refresh = refresh
-        this.catalogId = songCatalogId
-
     }
 
-    public static Default(songCatalogId: string = ""): IFilterSongActionProps {
-
-        const filter: ISongFilter = {
+    public static Default(): IFilterSongActionProps {
+        return FilterSongActionProps.Create({
             Title: "",
             Artist: "",
             Genre: "",
             Evergreen: false,
             Nineties: false
-        }
-
-        return FilterSongActionProps.Create(songCatalogId,filter, true)
+        }, true)
     }
 
-    public static Create(songCatalogId: string,filter: ISongFilter, refresh: boolean): IFilterSongActionProps {
-        return new FilterSongActionProps(songCatalogId,filter, refresh)
+    public static Create(filter: ISongFilter, refresh: boolean): IFilterSongActionProps {
+        return new FilterSongActionProps(filter, refresh)
     }
 
-    public static CreateFromSongCatalog(songCatalog:ISongCatalog){
-        const {Id,Filter,Refresh} = songCatalog
-        return new FilterSongActionProps(Id,Filter,Refresh)
+    public static CreateFromSongCatalog(songCatalog: ISongCatalog) {
+        const { Filter, Refresh } = songCatalog
+        return new FilterSongActionProps(Filter, Refresh)
     }
 }

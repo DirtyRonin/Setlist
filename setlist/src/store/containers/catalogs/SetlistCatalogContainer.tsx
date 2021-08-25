@@ -1,38 +1,44 @@
 import * as React from 'react';
 import { connect } from "react-redux";
-import SetlistCatalogComponent from '../../../components/catalogs/setlistCatalog';
+import { History } from 'history';
 
-import { RootState } from '../../reducers';
-import { IComponentOrderActionProps, IFilterSetlistActionProps, INextLinkActionProps, ISetlistCatalog } from '../../../models';
+import { RootState } from 'store/reducers';
 
-import * as Common from '../../actions/commonActions';
-import * as SetlistAction from '../../actions/catalogActions/setlistCatalogActions';
+import SetlistCatalogComponent from 'components/catalogs/setlistCatalog';
+
+import { IFilterSetlistActionProps, IModalActionsProps, INextLinkActionProps, ISetlistCatalog } from 'models';
+
+import * as SetlistAction from 'store/actions/catalogActions/setlistCatalogActions';
+import ModalActions from 'store/actions/modalActions';
 
 interface IConnectedDispatch {
     setSetlistFilter:(props: IFilterSetlistActionProps) => void
     fetchSetlistCatalog: (props: IFilterSetlistActionProps) => void
     fetchSetlistCatalogNextLink: (props: INextLinkActionProps) => void
-    pushCatalogsOrder: (props: IComponentOrderActionProps) => void,
+    setModal(props:IModalActionsProps):void
 }
 
-interface IState {
+interface IProps {
+    history: History
+}
+
+interface IState extends IProps {
     setlistCatalog: ISetlistCatalog;
-    showModal: boolean;
 }
 
 export type SetlistCatalogProps = IConnectedDispatch & IState
 
-const mapStateToProps = (state: RootState): IState =>
+const mapStateToProps = (state: RootState, props: IProps): IState =>
 ({
     setlistCatalog: state.setlistCatalogReducers.setlistCatalog,
-    showModal: state.catalogReducers.catalogState.modal.show
+    history:props.history
 });
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch => ({
     setSetlistFilter: (props: IFilterSetlistActionProps) => dispatch(SetlistAction.setSetlistFilter(props)),
-    pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),
     fetchSetlistCatalog:(props: IFilterSetlistActionProps) => dispatch(SetlistAction.fetchSetlistCatalog.request(props)),
     fetchSetlistCatalogNextLink:(props : INextLinkActionProps) => dispatch(SetlistAction.fetchSetlistCatalogNextLink.request(props)),
+    setModal:(props:IModalActionsProps) => dispatch(ModalActions.setModal(props)),
 })
 
 const SetlistCatalog = (props: SetlistCatalogProps) => (

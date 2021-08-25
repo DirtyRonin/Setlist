@@ -1,45 +1,26 @@
 import React, { useEffect } from "react";
 
-import { Form, FormControlProps, Col, Row, Navbar, Container, Button } from "react-bootstrap";
+import { FormControlProps, Col, Row, Navbar, Container, Button } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { INextLinkActionProps, IModalSong, CatalogTypes, IComponentOrderActionProps, IComponentOrder, DisplayIn, ModalTypes } from "models";
-import { FilterSongActionProps, Song } from "../../mapping";
-import { SongCatalogHtmlAttributesConfiguration } from "../../Configuration";
-import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
-import { SongFilterComponent } from "../filters";
-import SongCatalogNodeComponent from "../nodes/songCatalogNode";
-import { SongCatalogProps } from "../../store/containers/catalogs/SongCatalogContainer";
-import styled from "styled-components";
+import { INextLinkActionProps, ModalTypes } from "models";
+import { FilterSongActionProps } from "mapping";
+import { SongCatalogHtmlAttributesConfiguration } from "configuration";
+import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
 
-const CatalogBody = styled.div`
-    height: 100%;
-    margin: 0;
-`
-
-const NodeWrapper = styled.div`
-min-height: 100%;
-margin-bottom: -50px;
-`
-const StickBottomButtonWrapper = styled.div`
-  height: 50px;
-`
-const NodeFooter = styled.div`
-  height: 50px;
-`
+import { SongCatalogProps } from "store/containers/catalogs/SongCatalogContainer";
+import { SongFilterComponent } from "components/filters";
+import SongCatalogNodeComponent from "components/nodes/songCatalogNode";
 
 const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     const {
         songCatalog,
+        history,
+
         setSongFilter,
         fetchSongCatalog,
         fetchSongCatalogNextLink,
-        pushCatalogsOrder,
         setModal,
-
-        showModal,
-        history
-
     } = props;
 
     //initial refresh
@@ -59,8 +40,8 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     const songCatalogDef = SongCatalogHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        const { Id, OData } = songCatalog
-        const actionProps: INextLinkActionProps = { catalogId: Id, nextLink: OData.NextLink }
+        const { OData } = songCatalog
+        const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
             fetchSongCatalogNextLink(actionProps)
@@ -87,7 +68,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
         <Container fluid>
             <Row>
                 <Col >
-                    <ContainerCss data-testid={songCatalog.Id}>
+                    <ContainerCss >
                         <Row>
                             <Col>
                                 <NodeListCss id={songCatalogDef.NodeList.ControlId} >
@@ -99,20 +80,12 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                                 <Col sm="6">
                                                     <SongFilterCss>
                                                         <SongFilterComponent
-                                                            CatalogId={songCatalog.Id}
                                                             filter={songCatalog.Filter}
                                                             setSongFilter={setSongFilter}
                                                         />
                                                     </SongFilterCss>
                                                 </Col>
                                                 <Col sm="6">
-                                                    {/* <Form onChange={handleShowAddSong}>
-                                                        <Form.Row>
-                                                            <Form.Group as={Col} controlId={songCatalogDef.ShowAddSongCheckBox.ControlId}>
-                                                                <Form.Check type="switch" checked={showModal} label={songCatalogDef.ShowAddSongCheckBox.Label} />
-                                                            </Form.Group>
-                                                        </Form.Row>
-                                                    </Form> */}
                                                     <Button variant="secondary" onClick={handleShowAddSong}>New Song</Button>
                                                 </Col>
                                             </Row>
@@ -135,9 +108,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                         {Array.from(songCatalog.Values.values()).map((song, index) => (
                                             <SongCatalogNodeComponent
                                                 history={history}
-                                                // pushCatalogsOrder={pushCatalogsOrder}
                                                 setModal={setModal}
-                                                songListId={songCatalog.Id}
                                                 key={song.Id}
                                                 song={song}
                                                 index={index}

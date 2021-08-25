@@ -1,36 +1,30 @@
 import React, { useEffect } from "react";
 
-import { Col, Row, Navbar, Container, FormControlProps, Form } from "react-bootstrap";
+import { Col, Row, Navbar, Container, FormControlProps, Form, Button } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { INextLinkActionProps, CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps } from "../../models";
-import { BandCatalogHtmlAttributesConfiguration } from "../../Configuration";
-import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
-import { FilterBandActionProps, Band } from "../../mapping";
-import BandCatalogNodeComponent from "../nodes/bandCatalogNode";
-import { IModalBand } from "../../models/modals/modelBand";
-import { BandFilterComponent } from "../filters";
-import { BandCatalogProps } from "../../store/containers/catalogs/BandCatalogContainer";
+import { INextLinkActionProps, CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps, ModalTypes } from "models";
+import { BandCatalogHtmlAttributesConfiguration } from "configuration";
+import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
+import { FilterBandActionProps, Band } from "mapping";
+import { IModalBand } from "models/modals/modelBand";
+import { BandCatalogProps } from "store/containers/catalogs/BandCatalogContainer";
+import BandCatalogNodeComponent from "components/nodes/bandCatalogNode";
+import { BandFilterComponent } from "components/filters";
 
 const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
     const {
         bandcatalog,
         setBandFilter,
-        showModal,
 
         setModal,
         history,
 
 
-        // openedCatalogs,
         fetchBandCatalog,
         fetchBandCatalogNextLink,
-        // openBandSongsCatalog,
-        // closeBandSongsCatalog,
-        openBandSongsCatalog,
-        pushCatalogsOrder,
-        // setModal,
-        addToBandSongsAction,
+
+        setBandIdForBandSong,
     } = props;
 
     useEffect(() => {
@@ -50,8 +44,8 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
     const bandCatalogDef = BandCatalogHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        const { Id, OData } = bandcatalog
-        const actionProps: INextLinkActionProps = { catalogId: Id, nextLink: OData.NextLink }
+        const { OData } = bandcatalog
+        const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
             fetchBandCatalogNextLink(actionProps)
@@ -60,26 +54,17 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
     }
 
     const handleShowAddBand = (event: React.FormEvent<FormControlProps>) => {
-        const elements: any = (event.target as any).form.elements;
+        event.preventDefault();
+        setModal({ showModal: true })
 
-        const modal: IModalBand = {
-            show: elements[bandCatalogDef.ShowAddBandCheckBox.ControlId].checked,
-            catalogId: bandcatalog.Id,
-            catalogType: CatalogTypes["Band Catalog"],
-            type: "New",
-            value: Band.EmptyBand(),
-            catalogInModal: CatalogTypes["None"]
-        }
+        const type: ModalTypes = ModalTypes.New
+        const pathName: string = '/bandModal'
 
-        const order: IComponentOrderActionProps = {
-            ComponentOrder: {
-                value: modal,
-                id: modal.catalogId,
-                displayIn: DisplayIn.Modal
-            } as IComponentOrder
-        }
-
-        pushCatalogsOrder(order)
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}`,
+            state: { background: history.location }
+        })
     }
 
 
@@ -89,7 +74,7 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
         <Container fluid>
             <Row>
                 <Col >
-                    <ContainerCss data-testid={bandcatalog.Id}>
+                    <ContainerCss >
                         <Row>
                             <Col>
                                 <NodeListCss id={bandCatalogDef.NodeList.ControlId} >
@@ -102,21 +87,13 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                                 <Col sm="6">
                                                     <SongFilterCss>
                                                         <BandFilterComponent
-                                                            CatalogId={bandcatalog.Id}
-                                                            Filter={bandcatalog.Filter}
+                                                            filter={bandcatalog.Filter}
                                                             setBandFilter={setBandFilter}
                                                         />
                                                     </SongFilterCss>
                                                 </Col>
                                                 <Col sm="6">
-                                                    <Form onChange={handleShowAddBand}>
-                                                        <Form.Row>
-                                                            <Form.Group as={Col} controlId={bandCatalogDef.ShowAddBandCheckBox.ControlId}>
-                                                                <Form.Check type="switch" checked={showModal} label={bandCatalogDef.ShowAddBandCheckBox.Label} />
-                                                            </Form.Group>
-                                                        </Form.Row>
-                                                    </Form>
-
+                                                <Button variant="secondary" onClick={handleShowAddBand}>New Band</Button>
                                                 </Col>
                                             </Row>
                                         </Navbar.Collapse>
@@ -137,14 +114,10 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
                                     >
                                         {Array.from(bandcatalog.Values.values()).map((band, index) => (
                                             <BandCatalogNodeComponent
-                                                openBandSongsCatalog={openBandSongsCatalog}
-                                                addToBandSongsAction={addToBandSongsAction}
                                                 setModal={setModal}
+                                                setBandIdForBandSong={setBandIdForBandSong}
                                                 history={history}
-                                                // openBandSongsCatalog = {openBandSongsCatalog}
-                                                // closeBandSongsCatalog = {closeBandSongsCatalog}
-                                                // setModal={setModal}
-                                                catalogId={bandcatalog.Id}
+                                               
                                                 key={band.Id}
                                                 band={band}
                                                 index={index}

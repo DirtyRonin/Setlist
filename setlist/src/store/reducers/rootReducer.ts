@@ -16,18 +16,16 @@ import customEventCatalogReducers from "./catalogReducers/customEventCatalogRedu
 import modalReducers from "store/reducers/modalReducers"
 
 import dropDownFilterReducer from "./layoutReducers/GlobalBandFilterReducers"
-import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics, userEpics, setlistCatalogEpics, setlistSongCatalogEpics, locationCatalogEpics, customEventCatalogEpics } from "../epics"
-import { commonCatalogEpics } from '../epics/commonEpics';
+import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics, userEpics, setlistCatalogEpics, setlistSongCatalogEpics, locationCatalogEpics, customEventCatalogEpics } from "store/epics"
 
 import { auth } from "../auth/reducers"
 
 export const rootEpic = combineEpics(
-  songCatalogEpics,
   bandCatalogEpics,
+  songCatalogEpics,
   bandSongCatalogEpics,
   setlistCatalogEpics,
   setlistSongCatalogEpics,
-  commonCatalogEpics,
   locationCatalogEpics,
   customEventCatalogEpics,
 

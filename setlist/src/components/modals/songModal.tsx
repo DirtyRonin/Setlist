@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 
 import { SongModalHtmlAttributesConfiguration } from "configuration";
-import { ModalTypes, ISongEntityActionProps, ISong, IModalSong, songModalActions } from "models";
+import { ModalTypes, ISong, songModalActions } from "models";
 import { Song } from "mapping";
 import { fetchSongById } from "service";
 import { mapQuery } from "utils/routeQueryHelper";
@@ -14,7 +14,7 @@ export interface ISongModalComponent {
     query: string
 }
 
-export const SongModalComponent = (props: ISongModalComponent) => {
+const SongModalComponent = (props: ISongModalComponent) => {
 
     const { query, handleCloseModal, songModalActionsProvider } = props
 
@@ -56,28 +56,28 @@ export const SongModalComponent = (props: ISongModalComponent) => {
 
         const elements: any = (event.target as any).elements;
 
-        const song = GetSongForModalType(type, elements)
+        const _song = GetSongForModalType(type, elements)
         const executeSongModalAction = songModalActionsProvider[type]
 
-        executeSongModalAction({ value: song, catalogId: 'delete this prop' } as ISongEntityActionProps)
+        executeSongModalAction({ value: _song } )
 
         if (type !== "New")
             handleCloseModal()
     };
 
     const GetSongForModalType = (type: ModalTypes, elements: any) => {
-        const song = {
-            ...Song.EmptySong(),
+        const _song = {
+            ...song,
             Artist: elements[songDef.Artist.ControlId].value,
             Title: elements[songDef.Title.ControlId].value,
             Genre: elements[songDef.Genre.ControlId].value
         } as ISong
 
         if (type !== "New") {
-            song.Id = id
+            _song.Id = id
         }
 
-        return song;
+        return _song;
     }
 
     const IsReadonly = IsModalReadonly(type)
@@ -114,3 +114,4 @@ export const SongModalComponent = (props: ISongModalComponent) => {
     </Modal>
 }
 
+export default SongModalComponent

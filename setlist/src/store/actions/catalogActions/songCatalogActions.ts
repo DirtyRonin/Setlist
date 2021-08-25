@@ -1,12 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { IFilterSongActionProps, INextLinkActionProps, Catalog, IComponentOrder, ISong, IFilterSongActionResult, ISongEntityActionProps } from "../../../models";
-
-export const openSongCatalog = createAction(
-    "OPEN_THIS_SONG_CATALOG",
-)();
-export const closeSongCatalog = createAction(
-    "CLOSE_THIS_SONG_CATALOG",
-)();
+import { IFilterSongActionProps, INextLinkActionProps, ISong, IFilterSongActionResult, ISongEntityActionProps } from "models";
 
 export const fetchSongCatalog = createAsyncAction(
     "FETCH_SONGCATALOG_REQUEST",
@@ -42,10 +35,6 @@ export const deleteSongInCatalog= createAsyncAction(
     "DELETE_SONG_FAILURE",
     "DELETE_SONG_CANCEL",
 )<ISongEntityActionProps,string,Error,string>();
-
-export const readSongInCatalog= createAction(
-    "READ_SONG_REQUEST",
-)();
 
 export const setSongFilter= createAction(
     "SET_SONG_FILTER",

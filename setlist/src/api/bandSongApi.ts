@@ -24,3 +24,13 @@ export const CreateBandSongRequestAsync = async (url: string, bandSong: IBandSon
         headers: defaultHeader
     });
 }
+
+export const DeleteBandSongRequestAsync = async (url: string): Promise<AxiosResponse<IBandSongResource>> =>
+    await Axios.delete<IBandSongResource>(url, {
+        headers: defaultHeader
+    });
+
+export const UpdateBandSongRequestAsync = async (url: string, bandSong: IBandSongResource): Promise<AxiosResponse<IBandSongResource>> =>
+    await Axios.put<IBandSongResource>(url, bandSong, {
+        headers: defaultHeader
+    });

@@ -1,36 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row, Navbar, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { INextLinkActionProps } from "../../models";
-import { FilterBandSongActionProps } from "../../mapping";
-import { BandSongCatalogHtmlAttributesConfiguration } from "../../Configuration";
-import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
-import { BandSongFilterComponent } from "../filters/bandSongFilter";
-import BandSongCatalogNodeComponent from "../nodes/bandSongCatalogNode";
-import { BandSongCatalogProps } from "../../store/containers/catalogs/BandSongCatalogContainer";
+import { INextLinkActionProps } from "models";
+import { FilterBandSongActionProps } from "mapping";
+import { BandSongCatalogHtmlAttributesConfiguration } from "configuration";
+import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
 
-
-
-// export interface IBandSongCatalogProps{
-//     bandSongCatalog : IBandSongCatalog;
-//     showModal: boolean;
-//     setModal(props: IModal): void
-
-//     fetchBandSongCatalog(props: IFilterBandActionProps): void
-//     fetchBandSongCatalogNextLink: (props: INextLinkActionProps) => void
-// }
+import { BandSongCatalogProps } from "store/containers/catalogs/BandSongCatalogContainer";
+import { BandSongFilterComponent } from "components/filters";
+import BandSongCatalogNodeComponent from "components/nodes/bandSongCatalogNode";
 
 const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
 
     const {
-        bandId,
         bandSongCatalog,
         setBandSongFilter,
         fetchBandSongCatalog,
         fetchBandSongCatalogNextLink,
-        pushCatalogsOrder
+        setModal,
+        history
     } = props
+
+    useEffect(() => {
+        const filter = FilterBandSongActionProps.CreateFromCatalog(bandSongCatalog)
+        fetchBandSongCatalog(filter)
+    }, []);
 
     useEffect(() => {
         if (bandSongCatalog.Refresh) {
@@ -43,8 +38,8 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
     const bandSongCatalogDef = BandSongCatalogHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        const { Id, OData } = bandSongCatalog
-        const actionProps: INextLinkActionProps = { catalogId: Id, nextLink: OData.NextLink }
+        const { OData } = bandSongCatalog
+        const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
             fetchBandSongCatalogNextLink(actionProps)
@@ -57,7 +52,7 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
         <Container fluid>
             <Row>
                 <Col >
-                    <ContainerCss data-testid={bandSongCatalog.Id}>
+                    <ContainerCss >
                         <Row>
                             <Col>
                                 <NodeListCss id={bandSongCatalogDef.NodeList.ControlId} >
@@ -71,7 +66,7 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
                                                     <SongFilterCss>
                                                         <BandSongFilterComponent
                                                             bandId={bandSongCatalog.BandId}
-                                                            Filter={bandSongCatalog.Filter}
+                                                            filter={bandSongCatalog.Filter}
                                                             fetchBandSongCatalog={setBandSongFilter}
                                                         />
                                                     </SongFilterCss>
@@ -107,9 +102,9 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
                                             <BandSongCatalogNodeComponent
                                                 bandSong={bandSong}
                                                 index={index}
-                                                bandSongCatalogId={bandSongCatalog.Id}
-                                                pushCatalogsOrder={pushCatalogsOrder}
                                                 key={bandSong.Id}
+                                                setModal={setModal}
+                                                history={history}
                                             />
                                         ))}
                                     </InfiniteScroll>

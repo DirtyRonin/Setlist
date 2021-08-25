@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
-import * as actions from "../../actions/catalogActions/bandCatalogActions"
-import * as common from "../../actions/commonActions"
-import { IBandCatalog } from "../../../models";
-import { BandCatalog } from "../../../mapping";
-import { MapHelper } from "../../../utils";
+import * as actions from "store/actions/catalogActions/bandCatalogActions"
+import * as common from "store/actions/commonActions"
+import { IBandCatalog } from "models";
+import { BandCatalog } from "mapping";
+import { MapHelper } from "utils";
 
 export type BandCatalogActions = ActionType<typeof common & typeof actions>;
 
@@ -19,18 +19,6 @@ const initial: IBandCatalogState = {
 export default combineReducers<IBandCatalogState, BandCatalogActions>({
     bandCatalog: (state = initial.bandCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openBandsCatalog):
-                return {
-                    ...state,
-                    Refresh: true
-                }
-            case getType(actions.closeBandsCatalog):
-                return initial.bandCatalog
-            case getType(actions.refreshBandsCatalog):
-                return {
-                    ...state,
-                    Refresh: true
-                }
             case getType(actions.setBandFilter):
                 return {
                     ...state,
@@ -57,6 +45,27 @@ export default combineReducers<IBandCatalogState, BandCatalogActions>({
                         .GetMap(),
                     OData: action.payload.OData
                 }
+            case getType(actions.addBandToCatalog.success):
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddAsFirst(action.payload.Id, action.payload)
+                        .GetMap()
+                }
+            case getType(actions.editBandInCatalog.success):
+                return {
+                    ...state,
+                    Values: state.Values.set(action.payload.Id, action.payload)
+                }
+            case getType(actions.deleteBandInCatalog.success): {
+                const { Values } = state
+                Values.delete(action.payload)
+
+                return {
+                    ...state,
+                    Values
+                }
+            }
             default:
                 return state;
         }

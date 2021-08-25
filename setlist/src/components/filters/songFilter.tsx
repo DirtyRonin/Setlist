@@ -8,18 +8,17 @@ import { FilterSongActionProps } from "../../mapping";
 import { SongFilterTemplate } from "./songFilterTemplate";
 
 export interface ISongFilterProps {
-    CatalogId: string;
     filter: ISongFilter;
     setSongFilter(props: IFilterSongActionProps): void
 }
 
 export const SongFilterComponent = (props: ISongFilterProps) => {
-    const { filter, CatalogId, setSongFilter } = props;
+    const { filter, setSongFilter } = props;
 
     const htmlConfig = FilterSongHtmlAttributesConfiguration;
 
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
-        // event.preventDefault();
+        event.preventDefault();
 
         const elements: any = (event.target as any).form.elements;
 
@@ -31,7 +30,7 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
             Evergreen: elements[htmlConfig.SearchEvergreenCheckBox.ControlId].checked,
         }
 
-        const songFilter = FilterSongActionProps.Create(CatalogId, _filter, true)
+        const songFilter = FilterSongActionProps.Create( _filter, true)
 
         songFilter.refresh =
             filter.Evergreen !== songFilter.filter.Evergreen ? true :

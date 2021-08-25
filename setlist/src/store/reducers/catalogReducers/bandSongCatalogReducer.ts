@@ -20,14 +20,12 @@ const initial: IBandSongCatalogState = {
 export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
     bandSongCatalog: (state = initial.bandSongCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openBandSongsCatalog):
+            case getType(actions.setBandIdForBandSong):
                 return {
                     ...state,
                     Refresh: true,
                     BandId: action.payload
                 }
-            case getType(actions.closeBandSongsCatalog):
-                return initial.bandSongCatalog
             case getType(actions.setBandSongFilter):
                 return {
                     ...state,
@@ -58,6 +56,21 @@ export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
                         .AddAsFirst(action.payload.Id, action.payload)
                         .GetMap()
                 }
+            case getType(actions.editBandSongInCatalog.success):
+                return {
+                    ...state,
+                    Values: state.Values.set(action.payload.Id, action.payload)
+                }
+            case getType(actions.deleteBandSongInCatalog.success): {
+                const { Values } = state
+                Values.delete(action.payload)
+
+                return {
+                    ...state,
+                    Values
+                }
+            }
+
             default:
                 return state;
         }

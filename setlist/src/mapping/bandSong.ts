@@ -9,10 +9,8 @@ export class BandSong implements IBandSong {
     BandId: string;
     Song: ISong;
     Id: string;
-    Title: string;
 
-    constructor({ title, popularity, song, id = GUID_EMPTY, songId = GUID_EMPTY, bandId = GUID_EMPTY }: { title: string; popularity: number; song: ISong; id?: string; songId?: string; bandId?: string; },) {
-        this.Title = title
+    constructor({  popularity, song, id = GUID_EMPTY, songId = GUID_EMPTY, bandId = GUID_EMPTY }: {  popularity: number; song: ISong; id?: string; songId?: string; bandId?: string; },) {
         this.Id = id;
         this.Popularity = popularity;
         this.SongId = songId;
@@ -20,11 +18,11 @@ export class BandSong implements IBandSong {
         this.Song = song;
     }
 
-    public static Create({ title, popularity, song, id, songId, bandId }: { title: string; popularity: number; song: ISong; id?: string; songId?: string; bandId?: string; }): IBandSong {
-        const bandSong = new BandSong({ title, popularity, song, id, songId, bandId })
-        const { Title, Id, SongId, Song, BandId, Popularity } = bandSong
+    public static Create({ popularity, song, id, songId, bandId }: { popularity: number; song: ISong; id?: string; songId?: string; bandId?: string; }): IBandSong {
+        const bandSong = new BandSong({ popularity, song, id, songId, bandId })
+        const {  Id, SongId, Song, BandId, Popularity } = bandSong
 
-        return { Title, Id, SongId, Song, BandId, Popularity } as IBandSong
+        return { Id, SongId, Song, BandId, Popularity } 
     }
 
     public static ToResource(bandSong: IBandSong): IBandSongResource {
@@ -39,7 +37,6 @@ export class BandSong implements IBandSong {
 
         return BandSong.Create(
             {
-                title: song.Title,
                 popularity: Popularity,
                 song,
                 id: Id,
@@ -51,7 +48,7 @@ export class BandSong implements IBandSong {
 
     public static EmptyBandSong(): IBandSong {
         return BandSong.Create(
-            { title: "", popularity: 0, song: Song.EmptySong(), id: "", songId: "", bandId: "" })
+            {  popularity: 0, song: Song.EmptySong(), id: "", songId: "", bandId: "" })
     }
 
 

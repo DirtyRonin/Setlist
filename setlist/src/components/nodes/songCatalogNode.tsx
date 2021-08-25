@@ -14,25 +14,20 @@ import {
     MenuHeader
 } from '@szhsin/react-menu';
 
-
-
 export interface ISongNodeProps {
     history: History
     song: ISong;
     index: number;
-    songListId: string;
     setModal(props: IModalActionsProps): void
 }
 
 const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
-    const { song,
+    const { 
+        song,
         index,
-        songListId,
         setModal,
         history
     } = props;
-
-
 
     const createModal = (type: ModalTypes, pathName: string = '/') => {
 
@@ -51,12 +46,8 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
     const handleAddSongToBand = () => createModal(ModalTypes.Add, '/AddSongToBand')
     const handleAddSongToSetlist = () => createModal(ModalTypes.Add, '/AddSongToSetlist')
 
-    const uniqueNodeId = `${songListId}-${song.Id}-${index}`
-
     return (
-
         <DefaultNodeWrapperStyle >
-
             <Container>
                 <Row>
                     <Col xs="10" >
@@ -91,9 +82,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                     </Col>
                 </Row>
             </Container>
-
         </DefaultNodeWrapperStyle >
-
     );
 };
 

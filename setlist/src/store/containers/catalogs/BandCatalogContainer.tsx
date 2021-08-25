@@ -19,9 +19,8 @@ interface IConnectedDispatch {
     fetchBandCatalog(props: IFilterBandActionProps): void
     fetchBandCatalogNextLink: (props: INextLinkActionProps) => void
     pushCatalogsOrder(props: IComponentOrderActionProps): void
-    openBandSongsCatalog(bandId: string): void
-    // setModal(props: IModal): void
-    addToBandSongsAction: (props: IBandSongEntityActionProps) => void
+
+    setBandIdForBandSong(props:string) : void
 }
 
 interface IProps {
@@ -48,10 +47,9 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),
     setBandFilter: (props: IFilterBandActionProps) => dispatch(Action.setBandFilter(props)),
 
-    // setModal: (props: IModal) => dispatch(Common.setModal(props)),
-    addToBandSongsAction: (props: IBandSongEntityActionProps) => dispatch(bandSongAction.addBandSongToCatalog.request(props)),
-    openBandSongsCatalog: (bandId: string) => dispatch(bandSongAction.openBandSongsCatalog(bandId)),
-    setModal: (props: IModalActionsProps) => dispatch(ModalActions.setModal(props))
+    
+    setModal: (props: IModalActionsProps) => dispatch(ModalActions.setModal(props)),
+    setBandIdForBandSong:(props:string) => dispatch(bandSongAction.setBandIdForBandSong(props))
 })
 
 const BandCatalog = (props: BandCatalogProps) => (

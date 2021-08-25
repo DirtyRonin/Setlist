@@ -1,49 +1,14 @@
 import { Epic, combineEpics } from "redux-observable";
-import { EMPTY, from, merge, of } from "rxjs";
-import { filter, switchMap, map, catchError, takeUntil, mergeMap } from "rxjs/operators";
+import { from, of } from "rxjs";
+import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 import { isActionOf } from "typesafe-actions";
 
-import { CatalogActions, RootState } from "../../index"
-import * as Action from "../../actions";
+import { SongCatalogActions } from "store/reducers/catalogReducers/songCatalogReducer"
 
-import { addSongToCatalog, fetchSongCatalog, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "../../actions";
-import { addSongToSongCatalogAsync, fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync } from "../../../service";
-import { DisplayIn, IComponentOrderActionProps } from "../../../models";
+import { addSongToCatalog, fetchSongCatalog, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "store/actions";
+import { addSongToSongCatalogAsync, fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync } from "service";
 
-const openSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
-
-    const songCatalog = (state$.value as RootState).songCatalogReducers.songCatalog
-
-    const asComponentOrderActionProp: IComponentOrderActionProps = {
-        ComponentOrder: {
-            id: songCatalog.Id,
-            displayIn: DisplayIn.Main,
-            value: songCatalog
-        }
-    }
-
-    return action$.pipe(
-        filter(isActionOf(Action.openSongCatalog)),
-        mergeMap(() =>
-            merge(of(asComponentOrderActionProp).pipe(
-                map(Action.pushCatalogComponentOrder.request)
-            ))
-
-        )
-    )
-}
-
-const closeSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
-    action$.pipe(
-        filter(isActionOf(Action.closeSongCatalog)),
-        mergeMap(() =>
-            merge(of(EMPTY).pipe(
-                map(() => Action.popComponentOrder.request())
-            ))
-        )
-    )
-
-const fetchSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
+const fetchSongCatalogsEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (action$) =>
     action$.pipe(
         filter(isActionOf(fetchSongCatalog.request)),
         switchMap(action =>
@@ -55,7 +20,7 @@ const fetchSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action
         )
     );
 
-const fetchSongCatalogNextLinkEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
+const fetchSongCatalogNextLinkEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (action$) =>
     action$.pipe(
         filter(isActionOf(fetchSongCatalogNextLink.request)),
         switchMap(action =>
@@ -67,7 +32,7 @@ const fetchSongCatalogNextLinkEpic: Epic<CatalogActions, CatalogActions, any> = 
         )
     );
 
-const addSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
+const addSongEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (action$) => {
     return action$.pipe(
         filter(isActionOf(addSongToCatalog.request)),
         switchMap(action =>
@@ -80,7 +45,7 @@ const addSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
     );
 }
 
-const editSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
+const editSongEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (action$) => {
     return action$.pipe(
         filter(isActionOf(editSongInCatalog.request)),
         switchMap(action =>
@@ -93,7 +58,7 @@ const editSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
     );
 }
 
-const deleteSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
+const deleteSongEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (action$) => {
     return action$.pipe(
         filter(isActionOf(deleteSongInCatalog.request)),
         switchMap(action =>
@@ -108,8 +73,6 @@ const deleteSongEpic: Epic<CatalogActions, CatalogActions, any> = (action$) => {
 
 
 export const songCatalogEpics = combineEpics(
-    openSongCatalogEpic,
-    closeSongCatalogEpic,
     addSongEpic,
     editSongEpic,
     deleteSongEpic,

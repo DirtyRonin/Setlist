@@ -6,12 +6,10 @@ export class FilterBandSongActionProps implements IFilterBandSongActionProps {
 
     filter: IBandSongFilter;
     refresh: boolean;
-    catalogId: string;
 
     constructor(catalogId: string, filter: IBandSongFilter, refresh: boolean) {
         this.filter = filter
         this.refresh = refresh
-        this.catalogId = catalogId
     }
 
     public static Default(bandId: string): IFilterBandSongActionProps {
