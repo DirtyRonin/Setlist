@@ -1,2 +1,2 @@
-export * from "./HtmlAttributesConfig"
+export * from "./FormHtmlAttributesDefinition"
 export * from "./EndpointConfigs/index"

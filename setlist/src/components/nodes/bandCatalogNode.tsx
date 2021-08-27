@@ -77,8 +77,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
                     </Col >
                     <Col xs="2">
                         <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
-                            <MenuItem value="AddBand" onClick={handleShowBandSongsCatalog} >Show Band Songs</MenuItem>
-                            {/* <MenuItem value="AddBand" onClick={handleShowBandSongsModal} >Show Band Songs Modal</MenuItem> */}
+                            <MenuItem value="ShowBandSongs" onClick={handleShowBandSongsCatalog} >Show Band Songs</MenuItem>
 
                             <MenuDivider />
 

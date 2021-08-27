@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 
-import { BandSongModalHtmlAttributesConfiguration } from "configuration";
 import { ModalTypes, IBandSong, bandSongModalActions } from "models";
 import { BandSong } from "mapping";
 import { mapQuery, GetModalTypeByString, IsModalReadonly } from "utils";
 import { fetchBandSongById } from "service";
+import { BandSongModalHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandSongHtmlAttributes";
 
 export interface IBandSongModalComponent {
     handleCloseModal(): void
@@ -31,7 +31,6 @@ const BandSongModalComponent = (props: IBandSongModalComponent) => {
             setType(mapped.type)
             setId(mapped.id)
             setIsLoading(true)
-
 
             fetchBandSongById(mapped.id).then(result => {
                 setBandSong(result)

@@ -1,5 +1,6 @@
 export * from "./modalBase"
 export * from "./modalSong"
+export * from "./modalBand"
 export * from "./modalBandSong"
 export * from "./IModalSetlist"
 export * from "./IModalSetlistSong"

@@ -1,17 +1,19 @@
-import { filter } from "rxjs/operators";
-import { IFilterBandSongActionProps, IBandSongFilter, IBandSongCatalog } from "../../models";
-import { BandSongCatalog } from "../SongCatalog";
+import { IFilterBandSongActionProps, IBandSongFilter, IBandSongCatalog } from "models";
 
 export class FilterBandSongActionProps implements IFilterBandSongActionProps {
 
     filter: IBandSongFilter;
     refresh: boolean;
 
-    constructor(catalogId: string, filter: IBandSongFilter, refresh: boolean) {
+    constructor(filter: IBandSongFilter, refresh: boolean) {
         this.filter = filter
         this.refresh = refresh
     }
 
+    public static Create(filter: IBandSongFilter, refresh: boolean): IFilterBandSongActionProps {
+        return new FilterBandSongActionProps(filter, refresh)
+    }
+    
     public static Default(bandId: string): IFilterBandSongActionProps {
 
         const filter: IBandSongFilter = {
@@ -23,20 +25,14 @@ export class FilterBandSongActionProps implements IFilterBandSongActionProps {
             BandId: bandId
         }
 
-        return FilterBandSongActionProps.Create(FilterBandSongActionProps.CatalogId(bandId), filter, true)
+        return FilterBandSongActionProps.Create(filter, true)
     }
 
-    public static Create(bandId: string, filter: IBandSongFilter, refresh: boolean): IFilterBandSongActionProps {
-        return new FilterBandSongActionProps(FilterBandSongActionProps.CatalogId(bandId), filter, refresh)
-    }
 
     public static CreateFromCatalog(catalog: IBandSongCatalog) {
         const { Filter, Refresh, BandId } = catalog
         const newfilter = { ...Filter, BandId }
 
-        return  FilterBandSongActionProps.Create(BandId, newfilter, Refresh)
+        return  FilterBandSongActionProps.Create(newfilter, Refresh)
     }
-
-    public static CatalogId = (bandId: string): string => BandSongCatalog.GetCatalogId(bandId)
-
 }

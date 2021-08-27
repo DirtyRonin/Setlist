@@ -1,32 +1,40 @@
 import * as React from 'react';
 import { connect } from "react-redux";
+import { History } from 'history';
 
-import { RootState } from '../..';
-import LocationCatalogComponent from '../../../components/catalogs/locationCatalog';
-import { IComponentOrderActionProps, IFilterLocationActionProps, ILocationCatalog } from '../../../models';
+import { RootState } from 'store';
+import LocationCatalogComponent from 'components/catalogs/locationCatalog';
+import { IFilterLocationActionProps, ILocationCatalog, IModalActionsProps, INextLinkActionProps } from 'models';
 
-import * as Common from '../../actions/commonActions';
-import * as LocationAction from '../../actions/catalogActions/locationCatalogActions';
+import ModalActions from 'store/actions/modalActions';
+import * as LocationAction from 'store/actions/catalogActions/locationCatalogActions';
 
 interface IConnectedDispatch {
-    pushCatalogsOrder: (props: IComponentOrderActionProps) => void,
+    setLocationFilter(props: IFilterLocationActionProps): void
+    fetchLocationCatalogNextLink: (props: INextLinkActionProps) => void
+    setModal(props: IModalActionsProps): void
     fetchLocationCatalog: (props: IFilterLocationActionProps) => void
 }
 
-interface IState {
+interface IProps {
+    history: History
+}
+
+interface IState extends IProps {
     locationCatalog: ILocationCatalog;
-    showModal: boolean;
 }
 
 export type LocationCatalogProps = IConnectedDispatch & IState
 
-const mapStateToProps = (state: RootState) : IState => ({
-    showModal:state.catalogReducers.catalogState.modal.show,
-    locationCatalog: state.locationCatalogReducers.locationCatalog
+const mapStateToProps = (state: RootState, props: IProps): IState => ({
+    locationCatalog: state.locationCatalogReducers.locationCatalog,
+    history: props.history
 });
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch => ({
-    pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),
+    setLocationFilter: (props: IFilterLocationActionProps) => dispatch(LocationAction.setLocationFilter(props)),
+    fetchLocationCatalogNextLink: (props: INextLinkActionProps) => dispatch(LocationAction.fetchLocationCatalogNextLink.request(props)),
+    setModal: (props: IModalActionsProps) => dispatch(ModalActions.setModal(props)),
     fetchLocationCatalog: (props: IFilterLocationActionProps) => dispatch(LocationAction.fetchLocationCatalog.request(props)),
 })
 

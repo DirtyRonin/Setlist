@@ -1,8 +1,9 @@
 import { nameof } from "ts-simple-nameof"
-import { CreateSetlistAsync, ReadSetlistAsync } from ".."
-import { IFilterSetlistActionProps, IFilterSetlistActionResult, INextLinkActionProps, ISetlist, ISetlistEntityActionProps } from "../../models"
 
-import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../utils"
+import { Setlist } from "mapping"
+import { CreateSetlistAsync, DeleteSetlistAsync, ReadSetlistAsync, UpdateSetlistAsync } from ".."
+import { IFilterSetlistActionProps, IFilterSetlistActionResult, INextLinkActionProps, ISetlist, ISetlistEntityActionProps } from "models"
+import { IsMiminumStringLength, QueryBuilder, FilterBuilder } from "utils"
 
 
 export const fetchSetlistCatalogAsync = async (props: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
@@ -45,5 +46,18 @@ const GetFilterSetlistActionResult = async (filterQuery: string): Promise<IFilte
 export const addSetlistToSetlistCatalogAsync = async (props: ISetlistEntityActionProps): Promise<ISetlist> =>
     await CreateSetlistAsync(props.value)
 
+    export const editSetlistInCatalogAsync = async (props: ISetlistEntityActionProps): Promise<ISetlist> =>
+    await UpdateSetlistAsync(props.value)
 
+export const deleteSetlistInCatalogAsync = async (props: ISetlistEntityActionProps): Promise<string> =>
+    (await (DeleteSetlistAsync(props.value.Id))).Id
+
+export const fetchSetlistById = async (id: string): Promise<ISetlist> => {
+    let query = new QueryBuilder()
+    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<ISetlist>(x => x.Id), 'eq', id))
+    const filter = query.toQuery()
+
+    const setlist = (await GetFilterSetlistActionResult(filter)).Values.get(id) ?? Setlist.EmptySetlist()
+    return setlist
+}
 

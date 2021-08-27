@@ -4,7 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import { INextLinkActionProps } from "models";
 import { FilterBandSongActionProps } from "mapping";
-import { BandSongCatalogHtmlAttributesConfiguration } from "configuration";
+import { BandSongCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandSongHtmlAttributes";
 import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
 
 import { BandSongCatalogProps } from "store/containers/catalogs/BandSongCatalogContainer";
@@ -67,7 +67,7 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
                                                         <BandSongFilterComponent
                                                             bandId={bandSongCatalog.BandId}
                                                             filter={bandSongCatalog.Filter}
-                                                            fetchBandSongCatalog={setBandSongFilter}
+                                                            setBandSongFilter={setBandSongFilter}
                                                         />
                                                     </SongFilterCss>
                                                 </Col>

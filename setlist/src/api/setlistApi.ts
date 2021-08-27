@@ -26,3 +26,13 @@ export const CreateSetlistRequestAsync = async (setlist: ISetlistResource): Prom
         headers: defaultHeader
     });
 }
+
+export const DeleteSetlistRequestAsync = async (setlistId: string): Promise<AxiosResponse<ISetlistResource>> =>
+    await Axios.delete<ISetlistResource>(`${setlistEndpoint.GetEndpointUrl!()}/${setlistId}`, {
+        headers: defaultHeader
+    });
+
+export const UpdateSetlistRequestAsync = async (song: ISetlistResource): Promise<AxiosResponse<ISetlistResource>> =>
+    await Axios.put<ISetlistResource>(`${setlistEndpoint.GetEndpointUrl!()}/${song.Id}`, song, {
+        headers: defaultHeader
+    });

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
-import { BandModalHtmlAttributesConfiguration } from "configuration";
+import { BandModalHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandHtmlAttributes";
 import { ModalTypes, IBand } from "models";
 import { Band } from "mapping";
-import { bandModalActions } from "models/modals/modelBand";
+import { bandModalActions } from "models/modals/modalBand";
 import { GetModalTypeByString, IsModalReadonly } from "utils";
 import { mapQuery } from "utils/routeQueryHelper";
 import { fetchBandById } from "service";

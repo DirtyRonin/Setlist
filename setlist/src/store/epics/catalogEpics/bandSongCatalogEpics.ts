@@ -45,7 +45,7 @@ const addBandSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any>
     );
 }
 
-const editSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any> = (action$) => {
+const editBandSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any> = (action$) => {
     return action$.pipe(
         filter(isActionOf(editBandSongInCatalog.request)),
         switchMap(action =>
@@ -58,7 +58,7 @@ const editSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any> = 
     );
 }
 
-const deleteSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any> = (action$) => {
+const deleteBandSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any> = (action$) => {
     return action$.pipe(
         filter(isActionOf(deleteBandSongInCatalog.request)),
         switchMap(action =>
@@ -75,6 +75,6 @@ export const bandSongCatalogEpics = combineEpics(
     fetchBandSongCatalogsEpic,
     fetchBandSongCatalogNextLinkEpic,
     addBandSongEpic,
-    editSongEpic,
-    deleteSongEpic
+    editBandSongEpic,
+    deleteBandSongEpic
 )

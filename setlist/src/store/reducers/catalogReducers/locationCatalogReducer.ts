@@ -19,19 +19,12 @@ const initial : ILocationCatalogState = {
 export default combineReducers<ILocationCatalogState, LocationCatalogActions>({
     locationCatalog: (state = initial.locationCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openLocationCatalog):
+            case getType(actions.setLocationFilter):
                 return {
                     ...state,
-                    Refresh: true
+                    Filter: action.payload.filter,
+                    Refresh: action.payload.refresh
                 }
-            case getType(actions.closeLocationCatalog):
-                return initial.locationCatalog
-            // case getType(actions.setLocationFilter):
-            //     return {
-            //         ...state,
-            //         Filter: action.payload.filter,
-            //         Refresh: action.payload.refresh
-            //     }
             case getType(actions.fetchLocationCatalog.request):
                 return {
                     ...state,
@@ -43,21 +36,7 @@ export default combineReducers<ILocationCatalogState, LocationCatalogActions>({
                     Values: action.payload.Values,
                     OData: action.payload.OData
                 }
-            // case getType(actions.fetchLocationCatalogNextLink.success):
-            //     return {
-            //         ...state,
-            //         Values: MapHelper.Create(state.Values)
-            //             .AddMap(action.payload.Values)
-            //             .GetMap(),
-            //         OData: action.payload.OData
-            //     }
-            // case getType(actions.addSetListToCatalog.success):
-            //     return {
-            //         ...state,
-            //         Values: MapHelper.Create(state.Values)
-            //             .AddAsFirst(action.payload.Id, action.payload)
-            //             .GetMap()
-            //     }
+           
             default:
                 return state;
         }

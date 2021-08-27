@@ -1,16 +1,8 @@
-import { BandCatalog, Band } from "mapping";
+import { nameof } from "ts-simple-nameof";
+import {  Band } from "mapping";
 import { QueryBuilder, IsMiminumStringLength, FilterBuilder } from "utils";
 import { IFilterBandActionProps, IBand, INextLinkActionProps, IBandEntityActionProps, IComponentOrder, DisplayIn, IFilterBandActionResult } from "models";
-import { nameof } from "ts-simple-nameof";
 import { ReadBandsAsync, CreateBandAsync, UpdateBandAsync, DeleteBandAsync } from "..";
-
-
-
-export const createEmptyBandCatalog = (): IComponentOrder => ({
-    id: BandCatalog.CatalogId,
-    displayIn: DisplayIn.Main,
-    value: BandCatalog.CreateAndUpdate()
-})
 
 export const fetchBandCatalogAsync = async (props: IFilterBandActionProps): Promise<IFilterBandActionResult> => {
 

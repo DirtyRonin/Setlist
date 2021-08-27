@@ -25,3 +25,13 @@ export const CreateSetlistSongRequestAsync = async (url: string, setlistSong: IS
         headers: defaultHeader
     });
 }
+
+export const DeleteSetlistSongRequestAsync = async (url: string): Promise<AxiosResponse<ISetlistSongResource>> =>
+    await Axios.delete<ISetlistSongResource>(url, {
+        headers: defaultHeader
+    });
+
+export const UpdateSetlistSongRequestAsync = async (url: string, setlistSong: ISetlistSongResource): Promise<AxiosResponse<ISetlistSongResource>> =>
+    await Axios.put<ISetlistSongResource>(url, setlistSong, {
+        headers: defaultHeader
+    });

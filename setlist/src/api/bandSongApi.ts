@@ -1,6 +1,6 @@
 import Axios, { AxiosResponse } from "axios";
-import { defaultHeader } from "../Configuration";
-import { IOdataWrapper } from "../models";
+import { defaultHeader } from "configuration";
+import { IOdataWrapper } from "models";
 import { IBandSongResource } from "../resource";
 
 export const GetBandSongsRequestAsync = async (url: string): Promise<IOdataWrapper<IBandSongResource>> => {

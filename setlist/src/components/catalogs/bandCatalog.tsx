@@ -4,10 +4,10 @@ import { Col, Row, Navbar, Container, FormControlProps, Form, Button } from "rea
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { INextLinkActionProps, CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps, ModalTypes } from "models";
-import { BandCatalogHtmlAttributesConfiguration } from "configuration";
+import { BandCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandHtmlAttributes";
 import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
 import { FilterBandActionProps, Band } from "mapping";
-import { IModalBand } from "models/modals/modelBand";
+import { IModalBand } from "models/modals/modalBand";
 import { BandCatalogProps } from "store/containers/catalogs/BandCatalogContainer";
 import BandCatalogNodeComponent from "components/nodes/bandCatalogNode";
 import { BandFilterComponent } from "components/filters";

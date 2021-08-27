@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
+import { MapHelper } from "utils";
 import { SetlistSongCatalog } from "../../../mapping/SongCatalog/setlistSongCatalog";
 import { ISetlistSongCatalog } from "../../../models";
 
@@ -19,13 +20,12 @@ const initial: ISetlistSongCatalogState = {
 export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActions>({
     setlistSongCatalog: (state = initial.setlistSongCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openSetlistSongCatalog):
+            case getType(actions.setSetlistIdForSetlistSong):
                 return {
                     ...state,
-                    Refresh: true
+                    Refresh: true,
+                    SetlistId: action.payload
                 }
-            case getType(actions.closeSetlistSongCatalog):
-                return initial.setlistSongCatalog
             case getType(actions.setSetlistSongFilter):
                 return {
                     ...state,
@@ -43,6 +43,35 @@ export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActio
                     Values: action.payload.Values,
                     OData: action.payload.OData
                 }
+                case getType(actions.fetchSetlistSongCatalogNextLink.success):
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddMap(action.payload.Values)
+                        .GetMap(),
+                    OData: action.payload.OData
+                }
+            case getType(actions.addSetlistSongToCatalog.success):
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddAsFirst(action.payload.Id, action.payload)
+                        .GetMap()
+                }
+            case getType(actions.editSetlistSongInCatalog.success):
+                return {
+                    ...state,
+                    Values: state.Values.set(action.payload.Id, action.payload)
+                }
+            case getType(actions.deleteSetlistSongInCatalog.success): {
+                const { Values } = state
+                Values.delete(action.payload)
+
+                return {
+                    ...state,
+                    Values
+                }
+            }
             default:
                 return state;
         }

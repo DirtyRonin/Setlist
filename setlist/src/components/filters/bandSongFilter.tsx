@@ -1,20 +1,20 @@
 import React from "react";
-import { FormControlProps, Form, Col } from "react-bootstrap";
+import { FormControlProps, Form } from "react-bootstrap";
 
-import { IBandSongFilter, IFilterBandSongActionProps } from "../../models";
-import { FilterBandSongHtmlAttributesConfiguration } from "../../Configuration";
-import { FilterBandSongActionProps } from "../../mapping";
-import { IsFilterableString } from "../../utils";
-import { SongFilterTemplate } from "./songFilterTemplate";
+import { IBandSongFilter, IFilterBandSongActionProps } from "models";
+import { FilterBandSongHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandSongHtmlAttributes";
+import { FilterBandSongActionProps } from "mapping";
+import { IsFilterableString } from "utils";
+import { SongFilterTemplate } from "components/filters/songFilterTemplate";
 
 export interface IBandSongFilterProps {
     bandId: string;
     filter: IBandSongFilter;
-    fetchBandSongCatalog(props: IFilterBandSongActionProps): void
+    setBandSongFilter(props: IFilterBandSongActionProps): void
 }
 
 export const BandSongFilterComponent = (props: IBandSongFilterProps) => {
-    const { filter, bandId, fetchBandSongCatalog } = props;
+    const { filter, bandId, setBandSongFilter } = props;
 
     const htmlConfig = FilterBandSongHtmlAttributesConfiguration;
 
@@ -32,7 +32,7 @@ export const BandSongFilterComponent = (props: IBandSongFilterProps) => {
             BandId: bandId
         } 
 
-        const bandSongFilter = FilterBandSongActionProps.Create(bandId, _filter, true)
+        const bandSongFilter = FilterBandSongActionProps.Create( _filter, true)
 
         bandSongFilter.refresh =
             filter.Evergreen !== bandSongFilter.filter.Evergreen ? true :
@@ -43,7 +43,7 @@ export const BandSongFilterComponent = (props: IBandSongFilterProps) => {
                                 false
 
         if (bandSongFilter.refresh) {
-            fetchBandSongCatalog(bandSongFilter)
+            setBandSongFilter(bandSongFilter)
         }
     }
 

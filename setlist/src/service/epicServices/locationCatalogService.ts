@@ -1,8 +1,9 @@
 import { nameof } from "ts-simple-nameof"
-import { ReadLocationAsync } from ".."
-import { IFilterLocationActionProps, IFilterLocationActionResult, ILocation, INextLinkActionProps } from "../../models"
+import { CreateLocationAsync, DeleteLocationAsync, ReadLocationAsync, UpdateLocationAsync } from "service"
+import { IFilterLocationActionProps, IFilterLocationActionResult, ILocation, ILocationEntityActionProps, INextLinkActionProps } from "models"
+import { Location } from "mapping";
 
-import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../utils"
+import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "utils"
 
 export const fetchLocationCatalogAsync = async (props: IFilterLocationActionProps): Promise<IFilterLocationActionResult> => {
 
@@ -39,4 +40,22 @@ const GetFilterLocationActionResult = async (filterQuery: string): Promise<IFilt
         }, new Map<string, ILocation>()),
         OData: { NextLink, Context, Count }
     }
+}
+
+export const addLocationToLocationCatalogAsync = async (props: ILocationEntityActionProps): Promise<ILocation> =>
+    await CreateLocationAsync(props.value)
+
+export const editLocationInCatalogAsync = async (props: ILocationEntityActionProps): Promise<ILocation> =>
+    await UpdateLocationAsync(props.value)
+
+export const deleteLocationInCatalogAsync = async (props: ILocationEntityActionProps): Promise<string> =>
+    (await (DeleteLocationAsync(props.value.Id))).Id
+
+export const fetchLocationById = async (id: string): Promise<ILocation> => {
+    let query = new QueryBuilder()
+    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<ILocation>(x => x.Id), 'eq',id))
+    const filter = query.toQuery()
+
+    const location = (await GetFilterLocationActionResult(filter)).Values.get(id) ?? Location.EmptyLocation()
+    return location
 }

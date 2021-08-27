@@ -41,23 +41,6 @@ export class BandSongCatalog extends CatalogBase<IBandSong, IBandSongFilter, IBa
     public static CreateAndUpdate = (bandId: string, options?: IBandSongCatalogOptions): IBandSongCatalog =>
         BandSongCatalog.Default(bandId, true, options)
 
-    // public static AddValues(catalog: IBandSongCatalog, addValues: IBandSong[]): IBandSongCatalog {
-    //     const currentCatalog = { ...catalog };
-    //     addValues.forEach(value => currentCatalog.Values.set(value.Id, value))
-
-    //     return currentCatalog
-    // }
-
-    // public static UpdateOData(catalog: IBandSongCatalog, oData: ODataProps): IBandSongCatalog {
-    //     const newCatalog = { ...catalog, OData: oData }
-    //     return newCatalog;
-    // }
-
-    // public static UpdateFilter(catalog: IBandSongCatalog, filter: IBandSongFilter): IBandSongCatalog {
-    //     const newCatalog = { ...catalog, Filter: filter }
-    //     return newCatalog;
-    // }
-
     public static GetCatalogId = (bandId: string): string => `${CatalogTypes["BandSong Catalog"].toString()}_${bandId}`
 
 }

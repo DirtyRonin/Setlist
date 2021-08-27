@@ -1,10 +1,10 @@
 import React from "react";
 import { FormControlProps, Form, Col } from "react-bootstrap";
 
-import { IBandFilter, IFilterBandActionProps } from "../../models";
-import { FilterBandHtmlAttributesConfiguration } from "../../Configuration";
-import { FilterBandActionProps } from "../../mapping";
-import { IsFilterableString } from "../../utils";
+import { IBandFilter, IFilterBandActionProps } from "models";
+import { FilterBandHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandHtmlAttributes";
+import { FilterBandActionProps } from "mapping";
+import { IsFilterableString } from "utils";
 
 
 export interface IBandFilterProps {

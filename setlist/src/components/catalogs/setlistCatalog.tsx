@@ -4,7 +4,7 @@ import { Col, Container, Navbar, Row, FormControlProps, Button } from "react-boo
 
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { SetlistCatalogHtmlAttributesConfiguration } from "configuration";
+import { SetlistCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistHtmlAttributes";
 import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
 import { FilterSetlistActionProps } from "mapping";
 import { SetlistCatalogProps } from "store/containers/catalogs/SetlistCatalogContainer";
@@ -24,6 +24,7 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
         fetchSetlistCatalog,
         fetchSetlistCatalogNextLink,
         setModal,
+        setSetlistIdForSetlistSong,
     } = props;
 
     useEffect(() => {
@@ -108,6 +109,7 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
                                     >
                                         {Array.from(setlistCatalog.Values.values()).map((setlist, index) => (
                                             <SetlistCatalogNodeComponent
+                                            setSetlistIdForSetlistSong={setSetlistIdForSetlistSong}
                                                 setlist={setlist}
                                                 key={setlist.Id}
                                                 index={index}

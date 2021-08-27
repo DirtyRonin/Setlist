@@ -1,13 +1,14 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { History } from "history";
 
-import { SongNodeContainer } from "../../styles";
-import { CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps, IModalLocation, ILocation, ModalTypes } from "../../models";
+import { DefaultNodeWrapperStyle, DefaultNodeImageStyle, DefaultLabelStyle } from "styles/defaultNodeStyle";
+import { ILocation, ModalTypes, IModalActionsProps } from "models";
 
 import {
     Menu,
     MenuItem,
-    MenuDivider,
     MenuHeader
 } from '@szhsin/react-menu';
 
@@ -16,78 +17,68 @@ import {
 export interface ILocationNodeProps {
     location: ILocation;
     index: number;
-    catalogId: string;
-
-    pushCatalogsOrder(props: IComponentOrderActionProps): void
-
+    history: History
+    setModal(props: IModalActionsProps): void
 }
 
 const LocationCatalogNodeComponent = (props: ILocationNodeProps): JSX.Element => {
     const {
         location,
         index,
-        catalogId,
-
-        pushCatalogsOrder
+        setModal,
+        history
     } = props;
 
-    const createModal = (type: ModalTypes) => {
-        const modal: IModalLocation = {
-            show: true,
-            catalogId,
-            catalogType: CatalogTypes["Location Catalog"],
-            type,
-            value: location,
-            catalogInModal: CatalogTypes["None"]
-        }
+    const createModal = (type: ModalTypes, pathName: string = '/') => {
 
-        const order: IComponentOrderActionProps = {
-            ComponentOrder: {
-                value: modal,
-                id: modal.catalogId,
-                displayIn: DisplayIn.Modal
-            } as IComponentOrder
-        }
+        setModal({ showModal: true })
 
-        pushCatalogsOrder(order)
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}&$id=${location.Id}`,
+            state: { background: history.location }
+        })
     }
 
-    const handleShowEditLocation = () => createModal(ModalTypes.Edit)
-    const handleShowReadLocation = () => createModal(ModalTypes.Read)
-    const handleShowDeleteLocation = () => createModal(ModalTypes.Remove)
-
-    const uniqueNodeId = `${catalogId}-${location.Id}-${index}`
+    const handleShowReadLocation = () => createModal(ModalTypes.Read, `/locationModal`)
+    const handleShowEditLocation = () => createModal(ModalTypes.Edit, '/locationModal')
+    const handleShowDeleteLocation = () => createModal(ModalTypes.Remove, `/locationModal`)
 
     return (
-        <Container>
-            <SongNodeContainer >
+        <DefaultNodeWrapperStyle >
+            <Container>
                 <Row>
-                    <Col xs="8" >
+                    <Col xs="10" >
                         <Row>
-                            <Col>
-                                <label>{location.Name}</label>
+                            <Col xs="3">
+                                <DefaultNodeImageStyle />
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <label>{location.Address}</label>
+                            <Col xs="9">
+                                <Row>
+                                    <Col>
+                                        <DefaultLabelStyle>{location.Name}</DefaultLabelStyle>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <DefaultLabelStyle>{location.Address}</DefaultLabelStyle>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </Col >
-                    <Col xs='4' >
-                        <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
-                            <MenuDivider />
-
+                    <Col xs='2' >
+                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
                             <MenuHeader>Edit</MenuHeader>
-                            <MenuItem value="Read" onClick={handleShowReadLocation} >{ModalTypes.Read}*</MenuItem>
-                            <MenuItem value="Edit" onClick={handleShowEditLocation} >{ModalTypes.Edit}*</MenuItem>
-                            <MenuItem value="Remove" onClick={handleShowDeleteLocation} >{ModalTypes.Remove}*</MenuItem>
+                            <MenuItem value="Read" onClick={handleShowReadLocation} >{ModalTypes.Read}</MenuItem>
+                            <MenuItem value="Edit" onClick={handleShowEditLocation} >{ModalTypes.Edit}</MenuItem>
+                            <MenuItem value="Remove" onClick={handleShowDeleteLocation} >{ModalTypes.Remove}</MenuItem>
                         </Menu>
                     </Col>
                 </Row>
-            </SongNodeContainer>
-        </Container>
-    )
+            </Container>
+        </DefaultNodeWrapperStyle >
+    );
 }
 
 export default LocationCatalogNodeComponent

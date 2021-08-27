@@ -1,36 +1,36 @@
-import { IFilterSetlistSongActionProps, ISetlistSongCatalog, ISetlistSongFilter } from "../../models";
+import { IFilterSetlistSongActionProps, ISetlistSongCatalog, ISetlistSongFilter } from "models";
 
 export class FilterSetlistSongActionProps implements IFilterSetlistSongActionProps {
+
     filter: ISetlistSongFilter;
     refresh: boolean;
-    catalogId: string;
 
-    constructor({ setlistSongCatalogId, filter, refresh }: { setlistSongCatalogId: string; filter: ISetlistSongFilter; refresh: boolean; }) {
-        this.catalogId = setlistSongCatalogId
+    constructor({ filter, refresh }: { filter: ISetlistSongFilter; refresh: boolean; }) {
         this.filter = filter
         this.refresh = refresh
     }
 
-    public static Create = ({ setlistSongCatalogId, filter, refresh }: { setlistSongCatalogId: string; filter: ISetlistSongFilter; refresh: boolean; }): IFilterSetlistSongActionProps =>
-        new FilterSetlistSongActionProps({ setlistSongCatalogId, filter, refresh })
+    public static Create = ({ filter, refresh }: { filter: ISetlistSongFilter; refresh: boolean; }): IFilterSetlistSongActionProps =>
+        new FilterSetlistSongActionProps({ filter, refresh })
 
-    public static Default = (setlistSongCatalogId: string = ""): IFilterSetlistSongActionProps =>
+    public static Default = (setlistId: string): IFilterSetlistSongActionProps =>
         FilterSetlistSongActionProps.Create(
             {
-                setlistSongCatalogId,
                 filter: {
                     Title: '',
+                    Artist: "",
+                    Genre: "",
+                    Evergreen: false,
+                    Nineties: false,
+                    SetlistId: setlistId
                 },
                 refresh: true
             })
 
-    public static CreateFromCatalog = (setlistSongCatalog: ISetlistSongCatalog): IFilterSetlistSongActionProps => {
-        const { Id, Filter, Refresh } = setlistSongCatalog;
-
-        return FilterSetlistSongActionProps.Create({
-            setlistSongCatalogId: Id,
-            filter: Filter,
+    public static CreateFromCatalog = ({ Filter, Refresh, SetlistId }: ISetlistSongCatalog): IFilterSetlistSongActionProps =>
+        FilterSetlistSongActionProps.Create({
+            filter: { ...Filter, SetlistId },
             refresh: Refresh
         })
-    }
+
 }

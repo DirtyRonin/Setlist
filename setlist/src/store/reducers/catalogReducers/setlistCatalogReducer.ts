@@ -1,14 +1,13 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
 
-import { SetlistCatalog } from "../../../mapping";
-import { ISetlistCatalog } from "../../../models";
-import { MapHelper } from "../../../utils";
+import { SetlistCatalog } from "mapping";
+import { ISetlistCatalog } from "models";
+import { MapHelper } from "utils";
 
-import * as actions from "../../actions/catalogActions/setlistCatalogActions"
-import * as common from "../../actions/commonActions"
+import * as actions from "store/actions/catalogActions/setlistCatalogActions"
 
-export type SetlistCatalogActions = ActionType<typeof common & typeof actions>;
+export type SetlistCatalogActions = ActionType<typeof actions>;
 
 export interface ISetlistCatalogState {
     setlistCatalog: ISetlistCatalog
@@ -21,13 +20,6 @@ const initial: ISetlistCatalogState = {
 export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
     setlistCatalog: (state = initial.setlistCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openSetlistsCatalog):
-                return {
-                    ...state,
-                    Refresh: true
-                }
-            case getType(actions.closeSetlistsCatalog):
-                return initial.setlistCatalog
             case getType(actions.setSetlistFilter):
                 return {
                     ...state,
@@ -60,6 +52,19 @@ export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
                         .AddAsFirst(action.payload.Id, action.payload)
                         .GetMap()
                 }
+            case getType(actions.editSetListInCatalog.success):
+                return {
+                    ...state,
+                    Values: state.Values.set(action.payload.Id, action.payload)
+                }
+            case getType(actions.deleteSetListInCatalog.success): {
+                const { Values } = state
+                Values.delete(action.payload)
+                return {
+                    ...state,
+                    Values
+                }
+            }
             default:
                 return state;
         }

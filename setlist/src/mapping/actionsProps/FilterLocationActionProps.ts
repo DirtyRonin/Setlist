@@ -1,23 +1,23 @@
 import { IFilterLocationActionProps, ILocationCatalog, ILocationFilter } from "../../models";
 
 export class FilterLocationActionProps implements IFilterLocationActionProps {
-    catalogId: string;
+    
     filter: ILocationFilter;
     refresh: boolean;
 
-    constructor({ locationCatalogId, filter, refresh }: { locationCatalogId: string; filter: ILocationFilter; refresh: boolean; }) {
-        this.catalogId = locationCatalogId
+    constructor({  filter, refresh }: {  filter: ILocationFilter; refresh: boolean; }) {
+        
         this.filter = filter
         this.refresh = refresh
     }
 
-    public static Create = ({ locationCatalogId, filter, refresh }: { locationCatalogId: string; filter: ILocationFilter; refresh: boolean; }): IFilterLocationActionProps =>
-        new FilterLocationActionProps({ locationCatalogId, filter, refresh })
+    public static Create = ({ filter, refresh }: { filter: ILocationFilter; refresh: boolean; }): IFilterLocationActionProps =>
+        new FilterLocationActionProps({  filter, refresh })
 
-    public static Default = (locationCatalogId: string = ""): IFilterLocationActionProps =>
+    public static Default = (): IFilterLocationActionProps =>
         FilterLocationActionProps.Create(
             {
-                locationCatalogId,
+                
                 filter: {
                     Name: '',
                 },
@@ -25,7 +25,7 @@ export class FilterLocationActionProps implements IFilterLocationActionProps {
             })
 
     public static CreateFromCatalog = (locationCatalog: ILocationCatalog): IFilterLocationActionProps => {
-        const { Id, Filter, Refresh } = locationCatalog;
-        return new FilterLocationActionProps({ locationCatalogId: Id, filter: Filter, refresh: Refresh });
+        const {  Filter, Refresh } = locationCatalog;
+        return new FilterLocationActionProps({  filter: Filter, refresh: Refresh });
     }
 }

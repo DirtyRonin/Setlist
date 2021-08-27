@@ -16,9 +16,9 @@ import {
 
 export interface ISongNodeProps {
     history: History
+    setModal(props: IModalActionsProps): void
     song: ISong;
     index: number;
-    setModal(props: IModalActionsProps): void
 }
 
 const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {

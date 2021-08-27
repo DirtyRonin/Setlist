@@ -1,9 +1,10 @@
-import { IBandSongFilter, ISongFilter } from "models";
 import React from "react"
 import { Form, Col } from "react-bootstrap";
-import { FilterSongHtmlAttributesConfigurationType } from "../../Configuration";
 
-export const SongFilterTemplate = (html: FilterSongHtmlAttributesConfigurationType, filter: ISongFilter | IBandSongFilter) => {
+import { IBandSongFilter, ISetlistSongFilter, ISongFilter } from "models";
+import { FilterSongHtmlAttributesConfigurationType } from "configuration/HtmlAttributesConfigs/songHtmlAttributes";
+
+export const SongFilterTemplate = (html: FilterSongHtmlAttributesConfigurationType, filter: ISongFilter | IBandSongFilter | ISetlistSongFilter) => {
     return (
         <div>
             <Form.Row>

@@ -1,15 +1,9 @@
 import { nameof } from "ts-simple-nameof"
 
-import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IComponentOrder, IFilterSongActionResult, DisplayIn } from "../../models";
-import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "..";
-import { Song, SongCatalog } from "../../mapping";
-import { QueryBuilder, IsMiminumStringLength, FilterBuilder } from "../../utils";
-
-export const createEmptySongCatalog = (): IComponentOrder => ({
-    id: SongCatalog.CatalogId,
-    displayIn: DisplayIn.Main,
-    value: SongCatalog.CreateAndUpdate()
-});
+import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IFilterSongActionResult } from "models";
+import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "service";
+import { Song } from "mapping";
+import { QueryBuilder, IsMiminumStringLength, FilterBuilder } from "utils";
 
 export const fetchSongCatalogAsync = async (props: IFilterSongActionProps): Promise<IFilterSongActionResult> => {
     const { filter: Filter } = props

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
 
-import { SongModalHtmlAttributesConfiguration } from "configuration";
 import { ModalTypes, ISong, songModalActions } from "models";
 import { Song } from "mapping";
 import { fetchSongById } from "service";
 import { mapQuery } from "utils/routeQueryHelper";
 import { GetModalTypeByString ,IsModalReadonly} from "utils";
+import { SongModalHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/songHtmlAttributes";
 
 export interface ISongModalComponent {
     handleCloseModal(): void

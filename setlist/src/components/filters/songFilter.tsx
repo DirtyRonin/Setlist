@@ -1,10 +1,10 @@
 import React from "react"
 import { Form, FormControlProps } from "react-bootstrap";
 
-import { FilterSongHtmlAttributesConfiguration } from "../../Configuration"
-import { ISongFilter, IFilterSongActionProps } from "../../models";
-import { IsFilterableString } from "../../utils";
-import { FilterSongActionProps } from "../../mapping";
+import { FilterSongHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/songHtmlAttributes"
+import { ISongFilter, IFilterSongActionProps } from "models";
+import { IsFilterableString } from "utils";
+import { FilterSongActionProps } from "mapping";
 import { SongFilterTemplate } from "./songFilterTemplate";
 
 export interface ISongFilterProps {

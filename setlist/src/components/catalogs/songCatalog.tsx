@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import { INextLinkActionProps, ModalTypes } from "models";
 import { FilterSongActionProps } from "mapping";
-import { SongCatalogHtmlAttributesConfiguration } from "configuration";
+import { SongCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/songHtmlAttributes";
 import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
 
 import { SongCatalogProps } from "store/containers/catalogs/SongCatalogContainer";
@@ -120,7 +120,6 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                     </InfiniteScroll>
 
                                 </NodeListCss>
-                                <Button variant="secondary" >Close</Button>
                                 {songCatalog.OData.Count}
                             </Col>
                         </Row>

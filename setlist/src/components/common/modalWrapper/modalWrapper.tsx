@@ -4,35 +4,34 @@ import { History } from 'history';
 
 import { IModelState, RootState } from 'store'
 import PrivateRoute from "components/common/privateRoute"
-import { bandSongModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ISetlistEntityActionProps, ISongEntityActionProps, IUser, setlistModalActions, songModalActions } from "models"
+import {bandModalActions, bandSongModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ILocationEntityActionProps, ISetlistEntityActionProps, ISetlistSongEntityActionProps, ISongEntityActionProps, IUser, locationModalActions, setlistModalActions, setlistSongModalActions, songModalActions } from "models"
 import * as Action from 'store/actions';
-import { bandModalActions } from "models/modals/modelBand";
 
 const SongModalComponent = React.lazy(() => import("components/modals/songModal"))
 const AddSongToBandComponent = React.lazy(() => import("components/modals/AddItemTo/band/AddSongToBand"))
 const AddSongToSetlistModalComponent = React.lazy(() => import("components/modals/AddItemTo/setlist/AddSongToSetlistModal"))
 const BandModalComponent = React.lazy(() => import("components/modals/bandModal"))
-const BandSongCatalogComponent = React.lazy(() => import('store/containers/catalogs/BandSongCatalogContainer'))
 const BandSongModalComponent = React.lazy(() => import('components/modals/bandSongModal'))
-const ModalTemplate = React.lazy(() => import('components/common/modalWrapper/modalTemplate'))
+const SetlistModalComponent = React.lazy(() => import('components/modals/setlistModal'))
+const SetlistSongModalComponent = React.lazy(() => import('components/modals/setlistSongModal'))
+const LocationModalComponent = React.lazy(() => import('components/modals/locationModal'))
 
-const ModalWrapper = (props: ModalWrapperProps) => {
-    const {
-        modalState,
-        history,
-        userState,
+// const ModalTemplate = React.lazy(() => import('components/common/modalWrapper/modalTemplate'))
 
-        songModalActionsProvider,
-        bandModalActionsProvider,
-        bandSongModalActionsProvider,
-        setlistModalActionsProvider
-    } = props
+const ModalWrapper = ({
+    modalState,
+    history,
+    userState,
+    songModalActionsProvider,
+    bandModalActionsProvider,
+    bandSongModalActionsProvider,
+    setlistModalActionsProvider,
+    setlistSongModalActionsProvider,
+    locationModalActionsProvider
+}: ModalWrapperProps) => {
 
     const query = history.location.search ?? ''
-
     const handleCloseModal = () => history.goBack()
-
-
 
     return <div>
         <PrivateRoute path="/songModal">
@@ -64,7 +63,8 @@ const ModalWrapper = (props: ModalWrapperProps) => {
             />
         </PrivateRoute>
 
-        <PrivateRoute path="/bandSongAsModal">
+        {/* die variante als modal bleibt erstmal drinne, falls es dafür nochmal ne verwendung geben sollte (25.08.2021) */}
+        {/* <PrivateRoute path="/bandSongAsModal">
             <ModalTemplate
                 title={'My Title'}
                 handleCloseModal={handleCloseModal}
@@ -74,7 +74,7 @@ const ModalWrapper = (props: ModalWrapperProps) => {
                 />
             </ModalTemplate>
 
-        </PrivateRoute>
+        </PrivateRoute> */}
         <PrivateRoute path="/bandSongModal">
             <BandSongModalComponent
                 query={query}
@@ -82,13 +82,27 @@ const ModalWrapper = (props: ModalWrapperProps) => {
                 handleCloseModal={handleCloseModal}
             />
         </PrivateRoute>
-        {/* <PrivateRoute path="/setlistModal">
+        <PrivateRoute path="/setlistModal">
             <SetlistModalComponent
-                 query={query}
-                 bandSongModalActionsProvider={bandSongModalActionsProvider}
-                 handleCloseModal={handleCloseModal}
+                query={query}
+                setlistModalActionsProvider={setlistModalActionsProvider}
+                handleCloseModal={handleCloseModal}
             />
-        </PrivateRoute> */}
+        </PrivateRoute>
+        <PrivateRoute path="/setlistSongModal">
+            <SetlistSongModalComponent
+                query={query}
+                setlistSongModalActionsProvider={setlistSongModalActionsProvider}
+                handleCloseModal={handleCloseModal}
+            />
+        </PrivateRoute>
+        <PrivateRoute path="/locationModal">
+            <LocationModalComponent
+                query={query}
+                locationModalActionsProvider={locationModalActionsProvider}
+                handleCloseModal={handleCloseModal}
+            />
+        </PrivateRoute>
     </div>
 
 }
@@ -100,6 +114,8 @@ interface IConnectedDispatch {
     bandModalActionsProvider: bandModalActions
     bandSongModalActionsProvider: bandSongModalActions
     setlistModalActionsProvider: setlistModalActions
+    setlistSongModalActionsProvider: setlistSongModalActions
+    locationModalActionsProvider: locationModalActions
 }
 
 interface IProps {
@@ -152,8 +168,26 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     setlistModalActionsProvider: {
         None: () => { },
         New: (props: ISetlistEntityActionProps) => dispatch(Action.addSetListToCatalog.request(props)),
-        Edit: (props: ISetlistEntityActionProps) => { },
-        Remove: (props: ISetlistEntityActionProps) => { },
+        Edit: (props: ISetlistEntityActionProps) => dispatch(Action.editSetListInCatalog.request(props)),
+        Remove: (props: ISetlistEntityActionProps) => dispatch(Action.deleteSetListInCatalog.request(props)),
+        Read: () => { },
+        Add: () => { },
+        ShowCatalog: () => { }
+    },
+    setlistSongModalActionsProvider: {
+        None: () => { },
+        New: (props: ISetlistSongEntityActionProps) => dispatch(Action.addSetlistSongToCatalog.request(props)),
+        Edit: (props: ISetlistSongEntityActionProps) => dispatch(Action.editSetlistSongInCatalog.request(props)),
+        Remove: (props: ISetlistSongEntityActionProps) => dispatch(Action.deleteSetlistSongInCatalog.request(props)),
+        Read: () => { },
+        Add: () => { },
+        ShowCatalog: () => { }
+    },
+    locationModalActionsProvider: {
+        None: () => { },
+        New: (props: ILocationEntityActionProps) => dispatch(Action.addLocationToCatalog.request(props)),
+        Edit: (props: ILocationEntityActionProps) => dispatch(Action.editLocationInCatalog.request(props)),
+        Remove: (props: ILocationEntityActionProps) => dispatch(Action.deleteLocationInCatalog.request(props)),
         Read: () => { },
         Add: () => { },
         ShowCatalog: () => { }

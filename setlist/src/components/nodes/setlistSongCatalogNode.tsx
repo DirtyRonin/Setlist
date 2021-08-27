@@ -1,8 +1,9 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
+import { History } from "history";
 
-import { CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps, IModalSetlistSong, ISetlistSong, ModalTypes } from "../../models";
-import { SongNodeContainer } from "../../styles";
+import { IModalActionsProps, ISetlistSong, ModalTypes } from "models";
+import { DefaultLabelStyle, DefaultNodeImageStyle, DefaultNodeWrapperStyle } from "styles";
 
 import {
     Menu,
@@ -10,11 +11,12 @@ import {
     MenuDivider,
     MenuHeader
 } from '@szhsin/react-menu';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export interface ISetlistSongNodeProps {
     setlistSong: ISetlistSong;
     index: number;
-    catalogId: string;
-    pushCatalogsOrder(props: IComponentOrderActionProps): void
+    history: History
+    setModal(props: IModalActionsProps): void
 }
 
 
@@ -22,82 +24,60 @@ const SetlistSongCatalogNodeComponent = (props: ISetlistSongNodeProps): JSX.Elem
     const {
         setlistSong,
         index,
-        catalogId,
-        pushCatalogsOrder
+        setModal,
+        history
     } = props;
 
-    const createModal = (type: ModalTypes) => {
-        const modal: IModalSetlistSong = {
-            show: true,
-            catalogId: catalogId,
-            catalogType: CatalogTypes["SetlistSong Catalog"],
-            type,
-            value: setlistSong,
-            catalogInModal: CatalogTypes["None"]
-        }
+    const createModal = (type: ModalTypes, pathName: string = '/') => {
 
-        const order: IComponentOrderActionProps = {
-            ComponentOrder: {
-                value: modal,
-                id: modal.catalogId,
-                displayIn: DisplayIn.Modal
-            } as IComponentOrder
-        }
+        setModal({ showModal: true })
 
-        pushCatalogsOrder(order)
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}&$id=${setlistSong.Id}`,
+            state: { background: history.location }
+        })
     }
 
-    const handleShowEditSetlistSong = () => createModal("Edit")
-    const handleShowReadSetlistSong = () => createModal("Read")
-    const handleShowDeleteSetlistSong = () => createModal("Remove")
-
-    const uniqueNodeId = `${catalogId}-${setlistSong.Id}-${index}`
+    const handleShowEditSetlistSong = () => createModal(ModalTypes.Edit, '/setlistSongModal')
+    const handleShowReadSetlistSong = () => createModal(ModalTypes.Read, '/setlistSongModal')
+    const handleShowDeleteSetlistSong = () => createModal(ModalTypes.Remove, '/setlistSongModal')
 
     return (
-        <Container>
-            <SongNodeContainer >
+        <DefaultNodeWrapperStyle >
+            <Container>
                 <Row>
-                    <Col xs="8" >
+                    <Col xs="10" >
                         <Row>
-                            <Col>
-                                <label>{setlistSong.Song.Title}</label>
+                            <Col xs="3">
+                                <DefaultNodeImageStyle />
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <label>{setlistSong.Song.Artist}</label>
+                            <Col xs="9">
+                                <Row>
+                                    <Col>
+                                        <DefaultLabelStyle>{setlistSong.Song.Title}</DefaultLabelStyle>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <DefaultLabelStyle>{setlistSong.Song.Artist}</DefaultLabelStyle>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </Col >
-                    <Col xs='4' >
-                        <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
-                            <MenuItem value="AddBand" >Add Something</MenuItem>
-
+                    <Col xs='2' >
+                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
                             <MenuDivider />
-
                             <MenuHeader>Edit</MenuHeader>
                             <MenuItem value="Read" onClick={handleShowReadSetlistSong} >{ModalTypes.Read}</MenuItem>
                             <MenuItem value="Edit" onClick={handleShowEditSetlistSong} >{ModalTypes.Edit}</MenuItem>
                             <MenuItem value="Remove" onClick={handleShowDeleteSetlistSong} >{ModalTypes.Remove}</MenuItem>
                         </Menu>
                     </Col>
-
-                    {/* <Col >
-                                <label>{setlistSong.Song.Title} - {setlistSong.Song.Artist}</label>
-                            </Col>
-                            <Col></Col>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowReadSetlistSong}>{ModalTypes.New}</Button>
-                            </Col>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowEditSetlistSong}>{ModalTypes.Edit}</Button>
-                            </Col>
-                            <Col>
-                                <Button variant="secondary" onClick={handleShowDeleteSetlistSong}>{ModalTypes.Remove}</Button>
-                            </Col> */}
                 </Row>
-            </SongNodeContainer>
-        </Container>
+            </Container>
+        </DefaultNodeWrapperStyle >
     );
 };
 

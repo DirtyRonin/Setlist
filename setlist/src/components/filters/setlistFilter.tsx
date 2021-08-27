@@ -1,9 +1,9 @@
 import React from "react";
 import { FormControlProps, Form, Col } from "react-bootstrap";
-import { FilterSetlistHtmlAttributesConfiguration } from "../../Configuration";
-import { FilterSetlistActionProps } from "../../mapping";
-import { IFilterSetlistActionProps, ISetlistFilter } from "../../models";
-import { IsFilterableString } from "../../utils";
+import { FilterSetlistHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistHtmlAttributes";
+import { FilterSetlistActionProps } from "mapping";
+import { IFilterSetlistActionProps, ISetlistFilter } from "models";
+import { IsFilterableString } from "utils";
 
 export interface ISetlistFilterProps {
     CatalogId: string;

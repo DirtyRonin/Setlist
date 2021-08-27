@@ -10,6 +10,8 @@ const SetlistCatalogContainer = React.lazy(() => import('store/containers/catalo
 const LocationCatalogContainer = React.lazy(() => import('store/containers/catalogs/LocationCatalogContainer'))
 const CustomEventCatalogContainer = React.lazy(() => import('store/containers/catalogs/CustomEventCatalogContainer'))
 const BandSongCatalogComponent = React.lazy(() => import('store/containers/catalogs/BandSongCatalogContainer'))
+const SetlistSongCatalog = React.lazy(() => import('store/containers/catalogs/SetlistSongCatalogContainer'))
+
 const ModalWrapper = React.lazy(() => import('components/common/modalWrapper/modalWrapper'))
 
 import '@szhsin/react-menu/dist/index.css';
@@ -70,16 +72,25 @@ export const App = (props: AppProps): JSX.Element => {
                                 history={history} />
                         </PrivateRoute>
                         <PrivateRoute path='/setlist'>
-                            <SetlistCatalogContainer />
+                            <SetlistCatalogContainer
+                                history={history}
+                            />
                         </PrivateRoute>
                         <PrivateRoute path='/location'>
-                            <LocationCatalogContainer />
+                            <LocationCatalogContainer
+                                history={history}
+                            />
                         </PrivateRoute>
                         <PrivateRoute path='/customevent'>
                             <CustomEventCatalogContainer />
                         </PrivateRoute>
                         <PrivateRoute path="/bandSongAsCatalog">
                             <BandSongCatalogComponent
+                                history={history}
+                            />
+                        </PrivateRoute>
+                        <PrivateRoute path="/setlistSongAsCatalog">
+                            <SetlistSongCatalog
                                 history={history}
                             />
                         </PrivateRoute>

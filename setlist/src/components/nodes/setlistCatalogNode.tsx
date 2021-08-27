@@ -18,32 +18,36 @@ export interface ISetlistNodeProps {
     index: number;
     history: History
     setModal(props: IModalActionsProps): void
+    setSetlistIdForSetlistSong(setlistId: string): void
 }
 
 const SetlistCatalogNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
     const {
         setlist,
         index,
+        setSetlistIdForSetlistSong,
         setModal,
         history
     } = props;
 
-    const createModal = (type: ModalTypes, pathName: string = '/') => {
+    const createModal = (type: ModalTypes, pathName: string = '/', isModal: boolean = true) => {
 
         setModal({ showModal: true })
+
+        if (type === ModalTypes.ShowCatalog)
+            setSetlistIdForSetlistSong(setlist.Id)
 
         history.push({
             pathname: pathName,
             search: `?$type=${type}&$id=${setlist.Id}`,
-            state: { background: history.location }
+            state: isModal ? { background: history.location } : undefined //display as catalog in main window
         })
     }
 
-    const handleShowEditSetlist = () => createModal(ModalTypes.Edit,'/setlistModal')
-    const handleShowReadSetlist = () => createModal(ModalTypes.Read,'/setlistModal')
-    const handleShowDeleteSetlist = () => createModal(ModalTypes.Remove,'/setlistModal')
-    const handleAddSong = () => createModal(ModalTypes.Add, '/AddSong')
-    const handleAddSongFromBandSongs = () => createModal(ModalTypes.Add, '/AddSongFromBandSongs')
+    const handleShowEditSetlist = () => createModal(ModalTypes.Edit, '/setlistModal')
+    const handleShowReadSetlist = () => createModal(ModalTypes.Read, '/setlistModal')
+    const handleShowDeleteSetlist = () => createModal(ModalTypes.Remove, '/setlistModal')
+    const handleShowSetlistSongsCatalog = () => createModal(ModalTypes.ShowCatalog, '/setlistSongAsCatalog', false)
 
     return (
         <DefaultNodeWrapperStyle >
@@ -65,13 +69,12 @@ const SetlistCatalogNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
                     </Col >
                     <Col xs='2' >
                         <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
-                        <MenuItem value="AddSong" onClick={handleAddSong}  >Add Song *</MenuItem>
-                            <MenuItem value="AddBandSong" onClick={handleAddSongFromBandSongs} >Add Song from Band *</MenuItem>
+                            <MenuItem value="ShowSetlistSongs" onClick={handleShowSetlistSongsCatalog}  >Show Setlist Songs</MenuItem>
                             <MenuDivider />
                             <MenuHeader>Edit</MenuHeader>
-                            <MenuItem value="Read" onClick={handleShowReadSetlist} >{ModalTypes.Read}*</MenuItem>
-                            <MenuItem value="Edit" onClick={handleShowEditSetlist} >{ModalTypes.Edit}*</MenuItem>
-                            <MenuItem value="Remove" onClick={handleShowDeleteSetlist} >{ModalTypes.Remove}*</MenuItem>
+                            <MenuItem value="Read" onClick={handleShowReadSetlist} >{ModalTypes.Read}</MenuItem>
+                            <MenuItem value="Edit" onClick={handleShowEditSetlist} >{ModalTypes.Edit}</MenuItem>
+                            <MenuItem value="Remove" onClick={handleShowDeleteSetlist} >{ModalTypes.Remove}</MenuItem>
                         </Menu>
                     </Col>
                 </Row>

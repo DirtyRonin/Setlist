@@ -1,8 +1,8 @@
 import validator from "validator";
-import { GetLocationRequestAsync } from "../../api";
-import { EndpointConfiguration } from "../../Configuration";
-import { Location } from "../../mapping";
-import { IOdataWrapper, ILocation } from "../../models";
+import { CreateLocationRequestAsync, DeleteLocationRequestAsync, GetLocationRequestAsync, UpdateLocationRequestAsync } from "api";
+import { EndpointConfiguration } from "configuration";
+import { Location } from "mapping";
+import { IOdataWrapper, ILocation } from "models";
 
 export const ReadLocationAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<ILocation>> => {
 
@@ -28,3 +28,25 @@ export const ReadLocationAsync = async (filterOrNextLink: string): Promise<IOdat
 
     return { ...odataLocationResources, Values: location }
 };
+
+export const CreateLocationAsync = async (song: ILocation): Promise<ILocation> => {
+    const resource = Location.ToResource(song)
+
+    const result = await CreateLocationRequestAsync(resource)
+
+    return Location.FromResource(result.data)
+}
+
+export const UpdateLocationAsync = async(song:ILocation):Promise<ILocation> => {
+    const resource = Location.ToResource(song)
+
+    const result = await UpdateLocationRequestAsync(resource)
+
+    return Location.FromResource(result.data)
+}
+
+export const DeleteLocationAsync = async (songId: string): Promise<ILocation> => {
+    const result = await DeleteLocationRequestAsync(songId);
+
+    return Location.FromResource(result.data);
+}

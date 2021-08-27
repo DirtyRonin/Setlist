@@ -1,8 +1,8 @@
 import Axios, { AxiosResponse } from "axios";
 
-import { IOdataWrapper } from "../models";
-import { EndpointConfiguration, defaultHeader } from "../Configuration";
-import { ISongResource } from "../resource";
+import { IOdataWrapper } from "models";
+import { EndpointConfiguration, defaultHeader } from "configuration";
+import { ISongResource } from "resource";
 
 const songsEndpoint = EndpointConfiguration.Songs;
 

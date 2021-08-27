@@ -1,62 +1,83 @@
-import { combineEpics, Epic } from "redux-observable";
-import { from, of, merge, EMPTY } from "rxjs";
-import { filter, switchMap, map, catchError, takeUntil, mergeMap } from "rxjs/operators";
-
 import { isActionOf } from "typesafe-actions";
+import { combineEpics, Epic } from "redux-observable";
+import { from, of } from "rxjs";
+import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 
-import * as Action from "../../actions/";
+import { SetlistSongCatalogActions } from "store/reducers/catalogReducers/setlistSongCatalogReducer"
 
-import { CatalogActions, fetchSetlistSongCatalog, RootState } from "../..";
-import { DisplayIn, IComponentOrderActionProps } from "../../../models";
-import { fetchSetlistSongCatalogAsync } from "../../../service";
+import * as Action from "store/actions/catalogActions/setlistSongCatalogActions";
 
-const openSetlistSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$, state$) => {
-    const setlistSongCatalog = (state$.value as RootState).setlistSongCatalogReducers.setlistSongCatalog
+import { deleteSetlistSongInCatalogAsync, editSetlistSongInCatalogAsync, fetchSetlistSongCatalogAsync, fetchSetlistSongCatalogNextLinkAsync, NewSetlistSong } from "service";
 
-    const asComponentOrderActionProp: IComponentOrderActionProps = {
-        ComponentOrder: {
-            id: setlistSongCatalog.Id,
-            displayIn: DisplayIn.Main,
-            value: setlistSongCatalog
-        }
-    }
-
-    return action$.pipe(
-        filter(isActionOf(Action.openSetlistSongCatalog)),
-        mergeMap(() =>
-            merge(of(asComponentOrderActionProp).pipe(
-                map(Action.pushCatalogComponentOrder.request)
-            ))
-        )
-    )
-}
-
-const closeSetlistSongCatalogEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
+const fetchSetlistSongCatalogsEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogActions, any> = (action$) =>
     action$.pipe(
-        filter(isActionOf(Action.closeSetlistSongCatalog)),
-        mergeMap(() =>
-            merge(of(EMPTY).pipe(
-                map(() => Action.popComponentOrder.request())
-            ))
-        )
-    )
-
-const fetchSetlistSongCatalogsEpic: Epic<CatalogActions, CatalogActions, any> = (action$) =>
-    action$.pipe(
-        filter(isActionOf(fetchSetlistSongCatalog.request)),
+        filter(isActionOf(Action.fetchSetlistSongCatalog.request)),
         switchMap(action =>
             from(fetchSetlistSongCatalogAsync(action.payload)).pipe(
-                map(fetchSetlistSongCatalog.success),
-                catchError((error: Error) => of(fetchSetlistSongCatalog.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(fetchSetlistSongCatalog.cancel))))
+                map(Action.fetchSetlistSongCatalog.success),
+                catchError((error: Error) => of(Action.fetchSetlistSongCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.fetchSetlistSongCatalog.cancel))))
             )
         )
     );
 
+const fetchSetlistSongCatalogNextLinkEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogActions, any> = (action$, state$) =>
+    action$.pipe(
+        filter(isActionOf(Action.fetchSetlistSongCatalogNextLink.request)),
+        switchMap(action =>
+            from(fetchSetlistSongCatalogNextLinkAsync(action.payload)).pipe(
+                map(Action.fetchSetlistSongCatalogNextLink.success),
+                catchError((error: Error) => of(Action.fetchSetlistSongCatalogNextLink.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.fetchSetlistSongCatalogNextLink.cancel))))
+            )
+        )
+    );
+
+const addSetlistSongEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogActions, any> = (action$) => {
+    return action$.pipe(
+        filter(isActionOf(Action.addSetlistSongToCatalog.request)),
+        switchMap(action =>
+            from(NewSetlistSong(action.payload)).pipe(
+                map(Action.addSetlistSongToCatalog.success),
+                catchError((error: Error) => of(Action.addSetlistSongToCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.addSetlistSongToCatalog.cancel))))
+            )
+        )
+    );
+}
+
+const editSetlistSongEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogActions, any> = (action$) => {
+    return action$.pipe(
+        filter(isActionOf(Action.editSetlistSongInCatalog.request)),
+        switchMap(action =>
+            from(editSetlistSongInCatalogAsync(action.payload)).pipe(
+                map(Action.editSetlistSongInCatalog.success),
+                catchError((error: Error) => of(Action.editSetlistSongInCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.editSetlistSongInCatalog.cancel))))
+            )
+        )
+    );
+}
+
+const deleteSetlistSongEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogActions, any> = (action$) => {
+    return action$.pipe(
+        filter(isActionOf(Action.deleteSetlistSongInCatalog.request)),
+        switchMap(action =>
+            from(deleteSetlistSongInCatalogAsync(action.payload)).pipe(
+                map(Action.deleteSetlistSongInCatalog.success),
+                catchError((error: Error) => of(Action.deleteSetlistSongInCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.deleteSetlistSongInCatalog.cancel))))
+            )
+        )
+    );
+}
+
 
 
 export const setlistSongCatalogEpics = combineEpics(
-    openSetlistSongCatalogEpic,
-    closeSetlistSongCatalogEpic,
-    fetchSetlistSongCatalogsEpic
+    fetchSetlistSongCatalogsEpic,
+    fetchSetlistSongCatalogNextLinkEpic,
+addSetlistSongEpic,
+editSetlistSongEpic,
+deleteSetlistSongEpic
 )

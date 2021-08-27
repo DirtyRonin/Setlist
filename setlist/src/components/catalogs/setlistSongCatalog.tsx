@@ -2,41 +2,58 @@ import React from "react";
 import { useEffect } from "react";
 import { Col, Container, Navbar, Row, Form, FormControlProps } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { SetlistSongCatalogHtmlAttributesConfiguration } from "../../Configuration";
 
-import { FilterSetlistSongActionProps } from "../../mapping";
-import { SetlistSongCatalogProps } from "../../store/containers/catalogs/SetlistSongCatalogContainer";
-import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
-import { SetlistSongFilterComponent } from "../filters";
-import SetlistSongCatalogNodeComponent from "../nodes/setlistSongCatalogNode";
+import { SetlistSongCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistSongHtmlAttributes";
+
+import { FilterSetlistSongActionProps } from "mapping";
+import { SetlistSongCatalogProps } from "store/containers/catalogs/SetlistSongCatalogContainer";
+import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
+import { SetlistSongFilterComponent } from "components/filters";
+import SetlistSongCatalogNodeComponent from "components/nodes/setlistSongCatalogNode";
+import { INextLinkActionProps } from "models";
+
 
 const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Element => {
 
     const {
         setlistSongCatalog,
-        showModal,
-
-        pushCatalogsOrder,
         setSetlistSongFilter,
-        fetchSetlistSongCatalog
+        fetchSetlistSongCatalog,
+        fetchSetlistSongCatalogNextLink,
+        setModal,
+        history
     } = props
+
+    useEffect(() => {
+        const filter = FilterSetlistSongActionProps.CreateFromCatalog(setlistSongCatalog)
+        fetchSetlistSongCatalog(filter)
+    }, []);
 
     useEffect(() => {
         if (setlistSongCatalog.Refresh) {
             const filter = FilterSetlistSongActionProps.CreateFromCatalog(setlistSongCatalog)
             fetchSetlistSongCatalog(filter)
         }
-    }, [setlistSongCatalog.Refresh])
+
+    }, [setlistSongCatalog.Refresh]);
 
     const setlistSongCatalogDef = SetlistSongCatalogHtmlAttributesConfiguration
 
-    const handleScrollDown = () => { }
+    const handleScrollDown = () => {
+        const { OData } = setlistSongCatalog
+        const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
+
+        setTimeout(() => {
+            fetchSetlistSongCatalogNextLink(actionProps)
+        }, 500);
+
+    }
 
     return <div>
         <Container fluid>
             <Row>
                 <Col >
-                    <ContainerCss data-testid={setlistSongCatalog.Id}>
+                    <ContainerCss >
                         <Row>
                             <Col>
                                 <NodeListCss id={setlistSongCatalogDef.NodeList.ControlId} >
@@ -49,8 +66,8 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                                                 <Col sm="6">
                                                     <SongFilterCss>
                                                         <SetlistSongFilterComponent
-                                                            CatalogId={setlistSongCatalog.Id}
-                                                            Filter={setlistSongCatalog.Filter}
+                                                            setlistId={setlistSongCatalog.Id}
+                                                            filter={setlistSongCatalog.Filter}
                                                             setSetlistSongFilter={setSetlistSongFilter}
                                                         />
                                                     </SongFilterCss>
@@ -86,9 +103,9 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                                             <SetlistSongCatalogNodeComponent
                                                 setlistSong={setlistSong}
                                                 index={index}
-                                                catalogId={setlistSongCatalog.Id}
-                                                pushCatalogsOrder={pushCatalogsOrder}
                                                 key={setlistSong.Id}
+                                                setModal={setModal}
+                                                history={history}
                                             />
                                         ))}
                                     </InfiniteScroll>
@@ -96,12 +113,8 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                                 {setlistSongCatalog.OData.Count}
                             </Col>
                         </Row>
-
-
                     </ContainerCss>
                 </Col>
-
-
             </Row>
         </Container>
     </div>

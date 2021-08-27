@@ -1,5 +1,5 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import {  IFilterBandSongActionProps, Catalog, INextLinkActionProps, IFilterBandSongActionResult, IBandSongEntityActionProps, IBandSong } from "../../../models";
+import {  IFilterBandSongActionProps, INextLinkActionProps, IFilterBandSongActionResult, IBandSongEntityActionProps, IBandSong } from "../../../models";
 
 export const setBandIdForBandSong = createAction(
     "SET_BANDID_FOR_BANDSONG",
@@ -42,10 +42,6 @@ export const deleteBandSongInCatalog= createAsyncAction(
     "DELETE_BANDSONG_FAILURE",
     "DELETE_BANDSONG_CANCEL",
 )<IBandSongEntityActionProps,string,Error,string>();
-
-export const readBandSongInCatalog= createAction(
-    "READ_BANDSONG_REQUEST",
-)();
 
 export const setBandSongFilter= createAction(
     "SET_BandSONG_FILTER",

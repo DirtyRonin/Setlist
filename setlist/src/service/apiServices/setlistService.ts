@@ -1,8 +1,9 @@
 import validator from "validator";
-import { CreateSetlistRequestAsync, GetSetlistRequestAsync } from "../../api/setlistApi";
-import { EndpointConfiguration } from "../../Configuration";
-import { Setlist } from "../../mapping";
-import { IOdataWrapper, ISetlist } from "../../models";
+
+import { CreateSetlistRequestAsync, DeleteSetlistRequestAsync, GetSetlistRequestAsync, UpdateSetlistRequestAsync } from "api/setlistApi";
+import { EndpointConfiguration } from "configuration";
+import { Setlist } from "mapping";
+import { IOdataWrapper, ISetlist } from "models";
 
 export const ReadSetlistAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<ISetlist>> => {
 
@@ -35,4 +36,18 @@ export const CreateSetlistAsync = async (item: ISetlist): Promise<ISetlist> => {
     const result = await CreateSetlistRequestAsync(resource)
 
     return Setlist.FromResource(result.data)
+}
+
+export const UpdateSetlistAsync = async(setList:ISetlist):Promise<ISetlist> => {
+    const resource = Setlist.ToResource(setList)
+
+    const result = await UpdateSetlistRequestAsync(resource)
+
+    return Setlist.FromResource(result.data)
+}
+
+export const DeleteSetlistAsync = async (setListId: string): Promise<ISetlist> => {
+    const result = await DeleteSetlistRequestAsync(setListId);
+
+    return Setlist.FromResource(result.data);
 }
