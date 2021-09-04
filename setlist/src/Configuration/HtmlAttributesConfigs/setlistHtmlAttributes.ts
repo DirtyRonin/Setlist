@@ -15,13 +15,13 @@ export const SetlistCatalogHtmlAttributesConfiguration: ConfigurationItemCollect
 
 
 //filter
-type SetlistBandComponentNames = "SearchTitleInput";
-
+type SetlistBandComponentNames = "SearchQueryInput";
+const filterSetlist = "FilterSetlist"
 export const FilterSetlistHtmlAttributesConfiguration: ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
     SetlistBandComponentNames
 > = {
-    SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterSetlist_SearchTitle", ControlId: "FilterSetlist_SearchTitle" },
+    SearchQueryInput: { Label: `SearchQuery`, Placeholder: `Search...`, Data_TestId: `${filterSetlist}_SearchQuery`, ControlId: `${filterSetlist}_SearchQuery` },
 }
 
 

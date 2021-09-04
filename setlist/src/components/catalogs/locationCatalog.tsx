@@ -1,28 +1,26 @@
 import React, { useEffect } from "react";
-import { Col, Container, Navbar, Row, FormControlProps, Button } from "react-bootstrap";
-
+import { Col, Container, Row } from "react-bootstrap";
+import { MenuDivider, MenuHeader,Menu,    MenuItem } from "@szhsin/react-menu";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { LocationCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/locationHtmlAttributes";
 import { FilterLocationActionProps } from "mapping";
 import { INextLinkActionProps, ModalTypes } from "models";
 import { LocationCatalogProps } from "store/containers/catalogs/LocationCatalogContainer";
-import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles";
 import LocationCatalogNodeComponent from "components/nodes/locationCatalogNode";
 import { LocationFilterComponent } from "components/filters/LocationFilter";
+import AddButton from "components/common/AddButton/addButton";
 
-const LocationCatalogComponent = (props: LocationCatalogProps): JSX.Element => {
-
-
-    const {
-        locationCatalog,
-        history,
-
-        setLocationFilter,
-        fetchLocationCatalog,
-        fetchLocationCatalogNextLink,
-        setModal,
-    } = props;
+const LocationCatalogComponent = ({
+    locationCatalog,
+    history,
+    setLocationFilter,
+    fetchLocationCatalog,
+    fetchLocationCatalogNextLink,
+    setModal,
+}: LocationCatalogProps): JSX.Element => {
 
     useEffect(() => {
         const filter = FilterLocationActionProps.CreateFromCatalog(locationCatalog)
@@ -47,13 +45,11 @@ const LocationCatalogComponent = (props: LocationCatalogProps): JSX.Element => {
         }, 500);
     }
 
-    const handleShowAddLocation = (event: React.FormEvent<FormControlProps>) => {
-        event.preventDefault();
+    const handleShowAddLocation = () => {
         setModal({ showModal: true })
 
         const type: ModalTypes = ModalTypes.New
         const pathName: string = '/locationModal'
-
 
         history.push({
             pathname: pathName,
@@ -69,38 +65,34 @@ const LocationCatalogComponent = (props: LocationCatalogProps): JSX.Element => {
                     <ContainerCss >
                         <Row>
                             <Col>
+                                <Header >
+                                    <HeaderTitle>Locations</HeaderTitle>
+                                    <HeaderOptions>
+                                        <SearchFilterCss>
+                                            <LocationFilterComponent
+                                                filter={locationCatalog.Filter}
+                                                setLocationFilter={setLocationFilter}
+                                            />
+                                        </SearchFilterCss>
+                                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                                            <MenuItem value="Options"  >Options*</MenuItem>
+                                            <MenuDivider />
+                                            <MenuHeader>Edit</MenuHeader>
+                                            <MenuItem value="NewLocation" onClick={handleShowAddLocation}>New Location</MenuItem>
+                                        </Menu>
+                                    </HeaderOptions>
+                                </Header>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
                                 <NodeListCss id={locationCatalogDef.NodeList.ControlId} >
-                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                        <Navbar.Brand >{locationCatalog.Title}</Navbar.Brand>
-                                        <Navbar.Toggle aria-controls={locationCatalogDef.Navbar.ControlId} />
-                                        <Navbar.Collapse id={locationCatalogDef.Navbar.ControlId}>
-                                            <Row>
-                                                <Col sm="6">
-                                                    <SongFilterCss>
-                                                        <LocationFilterComponent
-                                                            filter={locationCatalog.Filter}
-                                                            setLocationFilter={setLocationFilter}
-                                                        />
-                                                    </SongFilterCss>
-                                                </Col>
-                                                <Col sm="6">
-                                                <Button variant="secondary" onClick={handleShowAddLocation}>New Song</Button>
-                                                </Col>
-                                            </Row>
-                                        </Navbar.Collapse>
-
-                                    </Navbar>
-
+                                    {locationCatalog.OData.Count}
                                     <InfiniteScroll
                                         dataLength={locationCatalog.Values.size}
                                         next={handleScrollDown}
                                         hasMore={locationCatalog.Values.size < locationCatalog.OData.Count}
                                         loader={<h4>Loading...</h4>}
-                                        endMessage={
-                                            <p style={{ textAlign: 'center' }}>
-                                                <b>Yay! You have seen it all</b>
-                                            </p>
-                                        }
                                         scrollableTarget={locationCatalogDef.NodeList.ControlId}
                                     >
                                         {Array.from(locationCatalog.Values.values()).map((location, index) => (
@@ -114,7 +106,7 @@ const LocationCatalogComponent = (props: LocationCatalogProps): JSX.Element => {
                                         ))}
                                     </InfiniteScroll>
                                 </NodeListCss>
-                                {locationCatalog.OData.Count}
+                                <AddButton onClick={handleShowAddLocation} />
                             </Col>
                         </Row>
                     </ContainerCss>

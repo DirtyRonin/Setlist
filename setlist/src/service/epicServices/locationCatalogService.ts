@@ -12,12 +12,22 @@ export const fetchLocationCatalogAsync = async (props: IFilterLocationActionProp
 
     const filters: FilterBuilder[] = []
 
-    if (IsMiminumStringLength(Filter.Name)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ILocation>(x => x.Name), Filter.Name))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ILocation>(x => x.Name), Filter.Query))
+    }
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ILocation>(x => x.Address), Filter.Query))
     }
 
+    //reduce all filter builders to one with all the fragments
+    const result = filters.reduce((prev, current) => {
+        const stuff = prev.or(()=>current)
+        return stuff
+    },new FilterBuilder())
+
     if (filters.length) {
-        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
+         // concat the fragments with or and give it to the query
+         query.filter(() => new FilterBuilder().or(() => result))
     }
 
     query = query.orderBy(`${nameof<ILocation>(x => x.Name)}`)

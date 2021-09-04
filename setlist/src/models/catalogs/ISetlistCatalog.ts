@@ -2,7 +2,7 @@ import { ISetlist } from "..";
 import { ICatalog } from "./ICatalog";
 
 export interface ISetlistFilter {
-    Title: string;
+    Query: string;
 }
 
 export interface ISetlistCatalogOptions{}

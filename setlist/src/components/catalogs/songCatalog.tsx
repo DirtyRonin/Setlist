@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
-
-import { FormControlProps, Col, Row, Navbar, Container, Button } from "react-bootstrap";
+import { Col, Row, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { INextLinkActionProps, ModalTypes } from "models";
 import { FilterSongActionProps } from "mapping";
 import { SongCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/songHtmlAttributes";
-import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles";
 
 import { SongCatalogProps } from "store/containers/catalogs/SongCatalogContainer";
 import { SongFilterComponent } from "components/filters";
 import SongCatalogNodeComponent from "components/nodes/songCatalogNode";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Menu, MenuItem, MenuDivider, MenuHeader } from '@szhsin/react-menu';
+import AddButton from "components/common/AddButton/addButton";
 
 const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     const {
@@ -48,8 +50,8 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
         }, 500);
     }
 
-    const handleShowAddSong = (event: React.FormEvent<FormControlProps>) => {
-        event.preventDefault();
+    const handleShowAddSong = () => {
+        
         setModal({ showModal: true })
 
         const type: ModalTypes = ModalTypes.New
@@ -64,44 +66,42 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     }
 
     return (
-
+        // <ContentWrapper>
         <Container fluid>
             <Row>
                 <Col >
                     <ContainerCss >
                         <Row>
                             <Col>
-                                <NodeListCss id={songCatalogDef.NodeList.ControlId} >
-                                    <Navbar sticky="top" collapseOnSelect expand={false} expanded={true} bg="light" variant="light">
-                                        <Navbar.Brand >{songCatalog.Title}</Navbar.Brand>
-                                        <Navbar.Toggle aria-controls={songCatalogDef.Navbar.ControlId} />
-                                        <Navbar.Collapse id={songCatalogDef.Navbar.ControlId}>
-                                            <Row>
-                                                <Col sm="6">
-                                                    <SongFilterCss>
-                                                        <SongFilterComponent
-                                                            filter={songCatalog.Filter}
-                                                            setSongFilter={setSongFilter}
-                                                        />
-                                                    </SongFilterCss>
-                                                </Col>
-                                                <Col sm="6">
-                                                    <Button variant="secondary" onClick={handleShowAddSong}>New Song</Button>
-                                                </Col>
-                                            </Row>
-                                        </Navbar.Collapse>
-                                    </Navbar>
+                                <Header >
+                                    <HeaderTitle>Songs</HeaderTitle>
 
+                                    <HeaderOptions>
+                                        <SearchFilterCss>
+                                            <SongFilterComponent
+                                                filter={songCatalog.Filter}
+                                                setSongFilter={setSongFilter}
+                                            />
+                                        </SearchFilterCss>
+                                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                                            <MenuItem value="Options"  >Options*</MenuItem>
+                                            <MenuDivider />
+                                            <MenuHeader>Edit</MenuHeader>
+                                            <MenuItem value="NewSong" onClick={handleShowAddSong}>New Song</MenuItem>
+                                        </Menu>
+                                    </HeaderOptions>
+                                </Header>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <NodeListCss id={songCatalogDef.NodeList.ControlId} >
+                                    {songCatalog.OData.Count}
                                     <InfiniteScroll
                                         dataLength={songCatalog.Values.size}
                                         next={handleScrollDown}
                                         hasMore={songCatalog.Values.size < songCatalog.OData.Count}
                                         loader={<h4>Loading...</h4>}
-                                        endMessage={
-                                            <p style={{ textAlign: 'center' }}>
-                                                <b>Yay! You have seen it all</b>
-                                            </p>
-                                        }
                                         scrollableTarget={songCatalogDef.NodeList.ControlId}
                                     >
 
@@ -114,20 +114,16 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                                                 index={index}
                                             />
                                         ))}
-
-
-
                                     </InfiniteScroll>
-
                                 </NodeListCss>
-                                {songCatalog.OData.Count}
+                                <AddButton onClick={handleShowAddSong} />
                             </Col>
                         </Row>
                     </ContainerCss>
                 </Col>
             </Row>
         </Container>
-
+        // </ContentWrapper>
     );
 };
 

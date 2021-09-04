@@ -1,4 +1,4 @@
-import { IFilterLocationActionProps, ILocationCatalog, ILocationFilter } from "../../models";
+import { IFilterLocationActionProps, ILocationCatalog, ILocationFilter } from "models";
 
 export class FilterLocationActionProps implements IFilterLocationActionProps {
     
@@ -19,7 +19,7 @@ export class FilterLocationActionProps implements IFilterLocationActionProps {
             {
                 
                 filter: {
-                    Name: '',
+                    Query: '',
                 },
                 refresh: true
             })

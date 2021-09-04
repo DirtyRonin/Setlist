@@ -13,7 +13,7 @@ export class FilterBandActionProps implements IFilterBandActionProps {
     public static Default(): IFilterBandActionProps {
 
         const filter: IBandFilter = {
-            Title: ""
+            Query: ""
         }
 
         return FilterBandActionProps.Create(filter, true)

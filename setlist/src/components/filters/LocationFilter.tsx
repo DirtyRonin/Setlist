@@ -1,5 +1,5 @@
 import React from "react"
-import { Form,Col, FormControlProps } from "react-bootstrap";
+import { Form, Col, FormControlProps } from "react-bootstrap";
 
 import { ILocationFilter, IFilterLocationActionProps } from "models";
 import { FilterLocationHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/locationHtmlAttributes";
@@ -13,20 +13,18 @@ export interface ILocationFilterProps {
 
 export const LocationFilterComponent = ({ filter, setLocationFilter }: ILocationFilterProps) => {
 
-    const htmlConfig = FilterLocationHtmlAttributesConfiguration;
+    const { SearchQueryInput } = FilterLocationHtmlAttributesConfiguration;
 
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
 
         const elements: any = (event.target as any).form.elements;
 
-        const _filter: ILocationFilter = {
-            Name: elements[htmlConfig.SearchNameInput.ControlId].value
-        }
+        const _filter: ILocationFilter = { ...filter, Query: elements[SearchQueryInput.ControlId].value }
 
         const locationFilter = FilterLocationActionProps.Create({ filter: _filter, refresh: true })
 
-        locationFilter.refresh = IsFilterableString(filter.Name, locationFilter.filter.Name) ? true : false
+        locationFilter.refresh = IsFilterableString(filter.Query, locationFilter.filter.Query) ? true : false
 
         if (locationFilter.refresh) {
             setLocationFilter(locationFilter)
@@ -36,8 +34,8 @@ export const LocationFilterComponent = ({ filter, setLocationFilter }: ILocation
     return (
         <Form onChange={handleFilter} >
             <Form.Row>
-                <Form.Group as={Col} controlId={htmlConfig.SearchNameInput.ControlId}>
-                    <Form.Control type="search" placeholder={htmlConfig.SearchNameInput.Placeholder} defaultValue={filter.Name} />
+                <Form.Group as={Col} controlId={SearchQueryInput.ControlId}>
+                    <Form.Control type="search" placeholder={SearchQueryInput.Placeholder} defaultValue={filter.Query} />
                 </Form.Group>
             </Form.Row>
         </Form>

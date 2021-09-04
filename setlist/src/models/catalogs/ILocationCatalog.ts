@@ -2,7 +2,7 @@ import { ILocation } from "..";
 import { ICatalog } from "./ICatalog";
 
 export interface ILocationFilter {
-    Name: string;
+    Query: string;
 }
 
 export interface ILocationCatalogOptions{}

@@ -15,20 +15,18 @@ export interface IBandFilterProps {
 export const BandFilterComponent = (props: IBandFilterProps) => {
     const { filter, setBandFilter } = props;
 
-    const { SearchTitleInput } = FilterBandHtmlAttributesConfiguration
+    const { SearchQueryInput } = FilterBandHtmlAttributesConfiguration
 
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
 
         const elements: any = (event.target as any).form.elements;
 
-        const _filter = {
-            Title: elements[SearchTitleInput.ControlId].value,
-        }
+        const _filter: IBandFilter = { ...filter, Query: elements[SearchQueryInput.ControlId].value }
 
         const bandFilter = FilterBandActionProps.Create(_filter, true)
 
-        bandFilter.refresh = IsFilterableString(filter.Title, bandFilter.filter.Title) ? true : false
+        bandFilter.refresh = IsFilterableString(filter.Query, bandFilter.filter.Query) ? true : false
 
         if (bandFilter.refresh) {
             setBandFilter(bandFilter)
@@ -39,8 +37,8 @@ export const BandFilterComponent = (props: IBandFilterProps) => {
 
         <Form onChange={handleFilter} >
             <Form.Row>
-                <Form.Group as={Col} controlId={SearchTitleInput.ControlId}>
-                    <Form.Control type="search" defaultValue={filter.Title} placeholder={SearchTitleInput.Placeholder} />
+                <Form.Group as={Col} controlId={SearchQueryInput.ControlId}>
+                    <Form.Control type="search" defaultValue={filter.Query} placeholder={SearchQueryInput.Placeholder} />
                 </Form.Group>
             </Form.Row>
         </Form>

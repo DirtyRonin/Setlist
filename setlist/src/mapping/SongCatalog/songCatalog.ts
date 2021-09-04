@@ -22,7 +22,7 @@ export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOpt
         options: ISongCatalogOptions = { ShowAddSong: false },
     ): SongCatalog =>
         new SongCatalog(
-            FilterSongActionProps.Default(SongCatalog.CatalogId).filter,
+            FilterSongActionProps.Default().filter,
             { NextLink: "", Count: 0, Context: "" },
             options,
             refresh,

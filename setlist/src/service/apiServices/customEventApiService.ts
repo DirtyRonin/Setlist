@@ -1,5 +1,5 @@
 import validator from "validator";
-import { GetCustomEventRequestAsync } from "../../api";
+import { CreateCustomEventRequestAsync, DeleteCustomEventRequestAsync, GetCustomEventRequestAsync, UpdateCustomEventRequestAsync } from "../../api";
 import { EndpointConfiguration } from "../../Configuration";
 import { CustomEvent } from "../../mapping";
 import { IOdataWrapper, ICustomEvent } from "../../models";
@@ -28,3 +28,25 @@ export const ReadCustomEventAsync = async (filterOrNextLink: string): Promise<IO
 
     return { ...odataCustomEventResources, Values: customEvent }
 };
+
+export const CreateCustomEventAsync = async (customEvent: ICustomEvent): Promise<ICustomEvent> => {
+    const resource = CustomEvent.ToResource(customEvent)
+
+    const result = await CreateCustomEventRequestAsync(resource)
+
+    return CustomEvent.FromResource(result.data)
+}
+
+export const UpdateCustomEventAsync = async(customEvent:ICustomEvent):Promise<ICustomEvent> => {
+    const resource = CustomEvent.ToResource(customEvent)
+
+    const result = await UpdateCustomEventRequestAsync(resource)
+
+    return CustomEvent.FromResource(result.data)
+}
+
+export const DeleteCustomEventAsync = async (customEventId: string): Promise<ICustomEvent> => {
+    const result = await DeleteCustomEventRequestAsync(customEventId);
+
+    return CustomEvent.FromResource(result.data);
+}

@@ -2,11 +2,9 @@ import { ICatalog } from "./ICatalog";
 import { ISong } from "..";
 
 export interface ISongFilter {
-    Title: string;
-    Artist: string;
+    Query: string;
     Evergreen: boolean;
     Nineties: boolean;
-    Genre: string;
 }
 
 export interface ISongCatalogOptions {

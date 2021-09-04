@@ -1,12 +1,5 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { IFilterCustomEventActionProps, IFilterCustomEventActionResult, INextLinkActionProps } from "../../../models";
-
-export const openCustomEventCatalog = createAction(
-    'OPEN_CUSTOM_EVENT_CATALOG'
-)();
-export const closeCustomEventCatalog = createAction(
-    'CLOSE_CUSTOM_EVENT_CATALOG'
-)();
+import { ICustomEvent, ICustomEventEntityActionProps, IFilterCustomEventActionProps, IFilterCustomEventActionResult, INextLinkActionProps } from "models";
 
 export const setCustomEventFilter= createAction(
     "SET_CUSTOM_EVENT_FILTER",
@@ -25,3 +18,24 @@ export const fetchCustomEventCatalogNextLink = createAsyncAction(
     "FETCH_CUSTOM_EVENT_CATALOG_NEXTLINK_FAILURE",
     "FETCH_CUSTOM_EVENT_CATALOG_NEXTLINK_CANCEL",
 )<INextLinkActionProps,IFilterCustomEventActionResult,Error,string>();
+
+export const addCustomEventToCatalog= createAsyncAction(
+    "NEW_CUSTOM_EVENT_REQUEST",
+    "NEW_CUSTOM_EVENT_SUCCESS",
+    "NEW_CUSTOM_EVENT_FAILURE",
+    "NEW_CUSTOM_EVENT_CANCEL",
+)<ICustomEventEntityActionProps,ICustomEvent,Error,string>();
+
+export const editCustomEventInCatalog= createAsyncAction(
+    "EDIT_CUSTOM_EVENT_REQUEST",
+    "EDIT_CUSTOM_EVENT_SUCCESS",
+    "EDIT_CUSTOM_EVENT_FAILURE",
+    "EDIT_CUSTOM_EVENT_CANCEL",
+)<ICustomEventEntityActionProps,ICustomEvent,Error,string>();
+
+export const deleteCustomEventInCatalog= createAsyncAction(
+    "DELETE_CUSTOM_EVENT_REQUEST",
+    "DELETE_CUSTOM_EVENT_SUCCESS",
+    "DELETE_CUSTOM_EVENT_FAILURE",
+    "DELETE_CUSTOM_EVENT_CANCEL",
+)<ICustomEventEntityActionProps,string,Error,string>();

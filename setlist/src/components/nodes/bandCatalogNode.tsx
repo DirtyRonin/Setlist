@@ -1,16 +1,12 @@
 import React from "react";
 import { History } from 'history'
 
-import { Container, Row, Col, Button } from "react-bootstrap";
-import {
-    Menu,
-    MenuItem,
-    MenuDivider,
-    MenuHeader
-} from '@szhsin/react-menu';
+import { Container, Row, Col, } from "react-bootstrap";
+import { Menu, MenuItem, MenuDivider, MenuHeader } from '@szhsin/react-menu';
 
 import { DefaultLabelStyle, DefaultNodeImageStyle, DefaultNodeWrapperStyle } from "styles";
 import { IBand, ModalTypes, IModalActionsProps } from "models";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export interface IBandNodeProps {
     band: IBand;
@@ -76,7 +72,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
                         </Row>
                     </Col >
                     <Col xs="2">
-                        <Menu menuButton={<Button variant="secondary" >Menu</Button>}>
+                        <Menu menuButton={<div><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
                             <MenuItem value="ShowBandSongs" onClick={handleShowBandSongsCatalog} >Show Band Songs</MenuItem>
 
                             <MenuDivider />

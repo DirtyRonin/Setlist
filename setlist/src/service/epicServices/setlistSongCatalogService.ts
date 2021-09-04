@@ -16,8 +16,8 @@ export const fetchSetlistSongCatalogAsync = async (props: IFilterSetlistSongActi
 
     filters.push(new FilterBuilder().filterGuidExpression(nameof<ISetlistSong>(x => x.SetlistId), 'eq', Filter.SetlistId))
 
-    if (IsMiminumStringLength(Filter.Title)) {
-        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Title)}`, Filter.Title))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Title)}`, Filter.Query))
     }
     if (IsMiminumStringLength(Filter.Artist)) {
         filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Artist)}`, Filter.Artist))

@@ -13,8 +13,8 @@ export const fetchSetlistCatalogAsync = async (props: IFilterSetlistActionProps)
 
     const filters: FilterBuilder[] = []
 
-    if (IsMiminumStringLength(Filter.Title)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISetlist>(x => x.Title), Filter.Title))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISetlist>(x => x.Title), Filter.Query))
     }
 
     if (filters.length) {

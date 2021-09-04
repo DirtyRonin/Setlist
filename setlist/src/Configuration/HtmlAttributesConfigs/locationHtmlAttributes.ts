@@ -17,7 +17,7 @@ export const LocationCatalogHtmlAttributesConfiguration: ConfigurationItemCollec
 
 
 // filter
-export type FilterLocationComponentNames = "SearchNameInput" 
+export type FilterLocationComponentNames = "SearchQueryInput" 
 
 export type FilterLocationHtmlAttributesConfigurationType = ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
@@ -26,7 +26,7 @@ export type FilterLocationHtmlAttributesConfigurationType = ConfigurationItemCol
 
 const filterLocationName = "FilterLocation"
 export const FilterLocationHtmlAttributesConfiguration: FilterLocationHtmlAttributesConfigurationType = {
-    SearchNameInput: { Label: `Search For Name`, Placeholder: `Enter Name`, Data_TestId: `${filterLocationName}_SearchName`, ControlId: `${filterLocationName}_SearchName` }
+    SearchQueryInput: { Label: `SearchQuery`, Placeholder: `Search...`, Data_TestId: `${filterLocationName}_SearchQuery`, ControlId: `${filterLocationName}_SearchQuery` },
 }
 
 // modal

@@ -7,42 +7,6 @@ export type FormHtmlAttributesDefinition = {
     ControlId: string;
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-type CustomEventCatalogComponentNames = "ShowAddCustomEventCheckBox" | "Navbar" | "NodeList"
-
-export const CustomEventCatalogHtmlAttributesConfiguration: ConfigurationItemCollection<
-    FormHtmlAttributesDefinition,
-    CustomEventCatalogComponentNames
-> = {
-    ShowAddCustomEventCheckBox: { Label: "Add CustomEvent", Placeholder: "", Data_TestId: "CustomEventCatalog_ShowAddCustomEvent", ControlId: "CustomEventCatalog_ShowAddCustomEvent" },
-    Navbar: { Label: "", Placeholder: "", Data_TestId: "CustomEventCatalog_Options_responsiveNavbar", ControlId: "CustomEventCatalog_Options_responsiveNavbar" },
-    NodeList: { Label: "", Placeholder: "", Data_TestId: "CustomEventCatalog_NodeList", ControlId: "CustomEventCatalog_NodeList" },
-}
-
-
 type AddSongToBandComponentNames = "ShowAddBandCheckBox" | "Navbar" | "NodeList"
 
 export const AddSongToBandHtmlAttributesConfiguration: ConfigurationItemCollection<

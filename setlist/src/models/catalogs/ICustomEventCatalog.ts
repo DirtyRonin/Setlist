@@ -2,7 +2,7 @@ import { ICustomEvent } from "..";
 import { ICatalog } from "./ICatalog";
 
 export interface ICustomEventFilter {
-    Title: string;
+    Query: string;
 }
 
 export interface ICustomEventCatalogOptions{}

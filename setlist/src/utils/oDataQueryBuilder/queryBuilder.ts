@@ -59,8 +59,11 @@ export class FilterBuilder {
         return this;
     };
     or = (predicate: (filter: FilterBuilder) => FilterBuilder) => {
+
+        const value = `(${predicate(new FilterBuilder()).toQuery('or')})`
         this.fragments.push(
-            new QueryFragment(FragmentType.Filter, `(${predicate(new FilterBuilder()).toQuery('or')})`)
+            
+            new QueryFragment(FragmentType.Filter, value)
         );
         return this;
     };

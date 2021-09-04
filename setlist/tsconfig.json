@@ -14,5 +14,8 @@
     "moduleResolution": "node",
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "baseUrl": "src",
+    "lib": ["es6", "dom"],
+    "noImplicitThis": true,
+    "strictNullChecks": true
   }
 }

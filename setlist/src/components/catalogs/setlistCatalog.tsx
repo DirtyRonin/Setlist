@@ -1,16 +1,18 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect }  from "react";
 import { Col, Container, Navbar, Row, FormControlProps, Button } from "react-bootstrap";
-
+import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+
 import { SetlistCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistHtmlAttributes";
-import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss, SongFilterCss } from "styles";
 import { FilterSetlistActionProps } from "mapping";
 import { SetlistCatalogProps } from "store/containers/catalogs/SetlistCatalogContainer";
 import { INextLinkActionProps, ModalTypes } from "models";
 import { SetlistFilterComponent } from "components/filters";
 import SetlistCatalogNodeComponent from "components/nodes/setlistCatalogNode";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AddButton from "components/common/AddButton/addButton";
 
 
 
@@ -51,8 +53,8 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
 
     }
 
-    const handleShowAddSetlist = (event: React.FormEvent<FormControlProps>) => {
-        event.preventDefault();
+    const handleShowAddSetlist = () => {
+
         setModal({ showModal: true })
 
         const type: ModalTypes = ModalTypes.New
@@ -74,42 +76,40 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
                     <ContainerCss >
                         <Row>
                             <Col>
+                                <Header >
+                                    <HeaderTitle>Songs</HeaderTitle>
+
+                                    <HeaderOptions>
+                                        <SearchFilterCss>
+                                            <SetlistFilterComponent
+                                                Filter={setlistCatalog.Filter}
+                                                setSetlistFilter={setSetlistFilter}
+                                            />
+                                        </SearchFilterCss>
+                                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                                            <MenuItem value="Options"  >Options*</MenuItem>
+                                            <MenuDivider />
+                                            <MenuHeader>Edit</MenuHeader>
+                                            <MenuItem value="NewSetlist" onClick={handleShowAddSetlist}>New Setlist</MenuItem>
+                                        </Menu>
+                                    </HeaderOptions>
+                                </Header>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
                                 <NodeListCss id={setlistCatalogDef.NodeList.ControlId} >
-                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                        <Navbar.Brand >{setlistCatalog.Title}</Navbar.Brand>
-                                        <Navbar.Toggle aria-controls={setlistCatalogDef.Navbar.ControlId} />
-                                        <Navbar.Collapse id={setlistCatalogDef.Navbar.ControlId}>
-                                            <Row>
-                                                <Col sm="6">
-                                                    <SongFilterCss>
-                                                        <SetlistFilterComponent
-                                                            CatalogId={setlistCatalog.Id}
-                                                            Filter={setlistCatalog.Filter}
-                                                            setSetlistFilter={setSetlistFilter}
-                                                        />
-                                                    </SongFilterCss>
-                                                </Col>
-                                                <Col sm="6">
-                                                    <Button variant="secondary" onClick={handleShowAddSetlist}>New Setlist</Button>
-                                                </Col>
-                                            </Row>
-                                        </Navbar.Collapse>
-                                    </Navbar>
+                                    {setlistCatalog.OData.Count}
                                     <InfiniteScroll
                                         dataLength={setlistCatalog.Values.size}
                                         next={handleScrollDown}
                                         hasMore={setlistCatalog.Values.size < setlistCatalog.OData.Count}
                                         loader={<h4>Loading...</h4>}
-                                        endMessage={
-                                            <p style={{ textAlign: 'center' }}>
-                                                <b>Yay! You have seen it all</b>
-                                            </p>
-                                        }
                                         scrollableTarget={setlistCatalogDef.NodeList.ControlId}
                                     >
                                         {Array.from(setlistCatalog.Values.values()).map((setlist, index) => (
                                             <SetlistCatalogNodeComponent
-                                            setSetlistIdForSetlistSong={setSetlistIdForSetlistSong}
+                                                setSetlistIdForSetlistSong={setSetlistIdForSetlistSong}
                                                 setlist={setlist}
                                                 key={setlist.Id}
                                                 index={index}
@@ -119,7 +119,7 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
                                         ))}
                                     </InfiniteScroll>
                                 </NodeListCss>
-                                {setlistCatalog.OData.Count}
+                                <AddButton onClick={handleShowAddSetlist} />
                             </Col>
                         </Row>
                     </ContainerCss>

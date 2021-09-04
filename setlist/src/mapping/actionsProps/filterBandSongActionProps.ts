@@ -17,7 +17,7 @@ export class FilterBandSongActionProps implements IFilterBandSongActionProps {
     public static Default(bandId: string): IFilterBandSongActionProps {
 
         const filter: IBandSongFilter = {
-            Title: "",
+            Query: "",
             Artist: "",
             Genre: "",
             Evergreen: false,

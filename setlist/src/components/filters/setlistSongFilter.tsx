@@ -24,24 +24,14 @@ export const SetlistSongFilterComponent = (props: ISetlistSongFilterProps) => {
         const elements: any = (event.target as any).form.elements;
 
         const _filter: ISetlistSongFilter = {
-            Title: elements[htmlConfig.SearchTitleInput.ControlId].value,
-            Artist: elements[htmlConfig.SearchArtistInput.ControlId].value,
-            Genre: elements[htmlConfig.SearchGenreInput.ControlId].value,
-            Nineties: elements[htmlConfig.SearchNinetiesCheckBox.ControlId].checked,
-            Evergreen: elements[htmlConfig.SearchEvergreenCheckBox.ControlId].checked,
+            ...filter,
+            Query: elements[htmlConfig.SearchTitleInput.ControlId].value,
             SetlistId: setlistId
         }
 
         const setlistSongFilter = FilterSetlistSongActionProps.Create({ filter: _filter, refresh: true })
 
-        setlistSongFilter.refresh = 
-        filter.Evergreen !== setlistSongFilter.filter.Evergreen ? true :
-                filter.Nineties !== setlistSongFilter.filter.Nineties ? true :
-                    IsFilterableString(filter.Title, setlistSongFilter.filter.Title) ? true :
-                        IsFilterableString(filter.Artist, setlistSongFilter.filter.Artist) ? true :
-                            IsFilterableString(filter.Genre, setlistSongFilter.filter.Genre) ? true :
-                                false
-
+        setlistSongFilter.refresh =IsFilterableString(filter.Query, setlistSongFilter.filter.Query) ? true :false
 
         if (setlistSongFilter.refresh) {
             setSetlistSongFilter(setlistSongFilter)
@@ -50,7 +40,7 @@ export const SetlistSongFilterComponent = (props: ISetlistSongFilterProps) => {
 
     return (
         <Form onChange={handleFilter} >
-            {SongFilterTemplate(htmlConfig,filter)}
+            {SongFilterTemplate(htmlConfig, filter)}
         </Form>
     )
 }

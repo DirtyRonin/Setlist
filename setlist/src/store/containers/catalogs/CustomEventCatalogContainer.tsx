@@ -1,33 +1,42 @@
 import * as React from 'react';
 import { connect } from "react-redux";
+import { History } from "history";
 
-import { RootState } from '../..';
-import CustomEventCatalogComponent from '../../../components/catalogs/customEventCatalog';
-import { IComponentOrderActionProps, IFilterCustomEventActionProps, ICustomEventCatalog } from '../../../models';
+import { RootState } from 'store';
 
-import * as Common from '../../actions/commonActions';
-import * as CustomEventAction from '../../actions/catalogActions/customEventCatalogActions';
+import CustomEventCatalogComponent from 'components/catalogs/customEventCatalog';
+import { IFilterCustomEventActionProps, ICustomEventCatalog, IModalActionsProps, INextLinkActionProps } from 'models';
+
+import ModalActions from 'store/actions/modalActions';
+import * as CustomEventAction from 'store/actions/catalogActions/customEventCatalogActions';
 
 interface IConnectedDispatch {
-    pushCatalogsOrder: (props: IComponentOrderActionProps) => void,
     fetchCustomEventCatalog: (props: IFilterCustomEventActionProps) => void
+    fetchCustomEventCatalogNextLink: (props: INextLinkActionProps) => void
+    setModal(props: IModalActionsProps): void
+    setCustomEventFilter(props: IFilterCustomEventActionProps): void
 }
 
-interface IState {
+export interface IProps {
+    history: History
+}
+
+interface IState extends IProps {
     customEventCatalog: ICustomEventCatalog;
-    showModal: boolean;
 }
 
 export type CustomEventCatalogProps = IConnectedDispatch & IState
 
-const mapStateToProps = (state: RootState) : IState => ({
-    showModal:state.catalogReducers.catalogState.modal.show,
-    customEventCatalog: state.customEventCatalogReducers.customEventCatalog
+const mapStateToProps = (state: RootState, props: IProps): IState => ({
+    customEventCatalog: state.customEventCatalogReducers.customEventCatalog,
+    history: props.history
 });
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch => ({
-    pushCatalogsOrder: (props: IComponentOrderActionProps) => dispatch(Common.pushComponentOrder.request(props)),
     fetchCustomEventCatalog: (props: IFilterCustomEventActionProps) => dispatch(CustomEventAction.fetchCustomEventCatalog.request(props)),
+    fetchCustomEventCatalogNextLink: (props: INextLinkActionProps) => dispatch(CustomEventAction.fetchCustomEventCatalogNextLink.request(props)),
+    setCustomEventFilter: (props: IFilterCustomEventActionProps) => dispatch(CustomEventAction.setCustomEventFilter(props)),
+    setModal: (props: IModalActionsProps) => dispatch(ModalActions.setModal(props))
 })
 
 const CustomEventCatalog = (props: CustomEventCatalogProps) => (

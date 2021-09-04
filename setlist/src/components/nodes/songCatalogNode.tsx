@@ -22,7 +22,7 @@ export interface ISongNodeProps {
 }
 
 const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
-    const { 
+    const {
         song,
         index,
         setModal,
@@ -70,7 +70,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                         </Row>
                     </Col >
                     <Col xs='2' >
-                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                        <Menu menuButton={<div><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
                             <MenuItem value="AddToBand" onClick={handleAddSongToBand} >Add to Band Song</MenuItem>
                             <MenuItem value="AddToSetlist" onClick={handleAddSongToSetlist}  >Add to Setlist</MenuItem>
                             <MenuDivider />

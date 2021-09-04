@@ -11,24 +11,31 @@ export const fetchSongCatalogAsync = async (props: IFilterSongActionProps): Prom
 
     const filters: FilterBuilder[] = []
 
-    if (IsMiminumStringLength(Filter.Title)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Title), Filter.Title))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Title), Filter.Query))
     }
-    if (IsMiminumStringLength(Filter.Artist)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Artist), Filter.Artist))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Artist), Filter.Query))
     }
-    if (IsMiminumStringLength(Filter.Genre)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Genre), Filter.Genre))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Genre), Filter.Query))
     }
-    if (Filter.Nineties) {
-        filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Nineties), 'eq', Filter.Nineties))
-    }
-    if (Filter.Evergreen) {
-        filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Evergreen), 'eq', Filter.Evergreen))
-    }
+    // if (Filter.Nineties) {
+    //     filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Nineties), 'eq', Filter.Nineties))
+    // }
+    // if (Filter.Evergreen) {
+    //     filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Evergreen), 'eq', Filter.Evergreen))
+    // }
+
+    //reduce all filter builders to one with all the fragments
+    const result = filters.reduce((prev, current) => {
+        const stuff = prev.or(()=>current)
+        return stuff
+    },new FilterBuilder())
 
     if (filters.length) {
-        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
+        // concat the fragments with or and give it to the query
+        query.filter(() => new FilterBuilder().or(() => result))
     }
 
     query = query.orderBy(`${nameof<ISong>(x => x.Artist)},${nameof<ISong>(x => x.Title)}`)

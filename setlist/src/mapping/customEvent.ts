@@ -1,6 +1,7 @@
-import { ICustomEvent } from "../models";
+import { IBand, ICustomEvent, ILocation, ISetlist } from "../models";
 import { ICustomEventResource } from "../resource";
 import { GUID_EMPTY } from "../utils";
+import { Location, Band, Setlist } from "mapping";
 
 export class CustomEvent implements ICustomEvent {
 
@@ -9,27 +10,39 @@ export class CustomEvent implements ICustomEvent {
     BandId: string;
     SetlistId: string;
     Title: string;
+    Date: Date;
+    Location: ILocation;
+    Band: IBand;
+    Setlist: ISetlist;
 
-    constructor({ title, locationId = GUID_EMPTY, bandId = GUID_EMPTY, setlistId = GUID_EMPTY, id = GUID_EMPTY }: { title: string; locationId?: string; bandId?: string; setlistId?: string; id?: string; }) {
+    constructor({ title, locationId = GUID_EMPTY, bandId = GUID_EMPTY, setlistId = GUID_EMPTY, id = GUID_EMPTY, date = new Date(), location = Location.EmptyLocation(), band = Band.EmptyBand(), setlist = Setlist.EmptySetlist() }: { title: string; locationId?: string; bandId?: string; setlistId?: string; id?: string; date?: Date, location?: ILocation, band?: IBand, setlist?: ISetlist }) {
         this.Id = id
         this.LocationId = locationId
         this.BandId = bandId
         this.SetlistId = setlistId
         this.Title = title
+        this.Date = date
+        this.Location = location
+        this.Band = band
+        this.Setlist = setlist
     }
 
-    public static Create = ({ title, locationId, bandId, setlistId, id }: { title: string; locationId?: string; bandId?: string; setlistId?: string; id?: string; }): ICustomEvent =>
-        new CustomEvent({ title, locationId, bandId, setlistId, id })
+    public static Create = ({ title, locationId, bandId, setlistId, id, date, location, band, setlist }: { title: string; locationId?: string; bandId?: string; setlistId?: string; id?: string; date?: Date; location?: ILocation; band?: IBand; setlist?: ISetlist }): ICustomEvent =>
+        new CustomEvent({
+            title, locationId, bandId, setlistId, id, date, location, band, setlist
+        })
 
 
-    public static ToResource = (customEvent: ICustomEvent): ICustomEventResource => {
-        const { Title, LocationId, BandId, SetlistId, Id } = customEvent
-        return { Title, LocationId, BandId, SetlistId, Id } as ICustomEventResource
+    public static ToResource = ({ Title, LocationId, BandId, SetlistId, Id, Date:date, Location, Band, Setlist }: ICustomEvent): ICustomEventResource => {
+        const dateAsString = date?.toLocaleDateString()
+        
+        return { Title, LocationId, BandId, SetlistId, Id, Date:dateAsString, Location, Band, Setlist  } 
     }
 
-    public static FromResource = (resource: ICustomEventResource): ICustomEvent => {
-        const { Title, LocationId, BandId, SetlistId, Id } = resource
-        return { Title, LocationId, BandId, SetlistId, Id } as ICustomEvent
+    public static FromResource = ({ Title, LocationId, BandId, SetlistId, Id, Date : date, Location, Band, Setlist }: ICustomEventResource): ICustomEvent => {
+        const newDate = date && new Date(date) ? new Date(date) : new Date()
+        
+        return { Title, LocationId, BandId, SetlistId, Id, Date : newDate, Location, Band, Setlist  } 
     }
 
     public static EmptyCustomEvent = (): ICustomEvent =>

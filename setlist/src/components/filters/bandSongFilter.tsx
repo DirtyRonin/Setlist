@@ -24,7 +24,7 @@ export const BandSongFilterComponent = (props: IBandSongFilterProps) => {
         const elements: any = (event.target as any).form.elements;
 
         const _filter: IBandSongFilter = {
-            Title: elements[htmlConfig.SearchTitleInput.ControlId].value,
+            Query: elements[htmlConfig.SearchTitleInput.ControlId].value,
             Artist: elements[htmlConfig.SearchArtistInput.ControlId].value,
             Genre: elements[htmlConfig.SearchGenreInput.ControlId].value,
             Nineties: elements[htmlConfig.SearchNinetiesCheckBox.ControlId].checked,
@@ -37,7 +37,7 @@ export const BandSongFilterComponent = (props: IBandSongFilterProps) => {
         bandSongFilter.refresh =
             filter.Evergreen !== bandSongFilter.filter.Evergreen ? true :
                 filter.Nineties !== bandSongFilter.filter.Nineties ? true :
-                    IsFilterableString(filter.Title, bandSongFilter.filter.Title) ? true :
+                    IsFilterableString(filter.Query, bandSongFilter.filter.Query) ? true :
                         IsFilterableString(filter.Artist, bandSongFilter.filter.Artist) ? true :
                             IsFilterableString(filter.Genre, bandSongFilter.filter.Genre) ? true :
                                 false

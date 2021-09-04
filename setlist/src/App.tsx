@@ -1,9 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Router, Switch, Route } from 'react-router-dom'
 import { ConnectedRouter } from 'connected-react-router'
-import styled from "styled-components";
 
+import Loader from "components/common/loader"
+import PrivateRoute from "components/common/privateRoute"
+import { ContentWrapper, Wrapper } from "styles";
 import { AppProps } from "store";
+
+import '@szhsin/react-menu/dist/index.css';
+
 const BandCatalogContainer = React.lazy(() => import('store/containers/catalogs/BandCatalogContainer'))
 const SongCatalogContainer = React.lazy(() => import('store/containers/catalogs/SongCatalogContainer'))
 const SetlistCatalogContainer = React.lazy(() => import('store/containers/catalogs/SetlistCatalogContainer'))
@@ -13,23 +18,8 @@ const BandSongCatalogComponent = React.lazy(() => import('store/containers/catal
 const SetlistSongCatalog = React.lazy(() => import('store/containers/catalogs/SetlistSongCatalogContainer'))
 
 const ModalWrapper = React.lazy(() => import('components/common/modalWrapper/modalWrapper'))
-
-import '@szhsin/react-menu/dist/index.css';
-
-
-import Loader from "components/common/loader"
-import PrivateRoute from "components/common/privateRoute"
-
 const Login = React.lazy(() => import('components/login'))
 const Sidebar = React.lazy(() => import('components/common/sidebar'))
-
-const Wrapper = styled.div`
-  display: flex;
-  max-width: 1600px;
-  margin: 0 auto;
-`
-
-
 
 export const App = (props: AppProps): JSX.Element => {
 
@@ -59,50 +49,80 @@ export const App = (props: AppProps): JSX.Element => {
                     <Login />
                 </Route>
                 <Wrapper>
-                    <Sidebar />
+
                     <Switch location={location.state?.background}>
                         <PrivateRoute exact path='/'>
+                            <Sidebar />
+                            <ContentWrapper>
+                            </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path='/songs'>
-                            <SongCatalogContainer
-                                history={history} />
+                            <Sidebar />
+                            <ContentWrapper>
+                                <SongCatalogContainer
+                                    history={history} />
+                            </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path='/bands'>
-                            <BandCatalogContainer
-                                history={history} />
+                            <Sidebar />
+                            <ContentWrapper>
+                                <BandCatalogContainer
+                                    history={history} />
+                            </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path='/setlist'>
-                            <SetlistCatalogContainer
-                                history={history}
-                            />
+                            <Sidebar />
+                            <ContentWrapper>
+                                <SetlistCatalogContainer
+                                    history={history}
+                                />
+                            </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path='/location'>
-                            <LocationCatalogContainer
-                                history={history}
-                            />
+                            <Sidebar />
+                            <ContentWrapper>
+                                <LocationCatalogContainer
+                                    history={history}
+                                />
+                            </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path='/customevent'>
-                            <CustomEventCatalogContainer />
+                            <Sidebar />
+                            <ContentWrapper>
+                                <CustomEventCatalogContainer
+                                    history={history}
+                                />
+                            </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path="/bandSongAsCatalog">
-                            <BandSongCatalogComponent
-                                history={history}
-                            />
+                            <Sidebar />
+                            <ContentWrapper>
+                                <BandSongCatalogComponent
+                                    history={history}
+                                />
+                            </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path="/setlistSongAsCatalog">
-                            <SetlistSongCatalog
-                                history={history}
-                            />
+                            <Sidebar />
+                            <ContentWrapper>
+                                <SetlistSongCatalog
+                                    history={history}
+                                />
+                            </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path='/settings'>
+                            <Sidebar />
+                            <ContentWrapper>
+                            </ContentWrapper>
                         </PrivateRoute>
                     </Switch>
                     {showModal && <Switch>
                         <ModalWrapper history={history} />
                     </Switch>}
+
                 </Wrapper>
             </Router>
-            {/* <GlobalStyle /> */}
+
         </React.Suspense>
     </ConnectedRouter >
     )

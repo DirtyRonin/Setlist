@@ -9,7 +9,7 @@ export const SongFilterTemplate = (html: FilterSongHtmlAttributesConfigurationTy
         <div>
             <Form.Row>
                 <Form.Group as={Col} controlId={html.SearchTitleInput.ControlId}>
-                    <Form.Control type="search" placeholder={html.SearchTitleInput.Placeholder} defaultValue={filter.Title} />
+                    <Form.Control type="search" placeholder={html.SearchTitleInput.Placeholder} defaultValue={filter.Query} />
                 </Form.Group>
             </Form.Row>
             <Form.Row>

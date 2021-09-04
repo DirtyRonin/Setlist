@@ -26,13 +26,13 @@ export const BandCatalogNodeHtmlAttributesConfiguration: ConfigurationItemCollec
 
 
 //filter
-type FilterBandComponentNames = "SearchTitleInput";
+type FilterBandComponentNames = "SearchQueryInput";
 
 export const FilterBandHtmlAttributesConfiguration: ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
     FilterBandComponentNames
 > = {
-    SearchTitleInput: { Label: "Search For Title", Placeholder: "Enter Title", Data_TestId: "FilterBand_SearchTitle", ControlId: "FilterBand_SearchTitle" },
+    SearchQueryInput: { Label: "SearchQuery", Placeholder: "Search...", Data_TestId: "FilterBand_SearchQuery", ControlId: "FilterBand_SearchQuery" },
 }
 
 

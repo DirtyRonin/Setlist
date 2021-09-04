@@ -12,9 +12,7 @@ export class FilterSongActionProps implements IFilterSongActionProps {
 
     public static Default(): IFilterSongActionProps {
         return FilterSongActionProps.Create({
-            Title: "",
-            Artist: "",
-            Genre: "",
+            Query: "",
             Evergreen: false,
             Nineties: false
         }, true)

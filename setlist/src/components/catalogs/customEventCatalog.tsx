@@ -1,29 +1,34 @@
 import React, { useEffect } from "react";
-import { Col, Container, Navbar, Row, Form, FormControlProps } from "react-bootstrap";
-
+import { Col, Container, Navbar, Row, FormControlProps } from "react-bootstrap";
+import { MenuDivider, MenuHeader,Menu,    MenuItem } from "@szhsin/react-menu";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { CustomEventCatalogHtmlAttributesConfiguration } from "../../Configuration";
-import { FilterCustomEventActionProps,CustomEvent } from "../../mapping";
-import { CatalogTypes, DisplayIn, IComponentOrder, IComponentOrderActionProps, IModalCustomEvent } from "../../models";
-import { CustomEventCatalogProps } from "../../store/containers/catalogs/CustomEventCatalogContainer";
-import { ContainerCss, NodeListCss, SongFilterCss } from "../../styles";
-import CustomEventCatalogNodeComponent from "../nodes/customEventCatalogNode";
+
+import { CustomEventCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/customEventHtmlAttributes";
+import { FilterCustomEventActionProps } from "mapping";
+import { INextLinkActionProps } from "models";
+import { CustomEventCatalogProps } from "store/containers/catalogs/CustomEventCatalogContainer";
+import CustomEventCatalogNodeComponent from "components/nodes/customEventCatalogNode";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss, SongFilterCss } from "styles";
+import AddButton from "components/common/AddButton/addButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CustomEventFilterComponent from "components/filters/CustomEventFilter";
 
 const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Element => {
 
 
     const {
         customEventCatalog,
-        showModal,
-
-        pushCatalogsOrder,
-        fetchCustomEventCatalog
+        fetchCustomEventCatalog,
+        fetchCustomEventCatalogNextLink,
+        setCustomEventFilter,
+        setModal,
+        history
     } = props;
 
     useEffect(() => {
-            const filter = FilterCustomEventActionProps.CreateFromCatalog(customEventCatalog)
-            fetchCustomEventCatalog(filter)
+        const filter = FilterCustomEventActionProps.CreateFromCatalog(customEventCatalog)
+        fetchCustomEventCatalog(filter)
     }, [])
 
     useEffect(() => {
@@ -35,93 +40,70 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
 
     const customEventCatalogDef = CustomEventCatalogHtmlAttributesConfiguration
 
-    const handleScrollDown = (): void => { }
+    const handleScrollDown = (): void => {
+        const { OData } = customEventCatalog
+        const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
-    const handleShowAddCustomEvent = (event: React.FormEvent<FormControlProps>) => {
-        const elements: any = (event.target as any).form.elements;
+        setTimeout(() => {
+            fetchCustomEventCatalogNextLink(actionProps)
+        }, 500);
 
-        const modal: IModalCustomEvent = {
-            show: elements[customEventCatalogDef.ShowAddCustomEventCheckBox.ControlId].checked,
-            catalogId: customEventCatalog.Id,
-            catalogType: CatalogTypes["CustomEvent Catalog"],
-            type: "New",
-            value: CustomEvent.EmptyCustomEvent(),
-            catalogInModal: CatalogTypes["None"]
-        }
+    }
 
-        const order: IComponentOrderActionProps = {
-            ComponentOrder: {
-                value: modal,
-                id: modal.catalogId,
-                displayIn: DisplayIn.Modal
-            } as IComponentOrder
-        }
+    const handleShowAddCustomEvent = () => {
 
-        pushCatalogsOrder(order)
     }
 
     return <div>
         <Container fluid>
             <Row>
                 <Col >
-                    <ContainerCss data-testid={customEventCatalog.Id}>
+                    <ContainerCss >
+                        <Row>
+                            <Col>
+                                <Header >
+                                    <HeaderTitle>Songs</HeaderTitle>
+
+                                    <HeaderOptions>
+                                        <SearchFilterCss>
+                                            <CustomEventFilterComponent
+                                                filter={customEventCatalog.Filter}
+                                                setCustomEventFilter={setCustomEventFilter}
+                                            />
+                                        </SearchFilterCss>
+                                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                                            <MenuItem value="Options"  >Options*</MenuItem>
+                                            <MenuDivider />
+                                            <MenuHeader>Edit</MenuHeader>
+                                            <MenuItem value="NewCustomEvent" onClick={handleShowAddCustomEvent}>New Custom Event</MenuItem>
+                                        </Menu>
+                                    </HeaderOptions>
+                                </Header>
+                            </Col>
+                        </Row>
                         <Row>
                             <Col>
                                 <NodeListCss id={customEventCatalogDef.NodeList.ControlId} >
-                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                        <Navbar.Brand >{customEventCatalog.Title}</Navbar.Brand>
-
-                                        <Navbar.Toggle aria-controls={customEventCatalogDef.Navbar.ControlId} />
-                                        <Navbar.Collapse id={customEventCatalogDef.Navbar.ControlId}>
-                                            <Row>
-                                                <Col sm="6">
-                                                    <SongFilterCss>
-                                                        {/* <CustomEventFilterComponent
-                                                            CatalogId={customEventCatalog.Id}
-                                                            Filter={customEventCatalog.Filter}
-                                                            setCustomEventFilter={setCustomEventFilter}
-                                                        /> */}
-                                                    </SongFilterCss>
-                                                </Col>
-                                                <Col sm="6">
-                                                    <Form onChange={handleShowAddCustomEvent}>
-                                                        <Form.Row>
-                                                            <Form.Group as={Col} controlId={customEventCatalogDef.ShowAddCustomEventCheckBox.ControlId}>
-                                                                <Form.Check type="switch" checked={showModal} label={customEventCatalogDef.ShowAddCustomEventCheckBox.Label} />
-                                                            </Form.Group>
-                                                        </Form.Row>
-                                                    </Form>
-
-                                                </Col>
-                                            </Row>
-                                        </Navbar.Collapse>
-
-                                    </Navbar>
-
+                                    {customEventCatalog.OData.Count}
                                     <InfiniteScroll
                                         dataLength={customEventCatalog.Values.size}
                                         next={handleScrollDown}
                                         hasMore={customEventCatalog.Values.size < customEventCatalog.OData.Count}
                                         loader={<h4>Loading...</h4>}
-                                        endMessage={
-                                            <p style={{ textAlign: 'center' }}>
-                                                <b>Yay! You have seen it all</b>
-                                            </p>
-                                        }
                                         scrollableTarget={customEventCatalogDef.NodeList.ControlId}
                                     >
                                         {Array.from(customEventCatalog.Values.values()).map((customEvent, index) => (
                                             <CustomEventCatalogNodeComponent
                                                 customEvent={customEvent}
                                                 index={index}
-                                                catalogId={customEventCatalog.Id}
-                                                pushCatalogsOrder={pushCatalogsOrder}
+                                                setModal={setModal}
+                                                history={history}
                                                 key={customEvent.Id}
                                             />
                                         ))}
                                     </InfiniteScroll>
                                 </NodeListCss>
-                                {customEventCatalog.OData.Count}
+                                <AddButton onClick={handleShowAddCustomEvent} />
                             </Col>
                         </Row>
                     </ContainerCss>

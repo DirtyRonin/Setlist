@@ -4,8 +4,9 @@ import { History } from 'history';
 
 import { IModelState, RootState } from 'store'
 import PrivateRoute from "components/common/privateRoute"
-import {bandModalActions, bandSongModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ILocationEntityActionProps, ISetlistEntityActionProps, ISetlistSongEntityActionProps, ISongEntityActionProps, IUser, locationModalActions, setlistModalActions, setlistSongModalActions, songModalActions } from "models"
+import { bandModalActions, bandSongModalActions, customEventModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ICustomEventEntityActionProps, ILocationEntityActionProps, ISetlistEntityActionProps, ISetlistSongEntityActionProps, ISongEntityActionProps, IUser, locationModalActions, setlistModalActions, setlistSongModalActions, songModalActions } from "models"
 import * as Action from 'store/actions';
+import CustomEventModalComponent from "components/modals/customEventModal";
 
 const SongModalComponent = React.lazy(() => import("components/modals/songModal"))
 const AddSongToBandComponent = React.lazy(() => import("components/modals/AddItemTo/band/AddSongToBand"))
@@ -27,7 +28,8 @@ const ModalWrapper = ({
     bandSongModalActionsProvider,
     setlistModalActionsProvider,
     setlistSongModalActionsProvider,
-    locationModalActionsProvider
+    locationModalActionsProvider,
+    customEventModalActionsProvider
 }: ModalWrapperProps) => {
 
     const query = history.location.search ?? ''
@@ -103,11 +105,15 @@ const ModalWrapper = ({
                 handleCloseModal={handleCloseModal}
             />
         </PrivateRoute>
+        <PrivateRoute path="/customEventModal">
+            <CustomEventModalComponent
+                query={query}
+                customEventModalActionsProvider={customEventModalActionsProvider}
+                handleCloseModal={handleCloseModal}
+            />
+        </PrivateRoute>
     </div>
-
 }
-
-
 
 interface IConnectedDispatch {
     songModalActionsProvider: songModalActions
@@ -116,6 +122,7 @@ interface IConnectedDispatch {
     setlistModalActionsProvider: setlistModalActions
     setlistSongModalActionsProvider: setlistSongModalActions
     locationModalActionsProvider: locationModalActions
+    customEventModalActionsProvider: customEventModalActions
 }
 
 interface IProps {
@@ -188,6 +195,15 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
         New: (props: ILocationEntityActionProps) => dispatch(Action.addLocationToCatalog.request(props)),
         Edit: (props: ILocationEntityActionProps) => dispatch(Action.editLocationInCatalog.request(props)),
         Remove: (props: ILocationEntityActionProps) => dispatch(Action.deleteLocationInCatalog.request(props)),
+        Read: () => { },
+        Add: () => { },
+        ShowCatalog: () => { }
+    },
+    customEventModalActionsProvider: {
+        None: () => { },
+        New: (props: ICustomEventEntityActionProps) => dispatch(Action.addCustomEventToCatalog.request(props)),
+        Edit: (props: ICustomEventEntityActionProps) => dispatch(Action.editCustomEventInCatalog.request(props)),
+        Remove: (props: ICustomEventEntityActionProps) => dispatch(Action.deleteCustomEventInCatalog.request(props)),
         Read: () => { },
         Add: () => { },
         ShowCatalog: () => { }

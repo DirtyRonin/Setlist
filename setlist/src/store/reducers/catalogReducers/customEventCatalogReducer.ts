@@ -19,19 +19,12 @@ const initial : ICustomEventCatalogState = {
 export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActions>({
     customEventCatalog: (state = initial.customEventCatalog, action) => {
         switch (action.type) {
-            case getType(actions.openCustomEventCatalog):
+            case getType(actions.setCustomEventFilter):
                 return {
                     ...state,
-                    Refresh: true
+                    Filter: action.payload.filter,
+                    Refresh: action.payload.refresh
                 }
-            case getType(actions.closeCustomEventCatalog):
-                return initial.customEventCatalog
-            // case getType(actions.setCustomEventFilter):
-            //     return {
-            //         ...state,
-            //         Filter: action.payload.filter,
-            //         Refresh: action.payload.refresh
-            //     }
             case getType(actions.fetchCustomEventCatalog.request):
                 return {
                     ...state,
@@ -43,21 +36,6 @@ export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActio
                     Values: action.payload.Values,
                     OData: action.payload.OData
                 }
-            // case getType(actions.fetchCustomEventCatalogNextLink.success):
-            //     return {
-            //         ...state,
-            //         Values: MapHelper.Create(state.Values)
-            //             .AddMap(action.payload.Values)
-            //             .GetMap(),
-            //         OData: action.payload.OData
-            //     }
-            // case getType(actions.addSetListToCatalog.success):
-            //     return {
-            //         ...state,
-            //         Values: MapHelper.Create(state.Values)
-            //             .AddAsFirst(action.payload.Id, action.payload)
-            //             .GetMap()
-            //     }
             default:
                 return state;
         }

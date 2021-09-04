@@ -2,7 +2,7 @@ import { ICatalog } from "./ICatalog";
 import { IBand } from "..";
 
 export interface IBandFilter {
-    Title: string;
+    Query: string;
     
 }
 

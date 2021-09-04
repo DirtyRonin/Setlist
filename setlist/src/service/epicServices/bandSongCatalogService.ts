@@ -18,8 +18,8 @@ export const fetchBandSongCatalogAsync = async (props: IFilterBandSongActionProp
 
     filters.push(new FilterBuilder().filterGuidExpression(nameof<IBandSong>(x => x.BandId), 'eq', Filter.BandId))
 
-    if (IsMiminumStringLength(Filter.Title)) {
-        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Title)}`, Filter.Title))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Title)}`, Filter.Query))
     }
     if (IsMiminumStringLength(Filter.Artist)) {
         filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Artist)}`, Filter.Artist))

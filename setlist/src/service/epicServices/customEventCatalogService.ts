@@ -1,25 +1,37 @@
 import { nameof } from "ts-simple-nameof"
-import { ReadCustomEventAsync } from ".."
-import { IFilterCustomEventActionProps, IFilterCustomEventActionResult, ICustomEvent, INextLinkActionProps } from "../../models"
 
-import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "../../utils"
+import { CustomEvent } from "mapping";
+import { CreateCustomEventAsync, DeleteCustomEventAsync, ReadCustomEventAsync, UpdateCustomEventAsync } from "service"
+import { IFilterCustomEventActionProps, IFilterCustomEventActionResult, ICustomEvent, INextLinkActionProps, IBand, ILocation, ISetlist, ICustomEventEntityActionProps } from "models"
+import { IsMiminumStringLength, QueryBuilder, FilterBuilder } from "utils"
 
 export const fetchCustomEventCatalogAsync = async (props: IFilterCustomEventActionProps): Promise<IFilterCustomEventActionResult> => {
 
     const { filter: Filter } = props
+
+
+    const bandExpand = `${nameof<ICustomEvent>(x => x.Band)}`
+    const locationExpand = `${nameof<ICustomEvent>(x => x.Location)}`
+    const setlistExpand = `${nameof<ICustomEvent>(x => x.Setlist)}`
+
+    const result: FilterBuilder | undefined = (IsMiminumStringLength(Filter.Query)) ?
+        new FilterBuilder().or(() =>
+            new FilterBuilder().containsFilterExpression(nameof<ICustomEvent>(x => x.Title), Filter.Query).or(
+                () => new FilterBuilder().containsFilterExpression(`${bandExpand}/${nameof<IBand>(x => x.Title)}`, Filter.Query).or(
+                    () => new FilterBuilder().containsFilterExpression(`${locationExpand}/${nameof<ILocation>(x => x.Name)}`, Filter.Query).or(
+                        () => new FilterBuilder().containsFilterExpression(`${setlistExpand}/${nameof<ISetlist>(x => x.Title)}`, Filter.Query
+                        )
+                    ))))
+        : undefined
+
     let query = new QueryBuilder().count()
 
-    const filters: FilterBuilder[] = []
-
-    if (IsMiminumStringLength(Filter.Title)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ICustomEvent>(x => x.Title), Filter.Title))
-    }
-
-    if (filters.length) {
-        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
-    }
+    if (result)
+        query.filter(() => result)
 
     query = query.orderBy(`${nameof<ICustomEvent>(x => x.Title)}`)
+
+    query.expand(`${bandExpand},${nameof<ICustomEvent>(x => x.Location)},${nameof<ICustomEvent>(x => x.Setlist)}`)
 
     const filter = query.toQuery()
 
@@ -39,4 +51,22 @@ const GetFilterCustomEventActionResult = async (filterQuery: string): Promise<IF
         }, new Map<string, ICustomEvent>()),
         OData: { NextLink, Context, Count }
     }
+}
+
+export const addCustomEventToCustomEventCatalogAsync = async (props: ICustomEventEntityActionProps): Promise<ICustomEvent> =>
+    await CreateCustomEventAsync(props.value)
+
+export const editCustomEventInCatalogAsync = async (props: ICustomEventEntityActionProps): Promise<ICustomEvent> =>
+    await UpdateCustomEventAsync(props.value)
+
+export const deleteCustomEventInCatalogAsync = async (props: ICustomEventEntityActionProps): Promise<string> =>
+    (await (DeleteCustomEventAsync(props.value.Id))).Id
+
+export const fetchCustomEventById = async (id: string): Promise<ICustomEvent> => {
+    let query = new QueryBuilder()
+    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<ICustomEvent>(x => x.Id), 'eq',id))
+    const filter = query.toQuery()
+
+    const customEvent = (await GetFilterCustomEventActionResult(filter)).Values.get(id) ?? CustomEvent.EmptyCustomEvent()
+    return customEvent
 }

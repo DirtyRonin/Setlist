@@ -17,7 +17,7 @@ export class FilterSetlistSongActionProps implements IFilterSetlistSongActionPro
         FilterSetlistSongActionProps.Create(
             {
                 filter: {
-                    Title: '',
+                    Query: '',
                     Artist: "",
                     Genre: "",
                     Evergreen: false,
