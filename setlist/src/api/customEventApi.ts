@@ -21,8 +21,8 @@ export const GetCustomEventRequestAsync = async (url: string): Promise<IOdataWra
     return Odata;
 }
 
-export const CreateCustomEventRequestAsync = async (customEvent: ICustomEventResource): Promise<AxiosResponse<ICustomEventResource>> => {
-    return await Axios.post<ICustomEventResource>(customEventsEndpoint.GetEndpointUrl!(), customEvent, {
+export const CreateCustomEventRequestAsync = async (customEvent: ICustomEventResource, expand:string = ''): Promise<AxiosResponse<ICustomEventResource>> => {
+    return await Axios.post<ICustomEventResource>(`${customEventsEndpoint.GetEndpointUrl!()}/${expand}`, customEvent, {
         headers: defaultHeader
     });
 }
@@ -32,7 +32,7 @@ export const DeleteCustomEventRequestAsync = async (customEventId: string): Prom
         headers: defaultHeader
     });
 
-export const UpdateCustomEventRequestAsync = async (customEvent: ICustomEventResource): Promise<AxiosResponse<ICustomEventResource>> =>
-    await Axios.put<ICustomEventResource>(`${customEventsEndpoint.GetEndpointUrl!()}/${customEvent.Id}`, customEvent, {
+export const UpdateCustomEventRequestAsync = async (customEvent: ICustomEventResource, expand:string = ''): Promise<AxiosResponse<ICustomEventResource>> =>
+    await Axios.put<ICustomEventResource>(`${customEventsEndpoint.GetEndpointUrl!()}/${customEvent.Id}${expand}`, customEvent, {
         headers: defaultHeader
     });

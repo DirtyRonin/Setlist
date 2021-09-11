@@ -26,7 +26,7 @@ interface IProps {
     isReadonly: boolean
     handleDateChange: (date: MaterialUiPickersDate) => void
     htmlConfig: FormHtmlAttributesDefinition
-    date: Date
+    date: Date | null
 }
 
 export default function WrapDateTimePicker({ date, isReadonly, htmlConfig, handleDateChange }: IProps) {
@@ -35,6 +35,7 @@ export default function WrapDateTimePicker({ date, isReadonly, htmlConfig, handl
 
     return (<MuiPickersUtilsProvider utils={DateFnsUtils}>
         <DateTimePicker
+        
             readOnly={isReadonly}
             ampm={false}
             clearable={true}

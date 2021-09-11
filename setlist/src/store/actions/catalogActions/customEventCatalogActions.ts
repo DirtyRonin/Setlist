@@ -39,3 +39,4 @@ export const deleteCustomEventInCatalog= createAsyncAction(
     "DELETE_CUSTOM_EVENT_FAILURE",
     "DELETE_CUSTOM_EVENT_CANCEL",
 )<ICustomEventEntityActionProps,string,Error,string>();
+

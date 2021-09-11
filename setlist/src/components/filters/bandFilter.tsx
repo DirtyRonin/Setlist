@@ -24,7 +24,7 @@ export const BandFilterComponent = (props: IBandFilterProps) => {
 
         const _filter: IBandFilter = { ...filter, Query: elements[SearchQueryInput.ControlId].value }
 
-        const bandFilter = FilterBandActionProps.Create(_filter, true)
+        const bandFilter = FilterBandActionProps.Create({ filter: _filter, refresh: true })
 
         bandFilter.refresh = IsFilterableString(filter.Query, bandFilter.filter.Query) ? true : false
 

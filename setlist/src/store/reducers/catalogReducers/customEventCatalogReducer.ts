@@ -1,19 +1,21 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
-import { CustomEventCatalog } from "../../../mapping";
 
-import { ICustomEventCatalog } from "../../../models";
-import * as actions from "../../actions/catalogActions/customEventCatalogActions"
-import * as common from "../../actions/commonActions"
+import { CustomEventCatalog } from "mapping";
+
+import { ICustomEventCatalog } from "models";
+import * as actions from "store/actions/catalogActions/customEventCatalogActions"
+import * as common from "store/actions/commonActions"
+import { MapHelper } from "utils";
 
 export type CustomEventCatalogActions = ActionType<typeof common & typeof actions>;
 
-export interface ICustomEventCatalogState{
-    customEventCatalog : ICustomEventCatalog
+export interface ICustomEventCatalogState {
+    customEventCatalog: ICustomEventCatalog
 }
 
-const initial : ICustomEventCatalogState = {
-    customEventCatalog : CustomEventCatalog.Create()
+const initial: ICustomEventCatalogState = {
+    customEventCatalog: CustomEventCatalog.Create()
 }
 
 export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActions>({
@@ -36,6 +38,37 @@ export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActio
                     Values: action.payload.Values,
                     OData: action.payload.OData
                 }
+            case getType(actions.fetchCustomEventCatalogNextLink.success):
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddMap(action.payload.Values)
+                        .GetMap(),
+                    OData: action.payload.OData
+                }
+            case getType(actions.addCustomEventToCatalog.success):
+                return {
+                    ...state,
+                    Values: MapHelper.Create(state.Values)
+                        .AddAsFirst(action.payload.Id, action.payload)
+                        .GetMap(),
+                    OData: { ...state.OData, Count: state.OData.Count + 1 }
+                }
+            case getType(actions.editCustomEventInCatalog.success):
+                return {
+                    ...state,
+                    Values: state.Values.set(action.payload.Id, action.payload)
+                }
+            case getType(actions.deleteCustomEventInCatalog.success): {
+                const { Values } = state
+                Values.delete(action.payload)
+
+                return {
+                    ...state,
+                    Values,
+                    OData: { ...state.OData, Count: state.OData.Count - 1 }
+                }
+            }
             default:
                 return state;
         }

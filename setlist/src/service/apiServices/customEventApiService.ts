@@ -29,18 +29,18 @@ export const ReadCustomEventAsync = async (filterOrNextLink: string): Promise<IO
     return { ...odataCustomEventResources, Values: customEvent }
 };
 
-export const CreateCustomEventAsync = async (customEvent: ICustomEvent): Promise<ICustomEvent> => {
+export const CreateCustomEventAsync = async (customEvent: ICustomEvent,expand :string | undefined): Promise<ICustomEvent> => {
     const resource = CustomEvent.ToResource(customEvent)
 
-    const result = await CreateCustomEventRequestAsync(resource)
+    const result = await CreateCustomEventRequestAsync(resource,expand)
 
     return CustomEvent.FromResource(result.data)
 }
 
-export const UpdateCustomEventAsync = async(customEvent:ICustomEvent):Promise<ICustomEvent> => {
+export const UpdateCustomEventAsync = async(customEvent:ICustomEvent,expand :string | undefined):Promise<ICustomEvent> => {
     const resource = CustomEvent.ToResource(customEvent)
 
-    const result = await UpdateCustomEventRequestAsync(resource)
+    const result = await UpdateCustomEventRequestAsync(resource,expand)
 
     return CustomEvent.FromResource(result.data)
 }

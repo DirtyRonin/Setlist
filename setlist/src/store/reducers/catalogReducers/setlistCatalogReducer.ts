@@ -45,19 +45,19 @@ export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
                         .GetMap(),
                     OData: action.payload.OData
                 }
-            case getType(actions.addSetListToCatalog.success):
+            case getType(actions.addSetlistToCatalog.success):
                 return {
                     ...state,
                     Values: MapHelper.Create(state.Values)
                         .AddAsFirst(action.payload.Id, action.payload)
                         .GetMap()
                 }
-            case getType(actions.editSetListInCatalog.success):
+            case getType(actions.editSetlistInCatalog.success):
                 return {
                     ...state,
                     Values: state.Values.set(action.payload.Id, action.payload)
                 }
-            case getType(actions.deleteSetListInCatalog.success): {
+            case getType(actions.deleteSetlistInCatalog.success): {
                 const { Values } = state
                 Values.delete(action.payload)
                 return {

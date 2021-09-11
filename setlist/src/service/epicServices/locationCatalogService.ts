@@ -3,7 +3,7 @@ import { CreateLocationAsync, DeleteLocationAsync, ReadLocationAsync, UpdateLoca
 import { IFilterLocationActionProps, IFilterLocationActionResult, ILocation, ILocationEntityActionProps, INextLinkActionProps } from "models"
 import { Location } from "mapping";
 
-import { IsMiminumStringLength, QueryBuilder ,FilterBuilder } from "utils"
+import { IsMiminumStringLength, QueryBuilder, FilterBuilder } from "utils"
 
 export const fetchLocationCatalogAsync = async (props: IFilterLocationActionProps): Promise<IFilterLocationActionResult> => {
 
@@ -21,13 +21,13 @@ export const fetchLocationCatalogAsync = async (props: IFilterLocationActionProp
 
     //reduce all filter builders to one with all the fragments
     const result = filters.reduce((prev, current) => {
-        const stuff = prev.or(()=>current)
+        const stuff = prev.or(() => current)
         return stuff
-    },new FilterBuilder())
+    }, new FilterBuilder())
 
     if (filters.length) {
-         // concat the fragments with or and give it to the query
-         query.filter(() => new FilterBuilder().or(() => result))
+        // concat the fragments with or and give it to the query
+        query.filter(() => new FilterBuilder().or(() => result))
     }
 
     query = query.orderBy(`${nameof<ILocation>(x => x.Name)}`)
@@ -63,9 +63,18 @@ export const deleteLocationInCatalogAsync = async (props: ILocationEntityActionP
 
 export const fetchLocationById = async (id: string): Promise<ILocation> => {
     let query = new QueryBuilder()
-    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<ILocation>(x => x.Id), 'eq',id))
+    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<ILocation>(x => x.Id), 'eq', id))
     const filter = query.toQuery()
 
     const location = (await GetFilterLocationActionResult(filter)).Values.get(id) ?? Location.EmptyLocation()
     return location
+}
+
+export const IsLocationExistingByName = async (name: string): Promise<boolean> => {
+    let query = new QueryBuilder()
+    query.filter(() => new FilterBuilder().filterExpression(`tolower(${nameof<ILocation>(x => x.Name)})`, 'eq', name))
+    const filter = query.toQuery()
+
+    const isExisting = (await GetFilterLocationActionResult(filter)).Values.size > 0
+    return isExisting
 }

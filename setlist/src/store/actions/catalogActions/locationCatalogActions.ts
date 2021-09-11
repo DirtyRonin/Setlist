@@ -39,3 +39,5 @@ export const deleteLocationInCatalog= createAsyncAction(
 export const setLocationFilter= createAction(
     "SET_LOCATION_FILTER",
 )<IFilterLocationActionProps>();
+
+

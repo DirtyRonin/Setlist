@@ -4,20 +4,21 @@ import { History } from 'history';
 
 import { IModelState, RootState } from 'store'
 import PrivateRoute from "components/common/privateRoute"
-import { bandModalActions, bandSongModalActions, customEventModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ICustomEventEntityActionProps, ILocationEntityActionProps, ISetlistEntityActionProps, ISetlistSongEntityActionProps, ISongEntityActionProps, IUser, locationModalActions, setlistModalActions, setlistSongModalActions, songModalActions } from "models"
+import { bandModalActions, bandSongModalActions, customEventModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ICustomEventEntityActionProps, IFilterCustomEventActionProps, ILocationCatalog, ILocationEntityActionProps, ISetlistEntityActionProps, ISetlistSongEntityActionProps, ISongEntityActionProps, IUser, locationModalActions, setlistModalActions, setlistSongModalActions, songModalActions } from "models"
 import * as Action from 'store/actions';
-import CustomEventModalComponent from "components/modals/customEventModal";
 
 const SongModalComponent = React.lazy(() => import("components/modals/songModal"))
 const AddSongToBandComponent = React.lazy(() => import("components/modals/AddItemTo/band/AddSongToBand"))
 const AddSongToSetlistModalComponent = React.lazy(() => import("components/modals/AddItemTo/setlist/AddSongToSetlistModal"))
-const BandModalComponent = React.lazy(() => import("components/modals/bandModal"))
 const BandSongModalComponent = React.lazy(() => import('components/modals/bandSongModal'))
-const SetlistModalComponent = React.lazy(() => import('components/modals/setlistModal'))
 const SetlistSongModalComponent = React.lazy(() => import('components/modals/setlistSongModal'))
-const LocationModalComponent = React.lazy(() => import('components/modals/locationModal'))
 
-// const ModalTemplate = React.lazy(() => import('components/common/modalWrapper/modalTemplate'))
+const LocationModalTemplate = React.lazy(() => import('components/modals/locationModalTemplate'))
+const CustomEventModalTemplate = React.lazy(() => import('components/modals/customEventModalTemplate'))
+const BandModalTemplate = React.lazy(() => import('components/modals/BandModalTemplate'))
+const SetlistModalTemplate = React.lazy(() => import('components/modals/setlistModalTemplate'))
+
+const ModalTemplate = React.lazy(() => import('components/common/Wrapper/modalTemplate'))
 
 const ModalWrapper = ({
     modalState,
@@ -29,89 +30,98 @@ const ModalWrapper = ({
     setlistModalActionsProvider,
     setlistSongModalActionsProvider,
     locationModalActionsProvider,
-    customEventModalActionsProvider
+    customEventModalActionsProvider,
 }: ModalWrapperProps) => {
 
     const query = history.location.search ?? ''
-    const handleCloseModal = () => history.goBack()
+    const handleClose = () => history.goBack()
 
     return <div>
         <PrivateRoute path="/songModal">
-            <SongModalComponent
-                songModalActionsProvider={songModalActionsProvider}
-                handleCloseModal={handleCloseModal}
-                query={query}
-            />
+            <ModalTemplate handleCloseModal={handleClose} title='Song'>
+                <SongModalComponent
+                    songModalActionsProvider={songModalActionsProvider}
+                    handleClose={handleClose}
+                    query={query}
+                />
+            </ModalTemplate>
         </PrivateRoute>
+
         <PrivateRoute path="/AddSongToBand">
             <AddSongToBandComponent
                 userId={userState.id}
                 routeQuery={query}
-                handleCloseModal={handleCloseModal}
+                handleCloseModal={handleClose}
             />
         </PrivateRoute>
+
         <PrivateRoute path="/AddSongToSetlist">
             <AddSongToSetlistModalComponent
                 routeQuery={query}
-                handleCloseModal={handleCloseModal}
+                handleCloseModal={handleClose}
             />
         </PrivateRoute>
 
         <PrivateRoute path="/bandModal">
-            <BandModalComponent
-                bandModalActionsProvider={bandModalActionsProvider}
-                handleCloseModal={handleCloseModal}
-                query={query}
-            />
-        </PrivateRoute>
-
-        {/* die variante als modal bleibt erstmal drinne, falls es dafür nochmal ne verwendung geben sollte (25.08.2021) */}
-        {/* <PrivateRoute path="/bandSongAsModal">
-            <ModalTemplate
-                title={'My Title'}
-                handleCloseModal={handleCloseModal}
-            >
-                <BandSongCatalogComponent
-                    history={history}
+            <ModalTemplate handleCloseModal={handleClose} title='Band'>
+                <BandModalTemplate
+                    bandModalActionsProvider={bandModalActionsProvider}
+                    handleClose={handleClose}
+                    query={query}
                 />
             </ModalTemplate>
+        </PrivateRoute>
 
-        </PrivateRoute> */}
         <PrivateRoute path="/bandSongModal">
-            <BandSongModalComponent
-                query={query}
-                bandSongModalActionsProvider={bandSongModalActionsProvider}
-                handleCloseModal={handleCloseModal}
-            />
+            <ModalTemplate handleCloseModal={handleClose} title='Band Song'>
+                <BandSongModalComponent
+                    query={query}
+                    bandSongModalActionsProvider={bandSongModalActionsProvider}
+                    handleCloseModal={handleClose}
+                />
+            </ModalTemplate>
         </PrivateRoute>
+
         <PrivateRoute path="/setlistModal">
-            <SetlistModalComponent
-                query={query}
-                setlistModalActionsProvider={setlistModalActionsProvider}
-                handleCloseModal={handleCloseModal}
-            />
+            <ModalTemplate handleCloseModal={handleClose} title='Setlist'>
+                <SetlistModalTemplate
+                    query={query}
+                    setlistModalActionsProvider={setlistModalActionsProvider}
+                    handleClose={handleClose}
+                />
+            </ModalTemplate>
         </PrivateRoute>
+
         <PrivateRoute path="/setlistSongModal">
-            <SetlistSongModalComponent
-                query={query}
-                setlistSongModalActionsProvider={setlistSongModalActionsProvider}
-                handleCloseModal={handleCloseModal}
-            />
+            <ModalTemplate handleCloseModal={handleClose} title='Setlist Songs'>
+                <SetlistSongModalComponent
+                    query={query}
+                    setlistSongModalActionsProvider={setlistSongModalActionsProvider}
+                    handleCloseModal={handleClose}
+                />
+            </ModalTemplate>
         </PrivateRoute>
+
         <PrivateRoute path="/locationModal">
-            <LocationModalComponent
-                query={query}
-                locationModalActionsProvider={locationModalActionsProvider}
-                handleCloseModal={handleCloseModal}
-            />
+            <ModalTemplate handleCloseModal={handleClose} title='Location'>
+                <LocationModalTemplate
+                    locationModalActionsProvider={locationModalActionsProvider}
+                    handleClose={handleClose}
+                    query={query}
+                />
+            </ModalTemplate>
         </PrivateRoute>
+
         <PrivateRoute path="/customEventModal">
-            <CustomEventModalComponent
-                query={query}
-                customEventModalActionsProvider={customEventModalActionsProvider}
-                handleCloseModal={handleCloseModal}
-            />
+            <ModalTemplate handleCloseModal={handleClose} title='Custom Event'>
+                <CustomEventModalTemplate
+                    customEventModalActionsProvider={customEventModalActionsProvider}
+                    handleClose={handleClose}
+                    query={query}
+                />
+            </ModalTemplate>
         </PrivateRoute>
+
     </div>
 }
 
@@ -132,6 +142,7 @@ interface IProps {
 interface IStateProps extends IProps {
     modalState: IModelState;
     userState: IUser
+    locationCatalog: ILocationCatalog
 }
 
 export type ModalWrapperProps = IStateProps & IConnectedDispatch;
@@ -140,7 +151,8 @@ const mapStateToProps = (state: RootState, props: IProps): IStateProps =>
 ({
     modalState: state.modalReducers.modalState,
     history: props.history,
-    userState: state.userReducers.user
+    userState: state.userReducers.user,
+    locationCatalog: state.locationCatalogReducers.locationCatalog
 })
 
 
@@ -174,9 +186,9 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     },
     setlistModalActionsProvider: {
         None: () => { },
-        New: (props: ISetlistEntityActionProps) => dispatch(Action.addSetListToCatalog.request(props)),
-        Edit: (props: ISetlistEntityActionProps) => dispatch(Action.editSetListInCatalog.request(props)),
-        Remove: (props: ISetlistEntityActionProps) => dispatch(Action.deleteSetListInCatalog.request(props)),
+        New: (props: ISetlistEntityActionProps) => dispatch(Action.addSetlistToCatalog.request(props)),
+        Edit: (props: ISetlistEntityActionProps) => dispatch(Action.editSetlistInCatalog.request(props)),
+        Remove: (props: ISetlistEntityActionProps) => dispatch(Action.deleteSetlistInCatalog.request(props)),
         Read: () => { },
         Add: () => { },
         ShowCatalog: () => { }
@@ -207,7 +219,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
         Read: () => { },
         Add: () => { },
         ShowCatalog: () => { }
-    }
+    },
 })
 
 const DefaultWrapper = (props: ModalWrapperProps) =>

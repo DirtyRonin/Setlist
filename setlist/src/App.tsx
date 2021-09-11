@@ -17,7 +17,7 @@ const CustomEventCatalogContainer = React.lazy(() => import('store/containers/ca
 const BandSongCatalogComponent = React.lazy(() => import('store/containers/catalogs/BandSongCatalogContainer'))
 const SetlistSongCatalog = React.lazy(() => import('store/containers/catalogs/SetlistSongCatalogContainer'))
 
-const ModalWrapper = React.lazy(() => import('components/common/modalWrapper/modalWrapper'))
+const ModalWrapper = React.lazy(() => import('components/common/Wrapper/modalWrapper'))
 const Login = React.lazy(() => import('components/login'))
 const Sidebar = React.lazy(() => import('components/common/sidebar'))
 

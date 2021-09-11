@@ -63,17 +63,17 @@ const CustomEventCatalogNodeComponent = (props: ICustomEventNodeProps): JSX.Elem
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>Band : {customEvent?.Band.Title ?? 'No Band'}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>Band : {customEvent?.Band?.Title ?? 'No Band'}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>Location : {customEvent?.Location.Name ?? 'No Location'}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>Location : {customEvent?.Location?.Name ?? 'No Location'}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>Setlist : {customEvent?.Setlist.Title ?? 'No Setlist'}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>Setlist : {customEvent?.Setlist?.Title ?? 'No Setlist'}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                                 <Row>

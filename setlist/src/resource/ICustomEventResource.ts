@@ -2,12 +2,12 @@ import { ILocation, IBand, ISetlist } from "models";
 
 export interface ICustomEventResource {
     Id: string;
-    Date: string;
-    LocationId: string;
-    BandId: string;
-    SetlistId: string;
+    Date: string | undefined;
+    LocationId: string | null;
+    BandId: string | null;
+    SetlistId: string | null;
     Title: string;
-    Location:ILocation
-    Band:IBand
-    Setlist:ISetlist
+    Location:ILocation| null
+    Band:IBand| null
+    Setlist:ISetlist| null
 }

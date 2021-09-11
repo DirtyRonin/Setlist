@@ -15,21 +15,21 @@ export const fetchSetlistCatalogNextLink = createAsyncAction(
     "FETCH_SETLIST_CATALOG_NEXTLINK_CANCEL",
 )<INextLinkActionProps, IFilterSetlistActionResult, Error, string>();
 
-export const addSetListToCatalog = createAsyncAction(
+export const addSetlistToCatalog = createAsyncAction(
     "NEW_SETLIST_REQUEST",
     "NEW_SETLIST_SUCCESS",
     "NEW_SETLIST_FAILURE",
     "NEW_SETLIST_CANCEL",
 )<ISetlistEntityActionProps, ISetlist, Error, string>();
 
-export const editSetListInCatalog = createAsyncAction(
+export const editSetlistInCatalog = createAsyncAction(
     "EDIT_SETLIST_REQUEST",
     "EDIT_SETLIST_SUCCESS",
     "EDIT_SETLIST_FAILURE",
     "EDIT_SETLIST_CANCEL",
 )<ISetlistEntityActionProps, ISetlist, Error, string>();
 
-export const deleteSetListInCatalog = createAsyncAction(
+export const deleteSetlistInCatalog = createAsyncAction(
     "DELETE_SETLIST_REQUEST",
     "DELETE_SETLIST_SUCCESS",
     "DELETE_SETLIST_FAILURE",

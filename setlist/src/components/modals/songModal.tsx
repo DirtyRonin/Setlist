@@ -1,27 +1,33 @@
-import React, { useEffect, useState } from "react"
-import { Modal, Form, Col, Button, FormControlProps } from "react-bootstrap"
+import React, { ChangeEvent, useEffect, useState } from "react"
 
-import { ModalTypes, ISong, songModalActions } from "models";
+import { ModalTypes, songModalActions } from "models";
 import { Song } from "mapping";
 import { fetchSongById } from "service";
 import { mapQuery } from "utils/routeQueryHelper";
-import { GetModalTypeByString ,IsModalReadonly} from "utils";
+import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly } from "utils";
 import { SongModalHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/songHtmlAttributes";
+import { AcitonButton, UseModalStyles } from "styles/modalStyles";
+import TextField from "@material-ui/core/TextField";
+import { ModalError } from "models/error/modalError/modalError";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
 
 export interface ISongModalComponent {
-    handleCloseModal(): void
+    handleClose(): void
     songModalActionsProvider: songModalActions
     query: string
 }
 
-const SongModalComponent = (props: ISongModalComponent) => {
+const SongModalComponent = ({ query, handleClose, songModalActionsProvider }: ISongModalComponent) => {
 
-    const { query, handleCloseModal, songModalActionsProvider } = props
-
-    const [song, setSong] = useState(Song.EmptySong())
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setLoading] = useState(false)
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
-    const [id, setId] = useState('')
+    const [id, setId] = useState(GUID_EMPTY)
+
+    const [artist, setArtist] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
+    const [title, setTitle] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
+    const [genre, setGenre] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
 
     useEffect(() => {
         if (query) {
@@ -29,13 +35,18 @@ const SongModalComponent = (props: ISongModalComponent) => {
 
             setType(mapped.type)
             setId(mapped.id)
-            setIsLoading(true)
 
 
-            fetchSongById(mapped.id).then(result => {
-                setSong(result)
-                setIsLoading(false)
-            })
+            if (mapped.id) {
+                setLoading(true)
+
+                fetchSongById(mapped.id).then(result => {
+                    setArtist({ HasError: false, Message: '', Value: result.Artist })
+                    setTitle({ HasError: false, Message: '', Value: result.Title })
+                    setGenre({ HasError: false, Message: '', Value: result.Genre })
+                    setLoading(false)
+                })
+            }
         }
     }, [])
 
@@ -49,69 +60,120 @@ const SongModalComponent = (props: ISongModalComponent) => {
         return { type: _type, id: _id }
     }
 
-    const songDef = SongModalHtmlAttributesConfiguration;
+    const htmlConfig = SongModalHtmlAttributesConfiguration;
+    const isStringInvalid = (value: string): boolean => !value
 
-    const hanldeOnClick = (event: React.FormEvent<FormControlProps>) => {
-        event.preventDefault();
+    const OnChangeTitle = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        event.preventDefault()
+        const value = event.target.value
 
-        const elements: any = (event.target as any).elements;
+        const newValue = isStringInvalid(value) ?
+            { HasError: true, Message: 'Please Enter a Title', Value: value } :
+            { HasError: false, Message: '', Value: value }
 
-        const _song = GetSongForModalType(type, elements)
-        const executeSongModalAction = songModalActionsProvider[type]
+        setTitle(newValue)
+    }
 
-        executeSongModalAction({ value: _song } )
+    const OnChangeArtist = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        event.preventDefault()
+        const value = event.target.value
 
-        if (type !== "New")
-            handleCloseModal()
-    };
+        const newValue = isStringInvalid(value) ?
+            { HasError: true, Message: 'Please Enter an Artist', Value: value } :
+            { HasError: false, Message: '', Value: value }
 
-    const GetSongForModalType = (type: ModalTypes, elements: any) => {
-        const _song = {
-            ...song,
-            Artist: elements[songDef.Artist.ControlId].value,
-            Title: elements[songDef.Title.ControlId].value,
-            Genre: elements[songDef.Genre.ControlId].value
-        } as ISong
+        setArtist(newValue)
+    }
+    const OnChangeGenre = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        event.preventDefault()
+        const value = event.target.value
 
-        if (type !== "New") {
-            _song.Id = id
+        const newValue = isStringInvalid(value) ?
+            { HasError: true, Message: 'Please Enter an Artist', Value: value } :
+            { HasError: false, Message: '', Value: value }
+
+        setGenre(newValue)
+    }
+
+    const handleOnClose = () => {
+        setTitle({ HasError: false, Message: '', Value: '' })
+        setArtist({ HasError: false, Message: '', Value: '' })
+        setGenre({ HasError: false, Message: '', Value: '' })
+        handleClose()
+    }
+
+    const handleSubmit = () => {
+
+        setLoading(true)
+
+        if (!title.HasError && !artist.HasError && !genre.HasError) {
+            const executeLocationModalAction = songModalActionsProvider[type]
+            executeLocationModalAction({
+                value: {
+                    ...Song.EmptySong(),
+                    Title: title.Value,
+                    Artist: artist.Value,
+                    Genre: genre.Value,
+                    Id: id
+                }
+            })
+            handleOnClose()
         }
-
-        return _song;
     }
 
     const IsReadonly = IsModalReadonly(type)
+    const Class = UseModalStyles()
 
-    return <Modal show={true} onHide={handleCloseModal}>
-        <Modal.Dialog >
-            <Modal.Header closeButton>
-                <Modal.Title>{type}</Modal.Title>
-            </Modal.Header>
-
-            <Form onSubmit={hanldeOnClick} method="GET">
-                <Modal.Body>
-                    <Form.Row>
-                        <Form.Group as={Col} md="4" controlId={songDef.Title.ControlId}>
-                            <Form.Label>{songDef.Title.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={song.Title} placeholder={songDef.Title.Placeholder}></Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} md="4" controlId={songDef.Artist.ControlId}>
-                            <Form.Label>{songDef.Artist.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={song.Artist} placeholder={songDef.Artist.Placeholder}></Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} md="4" controlId={songDef.Genre.ControlId}>
-                            <Form.Label>{songDef.Genre.Label}</Form.Label>
-                            <Form.Control readOnly={IsReadonly} type="text" defaultValue={song.Genre} placeholder={songDef.Genre.Placeholder}></Form.Control>
-                        </Form.Group>
-                    </Form.Row>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                    <Button variant="primary" type="submit" >{type}</Button>
-                </Modal.Footer>
-            </Form>
-        </Modal.Dialog>
-    </Modal>
+    return (
+        <div className={Class.root}>
+            <DialogContent>
+                <DialogContentText>
+                    {`${type} Location`}
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    fullWidth
+                    disabled={IsReadonly}
+                    margin="normal"
+                    id={htmlConfig.Title.ControlId}
+                    value={title.Value}
+                    placeholder={htmlConfig.Title.Placeholder}
+                    onChange={OnChangeTitle}
+                    error={title.HasError}
+                    label={htmlConfig.Title.Label}
+                    type={title.HasError ? 'Error' : 'text'}
+                    helperText={title.Message ?? ''}
+                />
+                <TextField
+                    fullWidth
+                    disabled={IsReadonly}
+                    margin="normal"
+                    id={htmlConfig.Artist.ControlId}
+                    value={artist.Value}
+                    placeholder={htmlConfig.Artist.Placeholder}
+                    onChange={OnChangeArtist}
+                    label={htmlConfig.Artist.Label}
+                    type={artist.HasError ? 'Error' : 'text'}
+                    helperText={artist.Message ?? ''}
+                />
+                <TextField
+                    fullWidth
+                    disabled={IsReadonly}
+                    margin="normal"
+                    id={htmlConfig.Genre.ControlId}
+                    value={genre.Value}
+                    placeholder={htmlConfig.Genre.Placeholder}
+                    onChange={OnChangeGenre}
+                    label={htmlConfig.Genre.Label}
+                    type={genre.HasError ? 'Error' : 'text'}
+                    helperText={genre.Message ?? ''}
+                />
+            </DialogContent>
+            <DialogActions>
+                <AcitonButton onClick={handleSubmit}>{type}</AcitonButton>
+            </DialogActions>
+        </div>
+    )
 }
 
 export default SongModalComponent

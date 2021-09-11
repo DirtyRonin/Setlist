@@ -6,11 +6,11 @@ import { Location, Band, Setlist } from "mapping";
 export class CustomEvent implements ICustomEvent {
 
     Id: string;
-    LocationId: string;
-    BandId: string;
-    SetlistId: string;
+    LocationId: string | null;
+    BandId: string | null;
+    SetlistId: string | null;
     Title: string;
-    Date: Date;
+    Date: Date | null;
     Location: ILocation;
     Band: IBand;
     Setlist: ISetlist;
@@ -33,16 +33,16 @@ export class CustomEvent implements ICustomEvent {
         })
 
 
-    public static ToResource = ({ Title, LocationId, BandId, SetlistId, Id, Date:date, Location, Band, Setlist }: ICustomEvent): ICustomEventResource => {
+    public static ToResource = ({ Title, LocationId, BandId, SetlistId, Id, Date:date }: ICustomEvent): ICustomEventResource => {
         const dateAsString = date?.toLocaleDateString()
         
-        return { Title, LocationId, BandId, SetlistId, Id, Date:dateAsString, Location, Band, Setlist  } 
+        return { Title, LocationId, BandId, SetlistId, Id, Date:dateAsString, Location:null, Band:null, Setlist:null  } 
     }
 
     public static FromResource = ({ Title, LocationId, BandId, SetlistId, Id, Date : date, Location, Band, Setlist }: ICustomEventResource): ICustomEvent => {
-        const newDate = date && new Date(date) ? new Date(date) : new Date()
+        const newDate = date && new Date(date) ? new Date(date) : null
         
-        return { Title, LocationId, BandId, SetlistId, Id, Date : newDate, Location, Band, Setlist  } 
+        return { Title, LocationId, BandId, SetlistId, Id, Date : newDate, Location , Band, Setlist  } 
     }
 
     public static EmptyCustomEvent = (): ICustomEvent =>

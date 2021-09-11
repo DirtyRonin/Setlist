@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
-import { Col, Container, Navbar, Row, FormControlProps } from "react-bootstrap";
-import { MenuDivider, MenuHeader,Menu,    MenuItem } from "@szhsin/react-menu";
+import { Col, Container, Row } from "react-bootstrap";
+import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 
 import { CustomEventCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/customEventHtmlAttributes";
 import { FilterCustomEventActionProps } from "mapping";
-import { INextLinkActionProps } from "models";
+import { INextLinkActionProps, ModalTypes } from "models";
 import { CustomEventCatalogProps } from "store/containers/catalogs/CustomEventCatalogContainer";
 import CustomEventCatalogNodeComponent from "components/nodes/customEventCatalogNode";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss, SongFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import AddButton from "components/common/AddButton/addButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CustomEventFilterComponent from "components/filters/CustomEventFilter";
@@ -25,11 +25,6 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
         setModal,
         history
     } = props;
-
-    useEffect(() => {
-        const filter = FilterCustomEventActionProps.CreateFromCatalog(customEventCatalog)
-        fetchCustomEventCatalog(filter)
-    }, [])
 
     useEffect(() => {
         if (customEventCatalog.Refresh) {
@@ -51,7 +46,16 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
     }
 
     const handleShowAddCustomEvent = () => {
+        setModal({ showModal: true })
 
+        const type: ModalTypes = ModalTypes.New
+        const pathName: string = '/customEventModal'
+
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}`,
+            state: { background: history.location }
+        })
     }
 
     return <div>

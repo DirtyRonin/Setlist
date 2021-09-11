@@ -1,11 +1,11 @@
 import React, { useEffect }  from "react";
-import { Col, Container, Navbar, Row, FormControlProps, Button } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 
 import { SetlistCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistHtmlAttributes";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss, SongFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles";
 import { FilterSetlistActionProps } from "mapping";
 import { SetlistCatalogProps } from "store/containers/catalogs/SetlistCatalogContainer";
 import { INextLinkActionProps, ModalTypes } from "models";

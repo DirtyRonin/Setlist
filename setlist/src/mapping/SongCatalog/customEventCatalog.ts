@@ -3,7 +3,8 @@ import { CatalogTypes, ICustomEvent, ICustomEventCatalog, ICustomEventCatalogOpt
 import { CatalogBase } from "./catalogBase";
 
 export class CustomEventCatalog extends CatalogBase<ICustomEvent, ICustomEventFilter, ICustomEventCatalogOptions> implements ICustomEventCatalog {
-    private constructor({ filter, oData, options, refresh, customEvents }: { filter: ICustomEventFilter; oData: ODataProps; options: ICustomEventCatalogOptions; refresh?: boolean; customEvents?: Map<string, ICustomEvent>; }) {
+    
+    private constructor({ filter, oData, options, refresh, customEvents }: { filter: ICustomEventFilter; oData: ODataProps; options: ICustomEventCatalogOptions; refresh?: boolean; customEvents?: Map<string, ICustomEvent> }) {
         super(
             CustomEventCatalog.CatalogId,
             CatalogTypes["CustomEvent Catalog"].toString(),
@@ -14,19 +15,21 @@ export class CustomEventCatalog extends CatalogBase<ICustomEvent, ICustomEventFi
             refresh,
             customEvents
         )
+        
     }
 
     private static Default = ({ refresh, options = {} }: { refresh: boolean, options?: ICustomEventCatalogOptions }): ICustomEventCatalog =>
         new CustomEventCatalog(
             {
-                filter: FilterCustomEventActionProps.Default(CustomEventCatalog.CatalogId).filter,
+                filter: FilterCustomEventActionProps.Default().filter,
                 oData: { NextLink: "", Count: 0, Context: "" },
                 options,
                 refresh,
-                customEvents: new Map<string, ICustomEvent>()
+                customEvents: new Map<string, ICustomEvent>(),
+               
             })
 
-    public static Create = (): ICustomEventCatalog => CustomEventCatalog.Default({ refresh: false })
+    public static Create = (): ICustomEventCatalog => CustomEventCatalog.Default({ refresh: true })
 
     public static CreateAndUpdate = (options?: ICustomEventCatalogOptions): ICustomEventCatalog =>
         CustomEventCatalog.Default({ refresh: true, options })

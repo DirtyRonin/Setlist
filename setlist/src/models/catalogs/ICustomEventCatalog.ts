@@ -7,4 +7,5 @@ export interface ICustomEventFilter {
 
 export interface ICustomEventCatalogOptions{}
 
-export interface ICustomEventCatalog extends ICatalog<ICustomEvent,ICustomEventFilter,ICustomEventCatalogOptions> { }
+export interface ICustomEventCatalog extends ICatalog<ICustomEvent,ICustomEventFilter,ICustomEventCatalogOptions> {
+ }

@@ -8,7 +8,7 @@ import { SetlistCatalogActions } from "store/reducers/catalogReducers/setlistCat
 
 import { fetchSetlistCatalog, fetchSetlistCatalogNextLink } from "store";
 import { addSetlistToSetlistCatalogAsync,  deleteSetlistInCatalogAsync,  editSetlistInCatalogAsync,  fetchSetlistCatalogAsync, fetchSetlistCatalogNextLinkAsync } from "service";
-import { addSetListToCatalog, deleteSetListInCatalog, editSetListInCatalog } from "store/actions/";
+import { addSetlistToCatalog, deleteSetlistInCatalog, editSetlistInCatalog } from "store/actions/";
 
 const fetchSetlistCatalogsEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = (action$) =>
     action$.pipe(
@@ -36,12 +36,12 @@ const fetchSetlistCatalogNextLinkEpic: Epic<SetlistCatalogActions, SetlistCatalo
 
 const addSetlistEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = (action$) => {
     return action$.pipe(
-        filter(isActionOf(addSetListToCatalog.request)),
+        filter(isActionOf(addSetlistToCatalog.request)),
         switchMap(action =>
             from(addSetlistToSetlistCatalogAsync(action.payload)).pipe(
-                map(addSetListToCatalog.success),
-                catchError((error: Error) => of(addSetListToCatalog.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(addSetListToCatalog.cancel))))
+                map(addSetlistToCatalog.success),
+                catchError((error: Error) => of(addSetlistToCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(addSetlistToCatalog.cancel))))
             )
         )
     );
@@ -49,12 +49,12 @@ const addSetlistEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = 
 
 const editSongEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = (action$) => {
     return action$.pipe(
-        filter(isActionOf(editSetListInCatalog.request)),
+        filter(isActionOf(editSetlistInCatalog.request)),
         switchMap(action =>
             from(editSetlistInCatalogAsync(action.payload)).pipe(
-                map(editSetListInCatalog.success),
-                catchError((error: Error) => of(editSetListInCatalog.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(editSetListInCatalog.cancel))))
+                map(editSetlistInCatalog.success),
+                catchError((error: Error) => of(editSetlistInCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(editSetlistInCatalog.cancel))))
             )
         )
     );
@@ -62,12 +62,12 @@ const editSongEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = (a
 
 const deleteSongEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = (action$) => {
     return action$.pipe(
-        filter(isActionOf(deleteSetListInCatalog.request)),
+        filter(isActionOf(deleteSetlistInCatalog.request)),
         switchMap(action =>
             from(deleteSetlistInCatalogAsync(action.payload)).pipe(
-                map(deleteSetListInCatalog.success),
-                catchError((error: Error) => of(deleteSetListInCatalog.failure(error))),
-                takeUntil(action$.pipe(filter(isActionOf(deleteSetListInCatalog.cancel))))
+                map(deleteSetlistInCatalog.success),
+                catchError((error: Error) => of(deleteSetlistInCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(deleteSetlistInCatalog.cancel))))
             )
         )
     );
