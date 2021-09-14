@@ -4,7 +4,7 @@ import { variables } from "styles/variablesStyle"
 
 
 
-export const AcitonButton = styled.button`
+export const ActionButton = styled.button`
     display: flex;
     width: 100%;
     justify-content: center;

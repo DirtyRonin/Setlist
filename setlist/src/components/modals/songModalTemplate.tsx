@@ -6,7 +6,7 @@ import { fetchSongById } from "service";
 import { mapQuery } from "utils/routeQueryHelper";
 import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly } from "utils";
 import { SongModalHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/songHtmlAttributes";
-import { AcitonButton, UseModalStyles } from "styles/modalStyles";
+import { ActionButton, UseModalStyles } from "styles/modalStyles";
 import TextField from "@material-ui/core/TextField";
 import { ModalError } from "models/error/modalError/modalError";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -19,7 +19,7 @@ export interface ISongModalComponent {
     query: string
 }
 
-const SongModalComponent = ({ query, handleClose, songModalActionsProvider }: ISongModalComponent) => {
+const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISongModalComponent) => {
 
     const [isLoading, setLoading] = useState(false)
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
@@ -107,8 +107,8 @@ const SongModalComponent = ({ query, handleClose, songModalActionsProvider }: IS
         setLoading(true)
 
         if (!title.HasError && !artist.HasError && !genre.HasError) {
-            const executeLocationModalAction = songModalActionsProvider[type]
-            executeLocationModalAction({
+            const executeModalAction = songModalActionsProvider[type]
+            executeModalAction({
                 value: {
                     ...Song.EmptySong(),
                     Title: title.Value,
@@ -128,8 +128,20 @@ const SongModalComponent = ({ query, handleClose, songModalActionsProvider }: IS
         <div className={Class.root}>
             <DialogContent>
                 <DialogContentText>
-                    {`${type} Location`}
+                    {`${type} Song`}
                 </DialogContentText>
+                <TextField
+                    fullWidth
+                    disabled={IsReadonly}
+                    margin="normal"
+                    id={htmlConfig.Artist.ControlId}
+                    value={artist.Value}
+                    placeholder={htmlConfig.Artist.Placeholder}
+                    onChange={OnChangeArtist}
+                    label={htmlConfig.Artist.Label}
+                    type={artist.HasError ? 'Error' : 'text'}
+                    helperText={artist.Message ?? ''}
+                />
                 <TextField
                     autoFocus
                     fullWidth
@@ -148,18 +160,6 @@ const SongModalComponent = ({ query, handleClose, songModalActionsProvider }: IS
                     fullWidth
                     disabled={IsReadonly}
                     margin="normal"
-                    id={htmlConfig.Artist.ControlId}
-                    value={artist.Value}
-                    placeholder={htmlConfig.Artist.Placeholder}
-                    onChange={OnChangeArtist}
-                    label={htmlConfig.Artist.Label}
-                    type={artist.HasError ? 'Error' : 'text'}
-                    helperText={artist.Message ?? ''}
-                />
-                <TextField
-                    fullWidth
-                    disabled={IsReadonly}
-                    margin="normal"
                     id={htmlConfig.Genre.ControlId}
                     value={genre.Value}
                     placeholder={htmlConfig.Genre.Placeholder}
@@ -170,10 +170,10 @@ const SongModalComponent = ({ query, handleClose, songModalActionsProvider }: IS
                 />
             </DialogContent>
             <DialogActions>
-                <AcitonButton onClick={handleSubmit}>{type}</AcitonButton>
+                <ActionButton onClick={handleSubmit}>{type}</ActionButton>
             </DialogActions>
         </div>
     )
 }
 
-export default SongModalComponent
+export default SongModalTemplate

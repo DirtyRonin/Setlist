@@ -5,7 +5,8 @@ import AsyncButtonComponent, { ButtonState } from "components/common/asyncButton
 import { Song, SetlistSong } from "mapping";
 import { ISetlist, ISetlistSong, IBandSong } from "models";
 import { CreateSetlistSongAsync } from "service";
-import { SongNodeContainer } from "styles/songStyle";
+
+import { DefaultLabelStyle, DefaultNodeImageStyle, DefaultNodeWrapperStyle } from "styles/defaultNodeStyle";
 
 export interface IAddBandSongToSetlistModalNode {
     setlist: ISetlist
@@ -26,23 +27,33 @@ const AddSongToSetlistModalNode = (props: IAddBandSongToSetlistModalNode) => {
     const IsSetlistSongExisting: ButtonState = setlist.SetlistSongs?.size > 0 ? 'Already Existing' : 'INITIAL'
 
     return (
-        <Container>
-            <SongNodeContainer >
-                <Row>
-                    <Col xs="8">
-                        <label>{props.setlist.Title}</label>
-                    </Col >
-                    <Col xs="4">
-                        <div>
-                            <Col>
-                                <AsyncButtonComponent asyncExecute={CreateSetlistSongAsync} value={CreateNewSetlistSong} defaultState={IsSetlistSongExisting} />
-                            </Col>
-                        </div>
-                    </Col>
 
+        <DefaultNodeWrapperStyle >
+
+            <Container>
+                <Row>
+                    <Col xs="10" >
+                        <Row>
+                            <Col xs="3">
+                                <DefaultNodeImageStyle />
+                            </Col>
+                            <Col xs="9">
+                                <Row>
+                                    <Col>
+                                        <DefaultLabelStyle>{props.setlist.Title}</DefaultLabelStyle>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </Col >
+                    <Col xs="2">
+                        <AsyncButtonComponent asyncExecute={CreateSetlistSongAsync} value={CreateNewSetlistSong} defaultState={IsSetlistSongExisting} />
+                    </Col>
                 </Row>
-            </SongNodeContainer>
-        </Container>
+            </Container>
+
+        </DefaultNodeWrapperStyle >
+
     );
 }
 

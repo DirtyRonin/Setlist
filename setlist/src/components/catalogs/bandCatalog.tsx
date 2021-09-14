@@ -48,7 +48,6 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
         setTimeout(() => {
             fetchBandCatalogNextLink(actionProps)
         }, 500);
-
     }
 
     const handleShowAddBand = () => {

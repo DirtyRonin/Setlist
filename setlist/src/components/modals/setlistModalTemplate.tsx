@@ -7,7 +7,7 @@ import { setlistModalActions, ModalTypes } from 'models';
 import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly, mapQuery } from 'utils';
 import { fetchSetlistById } from 'service';
 import { SetlistModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/setlistHtmlAttributes';
-import { AcitonButton, UseModalStyles } from 'styles/modalStyles';
+import { ActionButton, UseModalStyles } from 'styles/modalStyles';
 import { Setlist } from 'mapping';
 
 interface IProps {
@@ -136,7 +136,7 @@ const SetlistModalTemplate = ({ setlistModalActionsProvider, handleClose, query 
             </DialogContent>
 
             <DialogActions>
-                <AcitonButton onClick={handleSubmit}>{type}</AcitonButton>
+                <ActionButton onClick={handleSubmit}>{type}</ActionButton>
             </DialogActions>
         </div>
     )

@@ -1,11 +1,18 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { IFilterSetlistActionProps, IFilterSetlistActionResult, INextLinkActionProps, ISetlist, ISetlistEntityActionProps } from "models";
+import { IFilterSetlistActionProps, IFilterSetlistActionResult, INextLinkActionProps, ISetlist, ISetlistEntityActionProps, ISetlistSong } from "models";
 
 export const fetchSetlistCatalog = createAsyncAction(
     "FETCH_SETLIST_CATALOG_REQUEST",
     "FETCH_SETLIST_CATALOG_SUCCESS",
     "FETCH_SETLIST_CATALOG_FAILURE",
     "FETCH_SETLIST_CATALOG_CANCEL",
+)<IFilterSetlistActionProps, IFilterSetlistActionResult, Error, string>();
+
+export const fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId = createAsyncAction(
+    "FETCH_SETLIST_WITH_SETLISTSONGS_EXPANDED_BY_BANDSONGID_CATALOG_REQUEST",
+    "FETCH_SETLIST_WITH_SETLISTSONGS_EXPANDED_BY_BANDSONGID_CATALOG_SUCCESS",
+    "FETCH_SETLIST_WITH_SETLISTSONGS_EXPANDED_BY_BANDSONGID_CATALOG_FAILURE",
+    "FETCH_SETLIST_WITH_SETLISTSONGS_EXPANDED_BY_BANDSONGID_CATALOG_CANCEL",
 )<IFilterSetlistActionProps, IFilterSetlistActionResult, Error, string>();
 
 export const fetchSetlistCatalogNextLink = createAsyncAction(
@@ -22,6 +29,7 @@ export const addSetlistToCatalog = createAsyncAction(
     "NEW_SETLIST_CANCEL",
 )<ISetlistEntityActionProps, ISetlist, Error, string>();
 
+
 export const editSetlistInCatalog = createAsyncAction(
     "EDIT_SETLIST_REQUEST",
     "EDIT_SETLIST_SUCCESS",
@@ -35,6 +43,10 @@ export const deleteSetlistInCatalog = createAsyncAction(
     "DELETE_SETLIST_FAILURE",
     "DELETE_SETLIST_CANCEL",
 )<ISetlistEntityActionProps, string, Error, string>();
+
+export const addBandSongToSetlistCatalog = createAction(
+    "ADD_BANDSONG_TO_SETLIST",
+)<ISetlistSong>();
 
 export const setSetlistFilter = createAction(
     "SET_SETLIST_FILTER",

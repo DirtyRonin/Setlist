@@ -7,7 +7,7 @@ import { bandModalActions, ModalTypes } from 'models';
 import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly, mapQuery } from 'utils';
 import { fetchBandById } from 'service';
 import { BandModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/bandHtmlAttributes';
-import { AcitonButton, UseModalStyles } from 'styles/modalStyles';
+import { ActionButton, UseModalStyles } from 'styles/modalStyles';
 import { Band } from 'mapping';
 
 interface IProps {
@@ -110,7 +110,7 @@ const BandModalTemplate = ({ bandModalActionsProvider, handleClose, query }: IPr
                 />
             </DialogContent>
             <DialogActions>
-                <AcitonButton onClick={handleSubmit}>{type}</AcitonButton>
+                <ActionButton onClick={handleSubmit}>{type}</ActionButton>
             </DialogActions>
         </div>
     )

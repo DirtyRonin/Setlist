@@ -8,6 +8,7 @@ export interface IAsyncButtonProps<T> {
     asyncExecute(value: T): Promise<T>
     value: T
     defaultState: ButtonState
+
 }
 
 export const AsyncButtonComponent = <T extends {}>(props: IAsyncButtonProps<T>) => {
@@ -17,12 +18,15 @@ export const AsyncButtonComponent = <T extends {}>(props: IAsyncButtonProps<T>) 
     const [buttonState, setButtonState] = useState<ButtonActionStates>(defaultState)
 
     const handleOnClick = () => {
-        if (buttonState !== 'REQUEST' && buttonState !== 'SUCCESS' &&  buttonState !== 'Already Existing') {
+        if (buttonState !== 'REQUEST' && buttonState !== 'SUCCESS' && buttonState !== 'Already Existing') {
             setButtonState('REQUEST')
 
             asyncExecute(value)
                 .then(
-                    () => setButtonState('SUCCESS'))
+                    (result) => {
+                        setButtonState('SUCCESS')
+                    }
+                )
                 .catch(
                     (e) => {
                         console.log(e)

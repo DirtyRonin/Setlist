@@ -6,8 +6,8 @@ import { isActionOf } from "typesafe-actions";
 
 import { SetlistCatalogActions } from "store/reducers/catalogReducers/setlistCatalogReducer"
 
-import { fetchSetlistCatalog, fetchSetlistCatalogNextLink } from "store";
-import { addSetlistToSetlistCatalogAsync,  deleteSetlistInCatalogAsync,  editSetlistInCatalogAsync,  fetchSetlistCatalogAsync, fetchSetlistCatalogNextLinkAsync } from "service";
+import { fetchSetlistCatalog, fetchSetlistCatalogNextLink, fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId } from "store";
+import { addSetlistToSetlistCatalogAsync,  deleteSetlistInCatalogAsync,  editSetlistInCatalogAsync,  fetchSetlistCatalogAsync, fetchSetlistCatalogNextLinkAsync, fetchSetlistsWithSetlistSongsByBandSongId } from "service";
 import { addSetlistToCatalog, deleteSetlistInCatalog, editSetlistInCatalog } from "store/actions/";
 
 const fetchSetlistCatalogsEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = (action$) =>
@@ -18,6 +18,18 @@ const fetchSetlistCatalogsEpic: Epic<SetlistCatalogActions, SetlistCatalogAction
                 map(fetchSetlistCatalog.success),
                 catchError((error: Error) => of(fetchSetlistCatalog.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(fetchSetlistCatalog.cancel))))
+            )
+        )
+    );
+
+const fetchSetlistCatalogsExpandedByBandSongIdEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = (action$) =>
+    action$.pipe(
+        filter(isActionOf(fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.request)),
+        switchMap(action =>
+            from(fetchSetlistsWithSetlistSongsByBandSongId(action.payload)).pipe(
+                map(fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.success),
+                catchError((error: Error) => of(fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.cancel))))
             )
         )
     );
@@ -76,6 +88,7 @@ const deleteSongEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = 
 export const setlistCatalogEpics = combineEpics(
     fetchSetlistCatalogsEpic,
     fetchSetlistCatalogNextLinkEpic,
+    fetchSetlistCatalogsExpandedByBandSongIdEpic,
     addSetlistEpic,
     editSongEpic,
     deleteSongEpic

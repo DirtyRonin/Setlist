@@ -13,7 +13,7 @@ import AsyncLocationSelect from "components/common/asyncSelect/asyncLocationSele
 import { fetchCustomEventById } from "service";
 import AsyncSetlistSelect from "components/common/asyncSelect/asyncSetlistSelect";
 import AsyncBandSelect from "components/common/asyncSelect/asyncBandSelect";
-import { AcitonButton, UseModalStyles } from "styles/modalStyles";
+import { ActionButton, UseModalStyles } from "styles/modalStyles";
 
 interface IProps {
     handleClose(): void
@@ -23,7 +23,7 @@ interface IProps {
 
 const CustomEventModalTemplate = (props: IProps) => {
 
-    const { query, handleClose: handleCloseModal, customEventModalActionsProvider } = props
+    const { query, handleClose, customEventModalActionsProvider } = props
 
     const [isLoading, setIsLoading] = useState(false)
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
@@ -85,7 +85,7 @@ const CustomEventModalTemplate = (props: IProps) => {
         executeCustomEventModalAction({ value: _customEvent })
 
         if (type !== "New")
-            handleCloseModal()
+            handleClose()
     };
 
     const GetCustomEventForModalType = (type: ModalTypes, elements: any) => {
@@ -138,7 +138,7 @@ const CustomEventModalTemplate = (props: IProps) => {
                 defaultSetlistId={setlistId}
                 setSetlistId={setSetlistId}
             />
-            <AcitonButton type="submit">{type}</AcitonButton>
+            <ActionButton type="submit">{type}</ActionButton>
         </form>
         }
     </div>

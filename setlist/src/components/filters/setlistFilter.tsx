@@ -14,7 +14,7 @@ export const SetlistFilterComponent = ({ Filter, setSetlistFilter }: ISetlistFil
     const { SearchQueryInput } = FilterSetlistHtmlAttributesConfiguration
 
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
-        // event.preventDefault();
+        event.preventDefault();
 
         const elements: any = (event.target as any).form.elements;
 

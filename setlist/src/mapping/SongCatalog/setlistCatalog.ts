@@ -19,7 +19,7 @@ export class SetlistCatalog extends CatalogBase<ISetlist, ISetlistFilter, ISetli
     private static Default = ({ refresh, options = {} }: { refresh: boolean, options?: ISetlistCatalogOptions }): ISetlistCatalog =>
         new SetlistCatalog(
             {
-                filter: FilterSetlistActionProps.Default(SetlistCatalog.CatalogId).filter,
+                filter: FilterSetlistActionProps.Default().filter,
                 oData: { NextLink: "", Count: 0, Context: "" },
                 options,
                 refresh,

@@ -4,7 +4,7 @@ import { History } from 'history'
 import { Container, Row, Col, } from "react-bootstrap";
 import { Menu, MenuItem, MenuDivider, MenuHeader } from '@szhsin/react-menu';
 
-import { DefaultLabelStyle, DefaultNodeImageStyle, DefaultNodeWrapperStyle } from "styles";
+import { DefaultLabelStyle, DefaultNodeImageStyle, DefaultNodeWrapperStyle } from "styles/defaultNodeStyle";
 import { IBand, ModalTypes, IModalActionsProps } from "models";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

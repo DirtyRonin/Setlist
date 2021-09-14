@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 
 import { SetlistCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistHtmlAttributes";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import { FilterSetlistActionProps } from "mapping";
 import { SetlistCatalogProps } from "store/containers/catalogs/SetlistCatalogContainer";
 import { INextLinkActionProps, ModalTypes } from "models";

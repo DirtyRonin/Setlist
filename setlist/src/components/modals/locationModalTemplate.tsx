@@ -7,7 +7,7 @@ import { locationModalActions, ModalTypes } from 'models';
 import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly, mapQuery } from 'utils';
 import { fetchLocationById } from 'service';
 import { LocationModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/locationHtmlAttributes';
-import { AcitonButton, UseModalStyles } from 'styles/modalStyles';
+import { ActionButton, UseModalStyles } from 'styles/modalStyles';
 
 interface IProps {
     locationModalActionsProvider: locationModalActions
@@ -137,7 +137,7 @@ const LocationModalTemplate = ({ locationModalActionsProvider, handleClose, quer
                 />
             </DialogContent>
             <DialogActions>
-                <AcitonButton onClick={handleSubmit}>{type}</AcitonButton>
+                <ActionButton onClick={handleSubmit}>{type}</ActionButton>
             </DialogActions>
         </div>
     )

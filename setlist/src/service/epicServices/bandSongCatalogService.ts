@@ -21,26 +21,36 @@ export const fetchBandSongCatalogAsync = async (props: IFilterBandSongActionProp
     if (IsMiminumStringLength(Filter.Query)) {
         filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Title)}`, Filter.Query))
     }
-    if (IsMiminumStringLength(Filter.Artist)) {
-        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Artist)}`, Filter.Artist))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Artist)}`, Filter.Query))
     }
-    if (IsMiminumStringLength(Filter.Genre)) {
-        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Genre)}`, Filter.Genre))
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Genre)}`, Filter.Query))
     }
-    if (Filter.Nineties) {
-        filters.push(new FilterBuilder().filterExpression(`${songExpand}/${nameof<ISong>(x => x.Nineties)}`, 'eq', Filter.Nineties))
-    }
-    if (Filter.Evergreen) {
-        filters.push(new FilterBuilder().filterExpression(`${songExpand}/${nameof<ISong>(x => x.Evergreen)}`, 'eq', Filter.Evergreen))
-    }
+    // if (Filter.Nineties) {
+    //     filters.push(new FilterBuilder().filterExpression(`${songExpand}/${nameof<ISong>(x => x.Nineties)}`, 'eq', Filter.Nineties))
+    // }
+    // if (Filter.Evergreen) {
+    //     filters.push(new FilterBuilder().filterExpression(`${songExpand}/${nameof<ISong>(x => x.Evergreen)}`, 'eq', Filter.Evergreen))
+    // }
+
     // example expand and filter
     // https://stackoverflow.com/questions/51525409/odata-multiple-expands-and-filter
     // e.g. https://localhost:5001/odata/BandSongs/?$expand=Song&$filter=song/title eq 'No Limit'
+    
+    
+    //reduce all filter builders to one with all the fragments
+    const result = filters.reduce((prev, current) => {
+        const stuff = prev.or(()=>current)
+        return stuff
+    },new FilterBuilder())
+
     if (filters.length) {
-        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
+        // concat the fragments with or and give it to the query
+        query.filter(() => new FilterBuilder().or(() => result))
     }
 
-    //query = query.orderBy(`${nameof<IBandSong>(x => x.Song.Title)}`)
+    query = query.orderBy(`${songExpand}/${nameof<ISong>(x => x.Artist)},${songExpand}/${nameof<ISong>(x => x.Title)}`)
 
     query.expand(songExpand)
 

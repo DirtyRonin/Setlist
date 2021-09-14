@@ -34,7 +34,7 @@ export const BandSongModalHtmlAttributesConfiguration: BandSongModalHtmlAttribut
 
 
 //filter
-type FilterBandSongComponentNames = FilterSongComponentNames;
+type FilterBandSongComponentNames = "SearchQueryInput";
 export type FilterBandSongHtmlAttributesConfigurationType = ConfigurationItemCollection<
     FormHtmlAttributesDefinition,
     FilterBandSongComponentNames
@@ -42,10 +42,6 @@ export type FilterBandSongHtmlAttributesConfigurationType = ConfigurationItemCol
 
 const filterBandSongName = "FilterBandSong"
 export const FilterBandSongHtmlAttributesConfiguration: FilterBandSongHtmlAttributesConfigurationType = {
-    SearchTitleInput: { Label: `Search For Title`, Placeholder: `Enter Title`, Data_TestId: `${filterBandSongName}_SearchTitle`, ControlId: `${filterBandSongName}_SearchTitle` },
-    SearchArtistInput: { Label: `Search For Artist`, Placeholder: `Enter Artist`, Data_TestId: `${filterBandSongName}_SearchArtist`, ControlId: `${filterBandSongName}_SearchArtist` },
-    SearchGenreInput: { Label: `Search For Genre`, Placeholder: `Enter Genre`, Data_TestId: `${filterBandSongName}_SearchGenre`, ControlId: `${filterBandSongName}_SearchGenre` },
-    SearchEvergreenCheckBox: { Label: `Evergreen`, Placeholder: ``, Data_TestId: `${filterBandSongName}_SearchEvergreen`, ControlId: `${filterBandSongName}_SearchEvergreen` },
-    SearchNinetiesCheckBox: { Label: `90er`, Placeholder: ``, Data_TestId: `${filterBandSongName}_SearchNineties`, ControlId: `${filterBandSongName}_SearchNineties` },
-    SearchButton: { Label: `Search`, Placeholder: ``, Data_TestId: `${filterBandSongName}_SearchButton`, ControlId: `${filterBandSongName}_SearchButton` },
+    SearchQueryInput: { Label: `Search Query`, Placeholder: `Search...`, Data_TestId: `${filterBandSongName}_SearchQuery`, ControlId: `${filterBandSongName}_SearchQuery` },
+
 }

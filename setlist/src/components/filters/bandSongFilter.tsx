@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControlProps, Form } from "react-bootstrap";
+import { FormControlProps, Form, Col } from "react-bootstrap";
 
 import { IBandSongFilter, IFilterBandSongActionProps } from "models";
 import { FilterBandSongHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandSongHtmlAttributes";
@@ -16,31 +16,18 @@ export interface IBandSongFilterProps {
 export const BandSongFilterComponent = (props: IBandSongFilterProps) => {
     const { filter, bandId, setBandSongFilter } = props;
 
-    const htmlConfig = FilterBandSongHtmlAttributesConfiguration;
+    const {SearchQueryInput} = FilterBandSongHtmlAttributesConfiguration;
 
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
 
         const elements: any = (event.target as any).form.elements;
 
-        const _filter: IBandSongFilter = {
-            Query: elements[htmlConfig.SearchTitleInput.ControlId].value,
-            Artist: elements[htmlConfig.SearchArtistInput.ControlId].value,
-            Genre: elements[htmlConfig.SearchGenreInput.ControlId].value,
-            Nineties: elements[htmlConfig.SearchNinetiesCheckBox.ControlId].checked,
-            Evergreen: elements[htmlConfig.SearchEvergreenCheckBox.ControlId].checked,
-            BandId: bandId
-        } 
+        const _filter: IBandSongFilter = { ...filter, Query: elements[SearchQueryInput.ControlId].value,BandId:bandId }
 
-        const bandSongFilter = FilterBandSongActionProps.Create( _filter, true)
+        const bandSongFilter = FilterBandSongActionProps.Create({ filter: _filter, refresh: true })
 
-        bandSongFilter.refresh =
-            filter.Evergreen !== bandSongFilter.filter.Evergreen ? true :
-                filter.Nineties !== bandSongFilter.filter.Nineties ? true :
-                    IsFilterableString(filter.Query, bandSongFilter.filter.Query) ? true :
-                        IsFilterableString(filter.Artist, bandSongFilter.filter.Artist) ? true :
-                            IsFilterableString(filter.Genre, bandSongFilter.filter.Genre) ? true :
-                                false
+        bandSongFilter.refresh = IsFilterableString(filter.Query, bandSongFilter.filter.Query) ? true : false
 
         if (bandSongFilter.refresh) {
             setBandSongFilter(bandSongFilter)
@@ -48,8 +35,13 @@ export const BandSongFilterComponent = (props: IBandSongFilterProps) => {
     }
 
     return (
+
         <Form onChange={handleFilter} >
-            {SongFilterTemplate(htmlConfig,filter)}
+            <Form.Row>
+                <Form.Group as={Col} controlId={SearchQueryInput.ControlId}>
+                    <Form.Control type="search" defaultValue={filter.Query} placeholder={SearchQueryInput.Placeholder} />
+                </Form.Group>
+            </Form.Row>
         </Form>
     )
 }

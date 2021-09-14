@@ -2,9 +2,10 @@ import { nameof } from "ts-simple-nameof"
 
 import { Setlist } from "mapping"
 import { CreateSetlistAsync, DeleteSetlistAsync, ReadSetlistAsync, UpdateSetlistAsync } from ".."
-import { IFilterSetlistActionProps, IFilterSetlistActionResult, INextLinkActionProps, ISetlist, ISetlistEntityActionProps } from "models"
-import { IsMiminumStringLength, QueryBuilder, FilterBuilder } from "utils"
+import { IFilterSetlistActionProps, IFilterSetlistActionResult, INextLinkActionProps, ISetlist, ISetlistEntityActionProps, ISetlistSong } from "models"
+import { IsMiminumStringLength, QueryBuilder, FilterBuilder, GUID_EMPTY } from "utils"
 
+const SETLISTSONGS = `${nameof<ISetlist>(_ => _.SetlistSongs)}`
 
 export const fetchSetlistCatalogAsync = async (props: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
 
@@ -46,7 +47,7 @@ const GetFilterSetlistActionResult = async (filterQuery: string): Promise<IFilte
 export const addSetlistToSetlistCatalogAsync = async (props: ISetlistEntityActionProps): Promise<ISetlist> =>
     await CreateSetlistAsync(props.value)
 
-    export const editSetlistInCatalogAsync = async (props: ISetlistEntityActionProps): Promise<ISetlist> =>
+export const editSetlistInCatalogAsync = async (props: ISetlistEntityActionProps): Promise<ISetlist> =>
     await UpdateSetlistAsync(props.value)
 
 export const deleteSetlistInCatalogAsync = async (props: ISetlistEntityActionProps): Promise<string> =>
@@ -59,5 +60,29 @@ export const fetchSetlistById = async (id: string): Promise<ISetlist> => {
 
     const setlist = (await GetFilterSetlistActionResult(filter)).Values.get(id) ?? Setlist.EmptySetlist()
     return setlist
+}
+
+export const fetchSetlistsWithSetlistSongsByBandSongId = async ({ filter: Filter }: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
+
+    let query = new QueryBuilder().count()
+
+    const filters: FilterBuilder[] = []
+
+    if (IsMiminumStringLength(Filter.Query)) {
+        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISetlist>(x => x.Title), Filter.Query))
+    }
+
+    if (filters.length) {
+        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
+    }
+
+    query = query.orderBy(`${nameof<ISetlist>(x => x.Title)}`)
+
+    const BANDSONGID = `${nameof<ISetlistSong>(x => x.BandSongId)}`
+    query.expand(`${SETLISTSONGS}($filter= ${BANDSONGID} eq ${Filter.BandSongId ?? GUID_EMPTY})`)
+
+    const filter = query.toQuery()
+
+    return await GetFilterSetlistActionResult(filter)
 }
 

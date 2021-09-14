@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
 
-import { SetlistCatalog } from "mapping";
+import { SetlistCatalog, SetlistSong } from "mapping";
 import { ISetlistCatalog } from "models";
 import { MapHelper } from "utils";
 
@@ -37,6 +37,17 @@ export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
                     Values: action.payload.Values,
                     OData: action.payload.OData
                 }
+            case getType(actions.fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.request):
+                return {
+                    ...state,
+                    Refresh: false
+                }
+            case getType(actions.fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.success):
+                return {
+                    ...state,
+                    Values: action.payload.Values,
+                    OData: action.payload.OData
+                }
             case getType(actions.fetchSetlistCatalogNextLink.success):
                 return {
                     ...state,
@@ -52,6 +63,22 @@ export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
                         .AddAsFirst(action.payload.Id, action.payload)
                         .GetMap()
                 }
+            case getType(actions.addBandSongToSetlistCatalog): {
+
+                const setlist = MapHelper.Create(state.Values)
+                    .GetMap()
+                    .get(action.payload.SetlistId)
+
+                if (!setlist)
+                    return state
+
+                setlist.SetlistSongs.set(action.payload.Id, action.payload)
+
+                return {
+                    ...state,
+                    Values: state.Values.set(setlist.Id, setlist)
+                }
+            }
             case getType(actions.editSetlistInCatalog.success):
                 return {
                     ...state,

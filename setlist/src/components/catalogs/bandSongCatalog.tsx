@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { Col, Row, Navbar, Container } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Col, Row, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
 
 import { INextLinkActionProps } from "models";
 import { FilterBandSongActionProps } from "mapping";
 import { BandSongCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandSongHtmlAttributes";
-import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 
 import { BandSongCatalogProps } from "store/containers/catalogs/BandSongCatalogContainer";
-import { BandSongFilterComponent } from "components/filters";
+import { BandFilterComponent } from "components/filters";
 import BandSongCatalogNodeComponent from "components/nodes/bandSongCatalogNode";
+import AddButton from "components/common/AddButton/addButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
 
     const {
         bandSongCatalog,
+        history,
+
         setBandSongFilter,
         fetchBandSongCatalog,
         fetchBandSongCatalogNextLink,
         setModal,
-        history
     } = props
 
     useEffect(() => {
@@ -44,7 +48,20 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
         setTimeout(() => {
             fetchBandSongCatalogNextLink(actionProps)
         }, 500);
+    }
 
+    const handleShowAddBandSong = () => {
+
+        // setModal({ showModal: true })
+
+        // const type: ModalTypes = ModalTypes.New
+        // const pathName: string = '/bandSongModal'
+
+        // history.push({
+        //     pathname: pathName,
+        //     search: `?$type=${type}`,
+        //     state: { background: history.location }
+        // })
     }
 
     return <div >
@@ -55,37 +72,30 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
                     <ContainerCss >
                         <Row>
                             <Col>
+                            <Header >
+                                    <HeaderTitle>Bands</HeaderTitle>
+
+                                    <HeaderOptions>
+                                        <SearchFilterCss>
+                                            <BandFilterComponent
+                                                filter={bandSongCatalog.Filter}
+                                                setBandFilter={setBandSongFilter}
+                                            />
+                                        </SearchFilterCss>
+                                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                                            <MenuItem value="Options"  >Options*</MenuItem>
+                                            <MenuDivider />
+                                            <MenuHeader>Edit</MenuHeader>
+                                            <MenuItem value="NewBandSong" onClick={handleShowAddBandSong}>New Band</MenuItem>
+                                        </Menu>
+                                    </HeaderOptions>
+                                </Header>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
                                 <NodeListCss id={bandSongCatalogDef.NodeList.ControlId} >
-                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                        <Navbar.Brand >{bandSongCatalog.Title}</Navbar.Brand>
-
-                                        <Navbar.Toggle aria-controls={bandSongCatalogDef.Navbar.ControlId} />
-                                        <Navbar.Collapse id={bandSongCatalogDef.Navbar.ControlId}>
-                                            <Row>
-                                                <Col sm="6">
-                                                    <SongFilterCss>
-                                                        <BandSongFilterComponent
-                                                            bandId={bandSongCatalog.BandId}
-                                                            filter={bandSongCatalog.Filter}
-                                                            setBandSongFilter={setBandSongFilter}
-                                                        />
-                                                    </SongFilterCss>
-                                                </Col>
-                                                <Col sm="6">
-                                                    {/* <Form onChange={handleShowAddBand}>
-                                                                <Form.Row>
-                                                                    <Form.Group as={Col} controlId={bandSongCatalogDef.ShowAddBandCheckBox.ControlId}>
-                                                                        <Form.Check type="switch" checked={showModal} label={bandSongCatalogDef.ShowAddBandCheckBox.Label} />
-                                                                    </Form.Group>
-                                                                </Form.Row>
-                                                            </Form> */}
-
-                                                </Col>
-                                            </Row>
-                                        </Navbar.Collapse>
-
-                                    </Navbar>
-
+                                    {bandSongCatalog.OData.Count}
                                     <InfiniteScroll
                                         dataLength={bandSongCatalog.Values.size}
                                         next={handleScrollDown}
@@ -109,7 +119,7 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
                                         ))}
                                     </InfiniteScroll>
                                 </NodeListCss>
-                                {bandSongCatalog.OData.Count}
+                                <AddButton onClick={handleShowAddBandSong} />
                             </Col>
                         </Row>
                     </ContainerCss>

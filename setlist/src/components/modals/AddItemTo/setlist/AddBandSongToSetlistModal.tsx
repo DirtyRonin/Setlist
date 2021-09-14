@@ -1,133 +1,188 @@
-import React, { useEffect, useState } from "react";
-import { Col, Row, Navbar, Container } from "react-bootstrap";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { nameof } from "ts-simple-nameof";
+import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
+import { History } from "history";
 
 import { AddBandSongToSetlistHtmlAttributesConfiguration } from "configuration";
-import { IBandSong, ISetlist, ISetlistSong } from "models";
-import { ReadSetlistAsync } from "service";
-import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
+import { IBandSong, IFilterSetlistActionProps, ISetlist, ModalTypes } from "models";
+import { fetchBandSongById, fetchSetlistsWithSetlistSongsByBandSongId, ReadSetlistAsync } from "service";
+import { Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 
 import Node from "./node/AddBandSongToSetlistModalNode"
 
-export interface IAddBandSongToSetlistModalComponent {
-    bandSong: IBandSong
+
+import { IsFilterableString, mapQuery } from "utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import TextField from "@material-ui/core/TextField";
+import { BandSong, FilterSetlistActionProps } from "mapping";
+import { UseModalStyles, ActionButton } from 'styles/modalStyles';
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import AddButton from "components/common/AddButton/addButton";
+
+interface IProps {
+    history: History
+    handleClose: () => void
 }
 
-const AddBandSongToSetlistModalComponent = (props: IAddBandSongToSetlistModalComponent): JSX.Element => {
+const AddBandSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.Element => {
 
-    const { bandSong } = props
+
 
     const TITLE = 'Add BandSong To Setlist'
     const ID = `${TITLE}_id`
 
-    const [setlist, setSetlist] = useState<ISetlist[]>([]);
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [bandSong, setBandSong] = useState<IBandSong>(BandSong.EmptyBandSong());
+
+    const [setlists, setSetlists] = useState<ISetlist[]>([]);
     const [count, setCount] = useState(0);
     const [nextLink, setNextLink] = useState('');
 
-    const generateODataQuery = () => {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [currentFilter, setFilter] = useState<IFilterSetlistActionProps>(FilterSetlistActionProps.Default())
 
-        // $expand=setlistsongs($filter=bandsongid eq d0b60d82-96b7-411b-b6f0-b03a668fbf1f)
 
-        const SETLISTSONGS = `${nameof<ISetlist>(_ => _.SetlistSongs)}`
-        const BANDSONGID = `${nameof<ISetlistSong>(x => x.BandSongId)}`
-
-        return `?$expand=${SETLISTSONGS}($filter= ${BANDSONGID} eq ${bandSong.Id})`
-    }
 
     useEffect(() => {
-        const url = generateODataQuery()
-        ReadSetlistAsync(url).then(
-            resolve => {
-                setCount(resolve.Count);
-                setSetlist(resolve.Values);
-                setNextLink(resolve.NextLink);
+        const query = history.location.search ?? ''
+        if (query) {
+            const mapped = mapQueryRoute(query)
+            if (mapped.id) {
+                setIsLoading(true)
+                fetchBandSongById(mapped.id).then(result => {
+                    setBandSong(result)
+
+                    const newFilter = FilterSetlistActionProps.Default(result.Id)
+                    setFilter(newFilter)
+                    fetchSetlists(newFilter)
+                })
             }
-        ).catch().finally()
+        }
+
+
     }, []);
+
+    const mapQueryRoute = (query: String) => {
+        const args = mapQuery(query)
+        const _id = args.get('id') ?? undefined
+
+        return { id: _id }
+    }
 
 
     const addBandSongToSetlistDef = AddBandSongToSetlistHtmlAttributesConfiguration;
 
+    const fetchSetlists = (filter: IFilterSetlistActionProps): void => {
+        fetchSetlistsWithSetlistSongsByBandSongId(filter).then(
+            resolve => {
+                setSetlists(Array.from(resolve.Values.values()))
+                setCount(resolve.OData.Count);
+                setNextLink(resolve.OData.NextLink);
+                setIsLoading(false)
+            }
+        ).catch().finally()
+    }
+
     const handleScrollDown = () => {
         ReadSetlistAsync(nextLink).then(
             resolve => {
+                setSetlists(setlists.concat(Array.from(resolve.Values.values())));
                 setCount(resolve.Count);
-                setSetlist(setlist.concat(resolve.Values));
                 setNextLink(resolve.NextLink);
             }
         );
     }
 
+    const OnChangeQuery = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        event.preventDefault()
+
+        const value = event.target.value
+        const newFilter: IFilterSetlistActionProps = { ...currentFilter, filter: { ...currentFilter.filter, Query: value } }
+
+        const refresh = IsFilterableString(currentFilter.filter.Query, newFilter.filter.Query) ? true : false
+
+        setSearchQuery(value)
+
+        if (refresh) {
+            setFilter(newFilter)
+            fetchSetlists(newFilter)
+        }
+
+    }
+
+    const handleShowAddSetlist = () => {
+
+        // setModal({ showModal: true })
+
+        const type: ModalTypes = ModalTypes.New
+        const pathName: string = '/setlistModal'
+
+
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}`,
+            state: { background: history?.location?.state?.background ?? undefined }
+        })
+    }
+
+
+    const Class = UseModalStyles()
     return (
+        <div className={Class.root}>
+            <DialogContent>
+                <Header >
+                    <HeaderTitle>`Add '{bandSong.Song.Title}' to...`</HeaderTitle>
+                    <HeaderOptions>
+                        <SearchFilterCss>
+                            <TextField
 
-        <Container fluid>
-            <Row>
-                <Col >
-                    <ContainerCss data-testid={ID}>
-                        <Row>
-                            <Col>
-                                <NodeListCss id={addBandSongToSetlistDef.NodeList.ControlId} >
-                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                        <Navbar.Brand >{`${TITLE}`}</Navbar.Brand>
+                                autoFocus
+                                fullWidth
+                                margin="normal"
+                                id='AddBandSongToSetlistModal'
+                                value={searchQuery}
+                                placeholder='Search...'
+                                onChange={OnChangeQuery}
+                                type='search'
+                            />
+                        </SearchFilterCss>
+                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                            <MenuItem value="Options"  >Options*</MenuItem>
+                            <MenuDivider />
+                            <MenuHeader>Edit</MenuHeader>
+                            <MenuItem value="NewSetlist" onClick={handleShowAddSetlist}>New Setlist</MenuItem>
+                        </Menu>
+                    </HeaderOptions>
+                </Header>
+                {!isLoading && <NodeListCss id={addBandSongToSetlistDef.NodeList.ControlId} >
+                    {count?.toString()}
+                    <InfiniteScroll
+                        dataLength={setlists.length}
+                        next={handleScrollDown}
+                        hasMore={setlists.length < count}
+                        loader={<h4>Loading...</h4>}
+                        scrollableTarget={addBandSongToSetlistDef.NodeList.ControlId}
+                    >
+                        {Array.from(setlists.values()).map((setlist, index) => (
+                            <Node
+                                setlist={setlist}
+                                bandSong={bandSong}
+                                key={index}
+                            />
+                        ))}
+                    </InfiniteScroll>
+                </NodeListCss>}
+                <AddButton onClick={handleShowAddSetlist} />
+            </DialogContent>
 
-                                        <Navbar.Toggle aria-controls={addBandSongToSetlistDef.Navbar.ControlId} />
-                                        <Navbar.Collapse id={addBandSongToSetlistDef.Navbar.ControlId}>
-                                            <Row>
-                                                <Col sm="6">
-                                                    <SongFilterCss>
-                                                        {/* <BandFilterComponent
-                                                            CatalogId={bandcatalog.Id}
-                                                            Filter={bandcatalog.Filter}
-                                                            setBandFilter={setBandFilter}
-                                                        /> */}
-                                                    </SongFilterCss>
-                                                </Col>
-                                                <Col sm="6">
-                                                    {/* <Form onChange={handleShowAddBand}>
-                                                        <Form.Row>
-                                                            <Form.Group as={Col} controlId={addBandSongToSetlistDef.ShowAddBandCheckBox.ControlId}>
-                                                                <Form.Check type="switch" checked={showModal} label={addBandSongToSetlistDef.ShowAddBandCheckBox.Label} />
-                                                            </Form.Group>
-                                                        </Form.Row>
-                                                    </Form> */}
-
-                                                </Col>
-                                            </Row>
-                                        </Navbar.Collapse>
-
-                                    </Navbar>
-
-                                    <InfiniteScroll
-                                        dataLength={setlist.length}
-                                        next={handleScrollDown}
-                                        hasMore={setlist.length < count}
-                                        loader={<h4>Loading...</h4>}
-                                        endMessage={
-                                            <p style={{ textAlign: 'center' }}>
-                                                <b>Yay! You have seen it all</b>
-                                            </p>
-                                        }
-                                        scrollableTarget={addBandSongToSetlistDef.NodeList.ControlId}
-                                    >
-                                        {setlist.map((setlist, index) => (
-                                            <Node
-                                                setlist={setlist}
-                                                bandSong={bandSong}
-                                                key={index}
-                                            />
-                                        ))}
-                                    </InfiniteScroll>
-                                </NodeListCss>
-                                {count?.toString()}
-                            </Col>
-                        </Row>
-                    </ContainerCss>
-                </Col>
-            </Row>
-        </Container>
-
-    );
+            <DialogActions>
+                <ActionButton onClick={handleClose}>Done</ActionButton>
+            </DialogActions>
+        </div>
+    )
 };
 
 export default AddBandSongToSetlistModalComponent;
