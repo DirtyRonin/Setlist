@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
-import AsyncButtonComponent, { ButtonState } from "components/common/asyncButton";
+import AsyncButtonComponent from "components/common/asyncButton";
 import { Song, SetlistSong } from "mapping";
 import { ISetlist, ISetlistSong, IBandSong } from "models";
 import { CreateSetlistSongAsync } from "service";
@@ -24,7 +24,7 @@ const AddSongToSetlistModalNode = (props: IAddBandSongToSetlistModalNode) => {
         setlistId: setlist.Id
     })
 
-    const IsSetlistSongExisting: ButtonState = setlist.SetlistSongs?.size > 0 ? 'Already Existing' : 'INITIAL'
+    const IsSetlistSongExisting: boolean = setlist.SetlistSongs?.size > 0 
 
     return (
 
@@ -47,7 +47,7 @@ const AddSongToSetlistModalNode = (props: IAddBandSongToSetlistModalNode) => {
                         </Row>
                     </Col >
                     <Col xs="2">
-                        <AsyncButtonComponent asyncExecute={CreateSetlistSongAsync} value={CreateNewSetlistSong} defaultState={IsSetlistSongExisting} />
+                        <AsyncButtonComponent asyncExecute={CreateSetlistSongAsync} value={CreateNewSetlistSong} isExisting={IsSetlistSongExisting} />
                     </Col>
                 </Row>
             </Container>

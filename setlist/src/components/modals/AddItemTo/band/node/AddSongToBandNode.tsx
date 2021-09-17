@@ -36,7 +36,7 @@ const AddSongToBandNode = (props: IAddSongToBandNodeProps) => {
                     <Col xs="4">
                         <div>
                             <Col>
-                                <AsyncButtonComponent asyncExecute={CreateBandSongAsync} value={CreateNewBandSong} defaultState={IsBandsongExisting} />
+                                <AsyncButtonComponent asyncExecute={CreateBandSongAsync} value={CreateNewBandSong} isExisting={IsBandsongExisting} />
                             </Col>
                         </div>
                     </Col>

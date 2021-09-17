@@ -58,8 +58,8 @@ const ModalWrapper = ({
 
         <PrivateRoute path="/AddSongToSetlist">
             <AddSongToSetlistModalComponent
-                routeQuery={query}
-                handleCloseModal={handleClose}
+               handleClose={handleClose}
+               history={history}
             />
         </PrivateRoute>
 

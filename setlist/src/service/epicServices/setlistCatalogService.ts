@@ -62,7 +62,7 @@ export const fetchSetlistById = async (id: string): Promise<ISetlist> => {
     return setlist
 }
 
-export const fetchSetlistsWithSetlistSongsByBandSongId = async ({ filter: Filter }: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
+export const fetchSetlistsWithFilteredExpands = async ({ filter: Filter }: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
 
     let query = new QueryBuilder().count()
 
@@ -80,6 +80,9 @@ export const fetchSetlistsWithSetlistSongsByBandSongId = async ({ filter: Filter
 
     const BANDSONGID = `${nameof<ISetlistSong>(x => x.BandSongId)}`
     query.expand(`${SETLISTSONGS}($filter= ${BANDSONGID} eq ${Filter.BandSongId ?? GUID_EMPTY})`)
+
+    const SONGID = `${nameof<ISetlistSong>(x => x.SongId)}`
+    query.expand(`${SETLISTSONGS}($filter= ${SONGID} eq ${Filter.SongId ?? GUID_EMPTY})`)
 
     const filter = query.toQuery()
 

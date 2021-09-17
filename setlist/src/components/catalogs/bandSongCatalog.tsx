@@ -73,7 +73,7 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
                         <Row>
                             <Col>
                             <Header >
-                                    <HeaderTitle>Bands</HeaderTitle>
+                                    <HeaderTitle>Band Songs</HeaderTitle>
 
                                     <HeaderOptions>
                                         <SearchFilterCss>
@@ -86,7 +86,7 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
                                             <MenuItem value="Options"  >Options*</MenuItem>
                                             <MenuDivider />
                                             <MenuHeader>Edit</MenuHeader>
-                                            <MenuItem value="NewBandSong" onClick={handleShowAddBandSong}>New Band</MenuItem>
+                                            <MenuItem value="NewBandSong" onClick={handleShowAddBandSong}>Add Song</MenuItem>
                                         </Menu>
                                     </HeaderOptions>
                                 </Header>

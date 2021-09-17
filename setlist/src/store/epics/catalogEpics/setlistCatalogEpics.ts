@@ -7,7 +7,7 @@ import { isActionOf } from "typesafe-actions";
 import { SetlistCatalogActions } from "store/reducers/catalogReducers/setlistCatalogReducer"
 
 import { fetchSetlistCatalog, fetchSetlistCatalogNextLink, fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId } from "store";
-import { addSetlistToSetlistCatalogAsync,  deleteSetlistInCatalogAsync,  editSetlistInCatalogAsync,  fetchSetlistCatalogAsync, fetchSetlistCatalogNextLinkAsync, fetchSetlistsWithSetlistSongsByBandSongId } from "service";
+import { addSetlistToSetlistCatalogAsync,  deleteSetlistInCatalogAsync,  editSetlistInCatalogAsync,  fetchSetlistCatalogAsync, fetchSetlistCatalogNextLinkAsync, fetchSetlistsWithFilteredExpands } from "service";
 import { addSetlistToCatalog, deleteSetlistInCatalog, editSetlistInCatalog } from "store/actions/";
 
 const fetchSetlistCatalogsEpic: Epic<SetlistCatalogActions, SetlistCatalogActions, any> = (action$) =>
@@ -26,7 +26,7 @@ const fetchSetlistCatalogsExpandedByBandSongIdEpic: Epic<SetlistCatalogActions, 
     action$.pipe(
         filter(isActionOf(fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.request)),
         switchMap(action =>
-            from(fetchSetlistsWithSetlistSongsByBandSongId(action.payload)).pipe(
+            from(fetchSetlistsWithFilteredExpands(action.payload)).pipe(
                 map(fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.success),
                 catchError((error: Error) => of(fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.cancel))))

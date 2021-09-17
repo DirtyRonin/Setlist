@@ -8,6 +8,7 @@ import { ContentWrapper, Wrapper } from "styles";
 import { AppProps } from "store";
 
 import '@szhsin/react-menu/dist/index.css';
+import DashBoard from "./pages/dashboard";
 
 const BandCatalogContainer = React.lazy(() => import('store/containers/catalogs/BandCatalogContainer'))
 const SongCatalogContainer = React.lazy(() => import('store/containers/catalogs/SongCatalogContainer'))
@@ -54,6 +55,7 @@ export const App = (props: AppProps): JSX.Element => {
                         <PrivateRoute exact path='/'>
                             <Sidebar />
                             <ContentWrapper>
+                                <DashBoard />
                             </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path='/songs'>

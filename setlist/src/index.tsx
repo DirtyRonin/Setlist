@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Parse from "parse"
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,6 +12,8 @@ import { initFontAwesomeLib } from "./styles";
 import history from "store/history";
 
 initFontAwesomeLib()
+Parse.initialize('xso9wyIPU7eDc6fcDvwLQpTDPhmCPRpoP10mu5oR','3fvQOFEiORwyymI9yG5eihqg1FXwArqeczKiLvJP')
+Parse.serverURL = 'https://parseapi.back4app.com/'
 
 const start = () => storeSetup(history);
 
