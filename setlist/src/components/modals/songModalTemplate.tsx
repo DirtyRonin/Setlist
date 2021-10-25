@@ -23,7 +23,7 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
 
     const [isLoading, setLoading] = useState(false)
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
-    const [id, setId] = useState(GUID_EMPTY)
+    const [id, setId] = useState(0)
 
     const [artist, setArtist] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
     const [title, setTitle] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
@@ -31,7 +31,7 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
 
     useEffect(() => {
         if (query) {
-            const mapped = mapQueryRoute(query)
+            const mapped = mapQuery(query)
 
             setType(mapped.type)
             setId(mapped.id)
@@ -41,24 +41,14 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
                 setLoading(true)
 
                 fetchSongById(mapped.id).then(result => {
-                    setArtist({ HasError: false, Message: '', Value: result.Artist })
-                    setTitle({ HasError: false, Message: '', Value: result.Title })
-                    setGenre({ HasError: false, Message: '', Value: result.Genre })
+                    setArtist({ HasError: false, Message: '', Value: result.artist })
+                    setTitle({ HasError: false, Message: '', Value: result.title })
+                    setGenre({ HasError: false, Message: '', Value: result.genre })
                     setLoading(false)
                 })
             }
         }
     }, [])
-
-    //query: "?$type=Read&$id=80968fa2-312c-469f-9115-619d2fef06d5"
-
-    const mapQueryRoute = (query: String) => {
-        const args = mapQuery(query)
-        const _type = GetModalTypeByString(args.get('type') ?? '')
-        const _id = args.get('id') ?? ''
-
-        return { type: _type, id: _id }
-    }
 
     const htmlConfig = SongModalHtmlAttributesConfiguration;
     const isStringInvalid = (value: string): boolean => !value
@@ -110,11 +100,11 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
             const executeModalAction = songModalActionsProvider[type]
             executeModalAction({
                 value: {
-                    ...Song.EmptySong(),
-                    Title: title.Value,
-                    Artist: artist.Value,
-                    Genre: genre.Value,
-                    Id: id
+                    ...Song.CreateEmpty(),
+                    title: title.Value,
+                    artist: artist.Value,
+                    genre: genre.Value,
+                    id: id
                 }
             })
             handleOnClose()

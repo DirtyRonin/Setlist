@@ -6,7 +6,7 @@ import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
 
 import { INextLinkActionProps, ModalTypes } from "models";
 import { BandCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandHtmlAttributes";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss, InfinitScrollCss } from "styles";
 import { FilterBandActionProps } from "mapping";
 import { BandCatalogProps } from "store/containers/catalogs/BandCatalogContainer";
 import BandCatalogNodeComponent from "components/nodes/bandCatalogNode";
@@ -42,7 +42,7 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
     const bandCatalogDef = BandCatalogHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        const { OData } = bandcatalog
+        const { Meta: OData } = bandcatalog
         const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
@@ -67,65 +67,68 @@ const BandCatalogComponent = (props: BandCatalogProps): JSX.Element => {
 
 
     return (
+        <div>
 
-        <Container fluid>
-            <Row>
-                <Col >
-                    <ContainerCss >
-                        <Row>
-                            <Col>
-                                <Header >
-                                    <HeaderTitle>Bands</HeaderTitle>
+            <Container fluid>
+                <Row>
+                    <Col >
+                        <ContainerCss >
+                            <Row>
+                                <Col>
+                                    <Header >
+                                        <HeaderTitle>Bands</HeaderTitle>
 
-                                    <HeaderOptions>
-                                        <SearchFilterCss>
-                                            <BandFilterComponent
-                                                filter={bandcatalog.Filter}
-                                                setBandFilter={setBandFilter}
-                                            />
-                                        </SearchFilterCss>
-                                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
-                                            <MenuItem value="Options"  >Options*</MenuItem>
-                                            <MenuDivider />
-                                            <MenuHeader>Edit</MenuHeader>
-                                            <MenuItem value="NewBand" onClick={handleShowAddBand}>New Band</MenuItem>
-                                        </Menu>
-                                    </HeaderOptions>
-                                </Header>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <NodeListCss id={bandCatalogDef.NodeList.ControlId} >
-                                    {bandcatalog.OData.Count}
-                                    <InfiniteScroll
-                                        dataLength={bandcatalog.Values.size}
-                                        next={handleScrollDown}
-                                        hasMore={bandcatalog.Values.size < bandcatalog.OData.Count}
-                                        loader={<h4>Loading...</h4>}
-                                        scrollableTarget={bandCatalogDef.NodeList.ControlId}
-                                    >
-                                        {Array.from(bandcatalog.Values.values()).map((band, index) => (
-                                            <BandCatalogNodeComponent
-                                                setModal={setModal}
-                                                setBandIdForBandSong={setBandIdForBandSong}
-                                                history={history}
+                                        <HeaderOptions>
+                                            <SearchFilterCss>
+                                                <BandFilterComponent
+                                                    filter={bandcatalog.Filter}
+                                                    setBandFilter={setBandFilter}
+                                                />
+                                            </SearchFilterCss>
+                                            <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                                                <MenuItem value="Options"  >Options*</MenuItem>
+                                                <MenuDivider />
+                                                <MenuHeader>Edit</MenuHeader>
+                                                <MenuItem value="NewBand" onClick={handleShowAddBand}>New Band</MenuItem>
+                                            </Menu>
+                                        </HeaderOptions>
+                                    </Header>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <NodeListCss id={bandCatalogDef.NodeList.ControlId} >
+                                        {bandcatalog.Meta.Count}
+                                        <InfiniteScroll
+                                            dataLength={bandcatalog.Values.length}
+                                            next={handleScrollDown}
+                                            hasMore={bandcatalog.Values.length < bandcatalog.Meta.Count}
+                                            loader={<h4>Loading...</h4>}
+                                            scrollableTarget={bandCatalogDef.NodeList.ControlId}
+                                            style={InfinitScrollCss}
+                                        >
+                                            {Array.from(bandcatalog.Values.values()).map((band, index) => (
+                                                <BandCatalogNodeComponent
+                                                    setModal={setModal}
+                                                    setBandIdForBandSong={setBandIdForBandSong}
+                                                    history={history}
 
-                                                key={band.Id}
-                                                band={band}
-                                                index={index}
-                                            />
-                                        ))}
-                                    </InfiniteScroll>
-                                </NodeListCss>
-                                <AddButton onClick={handleShowAddBand} />
-                            </Col>
-                        </Row>
-                    </ContainerCss>
-                </Col>
-            </Row>
-        </Container>
+                                                    key={band.id}
+                                                    band={band}
+                                                    index={index}
+                                                />
+                                            ))}
+                                        </InfiniteScroll>
+                                    </NodeListCss>
+                                    <AddButton onClick={handleShowAddBand} />
+                                </Col>
+                            </Row>
+                        </ContainerCss>
+                    </Col>
+                </Row>
+            </Container>
 
+        </div>
     );
 };
 

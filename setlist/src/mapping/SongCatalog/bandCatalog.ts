@@ -1,9 +1,9 @@
-import { CatalogTypes, IBandCatalog, IBand, ODataProps, IBandFilter, IBandCatalogOptions } from "../../models";
+import { CatalogTypes, IBandCatalog, IBand, MetaProps, IBandFilter, IBandCatalogOptions } from "../../models";
 import { FilterBandActionProps } from "../actionsProps";
 import { CatalogBase } from "./catalogBase";
 
 export class BandCatalog extends CatalogBase<IBand, IBandFilter, IBandCatalogOptions> implements IBandCatalog {
-    private constructor(filter: IBandFilter, oData: ODataProps, options: IBandCatalogOptions, refresh?: boolean, bands?: Map<string, IBand>) {
+    private constructor(filter: IBandFilter, oData: MetaProps, options: IBandCatalogOptions, refresh?: boolean, bands?: IBand[]) {
         super(
             BandCatalog.CatalogId,
             CatalogTypes["Band Catalog"].toString(),
@@ -21,27 +21,27 @@ export class BandCatalog extends CatalogBase<IBand, IBandFilter, IBandCatalogOpt
         options: IBandCatalogOptions = {},
     ): BandCatalog =>
         new BandCatalog(
-            FilterBandActionProps.Default(BandCatalog.CatalogId).filter,
-            { NextLink: "", Count: 0, Context: "" },
+            FilterBandActionProps.Default({}).filter,
+            { NextLink: "", Count: 0 },
             options,
             refresh,
-            new Map<string, IBand>()
+            []
         )
 
     public static Create = (): IBandCatalog => BandCatalog.Default(false)
 
+
+    //deprecated ? 
     public static CreateAndUpdate = (options?: IBandCatalogOptions): IBandCatalog =>
         BandCatalog.Default(true, options)
 
-    public static AddValues(bandCatalog: IBandCatalog, addBands: IBand[]): IBandCatalog {
-        const currentCatalog = { ...bandCatalog };
-        addBands.forEach(newBand => currentCatalog.Values.set(newBand.Id, newBand))
+    public static AddValues = (bandCatalog: IBandCatalog, addBands: IBand[]): IBandCatalog => (
+        { ...bandCatalog, Values: bandCatalog.Values.concat(addBands) })
 
-        return currentCatalog
-    }
 
-    public static UpdateOData(bandCatalog: IBandCatalog, oData: ODataProps): IBandCatalog {
-        return { ...bandCatalog, OData: oData }
+
+    public static UpdateOData(bandCatalog: IBandCatalog, oData: MetaProps): IBandCatalog {
+        return { ...bandCatalog, Meta: oData }
     }
 
     public static UpdateFilter(bandCatalog: IBandCatalog, filter: IBandFilter): IBandCatalog {

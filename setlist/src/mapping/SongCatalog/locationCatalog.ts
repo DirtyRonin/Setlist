@@ -1,10 +1,10 @@
 import { FilterLocationActionProps } from "mapping";
-import { CatalogTypes, ILocation, ILocationCatalog, ILocationCatalogOptions, ILocationFilter, ODataProps } from "models";
+import { CatalogTypes, ILocation, ILocationCatalog, ILocationCatalogOptions, ILocationFilter, MetaProps } from "models";
 import { CatalogBase } from "mapping/SongCatalog/catalogBase";
 
 export class LocationCatalog extends CatalogBase<ILocation, ILocationFilter, ILocationCatalogOptions> implements ILocationCatalog {
 
-    private constructor({ filter, oData, options, refresh, locations }: { filter: ILocationFilter; oData: ODataProps; options: ILocationCatalogOptions; refresh?: boolean; locations?: Map<string, ILocation>; }) {
+    private constructor({ filter, oData, options, refresh, locations }: { filter: ILocationFilter; oData: MetaProps; options: ILocationCatalogOptions; refresh?: boolean; locations?: ILocation[]; }) {
         super(
             LocationCatalog.CatalogId,
             CatalogTypes["Location Catalog"].toString(),
@@ -22,10 +22,10 @@ export class LocationCatalog extends CatalogBase<ILocation, ILocationFilter, ILo
         new LocationCatalog(
             {
                 filter: FilterLocationActionProps.Default().filter,
-                oData: { NextLink: "", Count: 0, Context: "" },
+                oData: { NextLink: "", Count: 0 },
                 options,
                 refresh,
-                locations: new Map<string, ILocation>(),
+                locations: [],
             })
 
     public static Create = (): ILocationCatalog => LocationCatalog.Default({ refresh: false })

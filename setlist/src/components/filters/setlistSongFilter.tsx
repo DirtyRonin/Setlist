@@ -1,11 +1,10 @@
 import React from "react";
-import { FormControlProps, Form } from "react-bootstrap";
+import { FormControlProps, Form, Col } from "react-bootstrap";
 
 import { FilterSetlistSongHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistSongHtmlAttributes";
 import { FilterSetlistSongActionProps } from "mapping";
 import { IFilterSetlistSongActionProps, ISetlistSongFilter } from "models";
 import { IsFilterableString } from "utils";
-import { SongFilterTemplate } from "components/filters/songFilterTemplate";
 
 export interface ISetlistSongFilterProps {
     setlistId: string;
@@ -16,7 +15,7 @@ export interface ISetlistSongFilterProps {
 export const SetlistSongFilterComponent = (props: ISetlistSongFilterProps) => {
     const { filter, setlistId, setSetlistSongFilter } = props;
 
-    const htmlConfig = FilterSetlistSongHtmlAttributesConfiguration
+    const { SearchQueryInput } = FilterSetlistSongHtmlAttributesConfiguration
 
     const handleFilter = (event: React.FormEvent<FormControlProps>) => {
         event.preventDefault();
@@ -25,7 +24,7 @@ export const SetlistSongFilterComponent = (props: ISetlistSongFilterProps) => {
 
         const _filter: ISetlistSongFilter = {
             ...filter,
-            Query: elements[htmlConfig.SearchTitleInput.ControlId].value,
+            Query: elements[SearchQueryInput.ControlId].value,
             SetlistId: setlistId
         }
 
@@ -40,7 +39,11 @@ export const SetlistSongFilterComponent = (props: ISetlistSongFilterProps) => {
 
     return (
         <Form onChange={handleFilter} >
-            {SongFilterTemplate(htmlConfig, filter)}
+            <Form.Row>
+                <Form.Group as={Col} controlId={SearchQueryInput.ControlId}>
+                    <Form.Control type="search" defaultValue={filter.Query} placeholder={SearchQueryInput.Placeholder} />
+                </Form.Group>
+            </Form.Row>
         </Form>
     )
 }

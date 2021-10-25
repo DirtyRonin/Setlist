@@ -1,8 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Col, Row, Navbar, Container, Modal, Button } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
-import { nameof } from "ts-simple-nameof";
 import { History } from "history";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,9 +9,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 
 import { AddSongToSetlistHtmlAttributesConfiguration } from "configuration";
-import { ISong, IBandSong, ISetlist, IFilterSetlistActionProps, ModalTypes } from "models";
+import { ISetlist, IFilterSetlistActionProps, ModalTypes, setlistModalActions } from "models";
 import { fetchSetlistsWithFilteredExpands, fetchSongById, ReadSetlistAsync } from "service";
-import { Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
+import { Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import { UseModalStyles, ActionButton } from 'styles/modalStyles';
 
 import { FilterSetlistActionProps, Song } from "mapping";
@@ -22,6 +20,7 @@ import { IsFilterableString } from "utils";
 import AddButton from "components/common/AddButton/addButton";
 
 import Node from "./node/AddSongToSetlistModalNode"
+import { GetSetlistsRequestAsync } from "api/setlistApi";
 
 interface IProps {
     history: History
@@ -32,7 +31,7 @@ const AddSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.E
 
     const [isLoading, setLoading] = useState(false)
 
-    const [song, setSong] = useState(Song.EmptySong());
+    const [song, setSong] = useState(Song.CreateEmpty());
 
     const [setlists, setSetlists] = useState<ISetlist[]>([]);
     const [count, setCount] = useState(0);
@@ -44,13 +43,13 @@ const AddSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.E
     useEffect(() => {
         const query = history.location.search ?? ''
         if (query) {
-            const mapped = mapQueryRoute(query)
+            const mapped = mapQuery(query)
             if (mapped.id) {
                 setLoading(true)
                 fetchSongById(mapped.id).then(result => {
                     setSong(result)
 
-                    const newFilter = FilterSetlistActionProps.Default({ songId: result.Id })
+                    const newFilter = FilterSetlistActionProps.Default({ songId: result.id })
                     setFilter(newFilter)
                     fetchSetlists(newFilter)
                 })
@@ -60,21 +59,14 @@ const AddSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.E
 
     }, []);
 
-    const mapQueryRoute = (query: String) => {
-        const args = mapQuery(query)
-        const _id = args.get('id') ?? undefined
-
-        return { id: _id }
-    }
-
     const htmlConfig = AddSongToSetlistHtmlAttributesConfiguration;
 
     const fetchSetlists = (filter: IFilterSetlistActionProps): void => {
         fetchSetlistsWithFilteredExpands(filter).then(
             resolve => {
-                setSetlists(Array.from(resolve.Values.values()))
-                setCount(resolve.OData.Count);
-                setNextLink(resolve.OData.NextLink);
+                setSetlists(resolve.Values)
+                setCount(resolve.Meta.Count);
+                setNextLink(resolve.Meta.NextLink);
                 setLoading(false)
             }
         ).catch().finally()
@@ -82,7 +74,7 @@ const AddSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.E
 
     const handleScrollDown = () => {
         setLoading(true)
-        ReadSetlistAsync(nextLink).then(
+        GetSetlistsRequestAsync(nextLink).then(
             resolve => {
                 setSetlists(setlists.concat(resolve.Values));
                 setCount(resolve.Count);
@@ -111,9 +103,6 @@ const AddSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.E
     }
 
     const handleShowAddSetlist = () => {
-
-        // setModal({ showModal: true })
-
         const type: ModalTypes = ModalTypes.New
         const pathName: string = '/setlistModal'
 
@@ -131,14 +120,14 @@ const AddSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.E
         <div className={Class.root}>
             <DialogContent>
                 <Header >
-                    <HeaderTitle>`Add '{song.Title}' to...`</HeaderTitle>
+                    <HeaderTitle>`Add '{song.title}' to...`</HeaderTitle>
                     <HeaderOptions>
                         <SearchFilterCss>
                             <TextField
                                 autoFocus
                                 fullWidth
                                 margin="normal"
-                                id='AddBandSongToSetlistModal'
+                                id='AddSongToSetlistModal'
                                 value={searchQuery}
                                 placeholder='Search...'
                                 onChange={OnChangeQuery}
@@ -161,8 +150,9 @@ const AddSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.E
                         hasMore={setlists.length < count}
                         loader={<h4>Loading...</h4>}
                         scrollableTarget={htmlConfig.NodeList.ControlId}
+                        style={InfinitScrollCss}
                     >
-                        {Array.from(setlists.values()).map((setlist, index) => (
+                        {setlists.map((setlist, index) => (
                             <Node
                                 setlist={setlist}
                                 song={song}
@@ -182,5 +172,3 @@ const AddSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.E
 };
 
 export default AddSongToSetlistModalComponent;
-
-

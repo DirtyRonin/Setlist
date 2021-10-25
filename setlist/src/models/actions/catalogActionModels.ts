@@ -1,4 +1,4 @@
-import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter,  CatalogTypes, DisplayIn, ODataProps, ISetlistFilter, ISetlistSongFilter, ILocationFilter, ICustomEventFilter } from "..";
+import { ISongFilter, ISong, IBandFilter, IBand, IBandSong, IBandSongFilter,  CatalogTypes, DisplayIn, MetaProps, ISetlistFilter, ISetlistSongFilter, ILocationFilter, ICustomEventFilter } from "..";
 import { ICustomEvent, ILocation, ISetlist, ISetlistSong } from "../entity";
 
 interface IFilterActionPropsBase<T> {
@@ -50,7 +50,7 @@ export interface IStatusSongCatalogActionProps extends IStatusCatalogActionProps
 export interface IStatusBandCatalogActionProps extends IStatusCatalogActionProps { }
 
 export interface IStatusBandSongCatalogActionProps extends IStatusCatalogActionProps {
-    bandId: string
+    bandId: number
 }
 
 export interface INextLinkActionProps {
@@ -58,8 +58,8 @@ export interface INextLinkActionProps {
 }
 
 export interface IFilterActionResultBase<T> {
-    Values: Map<string, T>;
-    OData: ODataProps;
+    Values: T[];
+    Meta: MetaProps;
 }
 
 export interface IFilterSongActionResult extends IFilterActionResultBase<ISong> { }

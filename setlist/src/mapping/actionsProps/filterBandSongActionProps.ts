@@ -10,28 +10,20 @@ export class FilterBandSongActionProps implements IFilterBandSongActionProps {
         this.refresh = refresh
     }
 
-    public static Default(bandId: string): IFilterBandSongActionProps {
+    public static Create = ({ filter, refresh }: { filter: IBandSongFilter; refresh: boolean; }): IFilterBandSongActionProps =>
+        new FilterBandSongActionProps({ filter, refresh })
 
-        const filter: IBandSongFilter = {
-            Query: "",
-            BandId: bandId,
-            Evergreen:false,
-            Nineties:false
-        }
+    public static Default = (bandId: number): IFilterBandSongActionProps =>
+        FilterBandSongActionProps.Create({
+            filter: {
+                Query: "",
+                bandId: bandId,
+                Evergreen: false,
+                Nineties: false
+            }, refresh: true
+        })
 
-        return FilterBandSongActionProps.Create({ filter, refresh: true })
-    }
+    public static CreateFromCatalog = ({ Filter, Refresh, bandId: BandId }: IBandSongCatalog) =>
+        FilterBandSongActionProps.Create({ filter: { ...Filter, bandId: BandId }, refresh: Refresh })
 
-    public static Create({ filter, refresh }: { filter: IBandSongFilter; refresh: boolean; }): IFilterBandSongActionProps {
-        return new FilterBandSongActionProps({ filter, refresh })
-    }
-    
-
-
-    public static CreateFromCatalog(catalog: IBandSongCatalog) {
-        const { Filter, Refresh, BandId } = catalog
-        const newfilter = { ...Filter, BandId }
-
-        return  FilterBandSongActionProps.Create({ filter: newfilter, refresh: Refresh })
-    }
 }

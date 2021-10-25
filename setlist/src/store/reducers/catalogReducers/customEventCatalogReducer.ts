@@ -36,7 +36,7 @@ export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActio
                 return {
                     ...state,
                     Values: action.payload.Values,
-                    OData: action.payload.OData
+                    Meta: action.payload.Meta
                 }
             case getType(actions.fetchCustomEventCatalogNextLink.success):
                 return {
@@ -44,20 +44,20 @@ export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActio
                     Values: MapHelper.Create(state.Values)
                         .AddMap(action.payload.Values)
                         .GetMap(),
-                    OData: action.payload.OData
+                    Meta: action.payload.Meta
                 }
             case getType(actions.addCustomEventToCatalog.success):
                 return {
                     ...state,
                     Values: MapHelper.Create(state.Values)
-                        .AddAsFirst(action.payload.Id, action.payload)
+                        .AddAsFirst(action.payload.id, action.payload)
                         .GetMap(),
-                    OData: { ...state.OData, Count: state.OData.Count + 1 }
+                    Meta: { ...state.Meta, Count: state.Meta.Count + 1 }
                 }
             case getType(actions.editCustomEventInCatalog.success):
                 return {
                     ...state,
-                    Values: state.Values.set(action.payload.Id, action.payload)
+                    Values: state.Values.set(action.payload.id, action.payload)
                 }
             case getType(actions.deleteCustomEventInCatalog.success): {
                 const { Values } = state
@@ -66,7 +66,7 @@ export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActio
                 return {
                     ...state,
                     Values,
-                    OData: { ...state.OData, Count: state.OData.Count - 1 }
+                    Meta: { ...state.Meta, Count: state.Meta.Count - 1 }
                 }
             }
             default:

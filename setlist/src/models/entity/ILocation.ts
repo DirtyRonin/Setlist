@@ -1,5 +1,6 @@
-export interface ILocation {
-    Id: string;
-    Name: string;
-    Address:string;
+import { IEntityBase } from "./IEntityBase";
+
+export interface ILocation extends IEntityBase {
+    name: string;
+    address:string;
 }

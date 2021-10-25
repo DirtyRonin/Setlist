@@ -5,10 +5,10 @@ import { DialogActions, DialogContent, DialogContentText, TextField } from '@mat
 import { ModalError } from 'models/error/modalError/modalError';
 import { bandModalActions, ModalTypes } from 'models';
 import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly, mapQuery } from 'utils';
-import { fetchBandById } from 'service';
 import { BandModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/bandHtmlAttributes';
 import { ActionButton, UseModalStyles } from 'styles/modalStyles';
 import { Band } from 'mapping';
+import { fetchBandById } from 'service/epicServices/bandCatalogService';
 
 interface IProps {
     bandModalActionsProvider: bandModalActions
@@ -28,7 +28,7 @@ const BandModalTemplate = ({ bandModalActionsProvider, handleClose, query }: IPr
 
     useEffect(() => {
         if (query) {
-            const mapped = mapQueryRoute(query)
+            const mapped = mapQuery(query)
 
             setType(mapped.type)
 
@@ -37,21 +37,12 @@ const BandModalTemplate = ({ bandModalActionsProvider, handleClose, query }: IPr
 
                 fetchBandById(mapped.id).then(result => {
                     setId(mapped.id)
-                    setTitle({ HasError: false, Message: '', Value: result.Title })
+                    setTitle({ HasError: false, Message: '', Value: result.title })
                     setLoading(false)
                 })
             }
         }
     }, [])
-
-    const mapQueryRoute = (query: String) => {
-        const args = mapQuery(query)
-        const _type = GetModalTypeByString(args.get('type') ?? '')
-        const _id = args.get('id') ?? ''
-
-        return { type: _type, id: _id }
-    }
-
 
     const handleOnClose = () => {
         setTitle({ HasError: false, Message: '', Value: '' })
@@ -77,9 +68,9 @@ const BandModalTemplate = ({ bandModalActionsProvider, handleClose, query }: IPr
             const executeBandModalAction = bandModalActionsProvider[type]
             executeBandModalAction({
                 value: {
-                    ...Band.EmptyBand(),
-                    Title: title.Value,
-                    Id: id
+                    ...Band.CreateEmpty(),
+                    title: title.Value,
+                    id: id
                 }
             })
             handleOnClose()

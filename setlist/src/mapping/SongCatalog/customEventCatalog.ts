@@ -1,10 +1,10 @@
 import { FilterCustomEventActionProps } from "..";
-import { CatalogTypes, ICustomEvent, ICustomEventCatalog, ICustomEventCatalogOptions, ICustomEventFilter, ODataProps } from "../../models";
+import { CatalogTypes, ICustomEvent, ICustomEventCatalog, ICustomEventCatalogOptions, ICustomEventFilter, MetaProps } from "../../models";
 import { CatalogBase } from "./catalogBase";
 
 export class CustomEventCatalog extends CatalogBase<ICustomEvent, ICustomEventFilter, ICustomEventCatalogOptions> implements ICustomEventCatalog {
     
-    private constructor({ filter, oData, options, refresh, customEvents }: { filter: ICustomEventFilter; oData: ODataProps; options: ICustomEventCatalogOptions; refresh?: boolean; customEvents?: Map<string, ICustomEvent> }) {
+    private constructor({ filter, oData, options, refresh, customEvents }: { filter: ICustomEventFilter; oData: MetaProps; options: ICustomEventCatalogOptions; refresh?: boolean; customEvents?: ICustomEvent[] }) {
         super(
             CustomEventCatalog.CatalogId,
             CatalogTypes["CustomEvent Catalog"].toString(),
@@ -22,10 +22,10 @@ export class CustomEventCatalog extends CatalogBase<ICustomEvent, ICustomEventFi
         new CustomEventCatalog(
             {
                 filter: FilterCustomEventActionProps.Default().filter,
-                oData: { NextLink: "", Count: 0, Context: "" },
+                oData: { NextLink: "", Count: 0 },
                 options,
                 refresh,
-                customEvents: new Map<string, ICustomEvent>(),
+                customEvents: [],
                
             })
 

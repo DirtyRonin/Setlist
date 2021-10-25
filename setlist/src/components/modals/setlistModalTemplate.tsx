@@ -25,11 +25,11 @@ const SetlistModalTemplate = ({ setlistModalActionsProvider, handleClose, query 
     const [isLoading, setLoading] = useState(false)
 
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
-    const [id, setId] = useState(GUID_EMPTY)
+    const [id, setId] = useState(0)
 
     useEffect(() => {
         if (query) {
-            const mapped = mapQueryRoute(query)
+            const mapped = mapQuery(query)
 
             setType(mapped.type)
 
@@ -38,22 +38,13 @@ const SetlistModalTemplate = ({ setlistModalActionsProvider, handleClose, query 
 
                 fetchSetlistById(mapped.id).then(result => {
                     setId(mapped.id)
-                    setTitle({ HasError: false, Message: '', Value: result.Title })
-                    setComment({ HasError: false, Message: '', Value: result.Comment })
+                    setTitle({ HasError: false, Message: '', Value: result.title })
+                    setComment({ HasError: false, Message: '', Value: result.comment })
                     setLoading(false)
                 })
             }
         }
     }, [])
-
-    const mapQueryRoute = (query: String) => {
-        const args = mapQuery(query)
-        const _type = GetModalTypeByString(args.get('type') ?? '')
-        const _id = args.get('id') ?? ''
-
-        return { type: _type, id: _id }
-    }
-
 
     const handleOnClose = () => {
         setTitle({ HasError: false, Message: '', Value: '' })
@@ -89,10 +80,10 @@ const SetlistModalTemplate = ({ setlistModalActionsProvider, handleClose, query 
             const executeSetlistModalAction = setlistModalActionsProvider[type]
             executeSetlistModalAction({
                 value: {
-                    ...Setlist.EmptySetlist(),
-                    Title: title.Value,
-                    Comment: comment.Value,
-                    Id: id
+                    ...Setlist.CreateEmpty(),
+                    title: title.Value,
+                    comment: comment.Value,
+                    id: id
                 }
             })
             handleOnClose()

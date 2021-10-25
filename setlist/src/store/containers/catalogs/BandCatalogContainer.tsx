@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from "react-redux";
-import {History} from 'history'
+import { History } from 'history'
 
 import BandCatalogComponent from '../../../components/catalogs/bandCatalog';
 
@@ -18,7 +18,7 @@ interface IConnectedDispatch {
     fetchBandCatalog(props: IFilterBandActionProps): void
     fetchBandCatalogNextLink: (props: INextLinkActionProps) => void
 
-    setBandIdForBandSong(props:string) : void
+    setBandIdForBandSong(props: number): void
 }
 
 interface IProps {
@@ -44,9 +44,9 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     fetchBandCatalogNextLink: (props: INextLinkActionProps) => dispatch(Action.fetchBandCatalogNextLink.request(props)),
     setBandFilter: (props: IFilterBandActionProps) => dispatch(Action.setBandFilter(props)),
 
-    
+
     setModal: (props: IModalActionsProps) => dispatch(ModalActions.setModal(props)),
-    setBandIdForBandSong:(props:string) => dispatch(bandSongAction.setBandIdForBandSong(props))
+    setBandIdForBandSong: (props: number) => dispatch(bandSongAction.setBandIdForBandSong(props))
 })
 
 const BandCatalog = (props: BandCatalogProps) => (

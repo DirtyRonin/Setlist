@@ -1,97 +1,34 @@
 import { nameof } from "ts-simple-nameof";
 
-import { IFilterBandSongActionProps, IBandSong, ISong, INextLinkActionProps, IFilterBandSongActionResult, IBandSongEntityActionProps } from "models";
-import { BandSong } from "mapping";
-import {  QueryBuilder, IsMiminumStringLength,FilterBuilder } from "utils";
-import { CreateBandSongAsync, DeleteBandSongAsync, ReadBandSongsAsync, UpdateBandSongAsync } from "..";
+import { IFilterBandSongActionProps, IBandSong, ISong, INextLinkActionProps, IFilterBandSongActionResult, IBandSongEntityActionProps, IBand } from "models";
+import { IsMiminumStringLength } from "utils";
+import { CreateBandSongRequestAsync, DeleteBandSongRequestAsync, GetBandSongByIdRequestAsync, GetBandSongdByQueryRequestAsync, GetBandSongsRequestAsync, UpdateBandSongRequestAsync } from "api/bandSongApi";
+import { UnwrappResponse } from "mapping/ResponseWrapper";
 
-
-
-export const fetchBandSongCatalogAsync = async (props: IFilterBandSongActionProps): Promise<IFilterBandSongActionResult> => {
-
-    const { filter: Filter } = props
-    let query = new QueryBuilder().count()
-
-    const filters: FilterBuilder[] = []
-
-    const songExpand = `${nameof<IBandSong>(x => x.Song)}`
-
-    filters.push(new FilterBuilder().filterGuidExpression(nameof<IBandSong>(x => x.BandId), 'eq', Filter.BandId))
-
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Title)}`, Filter.Query))
-    }
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Artist)}`, Filter.Query))
-    }
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(`${songExpand}/${nameof<ISong>(x => x.Genre)}`, Filter.Query))
-    }
-    // if (Filter.Nineties) {
-    //     filters.push(new FilterBuilder().filterExpression(`${songExpand}/${nameof<ISong>(x => x.Nineties)}`, 'eq', Filter.Nineties))
-    // }
-    // if (Filter.Evergreen) {
-    //     filters.push(new FilterBuilder().filterExpression(`${songExpand}/${nameof<ISong>(x => x.Evergreen)}`, 'eq', Filter.Evergreen))
-    // }
-
-    // example expand and filter
-    // https://stackoverflow.com/questions/51525409/odata-multiple-expands-and-filter
-    // e.g. https://localhost:5001/odata/BandSongs/?$expand=Song&$filter=song/title eq 'No Limit'
+export const fetchBandSongCatalogAsync = async ({ filter: { Query, bandId } }: IFilterBandSongActionProps): Promise<IFilterBandSongActionResult> => {
     
-    
-    //reduce all filter builders to one with all the fragments
-    const result = filters.reduce((prev, current) => {
-        const stuff = prev.or(()=>current)
-        return stuff
-    },new FilterBuilder())
+    const response = IsMiminumStringLength(Query)
+        ? await GetBandSongdByQueryRequestAsync(bandId, Query)
+        : await GetBandSongsRequestAsync(bandId.toString())
 
-    if (filters.length) {
-        // concat the fragments with or and give it to the query
-        query.filter(() => new FilterBuilder().or(() => result))
-    }
-
-    query = query.orderBy(`${songExpand}/${nameof<ISong>(x => x.Artist)},${songExpand}/${nameof<ISong>(x => x.Title)}`)
-
-    query.expand(songExpand)
-
-    const filter = query.toQuery()
-
-    return await GetFilterBandSongActionResult(filter);
+    return UnwrappResponse(response)
 }
 
-const GetFilterBandSongActionResult = async (filterQuery: string): Promise<IFilterBandSongActionResult> => {
-    const { NextLink, Values, Context, Count } = await ReadBandSongsAsync(filterQuery);
+export const fetchBandSongCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterBandSongActionResult> => {
 
-    return {
-        Values: Values?.reduce((map, bandSong) => {
-            map.set(bandSong.Id, bandSong)
-            return map
-        }, new Map<string, IBandSong>()),
-        OData: { NextLink, Context, Count }
-    }
+    const response = await GetBandSongsRequestAsync(props.nextLink);
+    return UnwrappResponse(response);
 }
-
-export const fetchBandSongCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterBandSongActionResult> =>
-    await GetFilterBandSongActionResult(props.nextLink)
 
 export const NewBandSong = async (props: IBandSongEntityActionProps): Promise<IBandSong> =>
-    await CreateBandSongAsync(props.value)
+    await CreateBandSongRequestAsync(props.value)
 
-    export const editBandSongInCatalogAsync = async (props: IBandSongEntityActionProps): Promise<IBandSong> =>
-    await UpdateBandSongAsync(props.value)
+export const editBandSongInCatalogAsync = async (props: IBandSongEntityActionProps): Promise<IBandSong> =>
+    await UpdateBandSongRequestAsync(props.value)
 
-export const deleteBandSongInCatalogAsync = async (props: IBandSongEntityActionProps): Promise<string> =>
-    (await (DeleteBandSongAsync(props.value.Id))).Id
+export const deleteBandSongInCatalogAsync = async ({value:{bandId,songId}}: IBandSongEntityActionProps): Promise<number> =>
+    await DeleteBandSongRequestAsync(bandId,songId)
 
-export const fetchBandSongById = async (id: string): Promise<IBandSong> => {
-    let query = new QueryBuilder()
-    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<IBandSong>(x => x.Id), 'eq',id))
-    
-    const songExpand = `${nameof<IBandSong>(x => x.Song)}`
-    query.expand(songExpand)
-    
-    const filter = query.toQuery()
+export const fetchBandSongById = async (bandId: number,songId:number): Promise<IBandSong> =>
+    await GetBandSongByIdRequestAsync(bandId,songId)
 
-    const bandSong = (await GetFilterBandSongActionResult(filter)).Values.get(id) ?? BandSong.EmptyBandSong()
-    return bandSong
-}

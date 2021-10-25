@@ -2,13 +2,13 @@ import validator from "validator";
 import { nameof } from "ts-simple-nameof"
 
 import { EndpointConfiguration } from "configuration";
-import { IBandSong, IOdataWrapper } from "models";
+import { IBandSong, IResponseWrapper } from "models";
 import { GetBandSongsRequestAsync, CreateBandSongRequestAsync, UpdateBandSongRequestAsync, DeleteBandSongRequestAsync } from "api";
 import { BandSong } from "mapping";
 
 const bandSongsEndpoint = EndpointConfiguration.Bandsongs;
 
-export const ReadBandSongsAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<IBandSong>> => {
+export const ReadBandSongsAsync = async (filterOrNextLink: string): Promise<IResponseWrapper<IBandSong>> => {
 
     const default_url_options = {
         protocols: ['http', 'https', 'ftp'],
@@ -36,7 +36,7 @@ export const ReadBandSongsAsync = async (filterOrNextLink: string): Promise<IOda
 export const CreateBandSongAsync = async (bandSong: IBandSong): Promise<IBandSong> => {
     const resource = BandSong.ToResource(bandSong)
 
-    const url =`${bandSongsEndpoint.GetEndpointUrl!()}?$expand=${nameof<IBandSong>(x => x.Song)}`
+    const url =`${bandSongsEndpoint.GetEndpointUrl!()}?$expand=${nameof<IBandSong>(x => x.song)}`
     const result = await CreateBandSongRequestAsync(url,resource)
 
     return BandSong.FromResource(result.data)
@@ -46,7 +46,7 @@ export const CreateBandSongAsync = async (bandSong: IBandSong): Promise<IBandSon
 export const UpdateBandSongAsync = async(bandSong:IBandSong):Promise<IBandSong> => {
     const resource = BandSong.ToResource(bandSong)
     
-    const url =`${bandSongsEndpoint.GetEndpointUrl!()}/${bandSong.Id}?$expand=${nameof<IBandSong>(x => x.Song)}`
+    const url =`${bandSongsEndpoint.GetEndpointUrl!()}/${bandSong.id}?$expand=${nameof<IBandSong>(x => x.song)}`
     const result = await UpdateBandSongRequestAsync(url,resource)
     
     return BandSong.FromResource(result.data)
@@ -54,7 +54,7 @@ export const UpdateBandSongAsync = async(bandSong:IBandSong):Promise<IBandSong> 
 
 export const DeleteBandSongAsync = async (bandSongId: string): Promise<IBandSong> => {
 
-    const url =`${bandSongsEndpoint.GetEndpointUrl!()}/${bandSongId}?$expand=${nameof<IBandSong>(x => x.Song)}`
+    const url =`${bandSongsEndpoint.GetEndpointUrl!()}/${bandSongId}?$expand=${nameof<IBandSong>(x => x.song)}`
     const result = await DeleteBandSongRequestAsync(url);
 
     return BandSong.FromResource(result.data);

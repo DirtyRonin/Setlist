@@ -8,8 +8,8 @@ import { BandSongModalHtmlAttributesConfiguration } from "configuration/HtmlAttr
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
-import { ActionButton, UseModalStyles } from "styles/modalStyles";
 import DialogActions from "@material-ui/core/DialogActions";
+import { ActionButton, UseModalStyles } from "styles/modalStyles";
 import { ModalError } from "models/error/modalError/modalError";
 
 export interface IBandSongModalComponent {
@@ -22,48 +22,40 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
 
     const { query, handleClose, bandSongModalActionsProvider } = props
 
-    const [bandSong, setBandSong] = useState(BandSong.EmptyBandSong())
+    const [bandSong, setBandSong] = useState(BandSong.CreateEmpty())
     const [isLoading, setLoading] = useState(false)
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
-    const [id, setId] = useState(GUID_EMPTY)
+    const [bandId, setBandId] = useState(0)
+    const [songId, setSongId] = useState(0)
 
     const [popularity, setPopularity] = useState<ModalError<number>>({ HasError: false, Message: '', Value: 0 })
 
 
     useEffect(() => {
         if (query) {
-            const mapped = mapQueryRoute(query)
+            const mapped = mapQuery(query)
 
             setType(mapped.type)
-            setId(mapped.id)
+            setBandId(mapped.bandId)
+            setSongId(mapped.songId)
 
-            if (mapped.id) {
+            if (mapped.songId > 0 && mapped.bandId > 0) {
                 setLoading(true)
 
-                fetchBandSongById(mapped.id).then(result => {
+                fetchBandSongById(mapped.bandId, mapped.songId).then(result => {
                     setBandSong(result)
-                    setPopularity({ HasError: false, Message: '', Value: result.Popularity })
+                    setPopularity({ HasError: false, Message: '', Value: result.popularity })
                     setLoading(false)
                 })
             }
         }
     }, [])
 
-    //query: "?$type=Read&$id=80968fa2-312c-469f-9115-619d2fef06d5"
-
-    const mapQueryRoute = (query: String) => {
-        const args = mapQuery(query)
-        const _type = GetModalTypeByString(args.get('type') ?? '')
-        const _id = args.get('id') ?? ''
-
-        return { type: _type, id: _id }
-    }
-
     const htmlConfig = BandSongModalHtmlAttributesConfiguration;
 
     const OnPopularityChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
         event.preventDefault()
-        const value = event.target.value 
+        const value = event.target.value
         const asNumber = Number.parseFloat(value)
 
         if (Number.isInteger(asNumber))
@@ -75,7 +67,7 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
 
 
     const handleOnClose = () => {
-        setBandSong(BandSong.EmptyBandSong())
+        setBandSong(BandSong.CreateEmpty())
         setPopularity({ HasError: false, Message: '', Value: 0 })
         handleClose()
     }
@@ -89,8 +81,9 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
             executeModalAction({
                 value: {
                     ...bandSong,
-                    Popularity: popularity.Value,
-                    Id: id
+                    popularity: popularity.Value,
+                    bandId,
+                    songId
                 }
             })
             handleOnClose()
@@ -112,7 +105,7 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
                     disabled={IsReadonly}
                     margin="normal"
                     id={htmlConfig.Popularity.ControlId}
-                    value={popularity.Value }
+                    value={popularity.Value}
                     placeholder={htmlConfig.Popularity.Placeholder}
                     onChange={OnPopularityChange}
                     label={htmlConfig.Popularity.Label}
@@ -124,7 +117,7 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
                     disabled
                     margin="normal"
                     id={htmlConfig.Artist.ControlId}
-                    value={bandSong.Song.Artist}
+                    value={bandSong.song.artist}
                     placeholder={htmlConfig.Artist.Placeholder}
                     label={htmlConfig.Artist.Label}
                     type={'text'}
@@ -134,7 +127,7 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
                     disabled
                     margin="normal"
                     id={htmlConfig.Title.ControlId}
-                    value={bandSong.Song.Title}
+                    value={bandSong.song.title}
                     placeholder={htmlConfig.Title.Placeholder}
                     label={htmlConfig.Title.Label}
                     type={'text'}
@@ -145,7 +138,7 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
                     disabled
                     margin="normal"
                     id={htmlConfig.Genre.ControlId}
-                    value={bandSong.Song.Genre}
+                    value={bandSong.song.genre}
                     placeholder={htmlConfig.Genre.Placeholder}
                     label={htmlConfig.Genre.Label}
                     type={'text'}

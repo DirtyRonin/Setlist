@@ -1,10 +1,10 @@
 import validator from "validator";
-import { IBandUser, IOdataWrapper } from "../../models";
+import { IBandUser, IResponseWrapper } from "../../models";
 import { EndpointConfiguration } from "../../Configuration";
 import { GetBandUsersRequestAsync } from "../../api/bandUserApi";
 import { BandUser } from "../../mapping/bandUser";
 
-export const ReadBandUsersAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<IBandUser>> => {
+export const ReadBandUsersAsync = async (filterOrNextLink: string): Promise<IResponseWrapper<IBandUser>> => {
 
     const default_url_options = {
         protocols: ['http', 'https', 'ftp'],

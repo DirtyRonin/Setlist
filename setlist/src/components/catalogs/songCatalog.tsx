@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { INextLinkActionProps, ModalTypes } from "models";
 import { FilterSongActionProps } from "mapping";
 import { SongCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/songHtmlAttributes";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles";
 
 import { SongCatalogProps } from "store/containers/catalogs/SongCatalogContainer";
 import { SongFilterComponent } from "components/filters";
@@ -42,7 +42,7 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
     const songCatalogDef = SongCatalogHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        const { OData } = songCatalog
+        const { Meta: OData } = songCatalog
         const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
@@ -96,20 +96,21 @@ const SongCatalogComponent = (props: SongCatalogProps): JSX.Element => {
                         <Row>
                             <Col>
                                 <NodeListCss id={songCatalogDef.NodeList.ControlId} >
-                                    {songCatalog.OData.Count}
+                                    {songCatalog.Meta.Count}
                                     <InfiniteScroll
-                                        dataLength={songCatalog.Values.size}
+                                        dataLength={songCatalog.Values.length}
                                         next={handleScrollDown}
-                                        hasMore={songCatalog.Values.size < songCatalog.OData.Count}
+                                        hasMore={songCatalog.Values.length < songCatalog.Meta.Count}
                                         loader={<h4>Loading...</h4>}
                                         scrollableTarget={songCatalogDef.NodeList.ControlId}
+                                        style={InfinitScrollCss}
                                     >
 
                                         {Array.from(songCatalog.Values.values()).map((song, index) => (
                                             <SongCatalogNodeComponent
                                                 history={history}
                                                 setModal={setModal}
-                                                key={song.Id}
+                                                key={song.id}
                                                 song={song}
                                                 index={index}
                                             />

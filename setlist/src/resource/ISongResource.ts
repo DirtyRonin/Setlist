@@ -1,11 +1,15 @@
+import { IBandSong, ISetlistSong } from "models";
+
 export interface ISongResource {
-    Id: string;
-    Artist: string;
-    Title: string;
-    OriginalKey: string;
-    Evergreen: boolean;
-    Nineties:boolean;
+    id: string;
+    artist: string;
+    title: string;
+    originalKey: string;
+    evergreen: boolean;
+    nineties:boolean;
     // PlayTime: string;
-    Genre: string;
-    Comment: string;
+    genre: string;
+    comment: string;
+    bandSongs:IBandSong[]
+    setlistSongs:ISetlistSong[]
 }

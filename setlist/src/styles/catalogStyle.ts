@@ -1,6 +1,8 @@
+import { CSSProperties } from 'react';
 import styled from "styled-components";
 
 export const ContainerCss = styled.div`
+    min-height: 500px;    
     max-height: 800px;
     display: flex;
     flex-direction: column;
@@ -14,9 +16,9 @@ export const ContainerCss = styled.div`
 `;
 
 const variables = {
-    color: '#0062ff',
-    colorBorder: '#e2e2ea',
-  }
+  color: '#0062ff',
+  colorBorder: '#e2e2ea',
+}
 
 export const Header = styled.div`
   border-radius: 15px 15px 0 0;
@@ -56,6 +58,11 @@ export const NodeListCss = styled.div`
     background: none;
 `;
 
+
+//min-height für die Darstellung des Optionsmenüs
+export const InfinitScrollCss: CSSProperties = {
+  minHeight: '400px'
+}
 
 
 export const SearchFilterCss = styled.div`

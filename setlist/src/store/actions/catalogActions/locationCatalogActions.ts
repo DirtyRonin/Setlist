@@ -34,7 +34,7 @@ export const deleteLocationInCatalog= createAsyncAction(
     "DELETE_LOCATION_SUCCESS",
     "DELETE_LOCATION_FAILURE",
     "DELETE_LOCATION_CANCEL",
-)<ILocationEntityActionProps,string,Error,string>();
+)<ILocationEntityActionProps,number,Error,string>();
 
 export const setLocationFilter= createAction(
     "SET_LOCATION_FILTER",

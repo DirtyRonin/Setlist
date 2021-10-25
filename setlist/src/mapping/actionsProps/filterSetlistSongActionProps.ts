@@ -13,13 +13,11 @@ export class FilterSetlistSongActionProps implements IFilterSetlistSongActionPro
     public static Create = ({ filter, refresh }: { filter: ISetlistSongFilter; refresh: boolean; }): IFilterSetlistSongActionProps =>
         new FilterSetlistSongActionProps({ filter, refresh })
 
-    public static Default = (setlistId: string): IFilterSetlistSongActionProps =>
+    public static Default = (setlistId: number): IFilterSetlistSongActionProps =>
         FilterSetlistSongActionProps.Create(
             {
                 filter: {
                     Query: '',
-                    Artist: "",
-                    Genre: "",
                     Evergreen: false,
                     Nineties: false,
                     SetlistId: setlistId

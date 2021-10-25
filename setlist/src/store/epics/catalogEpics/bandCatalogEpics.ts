@@ -5,7 +5,7 @@ import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 
 import { BandCatalogActions } from "store/reducers/catalogReducers/bandCatalogReducer"
 
-import { fetchBandCatalogAsync, fetchBandCatalogNextLinkAsync, addBandToBandCatalogAsync, editBandInCatalogAsync, deleteBandInCatalogAsync } from "service";
+import { fetchBandCatalogAsync, fetchBandCatalogNextLinkAsync, addBandToBandCatalogAsync, editBandInCatalogAsync, deleteBandInCatalogAsync } from "service/epicServices/bandCatalogService";
 import { fetchBandCatalog, fetchBandCatalogNextLink, addBandToCatalog, editBandInCatalog, deleteBandInCatalog } from "store/actions";
 
 

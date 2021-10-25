@@ -1,64 +1,45 @@
-import { nameof } from "ts-simple-nameof";
-import {  Band } from "mapping";
-import { QueryBuilder, IsMiminumStringLength, FilterBuilder } from "utils";
-import { IFilterBandActionProps, IBand, INextLinkActionProps, IBandEntityActionProps, IComponentOrder, DisplayIn, IFilterBandActionResult } from "models";
-import { ReadBandsAsync, CreateBandAsync, UpdateBandAsync, DeleteBandAsync } from "..";
+import { IsMiminumStringLength } from "utils";
+import { IFilterBandActionProps, IBand, INextLinkActionProps, IBandEntityActionProps, IFilterBandActionResult, IBandUser, IBandSong } from "models";
+import { CreateBandRequestAsync, DeleteBandRequestAsync, FilterBandsWithPivotBySongId, GetBandByIdRequestAsync, GetBanddByQueryRequestAsync, GetBandsRequestAsync, GetBandsWithPivotBySongId, UpdateBandRequestAsync } from "api/bandApi";
+import { UnwrappResponse } from "mapping/ResponseWrapper";
 
-export const fetchBandCatalogAsync = async (props: IFilterBandActionProps): Promise<IFilterBandActionResult> => {
+export const fetchBandCatalogAsync = async ({ filter }: IFilterBandActionProps): Promise<IFilterBandActionResult> => {
 
-    const { filter: Filter } = props
-    let query = new QueryBuilder().count()
+    const response = IsMiminumStringLength(filter.Query)
+        ? await GetBanddByQueryRequestAsync(filter.Query)
+        : await GetBandsRequestAsync()
 
-    const filters: FilterBuilder[] = []
-
-    // const expand = `bandsong`
-    // filters.push(new FilterBuilder().filterGuidExpression(`${expand}/${nameof<IBandSong>(x => x.BandId)}`,'eq', Filter.Title))
-
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<IBand>(x => x.Title), Filter.Query))
-    }
-
-    if (filters.length) {
-        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
-    }
-
-    query = query.orderBy(`${nameof<IBand>(x => x.Title)}`)
-
-    const filter = query.toQuery()
-
-    return await GetFilterBandActionResult(filter)
+    return UnwrappResponse(response)
 }
 
-export const fetchBandCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterBandActionResult> =>
-    await GetFilterBandActionResult(props.nextLink)
+export const fetchBandCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterBandActionResult> => {
 
-
-const GetFilterBandActionResult = async (filterQuery: string): Promise<IFilterBandActionResult> => {
-    const { NextLink, Values, Context, Count } = await ReadBandsAsync(filterQuery);
-
-    return {
-        Values: Values?.reduce((map, band) => {
-            map.set(band.Id, band)
-            return map
-        }, new Map<string, IBand>()),
-        OData: { NextLink, Context, Count }
-    }
+    const response = await GetBandsRequestAsync(props.nextLink);
+    return UnwrappResponse(response);
 }
 
 export const addBandToBandCatalogAsync = async (props: IBandEntityActionProps): Promise<IBand> =>
-    await CreateBandAsync(props.value)
+    await CreateBandRequestAsync(props.value)
 
 export const editBandInCatalogAsync = async (props: IBandEntityActionProps): Promise<IBand> =>
-    await UpdateBandAsync(props.value)
+    await UpdateBandRequestAsync(props.value)
 
-export const deleteBandInCatalogAsync = async (props: IBandEntityActionProps): Promise<string> =>
-    (await (DeleteBandAsync(props.value.Id))).Id
+export const deleteBandInCatalogAsync = async (props: IBandEntityActionProps): Promise<number> =>
+    await DeleteBandRequestAsync(props.value.id)
 
-export const fetchBandById = async (id: string): Promise<IBand> => {
-    let query = new QueryBuilder()
-    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<IBand>(x => x.Id), 'eq', id))
-    const filter = query.toQuery()
+export const fetchBandById = async (id: number): Promise<IBand> =>
+    await GetBandByIdRequestAsync(id);
 
-    const band = (await GetFilterBandActionResult(filter)).Values.get(id) ?? Band.EmptyBand()
-    return band
+export const fetchBandsWithFilteredExpands = async ({ filter: { SongId, Query } }: IFilterBandActionProps): Promise<IFilterBandActionResult> => {
+
+    if (!SongId)
+        return { Values: [], Meta: { NextLink: '', Count: 0 } }
+
+    const response = IsMiminumStringLength(Query)
+        ? await FilterBandsWithPivotBySongId(SongId, Query)
+        : await GetBandsWithPivotBySongId(SongId)
+
+    return UnwrappResponse(response);
 }
+
+

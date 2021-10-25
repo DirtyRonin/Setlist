@@ -18,7 +18,7 @@ export interface ISetlistNodeProps {
     index: number;
     history: History
     setModal(props: IModalActionsProps): void
-    setSetlistIdForSetlistSong(setlistId: string): void
+    setSetlistIdForSetlistSong(setlistId: number): void
 }
 
 const SetlistCatalogNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
@@ -35,11 +35,11 @@ const SetlistCatalogNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
         setModal({ showModal: true })
 
         if (type === ModalTypes.ShowCatalog)
-            setSetlistIdForSetlistSong(setlist.Id)
+            setSetlistIdForSetlistSong(setlist.id)
 
         history.push({
             pathname: pathName,
-            search: `?$type=${type}&$id=${setlist.Id}`,
+            search: `?$type=${type}&$id=${setlist.id}`,
             state: isModal ? { background: history.location } : undefined //display as catalog in main window
         })
     }
@@ -61,7 +61,7 @@ const SetlistCatalogNodeComponent = (props: ISetlistNodeProps): JSX.Element => {
                             <Col xs="9">
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{setlist.Title}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{setlist.title}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                             </Col>

@@ -1,81 +1,51 @@
 import { nameof } from "ts-simple-nameof"
 
-import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IFilterSongActionResult } from "models";
-import { ReadSongsAsync, CreateSongAsync, UpdateSongAsync, DeleteSongAsync } from "service";
-import { Song } from "mapping";
-import { QueryBuilder, IsMiminumStringLength, FilterBuilder } from "utils";
+import { ISong, IFilterSongActionProps, ISongEntityActionProps, INextLinkActionProps, IFilterSongActionResult, IBandSong, ISetlistSong } from "models";
+import { IsMiminumStringLength } from "utils";
+import { CreateSongRequestAsync, DeleteSongRequestAsync, FilterSongssWithPivotBySetlistId, GetSongByIdRequestAsync, GetSongdByQueryRequestAsync, GetSongdWithPivotBySetlistId, GetSongsRequestAsync, UpdateSongRequestAsync } from "api/songApi";
+import { UnwrappResponse } from "mapping/ResponseWrapper";
 
-export const fetchSongCatalogAsync = async (props: IFilterSongActionProps): Promise<IFilterSongActionResult> => {
-    const { filter: Filter } = props
-    let query = new QueryBuilder().count()
 
-    const filters: FilterBuilder[] = []
+const BANDSONGS = nameof<ISong>(x => x.bandSongs)
+const SETLISTSONGS = nameof<ISong>(x => x.setlistSongs)
+const BANDID = nameof<IBandSong>(x => x.bandId)
+const SETLISTID = nameof<ISetlistSong>(x => x.setlistId)
 
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Title), Filter.Query))
-    }
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Artist), Filter.Query))
-    }
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISong>(x => x.Genre), Filter.Query))
-    }
-    // if (Filter.Nineties) {
-    //     filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Nineties), 'eq', Filter.Nineties))
-    // }
-    // if (Filter.Evergreen) {
-    //     filters.push(new FilterBuilder().filterExpression(nameof<ISong>(x => x.Evergreen), 'eq', Filter.Evergreen))
-    // }
+export const fetchSongCatalogAsync = async ({ filter }: IFilterSongActionProps): Promise<IFilterSongActionResult> => {
 
-    //reduce all filter builders to one with all the fragments
-    const result = filters.reduce((prev, current) => {
-        const stuff = prev.or(()=>current)
-        return stuff
-    },new FilterBuilder())
+    const response = IsMiminumStringLength(filter.Query)
+        ? await GetSongdByQueryRequestAsync(filter.Query)
+        : await GetSongsRequestAsync()
 
-    if (filters.length) {
-        // concat the fragments with or and give it to the query
-        query.filter(() => new FilterBuilder().or(() => result))
-    }
-
-    query = query.orderBy(`${nameof<ISong>(x => x.Artist)},${nameof<ISong>(x => x.Title)}`)
-
-    // query.select('My Properties')
-    const filter = query.toQuery()
-
-    return await GetFilterSongActionResult(filter)
+    return UnwrappResponse(response)
 }
 
-export const fetchSongCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterSongActionResult> =>
-    await GetFilterSongActionResult(props.nextLink)
+export const fetchSongCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterSongActionResult> => {
 
-const GetFilterSongActionResult = async (filterQuery: string): Promise<IFilterSongActionResult> => {
-    const { NextLink, Values, Context, Count } = await ReadSongsAsync(filterQuery);
-
-    return {
-        Values: Values?.reduce((map, song) => {
-            map.set(song.Id, song)
-            return map
-        }, new Map<string, ISong>()),
-        OData: { NextLink, Context, Count }
-    }
+    const response = await GetSongsRequestAsync(props.nextLink);
+    return UnwrappResponse(response);
 }
 
 export const addSongToSongCatalogAsync = async (props: ISongEntityActionProps): Promise<ISong> =>
-    await CreateSongAsync(props.value)
+    await CreateSongRequestAsync(props.value)
 
 export const editSongInCatalogAsync = async (props: ISongEntityActionProps): Promise<ISong> =>
-    await UpdateSongAsync(props.value)
+    await UpdateSongRequestAsync(props.value)
 
-export const deleteSongInCatalogAsync = async (props: ISongEntityActionProps): Promise<string> =>
-    (await (DeleteSongAsync(props.value.Id))).Id
+export const deleteSongInCatalogAsync = async (props: ISongEntityActionProps): Promise<number> =>
+    await DeleteSongRequestAsync(props.value.id)
 
-export const fetchSongById = async (id: string): Promise<ISong> => {
-    let query = new QueryBuilder()
-    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<ISong>(x => x.Id), 'eq',id))
-    const filter = query.toQuery()
+export const fetchSongById = async (id: number): Promise<ISong> =>
+    await GetSongByIdRequestAsync(id);
 
-    const song = (await GetFilterSongActionResult(filter)).Values.get(id) ?? Song.EmptySong()
-    return song
+export const fetchSongsWithFilteredExpands = async ({ filter: { SetlistId, Query } }: IFilterSongActionProps): Promise<IFilterSongActionResult> => {
+
+    if (!SetlistId)
+        return { Values: [], Meta: { NextLink: '', Count: 0 } }
+
+    const response = IsMiminumStringLength(Query)
+        ? await FilterSongssWithPivotBySetlistId(SetlistId, Query)
+        : await GetSongdWithPivotBySetlistId(SetlistId)
+
+    return UnwrappResponse(response);
 }
-

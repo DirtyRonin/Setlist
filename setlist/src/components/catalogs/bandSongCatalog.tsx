@@ -3,10 +3,10 @@ import { Col, Row, Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
 
-import { INextLinkActionProps } from "models";
+import { INextLinkActionProps, ModalTypes } from "models";
 import { FilterBandSongActionProps } from "mapping";
 import { BandSongCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandSongHtmlAttributes";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 
 import { BandSongCatalogProps } from "store/containers/catalogs/BandSongCatalogContainer";
 import { BandFilterComponent } from "components/filters";
@@ -42,7 +42,7 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
     const bandSongCatalogDef = BandSongCatalogHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        const { OData } = bandSongCatalog
+        const { Meta: OData } = bandSongCatalog
         const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
@@ -50,19 +50,18 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
         }, 500);
     }
 
-    const handleShowAddBandSong = () => {
+    const createModal = (type: ModalTypes, pathName: string = '/') => {
 
-        // setModal({ showModal: true })
+        setModal({ showModal: true })
 
-        // const type: ModalTypes = ModalTypes.New
-        // const pathName: string = '/bandSongModal'
-
-        // history.push({
-        //     pathname: pathName,
-        //     search: `?$type=${type}`,
-        //     state: { background: history.location }
-        // })
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}&$id=${bandSongCatalog.bandId}`,
+            state: { background: history.location }
+        })
     }
+
+    const handleShowAddBandSong = () => createModal(ModalTypes.Add, '/AddBandSongFromSongs')
 
     return <div >
 
@@ -95,24 +94,20 @@ const BandSongCatalogComponent = (props: BandSongCatalogProps): JSX.Element => {
                         <Row>
                             <Col>
                                 <NodeListCss id={bandSongCatalogDef.NodeList.ControlId} >
-                                    {bandSongCatalog.OData.Count}
+                                    {bandSongCatalog.Meta.Count}
                                     <InfiniteScroll
-                                        dataLength={bandSongCatalog.Values.size}
+                                        dataLength={bandSongCatalog.Values.length}
                                         next={handleScrollDown}
-                                        hasMore={bandSongCatalog.Values.size < bandSongCatalog.OData.Count}
+                                        hasMore={bandSongCatalog.Values.length < bandSongCatalog.Meta.Count}
                                         loader={<h4>Loading...</h4>}
-                                        endMessage={
-                                            <p style={{ textAlign: 'center' }}>
-                                                <b>Yay! You have seen it all</b>
-                                            </p>
-                                        }
+                                        style={InfinitScrollCss}
                                         scrollableTarget={bandSongCatalogDef.NodeList.ControlId}
                                     >
-                                        {Array.from(bandSongCatalog.Values.values()).map((bandSong, index) => (
+                                        {bandSongCatalog.Values.map((bandSong, index) => (
                                             <BandSongCatalogNodeComponent
                                                 bandSong={bandSong}
                                                 index={index}
-                                                key={bandSong.Id}
+                                                key={`${bandSongCatalog.Id}_${bandSong.songId}`}
                                                 setModal={setModal}
                                                 history={history}
                                             />

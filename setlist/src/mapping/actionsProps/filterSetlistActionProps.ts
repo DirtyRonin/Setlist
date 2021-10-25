@@ -12,7 +12,7 @@ export class FilterSetlistActionProps implements IFilterSetlistActionProps {
     public static Create = ({ filter, refresh }: { filter: ISetlistFilter; refresh: boolean; }): IFilterSetlistActionProps =>
         new FilterSetlistActionProps({ filter, refresh })
 
-    public static Default = ({ bandSongId,songId }: { bandSongId?: string ,songId?: string}): IFilterSetlistActionProps =>
+    public static Default = ({ bandSongId = 0, songId = 0 }: { bandSongId?: number, songId?: number }): IFilterSetlistActionProps =>
         FilterSetlistActionProps.Create({
             filter: {
                 Query: '',

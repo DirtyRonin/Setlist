@@ -2,9 +2,9 @@ import validator from "validator";
 import { CreateCustomEventRequestAsync, DeleteCustomEventRequestAsync, GetCustomEventRequestAsync, UpdateCustomEventRequestAsync } from "../../api";
 import { EndpointConfiguration } from "../../Configuration";
 import { CustomEvent } from "../../mapping";
-import { IOdataWrapper, ICustomEvent } from "../../models";
+import { IResponseWrapper, ICustomEvent } from "../../models";
 
-export const ReadCustomEventAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<ICustomEvent>> => {
+export const ReadCustomEventAsync = async (filterOrNextLink: string): Promise<IResponseWrapper<ICustomEvent>> => {
 
     const default_url_options = {
         protocols: ['http', 'https', 'ftp'],

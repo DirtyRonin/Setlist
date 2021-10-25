@@ -2,9 +2,9 @@ import validator from "validator";
 import { CreateLocationRequestAsync, DeleteLocationRequestAsync, GetLocationRequestAsync, UpdateLocationRequestAsync } from "api";
 import { EndpointConfiguration } from "configuration";
 import { Location } from "mapping";
-import { IOdataWrapper, ILocation } from "models";
+import { IResponseWrapper, ILocation } from "models";
 
-export const ReadLocationAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<ILocation>> => {
+export const ReadLocationAsync = async (filterOrNextLink: string): Promise<IResponseWrapper<ILocation>> => {
 
     const default_url_options = {
         protocols: ['http', 'https', 'ftp'],

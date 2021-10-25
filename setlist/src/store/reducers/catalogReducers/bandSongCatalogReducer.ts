@@ -2,8 +2,7 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
 import { BandSongCatalog } from "../../../mapping";
-import { IBandSongCatalog } from "../../../models";
-import { MapHelper } from "../../../utils";
+import { IBandSongCatalog,IBandSong } from "../../../models";
 
 import * as actions from "../../actions/catalogActions/bandSongCatalogActions"
 
@@ -14,7 +13,7 @@ export interface IBandSongCatalogState {
 }
 
 const initial: IBandSongCatalogState = {
-    bandSongCatalog: BandSongCatalog.Create("")
+    bandSongCatalog: BandSongCatalog.Create(0)
 }
 
 export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
@@ -24,7 +23,7 @@ export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
                 return {
                     ...state,
                     Refresh: true,
-                    BandId: action.payload
+                    bandId: action.payload
                 }
             case getType(actions.setBandSongFilter):
                 return {
@@ -39,31 +38,40 @@ export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
                 return {
                     ...state,
                     Values: action.payload.Values,
-                    OData: action.payload.OData
+                    Meta: action.payload.Meta
                 }
             case getType(actions.fetchBandSongCatalogNextLink.success):
                 return {
                     ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddMap(action.payload.Values)
-                        .GetMap(),
-                    OData: action.payload.OData
+                    Values: state.Values.concat(action.payload.Values),
+                    Meta: action.payload.Meta
                 }
-            case getType(actions.addBandSongToCatalog.success):
+            case getType(actions.addBandSongToCatalog.success):{
+                const {Values} = state
+                Values.unshift(action.payload)
+
                 return {
                     ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddAsFirst(action.payload.Id, action.payload)
-                        .GetMap()
+                    Values
                 }
-            case getType(actions.editBandSongInCatalog.success):
+            }
+            case getType(actions.editBandSongInCatalog.success):{
+
+                const {Values} = state
+
+                const index = Values.findIndex(x => x.songId === action.payload.songId)
+                Values[index] = action.payload
+
                 return {
-                    ...state,
-                    Values: state.Values.set(action.payload.Id, action.payload)
-                }
+                    ...state,Values
+                    
+                }}
             case getType(actions.deleteBandSongInCatalog.success): {
-                const { Values } = state
-                Values.delete(action.payload)
+
+                const {Values} = state
+
+                const index = Values.findIndex(x => x.songId === action.payload)
+                Values.splice(index,1)
 
                 return {
                     ...state,
@@ -77,3 +85,8 @@ export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
 
     }
 })
+
+// function IsBandSong(payload: IBandSong): (value: IBandSong, index: number, obj: IBandSong[]) => unknown {
+//     return x => x.bandId === payload.bandId && x.songId === payload.songId;
+// }
+

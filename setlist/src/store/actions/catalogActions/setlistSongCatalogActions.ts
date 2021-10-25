@@ -4,7 +4,7 @@ import { IFilterSetlistSongActionProps, IFilterSetlistSongActionResult, INextLin
 
 export const setSetlistIdForSetlistSong = createAction(
     'SET_SETLISTID_FOR_SETLISTSONG'
-)<string>();
+)<number>();
 
 export const fetchSetlistSongCatalog = createAsyncAction(
     "FETCH_SETLISTSONG_REQUEST",
@@ -39,7 +39,7 @@ export const deleteSetlistSongInCatalog= createAsyncAction(
     "DELETE_SETLISTSONG_SUCCESS",
     "DELETE_SETLISTSONG_FAILURE",
     "DELETE_SETLISTSONG_CANCEL",
-)<ISetlistSongEntityActionProps,string,Error,string>();
+)<ISetlistSongEntityActionProps,number,Error,string>();
 
 export const setSetlistSongFilter = createAction(
     "SET_SETLIST_SONG_FILTER",

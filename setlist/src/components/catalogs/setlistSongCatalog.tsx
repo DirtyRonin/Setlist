@@ -1,27 +1,32 @@
-import React from "react";
-import { useEffect } from "react";
-import { Col, Container, Navbar, Row, Form, FormControlProps } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
+
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 
 import { SetlistSongCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistSongHtmlAttributes";
 
 import { FilterSetlistSongActionProps } from "mapping";
 import { SetlistSongCatalogProps } from "store/containers/catalogs/SetlistSongCatalogContainer";
-import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
-import { SetlistSongFilterComponent } from "components/filters";
 import SetlistSongCatalogNodeComponent from "components/nodes/setlistSongCatalogNode";
-import { INextLinkActionProps } from "models";
+import { INextLinkActionProps, ModalTypes } from "models";
+
+import AddButton from "components/common/AddButton/addButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SetlistSongFilterComponent } from "components/filters";
 
 
 const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Element => {
 
     const {
         setlistSongCatalog,
+        history,
+
         setSetlistSongFilter,
         fetchSetlistSongCatalog,
         fetchSetlistSongCatalogNextLink,
         setModal,
-        history
     } = props
 
     useEffect(() => {
@@ -37,11 +42,11 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
 
     }, [setlistSongCatalog.Refresh]);
 
-    const setlistSongCatalogDef = SetlistSongCatalogHtmlAttributesConfiguration
+    const htmlConfig = SetlistSongCatalogHtmlAttributesConfiguration
 
     const handleScrollDown = () => {
-        const { OData } = setlistSongCatalog
-        const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
+        const { Meta: { NextLink } } = setlistSongCatalog
+        const actionProps: INextLinkActionProps = { nextLink: NextLink }
 
         setTimeout(() => {
             fetchSetlistSongCatalogNextLink(actionProps)
@@ -49,68 +54,72 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
 
     }
 
-    return <div>
+    const createModal = (type: ModalTypes, pathName: string = '/') => {
+
+        setModal({ showModal: true })
+
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}&$id=${setlistSongCatalog.SetlistId}`,
+            state: { background: history.location }
+        })
+    }
+
+    const handleShowAddSetlistSong = () => createModal(ModalTypes.Add, '/AddSetlistSongFromSongs')
+
+    return <div >
+
         <Container fluid>
             <Row>
                 <Col >
                     <ContainerCss >
                         <Row>
                             <Col>
-                                <NodeListCss id={setlistSongCatalogDef.NodeList.ControlId} >
-                                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                                        <Navbar.Brand >{setlistSongCatalog.Title}</Navbar.Brand>
+                                <Header >
+                                    <HeaderTitle>Setlist Songs</HeaderTitle>
 
-                                        <Navbar.Toggle aria-controls={setlistSongCatalogDef.Navbar.ControlId} />
-                                        <Navbar.Collapse id={setlistSongCatalogDef.Navbar.ControlId}>
-                                            <Row>
-                                                <Col sm="6">
-                                                    <SongFilterCss>
-                                                        <SetlistSongFilterComponent
-                                                            setlistId={setlistSongCatalog.Id}
-                                                            filter={setlistSongCatalog.Filter}
-                                                            setSetlistSongFilter={setSetlistSongFilter}
-                                                        />
-                                                    </SongFilterCss>
-                                                </Col>
-                                                <Col sm="6">
-                                                    {/* <Form onChange={handleShowAddSetlist}>
-                                                                <Form.Row>
-                                                                    <Form.Group as={Col} controlId={setlistSongCatalogDef.ShowAddSetlistCheckBox.ControlId}>
-                                                                        <Form.Check type="switch" checked={showModal} label={setlistSongCatalogDef.ShowAddSetlistCheckBox.Label} />
-                                                                    </Form.Group>
-                                                                </Form.Row>
-                                                            </Form> */}
-
-                                                </Col>
-                                            </Row>
-                                        </Navbar.Collapse>
-
-                                    </Navbar>
-
+                                    <HeaderOptions>
+                                        <SearchFilterCss>
+                                            <SetlistSongFilterComponent
+                                                setlistId={setlistSongCatalog.Id}
+                                                filter={setlistSongCatalog.Filter}
+                                                setSetlistSongFilter={setSetlistSongFilter}
+                                            />
+                                        </SearchFilterCss>
+                                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                                            <MenuItem value="Options"  >Options*</MenuItem>
+                                            <MenuDivider />
+                                            <MenuHeader>Edit</MenuHeader>
+                                            <MenuItem value="NewSetlistSong" onClick={handleShowAddSetlistSong}>Add Songs</MenuItem>
+                                        </Menu>
+                                    </HeaderOptions>
+                                </Header>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <NodeListCss id={htmlConfig.NodeList.ControlId} >
+                                    {setlistSongCatalog.Meta.Count}
                                     <InfiniteScroll
-                                        dataLength={setlistSongCatalog.Values.size}
+                                        dataLength={setlistSongCatalog.Values.length}
                                         next={handleScrollDown}
-                                        hasMore={setlistSongCatalog.Values.size < setlistSongCatalog.OData.Count}
+                                        hasMore={setlistSongCatalog.Values.length < setlistSongCatalog.Meta.Count}
                                         loader={<h4>Loading...</h4>}
-                                        endMessage={
-                                            <p style={{ textAlign: 'center' }}>
-                                                <b>Yay! You have seen it all</b>
-                                            </p>
-                                        }
-                                        scrollableTarget={setlistSongCatalogDef.NodeList.ControlId}
+                                        style={InfinitScrollCss}
+                                        scrollableTarget={htmlConfig.NodeList.ControlId}
                                     >
-                                        {Array.from(setlistSongCatalog.Values.values()).map((setlistSong, index) => (
+                                        {setlistSongCatalog.Values.map((setlistSong, index) => (
                                             <SetlistSongCatalogNodeComponent
                                                 setlistSong={setlistSong}
                                                 index={index}
-                                                key={setlistSong.Id}
+                                                key={`${setlistSongCatalog.Id}_${setlistSong.songId}`}
                                                 setModal={setModal}
                                                 history={history}
                                             />
                                         ))}
                                     </InfiniteScroll>
                                 </NodeListCss>
-                                {setlistSongCatalog.OData.Count}
+                                <AddButton onClick={handleShowAddSetlistSong} />
                             </Col>
                         </Row>
                     </ContainerCss>

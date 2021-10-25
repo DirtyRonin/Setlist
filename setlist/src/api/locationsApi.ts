@@ -1,38 +1,39 @@
-import Axios, { AxiosResponse } from "axios";
-import { defaultHeader, EndpointConfiguration } from "configuration";
-import { IOdataWrapper } from "models";
-import { ILocationResource } from "resource";
+import { EndpointConfiguration } from "configuration";
+import { WrappResponse } from "mapping/ResponseWrapper";
+import { ILocation, IResponseWrapper } from "models";
+import api from "./baseApi";
 
 const locationsEndpoint = EndpointConfiguration.Locations;
 
-export const GetLocationRequestAsync = async (url: string): Promise<IOdataWrapper<ILocationResource>> => {
+export const GetLocationsRequestAsync = async (nextlink?: string): Promise<IResponseWrapper<ILocation>> => {
+    const url = nextlink ?? locationsEndpoint.GetEndpointUrl()
 
-    const result = await Axios.get(url, {
-        headers: defaultHeader
-    });
+    const response = await api().get(url);
 
-    const Odata: IOdataWrapper<ILocationResource> = {
-        Values: result.data.value,
-        Context: result.data["@odata.context"],
-        Count: result.data["@odata.count"],
-        NextLink: result.data["@odata.nextLink"],
-    }
+    const result: IResponseWrapper<ILocation> = WrappResponse(response);
 
-    return Odata;
+    return result;
 }
 
-export const CreateLocationRequestAsync = async (location: ILocationResource): Promise<AxiosResponse<ILocationResource>> => {
-    return await Axios.post<ILocationResource>(locationsEndpoint.GetEndpointUrl!(), location, {
-        headers: defaultHeader
-    });
+export const GetLocationdByQueryRequestAsync = async (query: string): Promise<IResponseWrapper<ILocation>> => {
+
+    const url = `${locationsEndpoint.GetEndpointUrl()}Search/${query}`
+
+    const response = await api().get(url);
+
+    const result: IResponseWrapper<ILocation> = WrappResponse(response);
+
+    return result;
 }
 
-export const DeleteLocationRequestAsync = async (locationId: string): Promise<AxiosResponse<ILocationResource>> =>
-    await Axios.delete<ILocationResource>(`${locationsEndpoint.GetEndpointUrl!()}/${locationId}`, {
-        headers: defaultHeader
-    });
+export const GetLocationByIdRequestAsync = async (id: number): Promise<ILocation> =>
+    (await api().get(`${locationsEndpoint.GetEndpointUrl()}/${id}`)).data
 
-export const UpdateLocationRequestAsync = async (location: ILocationResource): Promise<AxiosResponse<ILocationResource>> =>
-    await Axios.put<ILocationResource>(`${locationsEndpoint.GetEndpointUrl!()}/${location.Id}`, location, {
-        headers: defaultHeader
-    });
+export const CreateLocationRequestAsync = async (location: ILocation): Promise<ILocation> =>
+    (await api().post<ILocation>(locationsEndpoint.GetEndpointUrl!(), location)).data
+
+export const DeleteLocationRequestAsync = async (locationId: number): Promise<number> =>
+    (await api().delete<number>(`${locationsEndpoint.GetEndpointUrl!()}/${locationId}`)).data
+
+export const UpdateLocationRequestAsync = async (location: ILocation): Promise<ILocation> =>
+    (await api().put<ILocation>(`${locationsEndpoint.GetEndpointUrl!()}/${location.id}`, location)).data

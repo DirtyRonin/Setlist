@@ -23,7 +23,7 @@ const htmlConfig = CustomEventModalHtmlAttributesConfiguration;
 
 function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog, fetchBandCatalog, setBandFilter, setBandId, isReadonly }: props) {
 
-    const [selectedBand, setSelectedBand] = useState(Band.EmptyBand())
+    const [selectedBand, setSelectedBand] = useState(Band.CreateEmpty())
     const [isLoading, setLoading] = useState(true)
     const [query, setQuery] = useState('')
 
@@ -55,7 +55,7 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
 
     const handleClose = () => {
         setBandFilter(FilterBandActionProps.Create({ filter: { Query: '' }, refresh: false }))
-        setSelectedBand(Band.EmptyBand())
+        setSelectedBand(Band.CreateEmpty())
         setQuery('')
 
         toggleOpen(false);
@@ -65,18 +65,18 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
         if (!newValue) {
 
             //clear this component before you leave it
-            setSelectedBand(Band.EmptyBand())
+            setSelectedBand(Band.CreateEmpty())
             setQuery('')
 
             setBandId(null)
 
-        } else if (newValue.Id !== GUID_EMPTY) {
+        } else if (newValue.id !== GUID_EMPTY) {
 
             //set the values before you leave it
             setSelectedBand(newValue)
-            setQuery(newValue.Title)
+            setQuery(newValue.title)
 
-            setBandId(newValue.Id)
+            setBandId(newValue.id)
 
 
             setBandFilter(FilterBandActionProps.Create({ filter: { Query: '' }, refresh: true }))
@@ -85,7 +85,7 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
         } else {
 
 
-            setSelectedBand(Band.EmptyBand())
+            setSelectedBand(Band.CreateEmpty())
             setQuery('')
             setBandFilter(FilterBandActionProps.Create({ filter: { Query: '' }, refresh: true }))
 
@@ -126,7 +126,7 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
                     if (typeof option === 'string') {
                         return option;
                     }
-                    return option.Title;
+                    return option.title;
                 }}
                 loading={isLoading || bandCatalog.Refresh}
                 renderInput={(params) => <TextField
@@ -135,8 +135,8 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
                 />}
                 renderOption={(option, { inputValue }) => {
 
-                    const matches = option.Title === CONST_NEW_BAND ? match(option.Title, CONST_NEW_BAND) : match(option.Title, inputValue);
-                    const parts = parse(option.Title, matches);
+                    const matches = option.title === CONST_NEW_BAND ? match(option.title, CONST_NEW_BAND) : match(option.title, inputValue);
+                    const parts = parse(option.title, matches);
 
                     return (
                         <div>
@@ -152,8 +152,8 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
                     const filtered = filter(options, params) as IBand[];
 
                     filtered.unshift({
-                        ...Band.EmptyBand(),
-                        Title: CONST_NEW_BAND
+                        ...Band.CreateEmpty(),
+                        title: CONST_NEW_BAND
                     });
 
                     return filtered;

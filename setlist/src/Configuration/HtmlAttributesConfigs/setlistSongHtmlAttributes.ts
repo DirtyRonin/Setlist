@@ -46,10 +46,7 @@ export type FilterSetlistSongHtmlAttributesConfigurationType= ConfigurationItemC
 const filterSetlistSongName = "FilterSetlistSong"
 
 export const FilterSetlistSongHtmlAttributesConfiguration: FilterSetlistSongHtmlAttributesConfigurationType= {
-    SearchTitleInput: { Label: `Search For Title`, Placeholder: `Enter Title`, Data_TestId: `${filterSetlistSongName}_SearchTitle`, ControlId: `${filterSetlistSongName}_SearchTitle` },
-    SearchArtistInput: { Label: `Search For Artist`, Placeholder: `Enter Artist`, Data_TestId: `${filterSetlistSongName}_SearchArtist`, ControlId: `${filterSetlistSongName}_SearchArtist` },
-    SearchGenreInput: { Label: `Search For Genre`, Placeholder: `Enter Genre`, Data_TestId: `${filterSetlistSongName}_SearchGenre`, ControlId: `${filterSetlistSongName}_SearchGenre` },
+    SearchQueryInput: { Label: `SearchQuery`, Placeholder: `Search...`, Data_TestId: `${filterSetlistSongName}_SearchQuery`, ControlId: `${filterSetlistSongName}_SearchQuery` },
     SearchEvergreenCheckBox: { Label: `Evergreen`, Placeholder: ``, Data_TestId: `${filterSetlistSongName}_SearchEvergreen`, ControlId: `${filterSetlistSongName}_SearchEvergreen` },
     SearchNinetiesCheckBox: { Label: `90er`, Placeholder: ``, Data_TestId: `${filterSetlistSongName}_SearchNineties`, ControlId: `${filterSetlistSongName}_SearchNineties` },
-    SearchButton: { Label: `Search`, Placeholder: ``, Data_TestId: `${filterSetlistSongName}_SearchButton`, ControlId: `${filterSetlistSongName}_SearchButton` },
 }

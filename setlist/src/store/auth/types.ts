@@ -1,20 +1,23 @@
 export const AUTH = 'AUTH'
+export const LOGOUT = 'LOGOUT'
 
 export interface IUserInfo {
-  login: string
-  password: string
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  }
+  token: string;
 }
 
-export interface IAuthState {
+export interface IAuthState extends IUserInfo {
   isAuth: boolean
-  login: string
-  password: string
 }
 
 export interface IAuthCheckAction {
   type: typeof AUTH
-  payload: {
-    login: string
-    password: string
-  }
+  payload: IUserInfo
+}
+export interface ILogoutAction {
+  type: typeof LOGOUT
 }

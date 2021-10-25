@@ -1,8 +1,7 @@
-import { ISetlistSong } from "models";
+import { IEntityBase, ISetlistSong } from "models";
 
-export interface ISetlist {
-    Id: string;
-    Title: string;
-    Comment:string;
-    SetlistSongs: Map<string, ISetlistSong>;
+export interface ISetlist extends IEntityBase{
+    title: string;
+    comment:string;
+    setlistSongs: ISetlistSong[];
 }

@@ -42,7 +42,7 @@ export const deleteSetlistInCatalog = createAsyncAction(
     "DELETE_SETLIST_SUCCESS",
     "DELETE_SETLIST_FAILURE",
     "DELETE_SETLIST_CANCEL",
-)<ISetlistEntityActionProps, string, Error, string>();
+)<ISetlistEntityActionProps, number, Error, string>();
 
 export const addBandSongToSetlistCatalog = createAction(
     "ADD_BANDSONG_TO_SETLIST",

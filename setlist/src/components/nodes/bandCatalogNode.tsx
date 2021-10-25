@@ -15,7 +15,7 @@ export interface IBandNodeProps {
 
     setModal(props: IModalActionsProps): void
 
-    setBandIdForBandSong(bandId: string): void
+    setBandIdForBandSong(bandId: number): void
 }
 
 const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
@@ -32,11 +32,11 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
         setModal({ showModal: true })
 
         if (type === ModalTypes.ShowCatalog)
-            setBandIdForBandSong(band.Id)
+            setBandIdForBandSong(band.id)
 
         history.push({
             pathname: pathName,
-            search: `?$type=${type}&$id=${band.Id}`,
+            search: `?$type=${type}&$id=${band.id}`,
             state: isModal ? { background: history.location } : undefined //display as catalog in main window
         })
     }
@@ -65,7 +65,7 @@ const BandCatalogNodeComponent = (props: IBandNodeProps): JSX.Element => {
                             <Col xs="9">
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{band.Title}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{band.title}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                             </Col>

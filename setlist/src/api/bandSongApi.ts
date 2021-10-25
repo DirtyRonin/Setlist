@@ -1,36 +1,85 @@
-import Axios, { AxiosResponse } from "axios";
-import { defaultHeader } from "configuration";
-import { IOdataWrapper } from "models";
-import { IBandSongResource } from "../resource";
+import { EndpointConfiguration } from "configuration";
+import { BandSong, Song } from "mapping";
+import { UnwrappPivot, WrappResponse } from "mapping/ResponseWrapper";
+import { IBandSong, IResponseWrapper, ISong } from "models";
+import validator from "validator";
+import api from "./baseApi";
 
-export const GetBandSongsRequestAsync = async (url: string): Promise<IOdataWrapper<IBandSongResource>> => {
+const bandSongsEndpoint = EndpointConfiguration.Bandsongs;
 
-    const result = await Axios.get(url, {
-        headers: defaultHeader
-    });
-
-    const Odata: IOdataWrapper<IBandSongResource> = {
-        Values: result.data.value,
-        Context: result.data["@odata.context"],
-        Count: result.data["@odata.count"],
-        NextLink: result.data["@odata.nextLink"],
+type BandSongPivot = ISong & {
+    "pivot": {
+        "bandId": number
+        "created_at": Date
+        "popularity": number
+        "songId": number
+        "updated_at": Date
     }
-
-    return Odata;
 }
 
-export const CreateBandSongRequestAsync = async (url: string, bandSong: IBandSongResource): Promise<AxiosResponse<IBandSongResource>> => {
-    return await Axios.post<IBandSongResource>(url, bandSong, {
-        headers: defaultHeader
-    });
+export const GetBandSongsRequestAsync = async (bandIdOrNextlink: string): Promise<IResponseWrapper<IBandSong>> => {
+    const url = validator.isNumeric(bandIdOrNextlink)
+        ? `${bandSongsEndpoint.GetEndpointUrl()}/${bandIdOrNextlink}` // is bandId
+        : bandIdOrNextlink //ia nextlink
+
+        return await getRequest(url);
 }
 
-export const DeleteBandSongRequestAsync = async (url: string): Promise<AxiosResponse<IBandSongResource>> =>
-    await Axios.delete<IBandSongResource>(url, {
-        headers: defaultHeader
-    });
+export const GetBandSongdByQueryRequestAsync = async (bandId: number, query: string): Promise<IResponseWrapper<IBandSong>> => {
 
-export const UpdateBandSongRequestAsync = async (url: string, bandSong: IBandSongResource): Promise<AxiosResponse<IBandSongResource>> =>
-    await Axios.put<IBandSongResource>(url, bandSong, {
-        headers: defaultHeader
-    });
+    const url = `${bandSongsEndpoint.GetEndpointUrl()}Search/${bandId}/${query}`
+
+    return await getRequest(url);
+}
+
+async function getRequest(url: string): Promise<IResponseWrapper<IBandSong>> {
+    const response = await api().get<BandSongPivot>(url);
+
+    const result = UnwrappPivot(response, convertToBandSong);
+
+    return result;
+}
+
+export const GetBandSongByIdRequestAsync = async (bandId: number, songId: number): Promise<IBandSong> => {
+    const response = await api().get(`${bandSongsEndpoint.GetEndpointUrl()}/${bandId}/${songId}`)
+    const result = convertToBandSong(response.data);
+    return result
+}
+
+export async function CreateBandSongRequestAsync(bandSong: IBandSong): Promise<IBandSong> {
+    const response = await api().post(bandSongsEndpoint.GetEndpointUrl!(), bandSong)
+    const result = convertToBandSong(response.data);
+    return result
+}
+
+export async function DeleteBandSongRequestAsync(bandId: number, songId: number): Promise<number> {
+    return (await api().delete<number>(`${bandSongsEndpoint.GetEndpointUrl!()}/${bandId}/${songId}`)).data;
+}
+
+export async function UpdateBandSongRequestAsync(bandSong: IBandSong): Promise<IBandSong> {
+    const response = await api().put(`${bandSongsEndpoint.GetEndpointUrl!()}/${bandSong.bandId}`, bandSong)
+    const result = convertToBandSong(response.data);
+    return result
+}
+
+export async function AddSongToBandRequestAsync(bandSong: IBandSong): Promise<boolean> {
+    const response = await api().post(`${bandSongsEndpoint.GetEndpointUrl()}AddSong`, bandSong)
+    
+    return response.data
+}
+
+const convertToBandSong = (response: BandSongPivot): IBandSong =>
+    BandSong.Create(
+        {
+            bandId: response.pivot.bandId,
+            songId: response.pivot.songId,
+            song: Song.Create({
+                ...response
+            }),
+            popularity: response.pivot.popularity
+        }
+    )
+
+
+
+

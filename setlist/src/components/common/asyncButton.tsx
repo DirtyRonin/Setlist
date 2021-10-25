@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface IAsyncButtonProps<T> {
-    asyncExecute(value: T): Promise<T>
+    asyncExecute(value: T): Promise<T> | Promise<boolean>
     value: T
     isExisting: boolean
 

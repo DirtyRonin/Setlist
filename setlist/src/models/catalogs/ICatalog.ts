@@ -6,14 +6,13 @@ export interface ICatalog<TValue, SFilter, ROptions> {
     Id: string;
     Title: string;
     Refresh: boolean;
-    Values: Map<string, TValue>;
-    OData: ODataProps;
+    Values: TValue[];
+    Meta: MetaProps;
     CatalogOptions: ROptions;
     // NodeType: NodeTypes;
 }
 
-export interface ODataProps {
-    Context: string
+export interface MetaProps {
     Count: number
     NextLink: string
 }

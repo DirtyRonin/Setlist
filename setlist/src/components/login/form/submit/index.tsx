@@ -1,9 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Axios, { AxiosResponse } from "axios";
+
+
+
 import styled from 'styled-components'
 import { Redirect } from 'react-router-dom'
 import { IUserInfo } from '../../../../store/auth/types'
 import { checkAuth } from '../../../../store/auth/actions'
+import api from 'api/baseApi';
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,22 +70,16 @@ interface IFormSubmitProps {
   checkAuth: typeof checkAuth
 }
 
+interface ILogin {
+  email: string
+  password: string
+}
+
 const Sumbit: React.FC<IFormSubmitProps> = props => {
   const { checkAuth } = props
 
-  let dataUser = {
-    login: '',
-    password: ''
-  }
-
-  let dataError = {
-    login: 'Login error',
-    password: 'Password error'
-  }
-
-  const [user, setUser] = React.useState<IUserInfo>(dataUser)
-  const [error, setError] = React.useState<IUserInfo>(dataError)
   const [redirect, setRedirect] = React.useState<boolean>(false)
+  const [error, setError] = React.useState('')
 
   const renderRedirect = (): object | void => {
     if (redirect) {
@@ -90,86 +89,50 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
-    if ( true /*!error.login && !error.password*/) {
-      checkAuth({
-        login: user.login,
-        password: user.password
-      })
-      setRedirect(true)
-    }
-  }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target
-    if (value !== 'admin') {
-      switch (name) {
-        case 'login':
-          setError(prevState => ({
-            ...prevState,
-            login: 'Login error'
-          }))
-          break
-        case 'password':
-          setError(prevState => ({
-            ...prevState,
-            password: 'Password error'
-          }))
-          break
-        default:
-          break
-      }
-    } else {
-      name === 'login'
-        ? setError(prevState => ({
-          ...prevState,
-          login: ''
-        }))
-        : setError(prevState => ({
-          ...prevState,
-          password: ''
-        }))
-    }
-    name === 'login'
-      ? setUser(prevState => ({
-        ...prevState,
-        login: value
-      }))
-      : setUser(prevState => ({
-        ...prevState,
-        password: value
-      }))
-  }
+    const target = e.target as typeof e.target & {
+      email: { value: string };
+      password: { value: string };
+    };
+    const email = target.email.value; // typechecks!
+    const password = target.password.value; // typechecks!
 
+    api().get('/sanctum/csrf-cookie').then(() =>
+      api().post<IUserInfo>('/login', { email, password })
+        .then((response) => {
+          setError('');
+          checkAuth(response.data)
+          setRedirect(true)
+        }
+        ).catch(
+          response => setError(response)
+        ))
+  }
   return (
     <form onSubmit={handleSubmit}>
       <Wrapper>
         <InputText
-          type='text'
+          type='email'
           placeholder='Your login'
-          name='login'
-          onChange={handleChange}
-          value={user.login}
+          name='email'
+          value='admin@admin.de'
         />
-        <InputLabel>{error.login ? 'Error, your login: admin' : ''}</InputLabel>
       </Wrapper>
       <Wrapper>
         <InputText
           type='password'
           placeholder='Your password'
           name='password'
-          onChange={handleChange}
-          value={user.password}
+          value='admin'
         />
         <InputLabel>
-          {error.password ? 'Error, your password: admin' : ''}
+          {error}
         </InputLabel>
       </Wrapper>
       <InputSubmit
         type='submit'
         value='Sign in'
-        //!!23 // TRUE
-        //!!"" // FALSE
-        disabled= {false} //{!!(error.login || error.password)}
+        disabled={false}
       />
       {renderRedirect()}
     </form>

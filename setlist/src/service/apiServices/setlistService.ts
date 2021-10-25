@@ -3,9 +3,9 @@ import validator from "validator";
 import { CreateSetlistRequestAsync, DeleteSetlistRequestAsync, GetSetlistRequestAsync, UpdateSetlistRequestAsync } from "api/setlistApi";
 import { EndpointConfiguration } from "configuration";
 import { Setlist } from "mapping";
-import { IOdataWrapper, ISetlist } from "models";
+import { IResponseWrapper, ISetlist } from "models";
 
-export const ReadSetlistAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<ISetlist>> => {
+export const ReadSetlistAsync = async (filterOrNextLink: string): Promise<IResponseWrapper<ISetlist>> => {
 
     const default_url_options = {
         protocols: ['http', 'https', 'ftp'],

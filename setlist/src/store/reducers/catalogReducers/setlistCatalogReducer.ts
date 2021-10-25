@@ -35,7 +35,7 @@ export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
                 return {
                     ...state,
                     Values: action.payload.Values,
-                    OData: action.payload.OData
+                    Meta: action.payload.Meta
                 }
             case getType(actions.fetchSetlistCatalogWithSetlistSongsExpandedByBandSongId.request):
                 return {
@@ -46,52 +46,47 @@ export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
                 return {
                     ...state,
                     Values: action.payload.Values,
-                    OData: action.payload.OData
+                    Meta: action.payload.Meta
                 }
             case getType(actions.fetchSetlistCatalogNextLink.success):
                 return {
                     ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddMap(action.payload.Values)
-                        .GetMap(),
-                    OData: action.payload.OData
+                    Values: state.Values.concat(action.payload.Values),
+                    Meta: action.payload.Meta
                 }
             case getType(actions.addSetlistToCatalog.success):
-                return {
-                    ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddAsFirst(action.payload.Id, action.payload)
-                        .GetMap()
+                {
+                    const { Values } = state
+                    Values.unshift(action.payload)
+
+                    return {
+                        ...state,
+                        Values
+                    }
                 }
-            case getType(actions.addBandSongToSetlistCatalog): {
-
-                const setlist = MapHelper.Create(state.Values)
-                    .GetMap()
-                    .get(action.payload.SetlistId)
-
-                if (!setlist)
-                    return state
-
-                setlist.SetlistSongs.set(action.payload.Id, action.payload)
-
-                return {
-                    ...state,
-                    Values: state.Values.set(setlist.Id, setlist)
-                }
-            }
             case getType(actions.editSetlistInCatalog.success):
-                return {
-                    ...state,
-                    Values: state.Values.set(action.payload.Id, action.payload)
+                {
+                    const { Values } = state
+
+                    const index = Values.findIndex(x => x.id === action.payload.id)
+                    Values[index] = action.payload
+
+                    return {
+                        ...state, Values
+                    }
                 }
-            case getType(actions.deleteSetlistInCatalog.success): {
-                const { Values } = state
-                Values.delete(action.payload)
-                return {
-                    ...state,
-                    Values
+            case getType(actions.deleteSetlistInCatalog.success):
+                {
+                    const { Values } = state
+
+                    const index = Values.findIndex(x => x.id === action.payload)
+                    Values.splice(index, 1)
+
+                    return {
+                        ...state,
+                        Values
+                    }
                 }
-            }
             default:
                 return state;
         }

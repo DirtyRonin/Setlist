@@ -18,13 +18,13 @@ const AddSongToSetlistModalNode = (props: IAddBandSongToSetlistModalNode) => {
     const { setlist, bandSong, } = props
 
     const CreateNewSetlistSong: ISetlistSong = SetlistSong.Create({
-        bandSongId: bandSong.Id,
-        songId: bandSong.SongId,
-        song: Song.EmptySong(),
-        setlistId: setlist.Id
+        bandSongId: bandSong.id,
+        songId: bandSong.songId,
+        song: Song.CreateEmpty(),
+        setlistId: setlist.id
     })
 
-    const IsSetlistSongExisting: boolean = setlist.SetlistSongs?.size > 0 
+    const IsSetlistSongExisting: boolean = setlist.setlistSongs?.size > 0 
 
     return (
 
@@ -40,7 +40,7 @@ const AddSongToSetlistModalNode = (props: IAddBandSongToSetlistModalNode) => {
                             <Col xs="9">
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{props.setlist.Title}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{props.setlist.title}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                             </Col>

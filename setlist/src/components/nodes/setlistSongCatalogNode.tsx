@@ -34,7 +34,7 @@ const SetlistSongCatalogNodeComponent = (props: ISetlistSongNodeProps): JSX.Elem
 
         history.push({
             pathname: pathName,
-            search: `?$type=${type}&$id=${setlistSong.Id}`,
+            search: `?$type=${type}&$setlistId=${setlistSong.setlistId}&$songId=${setlistSong.songId}`,
             state: { background: history.location }
         })
     }
@@ -55,12 +55,12 @@ const SetlistSongCatalogNodeComponent = (props: ISetlistSongNodeProps): JSX.Elem
                             <Col xs="9">
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{setlistSong.Song.Title}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{setlistSong.song.title}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{setlistSong.Song.Artist}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{setlistSong.song.artist}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                             </Col>

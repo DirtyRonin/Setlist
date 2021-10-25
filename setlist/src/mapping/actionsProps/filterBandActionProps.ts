@@ -10,10 +10,11 @@ export class FilterBandActionProps implements IFilterBandActionProps {
         this.refresh = refresh
     }
 
-    public static Default(): IFilterBandActionProps {
+    public static Default = ({ songId = 0 }: { songId?: number}): IFilterBandActionProps => {
 
         const filter: IBandFilter = {
-            Query: ""
+            Query: "",
+            SongId: songId,
         }
 
         return FilterBandActionProps.Create({ filter, refresh: true })
@@ -23,8 +24,8 @@ export class FilterBandActionProps implements IFilterBandActionProps {
         return new FilterBandActionProps({ filter, refresh })
     }
 
-    public static CreateFromCatalog(bandCatalog:IBandCatalog){
-        const {Filter,Refresh} = bandCatalog
+    public static CreateFromCatalog(bandCatalog: IBandCatalog) {
+        const { Filter, Refresh } = bandCatalog
         return new FilterBandActionProps({ filter: Filter, refresh: Refresh })
     }
 }

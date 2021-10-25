@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Router, Switch, Route } from 'react-router-dom'
 import { ConnectedRouter } from 'connected-react-router'
 
@@ -50,7 +50,6 @@ export const App = (props: AppProps): JSX.Element => {
                     <Login />
                 </Route>
                 <Wrapper>
-
                     <Switch location={location.state?.background}>
                         <PrivateRoute exact path='/'>
                             <Sidebar />
@@ -99,6 +98,8 @@ export const App = (props: AppProps): JSX.Element => {
                         <PrivateRoute path="/bandSongAsCatalog">
                             <Sidebar />
                             <ContentWrapper>
+                                <BandCatalogContainer
+                                    history={history} />
                                 <BandSongCatalogComponent
                                     history={history}
                                 />
@@ -107,6 +108,9 @@ export const App = (props: AppProps): JSX.Element => {
                         <PrivateRoute path="/setlistSongAsCatalog">
                             <Sidebar />
                             <ContentWrapper>
+                                <SetlistCatalogContainer
+                                    history={history}
+                                />
                                 <SetlistSongCatalog
                                     history={history}
                                 />

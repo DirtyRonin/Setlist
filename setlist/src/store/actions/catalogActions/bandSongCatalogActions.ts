@@ -3,7 +3,7 @@ import {  IFilterBandSongActionProps, INextLinkActionProps, IFilterBandSongActio
 
 export const setBandIdForBandSong = createAction(
     "SET_BANDID_FOR_BANDSONG",
-)<string>();
+)<number>();
 export const closeBandSongsCatalog = createAction(
     "CLOSE_BANDSONG_CATALOG",
 )();
@@ -41,7 +41,7 @@ export const deleteBandSongInCatalog= createAsyncAction(
     "DELETE_BANDSONG_SUCCESS",
     "DELETE_BANDSONG_FAILURE",
     "DELETE_BANDSONG_CANCEL",
-)<IBandSongEntityActionProps,string,Error,string>();
+)<IBandSongEntityActionProps,number,Error,string>();
 
 export const setBandSongFilter= createAction(
     "SET_BandSONG_FILTER",

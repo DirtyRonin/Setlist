@@ -9,7 +9,7 @@ import { FilterCustomEventActionProps } from "mapping";
 import { INextLinkActionProps, ModalTypes } from "models";
 import { CustomEventCatalogProps } from "store/containers/catalogs/CustomEventCatalogContainer";
 import CustomEventCatalogNodeComponent from "components/nodes/customEventCatalogNode";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import AddButton from "components/common/AddButton/addButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CustomEventFilterComponent from "components/filters/CustomEventFilter";
@@ -36,7 +36,7 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
     const customEventCatalogDef = CustomEventCatalogHtmlAttributesConfiguration
 
     const handleScrollDown = (): void => {
-        const { OData } = customEventCatalog
+        const { Meta: OData } = customEventCatalog
         const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
@@ -88,21 +88,22 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
                         <Row>
                             <Col>
                                 <NodeListCss id={customEventCatalogDef.NodeList.ControlId} >
-                                    {customEventCatalog.OData.Count}
+                                    {customEventCatalog.Meta.Count}
                                     <InfiniteScroll
-                                        dataLength={customEventCatalog.Values.size}
+                                        dataLength={customEventCatalog.Values.length}
                                         next={handleScrollDown}
-                                        hasMore={customEventCatalog.Values.size < customEventCatalog.OData.Count}
+                                        hasMore={customEventCatalog.Values.length < customEventCatalog.Meta.Count}
                                         loader={<h4>Loading...</h4>}
                                         scrollableTarget={customEventCatalogDef.NodeList.ControlId}
+                                        style={InfinitScrollCss}
                                     >
-                                        {Array.from(customEventCatalog.Values.values()).map((customEvent, index) => (
+                                        {customEventCatalog.Values.map((customEvent, index) => (
                                             <CustomEventCatalogNodeComponent
                                                 customEvent={customEvent}
                                                 index={index}
                                                 setModal={setModal}
                                                 history={history}
-                                                key={customEvent.Id}
+                                                key={customEvent.id}
                                             />
                                         ))}
                                     </InfiniteScroll>

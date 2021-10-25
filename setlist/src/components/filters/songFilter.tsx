@@ -23,7 +23,7 @@ export const SongFilterComponent = (props: ISongFilterProps) => {
 
         const _filter: ISongFilter = { ...filter, Query: elements[htmlConfig.SearchQueryInput.ControlId].value, }
 
-        const songFilter = FilterSongActionProps.Create(_filter, true)
+        const songFilter = FilterSongActionProps.Create({ filter: _filter, refresh: true })
 
         songFilter.refresh = IsFilterableString(filter.Query, songFilter.filter.Query) ?? false
 

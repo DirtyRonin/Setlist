@@ -23,7 +23,7 @@ const htmlConfig = CustomEventModalHtmlAttributesConfiguration;
 
 function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, locationCatalog, fetchLocationCatalog, setLocationFilter, setLocationId, isReadonly }: props) {
 
-    const [selectedLocation, setSelectedLocation] = useState(Location.EmptyLocation())
+    const [selectedLocation, setSelectedLocation] = useState(Location.CreateEmpty())
     const [isLoading, setLoading] = useState(true)
     const [query, setQuery] = useState('')
 
@@ -55,7 +55,7 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
 
     const handleClose = () => {
         setLocationFilter(FilterLocationActionProps.Create({ filter: { Query: '' }, refresh: false }))
-        setSelectedLocation(Location.EmptyLocation())
+        setSelectedLocation(Location.CreateEmpty())
         setQuery('')
 
         toggleOpen(false);
@@ -65,17 +65,17 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
         if (!newValue) {
 
             //clear this component before you leave it
-            setSelectedLocation(Location.EmptyLocation())
+            setSelectedLocation(Location.CreateEmpty())
             setQuery('')
 
             setLocationId(null)
 
-        } else if (newValue.Id !== GUID_EMPTY) {
+        } else if (newValue.id !== GUID_EMPTY) {
 
             setSelectedLocation(newValue)
-            setQuery(newValue.Name)
+            setQuery(newValue.name)
 
-            setLocationId(newValue.Id)
+            setLocationId(newValue.id)
 
 
             setLocationFilter(FilterLocationActionProps.Create({ filter: { Query: '' }, refresh: true }))
@@ -83,7 +83,7 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
 
         } else {
 
-            setSelectedLocation(Location.EmptyLocation())
+            setSelectedLocation(Location.CreateEmpty())
             setQuery('')
             setLocationFilter(FilterLocationActionProps.Create({ filter: { Query: '' }, refresh: true }))
 
@@ -124,7 +124,7 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
                     if (typeof option === 'string') {
                         return option;
                     }
-                    return option.Name;
+                    return option.name;
                 }}
                 loading={isLoading || locationCatalog.Refresh}
                 renderInput={(params) => <TextField
@@ -133,8 +133,8 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
                 />}
                 renderOption={(option, { inputValue }) => {
 
-                    const matches = option.Name === CONST_NEW_LOCATION ? match(option.Name, CONST_NEW_LOCATION) : match(option.Name, inputValue);
-                    const parts = parse(option.Name, matches);
+                    const matches = option.name === CONST_NEW_LOCATION ? match(option.name, CONST_NEW_LOCATION) : match(option.name, inputValue);
+                    const parts = parse(option.name, matches);
 
                     return (
                         <div>
@@ -150,8 +150,8 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
                     const filtered = filter(options, params) as ILocation[];
 
                     filtered.unshift({
-                        ...Location.EmptyLocation(),
-                        Name: CONST_NEW_LOCATION
+                        ...Location.CreateEmpty(),
+                        name: CONST_NEW_LOCATION
                     });
 
                     return filtered;

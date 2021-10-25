@@ -18,7 +18,7 @@ export class FilterCustomEventActionProps implements IFilterCustomEventActionPro
             {
 
                 filter: {
-                    Query: '',
+                    query: '',
                 },
                 refresh: true
             })

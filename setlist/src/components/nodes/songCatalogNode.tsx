@@ -35,7 +35,7 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
 
         history.push({
             pathname: pathName,
-            search: `?$type=${type}&$id=${song.Id}`,
+            search: `?$type=${type}&$id=${song.id}`,
             state: { background: history.location }
         })
     }
@@ -58,12 +58,12 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                             <Col xs="9">
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{song.Title}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{song.title}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{song.Artist}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{song.artist}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                             </Col>

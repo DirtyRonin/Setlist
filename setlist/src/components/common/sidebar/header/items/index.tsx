@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import HeaderTeams from '../teams'
 import HeaderButton from '../button'
+import LogoutButton from 'components/common/logout'
 
 const variables = {
   color: '#92929d'
@@ -46,7 +47,7 @@ const TeamsTitle = styled.span`
 `
 
 const Items = () => {
-  const [opened, setOpened] = React.useState<boolean>(true)
+  const [opened, setOpened] = React.useState<boolean>(false)
 
   const handleOpened = (): void => {
     setOpened(prevState => !prevState)
@@ -60,6 +61,7 @@ const Items = () => {
       </Block>
       {opened && <HeaderTeams />}
       <HeaderButton />
+      <LogoutButton/>
     </Wrapper>
   )
 }

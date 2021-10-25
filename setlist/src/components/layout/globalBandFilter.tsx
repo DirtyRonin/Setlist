@@ -28,8 +28,8 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
 
     useEffect(() => {
         // check if current user has been fetched yet
-        if (selectedBand.Id !== undefined)
-            openBandSongsCatalog(selectedBand.Id)
+        if (selectedBand.id !== undefined)
+            openBandSongsCatalog(selectedBand.id)
     }, [selectedBand]);
 
     type ButtonProps = React.ComponentPropsWithoutRef<'button'>
@@ -75,12 +75,12 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
 
         const filters: FilterBuilder[] = []
 
-        const bandExpand = `${nameof<IBandUser>(x => x.Band)}`
+        const bandExpand = `${nameof<IBandUser>(x => x.band)}`
 
-        filters.push(new FilterBuilder().filterGuidExpression(nameof<IBandUser>(x => x.UserId), 'eq', user.id))
+        filters.push(new FilterBuilder().filterGuidExpression(nameof<IBandUser>(x => x.userId), 'eq', user.id))
 
         if (IsMiminumStringLength(filter)) {
-            filters.push(new FilterBuilder().startsWithFilterExpression(`${bandExpand}/${nameof<IBand>(x => x.Title)}`, filter))
+            filters.push(new FilterBuilder().startsWithFilterExpression(`${bandExpand}/${nameof<IBand>(x => x.title)}`, filter))
         }
 
         // example expand and filter
@@ -90,7 +90,7 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
             query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
         }
 
-        query = query.orderBy(`${bandExpand}/${nameof<IBand>(x => x.Title)}`)
+        query = query.orderBy(`${bandExpand}/${nameof<IBand>(x => x.title)}`)
 
         query.expand(bandExpand)
 
@@ -99,7 +99,7 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
         const result = await ReadBandUsersAsync(url);
 
         const hashBands = result.Values.reduce((acc, cur) => {
-            acc[cur.Band.Title] = cur.Band;
+            acc[cur.band.title] = cur.band;
             return acc;
         }, {} as IHashTable<IBand>);
 
@@ -110,12 +110,12 @@ export const GlobalBandFilterComponent = (props: GlobalBandFilterProps) => {
         <div>
             <Dropdown>
                 <Dropdown.Toggle as={myToggle} id="dropdown-custom-components">
-                    {selectedBand.Title !== undefined ? `${selectedBand.Title}` : 'Select Band'}
+                    {selectedBand.title !== undefined ? `${selectedBand.title}` : 'Select Band'}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu as={myMenu} onChange={Delegate_SetFilter} >
                     {Object.keys(bands).map(bandId =>
-                        <Dropdown.Item onSelect={Delegate_OpenBandSongCatalog} eventKey={bandId}>{bands[bandId].Title}</Dropdown.Item>
+                        <Dropdown.Item onSelect={Delegate_OpenBandSongCatalog} eventKey={bandId}>{bands[bandId].title}</Dropdown.Item>
                     )}
                 </Dropdown.Menu>
             </Dropdown>

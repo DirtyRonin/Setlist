@@ -1,10 +1,10 @@
-import { IOdataWrapper, IUser } from "../../models";
+import { IResponseWrapper, IUser } from "../../models";
 import validator from "validator";
 import { EndpointConfiguration } from "../../Configuration";
 import { User } from "../../mapping";
 import { GetUsersRequestAsync } from "../../api/userApi";
 
-export const ReadUsersAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<IUser>> => {
+export const ReadUsersAsync = async (filterOrNextLink: string): Promise<IResponseWrapper<IUser>> => {
 
     const default_url_options = {
         protocols: ['http', 'https', 'ftp'],

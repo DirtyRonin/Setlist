@@ -35,37 +35,48 @@ export default combineReducers<IBandCatalogState, BandCatalogActions>({
                 return {
                     ...state,
                     Values: action.payload.Values,
-                    OData: action.payload.OData
+                    Meta: action.payload.Meta
                 }
             case getType(actions.fetchBandCatalogNextLink.success):
                 return {
                     ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddMap(action.payload.Values)
-                        .GetMap(),
-                    OData: action.payload.OData
+                    Values: state.Values.concat(action.payload.Values),
+                    Meta: action.payload.Meta
                 }
             case getType(actions.addBandToCatalog.success):
-                return {
-                    ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddAsFirst(action.payload.Id, action.payload)
-                        .GetMap()
-                }
-            case getType(actions.editBandInCatalog.success):
-                return {
-                    ...state,
-                    Values: state.Values.set(action.payload.Id, action.payload)
-                }
-            case getType(actions.deleteBandInCatalog.success): {
-                const { Values } = state
-                Values.delete(action.payload)
+                {
+                    const { Values } = state
+                    Values.unshift(action.payload)
 
-                return {
-                    ...state,
-                    Values
+                    return {
+                        ...state,
+                        Values
+                    }
                 }
-            }
+
+            case getType(actions.editBandInCatalog.success):
+                {
+                    const { Values } = state
+
+                    const index = Values.findIndex(x => x.id === action.payload.id)
+                    Values[index] = action.payload
+
+                    return {
+                        ...state, Values
+                    }
+                }
+            case getType(actions.deleteBandInCatalog.success):
+                {
+                    const { Values } = state
+
+                    const index = Values.findIndex(x => x.id === action.payload)
+                    Values.splice(index, 1)
+
+                    return {
+                        ...state,
+                        Values
+                    }
+                }
             default:
                 return state;
         }

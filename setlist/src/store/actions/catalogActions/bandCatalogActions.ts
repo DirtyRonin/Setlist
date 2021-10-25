@@ -35,7 +35,7 @@ export const deleteBandInCatalog= createAsyncAction(
     "DELETE_BAND_SUCCESS",
     "DELETE_BAND_FAILURE",
     "DELETE_BAND_CANCEL",
-)<IBandEntityActionProps,string,Error,string>();
+)<IBandEntityActionProps,number,Error,string>();
 
 export const setBandFilter= createAction(
     "SET_BAND_FILTER",

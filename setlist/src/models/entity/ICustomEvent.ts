@@ -1,13 +1,13 @@
 import { ILocation, IBand, ISetlist } from "models";
+import { IEntityBase } from "./IEntityBase";
 
-export interface ICustomEvent {
-    Id: string;
-    Date: Date | null;
-    LocationId: string | null;
-    BandId: string | null;
-    SetlistId: string | null;
-    Title: string;
-    Location:ILocation| null
+export interface ICustomEvent extends IEntityBase {
+    date: Date | null;
+    locationId: number;
+    bandId: number;
+    setlistId: number;
+    title: string;
+    location:ILocation| null
     Band:IBand| null
-    Setlist:ISetlist| null
+    setlist:ISetlist| null
 }

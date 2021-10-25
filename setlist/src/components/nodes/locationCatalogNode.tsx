@@ -35,7 +35,7 @@ const LocationCatalogNodeComponent = (props: ILocationNodeProps): JSX.Element =>
 
         history.push({
             pathname: pathName,
-            search: `?$type=${type}&$id=${location.Id}`,
+            search: `?$type=${type}&$id=${location.id}`,
             state: { background: history.location }
         })
     }
@@ -56,12 +56,12 @@ const LocationCatalogNodeComponent = (props: ILocationNodeProps): JSX.Element =>
                             <Col xs="9">
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{location.Name}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{location.name}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{location.Address}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{location.address}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                             </Col>

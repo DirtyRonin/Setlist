@@ -27,47 +27,37 @@ const CustomEventModalTemplate = (props: IProps) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
-    const [id, setId] = useState('')
+    const [id, setId] = useState(0)
 
     const [title, setTitle] = useState('')
     const [date, setDate] = useState<Date | null>(null);
-    const [locationId, setLocationId] = useState<string | null>(null);
-    const [setlistId, setSetlistId] = useState<string | null>(null);
-    const [bandId, setBandId] = useState<string | null>(null);
+    const [locationId, setLocationId] = useState(0);
+    const [setlistId, setSetlistId] = useState(0);
+    const [bandId, setBandId] = useState(0);
 
     useEffect(() => {
         if (query) {
-            const mapped = mapQueryRoute(query)
+            const mapped = mapQuery(query)
 
             setType(mapped.type)
             setId(mapped.id)
-
-            if (mapped.id != GUID_EMPTY) {
+            
+            if (mapped.id > 0) {
 
                 setIsLoading(true)
 
                 fetchCustomEventById(mapped.id).then(result => {
-                    setTitle(result.Title)
-                    setDate(result.Date)
-                    setLocationId(result.LocationId)
-                    setSetlistId(result.SetlistId)
-                    setBandId(result.BandId)
+                    setTitle(result.title)
+                    setDate(result.date)
+                    setLocationId(result.locationId)
+                    setSetlistId(result.setlistId)
+                    setBandId(result.bandId)
 
                     setIsLoading(false)
                 })
             }
         }
     }, [])
-
-    //query: "?$type=Read&$id=80968fa2-312c-469f-9115-619d2fef06d5"
-
-    const mapQueryRoute = (query: String) => {
-        const args = mapQuery(query)
-        const _type = GetModalTypeByString(args.get('type') ?? '')
-        const _id = args.get('id') ?? GUID_EMPTY
-
-        return { type: _type, id: _id }
-    }
 
     const htmlConfig = CustomEventModalHtmlAttributesConfiguration;
 
@@ -90,17 +80,17 @@ const CustomEventModalTemplate = (props: IProps) => {
 
     const GetCustomEventForModalType = (type: ModalTypes, elements: any) => {
         const _customEvent: ICustomEvent = {
-            ...CustomEvent.EmptyCustomEvent(),
-            Id: id,
-            Date: date,
-            Title: elements[htmlConfig.Title.ControlId].value,
-            SetlistId: setlistId,
-            LocationId: locationId,
-            BandId: bandId,
+            ...CustomEvent.CreateEmpty(),
+            id: id,
+            date: date,
+            title: elements[htmlConfig.Title.ControlId].value,
+            setlistId: setlistId,
+            locationId: locationId,
+            bandId: bandId,
         }
 
         if (type !== "New") {
-            _customEvent.Id = id
+            _customEvent.id = id
         }
 
         return _customEvent;

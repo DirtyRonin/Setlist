@@ -1,143 +1,158 @@
-import React, { useEffect, useState } from "react";
-import { Col, Row, Navbar, Container, Modal, Form, Button } from "react-bootstrap";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { nameof } from "ts-simple-nameof";
+import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
+import { History } from "history";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import TextField from "@material-ui/core/TextField";
 
 import { AddSongToBandHtmlAttributesConfiguration } from "configuration";
-import { IBand, IBandSong, IBandUser } from "models";
-import { fetchSongById, ReadBandsAsync } from "service";
-import { ContainerCss, NodeListCss, SongFilterCss } from "styles";
+import { IBand, IFilterBandActionProps, ModalTypes } from "models";
+import { Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
+import { UseModalStyles, ActionButton } from 'styles/modalStyles';
+
+import { FilterBandActionProps, Song } from "mapping";
+import { mapQuery } from "utils/routeQueryHelper";
+import { IsFilterableString } from "utils";
+import AddButton from "components/common/AddButton/addButton";
 
 import Node from "./node/AddSongToBandNode"
-import { Song } from "mapping";
-import { mapQuery } from "utils/routeQueryHelper";
+import { GetBandsRequestAsync } from "api/bandApi";
+import { fetchSongById } from "service/epicServices";
+import { fetchBandsWithFilteredExpands } from "service/epicServices/bandCatalogService";
 
 export interface IAddSongToBandComponent {
-    routeQuery: string
+    history: History
     userId: string
-    handleCloseModal(): void
+    handleClose(): void
 }
 
-const AddSongToBandComponent = (props: IAddSongToBandComponent): JSX.Element => {
+const AddSongToBandComponent = ({ history, userId, handleClose }: IAddSongToBandComponent): JSX.Element => {
 
-    const { routeQuery, userId, handleCloseModal } = props
+    const [isLoading, setLoading] = useState(false)
 
-    const TITLE = 'Add Song To Band'
-    const ID = `${TITLE}_id`
+    const [song, setSong] = useState(Song.CreateEmpty());
+
 
     const [bands, setBands] = useState<IBand[]>([]);
-    const [odataCount, setOdataCount] = useState(0);
-    const [song, setSong] = useState(Song.EmptySong());
-    const [isLoading, setIsLoading] = useState(false)
+    const [count, setCount] = useState(0);
+    const [nextLink, setNextLink] = useState('');
 
+    const [searchQuery, setSearchQuery] = useState('');
+    const [currentFilter, setFilter] = useState<IFilterBandActionProps>(FilterBandActionProps.Default({}))
 
     useEffect(() => {
+        const query = history.location.search ?? ''
+        if (query) {
+            const mapped = mapQuery(query)
+            if (mapped.id) {
+                setLoading(true)
+                fetchSongById(mapped.id).then(result => {
+                    setSong(result)
 
-        const mapped = mapQueryRoute(routeQuery)
+                    const newFilter = FilterBandActionProps.Default({ songId: result.id })
+                    setFilter(newFilter)
+                    fetchBands(newFilter)
+                })
+            }
+        }
+    }, []);
 
-        setIsLoading(true)
-        const songId = mapped.id
-        const url = generateODataQuery(songId)
-
-        Promise.all([
-            fetchSongById(songId).then(result => {
-                setSong(result)
-
-            }),
-            ReadBandsAsync(url).then(
-                result => {
-                    setOdataCount(result.Count);
-                    setBands(result.Values);
-                }
-            ).catch().finally()]
-
-        ).then(() => setIsLoading(false))
-    }, [])
-
-    const generateODataQuery = (songId: string) => {
-
-        // get bands that have the current userId and if this band has the songId, return it in property bandsongs. otherwise bangssongs will be empty 
-        // bands?$filter=bandusers/any(d:d/userid eq 54eef1ca-d399-4f5c-b77e-8ff6b0e47083)&$expand=bandsongs($filter= songid eq 37c2047e-6171-441b-b409-b1488f5494e0)
-
-        const BANDUSERS = `${nameof<IBand>(_ => _.BandUsers)}`
-        const USERID = `${nameof<IBandUser>(x => x.UserId)}`
-
-        const BANDSONGS = `${nameof<IBand>(_ => _.BandSongs)}`
-        const SONGID = `${nameof<IBandSong>(x => x.SongId)}`
-
-        return `?$filter=${BANDUSERS}/any(d:d/${USERID} eq ${userId})&$expand=${BANDSONGS}($filter= ${SONGID} eq ${songId})`
+    const fetchBands = (filter: IFilterBandActionProps): void => {
+        fetchBandsWithFilteredExpands(filter).then(
+            resolve => {
+                setBands(resolve.Values)
+                setCount(resolve.Meta.Count);
+                setNextLink(resolve.Meta.NextLink);
+                setLoading(false)
+            }
+        ).catch().finally()
     }
-
-    const mapQueryRoute = (query: String) => {
-        const args = mapQuery(query)
-        const _id = args.get('id') ?? ''
-
-        return { id: _id }
-    }
-
-
-    const addSongToBandDef = AddSongToBandHtmlAttributesConfiguration;
 
     const handleScrollDown = () => {
-        // const { Id, OData } = bandcatalog
-        // const actionProps: INextLinkActionProps = { catalogId: Id, nextLink: OData.NextLink }
+        setLoading(true)
+        GetBandsRequestAsync(nextLink).then(
+            resolve => {
+                setBands(bands.concat(resolve.Values));
+                setCount(resolve.Count);
+                setNextLink(resolve.NextLink);
+                setLoading(false)
+            }
+        );
+    }
 
-        setTimeout(() => {
-            // new nextLink methode
-            //fetchBandCatalogNextLink(actionProps)
-        }, 500);
+    const OnChangeQuery = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        event.preventDefault()
+
+        const value = event.target.value
+        const newFilter: IFilterBandActionProps = { ...currentFilter, filter: { ...currentFilter.filter, Query: value } }
+
+        const refresh = IsFilterableString(currentFilter.filter.Query, newFilter.filter.Query) ? true : false
+
+        setSearchQuery(value)
+
+        if (refresh) {
+            setLoading(true)
+            setFilter(newFilter)
+            fetchBands(newFilter)
+        }
 
     }
 
-    return <Modal show={true} onHide={handleCloseModal}>
-        <Modal.Dialog >
-            <Modal.Header closeButton>
-                <Modal.Title>{song.Title}</Modal.Title>
-            </Modal.Header>
+    const handleShowAddBand = () => {
 
-            <Modal.Body>
-                <NodeListCss id={addSongToBandDef.NodeList.ControlId} >
-                    <Navbar sticky="top" collapseOnSelect expand={false} bg="light" variant="light">
-                        <Navbar.Brand >{`${TITLE}`}</Navbar.Brand>
+        const type: ModalTypes = ModalTypes.New
+        const pathName: string = '/bandModal'
 
-                        <Navbar.Toggle aria-controls={addSongToBandDef.Navbar.ControlId} />
-                        <Navbar.Collapse id={addSongToBandDef.Navbar.ControlId}>
-                            <Row>
-                                <Col sm="6">
-                                    <SongFilterCss>
-                                        {/* <BandFilterComponent
-                                                            CatalogId={bandcatalog.Id}
-                                                            Filter={bandcatalog.Filter}
-                                                            setBandFilter={setBandFilter}
-                                                        /> */}
-                                    </SongFilterCss>
-                                </Col>
-                                <Col sm="6">
-                                    {/* <Form onChange={handleShowAddBand}>
-                                                        <Form.Row>
-                                                            <Form.Group as={Col} controlId={addSongToBandDef.ShowAddBandCheckBox.ControlId}>
-                                                                <Form.Check type="switch" checked={showModal} label={addSongToBandDef.ShowAddBandCheckBox.Label} />
-                                                            </Form.Group>
-                                                        </Form.Row>
-                                                    </Form> */}
+        history.push({
+            pathname: pathName,
+            search: `?$type=${type}`,
+            state: { background: history?.location?.state?.background ?? undefined }
+        })
+    }
 
-                                </Col>
-                            </Row>
-                        </Navbar.Collapse>
 
-                    </Navbar>
+    const htmlConfig = AddSongToBandHtmlAttributesConfiguration;
 
+    const Class = UseModalStyles()
+
+    return (
+        <div className={Class.root}>
+            <DialogContent>
+                <Header >
+                    <HeaderTitle>`Add '{song.title}' to...`</HeaderTitle>
+                    <HeaderOptions>
+                        <SearchFilterCss>
+                            <TextField
+                                autoFocus
+                                fullWidth
+                                margin="normal"
+                                id='AddSongToBandModal'
+                                value={searchQuery}
+                                placeholder='Search...'
+                                onChange={OnChangeQuery}
+                                type='search'
+                            />
+                        </SearchFilterCss>
+                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                            <MenuItem value="Options"  >Options*</MenuItem>
+                            <MenuDivider />
+                            <MenuHeader>Edit</MenuHeader>
+                            <MenuItem value="NewBand" onClick={handleShowAddBand}>New Band</MenuItem>
+                        </Menu>
+                    </HeaderOptions>
+                </Header>
+                {!isLoading && <NodeListCss id={htmlConfig.NodeList.ControlId} >
+                    {count?.toString()}
                     <InfiniteScroll
                         dataLength={bands.length}
                         next={handleScrollDown}
-                        hasMore={bands.length < odataCount}
+                        hasMore={bands.length < count}
                         loader={<h4>Loading...</h4>}
-                        endMessage={
-                            <p style={{ textAlign: 'center' }}>
-                                <b>Yay! You have seen it all</b>
-                            </p>
-                        }
-                        scrollableTarget={addSongToBandDef.NodeList.ControlId}
+                        scrollableTarget={htmlConfig.NodeList.ControlId}
+                        style={InfinitScrollCss}
                     >
                         {bands.map((band, index) => (
                             <Node
@@ -147,16 +162,17 @@ const AddSongToBandComponent = (props: IAddSongToBandComponent): JSX.Element => 
                             />
                         ))}
                     </InfiniteScroll>
-                </NodeListCss>
-                {odataCount?.toString()}
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-            </Modal.Footer>
-        </Modal.Dialog>
-    </Modal>
+                </NodeListCss>}
+                <AddButton onClick={handleShowAddBand} />
+            </DialogContent>
 
-    
+            <DialogActions>
+                <ActionButton onClick={handleClose}>Done</ActionButton>
+            </DialogActions>
+        </div>
+    )
+
+
 };
 
 export default AddSongToBandComponent;

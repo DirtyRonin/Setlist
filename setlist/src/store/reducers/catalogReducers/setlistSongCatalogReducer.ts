@@ -14,7 +14,7 @@ export interface ISetlistSongCatalogState {
 }
 
 const initial: ISetlistSongCatalogState = {
-    setlistSongCatalog: SetlistSongCatalog.Create()
+    setlistSongCatalog: SetlistSongCatalog.Create(0)
 }
 
 export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActions>({
@@ -41,37 +41,48 @@ export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActio
                 return {
                     ...state,
                     Values: action.payload.Values,
-                    OData: action.payload.OData
+                    Meta: action.payload.Meta
                 }
-                case getType(actions.fetchSetlistSongCatalogNextLink.success):
+            case getType(actions.fetchSetlistSongCatalogNextLink.success):
                 return {
                     ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddMap(action.payload.Values)
-                        .GetMap(),
-                    OData: action.payload.OData
+                    Values: state.Values.concat(action.payload.Values),
+                    Meta: action.payload.Meta
                 }
             case getType(actions.addSetlistSongToCatalog.success):
+                const { Values } = state
+                Values.unshift(action.payload)
+
                 return {
                     ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddAsFirst(action.payload.Id, action.payload)
-                        .GetMap()
+                    Values
                 }
             case getType(actions.editSetlistSongInCatalog.success):
-                return {
-                    ...state,
-                    Values: state.Values.set(action.payload.Id, action.payload)
+                {
+
+                    const { Values } = state
+
+                    const index = Values.findIndex(x => x.songId === action.payload.songId)
+                    Values[index] = action.payload
+
+                    return {
+                        ...state, Values
+
+                    }
                 }
             case getType(actions.deleteSetlistSongInCatalog.success): {
+
                 const { Values } = state
-                Values.delete(action.payload)
+
+                const index = Values.findIndex(x => x.songId === action.payload)
+                Values.splice(index, 1)
 
                 return {
                     ...state,
                     Values
                 }
             }
+            
             default:
                 return state;
         }

@@ -8,7 +8,7 @@ import { LocationCatalogHtmlAttributesConfiguration } from "configuration/HtmlAt
 import { FilterLocationActionProps } from "mapping";
 import { INextLinkActionProps, ModalTypes } from "models";
 import { LocationCatalogProps } from "store/containers/catalogs/LocationCatalogContainer";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles";
 import LocationCatalogNodeComponent from "components/nodes/locationCatalogNode";
 import { LocationFilterComponent } from "components/filters/LocationFilter";
 import AddButton from "components/common/AddButton/addButton";
@@ -37,7 +37,7 @@ const LocationCatalogComponent = ({
     const locationCatalogDef = LocationCatalogHtmlAttributesConfiguration
 
     const handleScrollDown = (): void => {
-        const { OData } = locationCatalog
+        const { Meta: OData } = locationCatalog
         const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
@@ -87,19 +87,20 @@ const LocationCatalogComponent = ({
                         <Row>
                             <Col>
                                 <NodeListCss id={locationCatalogDef.NodeList.ControlId} >
-                                    {locationCatalog.OData.Count}
+                                    {locationCatalog.Meta.Count}
                                     <InfiniteScroll
-                                        dataLength={locationCatalog.Values.size}
+                                        dataLength={locationCatalog.Values.length}
                                         next={handleScrollDown}
-                                        hasMore={locationCatalog.Values.size < locationCatalog.OData.Count}
+                                        hasMore={locationCatalog.Values.length < locationCatalog.Meta.Count}
                                         loader={<h4>Loading...</h4>}
                                         scrollableTarget={locationCatalogDef.NodeList.ControlId}
+                                        style={InfinitScrollCss}
                                     >
                                         {Array.from(locationCatalog.Values.values()).map((location, index) => (
                                             <LocationCatalogNodeComponent
                                                 location={location}
                                                 index={index}
-                                                key={location.Id}
+                                                key={location.id}
                                                 history={history}
                                                 setModal={setModal}
                                             />

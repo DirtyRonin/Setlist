@@ -1,38 +1,53 @@
-import Axios, { AxiosResponse } from "axios";
-import { defaultHeader, EndpointConfiguration } from "../Configuration";
-import { IOdataWrapper } from "../models";
-import { ISetlistResource } from "../resource";
+import { WrappResponse } from "mapping/ResponseWrapper";
+import { EndpointConfiguration } from "../Configuration";
+import { IResponseWrapper, ISetlist } from "../models";
+import api from "./baseApi";
 
-const setlistEndpoint = EndpointConfiguration.Setlist;
+const setlistsEndpoint = EndpointConfiguration.Setlist;
 
-export const GetSetlistRequestAsync = async (url: string): Promise<IOdataWrapper<ISetlistResource>> => {
+export const GetSetlistsRequestAsync = async (nextlink?: string): Promise<IResponseWrapper<ISetlist>> => {
+    const url = nextlink ?? setlistsEndpoint.GetEndpointUrl()
 
-    const result = await Axios.get(url, {
-        headers: defaultHeader
-    });
+    const response = await api().get(url);
 
-    const Odata: IOdataWrapper<ISetlistResource> = {
-        Values: result.data.value,
-        Context: result.data["@odata.context"],
-        Count: result.data["@odata.count"],
-        NextLink: result.data["@odata.nextLink"],
-    }
+    const result: IResponseWrapper<ISetlist> = WrappResponse(response);
 
-    return Odata;
+    return result;
 }
 
-export const CreateSetlistRequestAsync = async (setlist: ISetlistResource): Promise<AxiosResponse<ISetlistResource>> => {
-    return await Axios.post<ISetlistResource>(setlistEndpoint.GetEndpointUrl!(), setlist, {
-        headers: defaultHeader
-    });
+export const GetSetlistdByQueryRequestAsync = async (query: string): Promise<IResponseWrapper<ISetlist>> => {
+
+    const url = `${setlistsEndpoint.GetEndpointUrl()}Search/${query}`
+
+    const response = await api().get(url);
+
+    const result: IResponseWrapper<ISetlist> = WrappResponse(response);
+
+    return result;
 }
 
-export const DeleteSetlistRequestAsync = async (setlistId: string): Promise<AxiosResponse<ISetlistResource>> =>
-    await Axios.delete<ISetlistResource>(`${setlistEndpoint.GetEndpointUrl!()}/${setlistId}`, {
-        headers: defaultHeader
-    });
+export const GetSetlistByIdRequestAsync = async (id: number): Promise<ISetlist> =>
+    (await api().get(`${setlistsEndpoint.GetEndpointUrl()}/${id}`)).data
 
-export const UpdateSetlistRequestAsync = async (song: ISetlistResource): Promise<AxiosResponse<ISetlistResource>> =>
-    await Axios.put<ISetlistResource>(`${setlistEndpoint.GetEndpointUrl!()}/${song.Id}`, song, {
-        headers: defaultHeader
-    });
+export const CreateSetlistRequestAsync = async (setlist: ISetlist): Promise<ISetlist> =>
+    (await api().post<ISetlist>(setlistsEndpoint.GetEndpointUrl!(), setlist)).data
+
+export const DeleteSetlistRequestAsync = async (setlistId: number): Promise<number> =>
+    (await api().delete<number>(`${setlistsEndpoint.GetEndpointUrl!()}/${setlistId}`)).data
+
+export const UpdateSetlistRequestAsync = async (setlist: ISetlist): Promise<ISetlist> =>
+    (await api().put<ISetlist>(`${setlistsEndpoint.GetEndpointUrl!()}/${setlist.id}`, setlist)).data
+
+export async function GetSetlistsWithPivotBySongId(songId: number): Promise<IResponseWrapper<ISetlist>> {
+    const response = await api().get(`${setlistsEndpoint.GetEndpointUrl()}HaveSong/${songId}`)
+    const result: IResponseWrapper<ISetlist> = WrappResponse(response);
+
+    return result;
+}
+
+export async function FilterSetlistsWithPivotBySongId(songId: number, query: string): Promise<IResponseWrapper<ISetlist>> {
+    const response = await api().get(`${setlistsEndpoint.GetEndpointUrl()}HaveSongSearch/${songId}/${query}`)
+    const result: IResponseWrapper<ISetlist> = WrappResponse(response);
+
+    return result;
+}

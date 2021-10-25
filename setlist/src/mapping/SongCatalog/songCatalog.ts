@@ -1,10 +1,10 @@
 import { FilterSongActionProps } from "..";
-import { ISong, CatalogTypes, ISongCatalog, ISongFilter, ODataProps, ISongCatalogOptions } from "../../models";
+import { ISong, CatalogTypes, ISongCatalog, ISongFilter, MetaProps, ISongCatalogOptions } from "../../models";
 import { CatalogBase } from "./catalogBase";
 
 export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOptions> implements ISongCatalog {
 
-    private constructor(filter: ISongFilter, oData: ODataProps, options: ISongCatalogOptions, refresh?: boolean, songs: Map<string, ISong> = new Map<string, ISong>()) {
+    private constructor({ filter, oData, options, refresh, songs = [] }: { filter: ISongFilter; oData: MetaProps; options: ISongCatalogOptions; refresh?: boolean; songs?: ISong[] }) {
         super(
             SongCatalog.CatalogId,
             CatalogTypes["Song Catalog"].toString(),
@@ -22,16 +22,12 @@ export class SongCatalog extends CatalogBase<ISong, ISongFilter, ISongCatalogOpt
         options: ISongCatalogOptions = { ShowAddSong: false },
     ): SongCatalog =>
         new SongCatalog(
-            FilterSongActionProps.Default().filter,
-            { NextLink: "", Count: 0, Context: "" },
-            options,
-            refresh,
-            new Map<string, ISong>()
-        )
+            { filter: FilterSongActionProps.Default({}).filter, oData: { NextLink: "", Count: 0 }, options, refresh, songs: [] }        )
 
     public static Create = (): ISongCatalog => SongCatalog.Default(false)
 
-    public static CreateAndUpdate = (options?: ISongCatalogOptions,): ISongCatalog =>
+        //deprecated ? 
+        public static CreateAndUpdate = (options?: ISongCatalogOptions,): ISongCatalog =>
         SongCatalog.Default(true, options)
 
     public static CatalogId: string = `${CatalogTypes["Song Catalog"].toString()}_id`

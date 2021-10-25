@@ -11,7 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import { AddBandSongToSetlistHtmlAttributesConfiguration } from "configuration";
 import { IFilterSetlistActionProps, ISetlist, ModalTypes } from "models";
 import { fetchBandSongById, fetchSetlistsWithFilteredExpands, ReadSetlistAsync } from "service";
-import { Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
+import { Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import { IsFilterableString, mapQuery } from "utils";
 import { BandSong, FilterSetlistActionProps } from "mapping";
 import { UseModalStyles, ActionButton } from 'styles/modalStyles';
@@ -27,7 +27,7 @@ const AddBandSongToSetlistModalComponent = ({ history, handleClose }: IProps): J
 
     const [isLoading, setLoading] = useState(false)
 
-    const [bandSong, setBandSong] = useState(BandSong.EmptyBandSong());
+    const [bandSong, setBandSong] = useState(BandSong.CreateEmpty());
 
     const [setlists, setSetlists] = useState<ISetlist[]>([]);
     const [count, setCount] = useState(0);
@@ -47,7 +47,7 @@ const AddBandSongToSetlistModalComponent = ({ history, handleClose }: IProps): J
                 fetchBandSongById(mapped.id).then(result => {
                     setBandSong(result)
 
-                    const newFilter = FilterSetlistActionProps.Default({ bandSongId: result.Id })
+                    const newFilter = FilterSetlistActionProps.Default({ bandSongId: result.id })
                     setFilter(newFilter)
                     fetchSetlists(newFilter)
                 })
@@ -71,8 +71,8 @@ const AddBandSongToSetlistModalComponent = ({ history, handleClose }: IProps): J
         fetchSetlistsWithFilteredExpands(filter).then(
             resolve => {
                 setSetlists(Array.from(resolve.Values.values()))
-                setCount(resolve.OData.Count);
-                setNextLink(resolve.OData.NextLink);
+                setCount(resolve.Meta.Count);
+                setNextLink(resolve.Meta.NextLink);
                 setLoading(false)
             }
         ).catch().finally()
@@ -129,7 +129,7 @@ const AddBandSongToSetlistModalComponent = ({ history, handleClose }: IProps): J
         <div className={Class.root}>
             <DialogContent>
                 <Header >
-                    <HeaderTitle>`Add '{bandSong.Song.Title}' to...`</HeaderTitle>
+                    <HeaderTitle>`Add '{bandSong.song.title}' to...`</HeaderTitle>
                     <HeaderOptions>
                         <SearchFilterCss>
                             <TextField
@@ -160,6 +160,7 @@ const AddBandSongToSetlistModalComponent = ({ history, handleClose }: IProps): J
                         hasMore={setlists.length < count}
                         loader={<h4>Loading...</h4>}
                         scrollableTarget={htmlConfig.NodeList.ControlId}
+                        style={InfinitScrollCss}
                     >
                         {Array.from(setlists.values()).map((setlist, index) => (
                             <Node

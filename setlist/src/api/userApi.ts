@@ -1,19 +1,19 @@
 import Axios, { AxiosResponse } from "axios";
 
 import { EndpointConfiguration, defaultHeader } from "../Configuration";
-import { IOdataWrapper } from "../models";
+import { IResponseWrapper } from "../models";
 // import { ReadSongsFromBand, ToApiBandlist, ToBandlistAsync, IOdataWrapper } from ".";
 import { IUserResource } from "../resource";
 
 const userEndpoint = EndpointConfiguration.Users;
 
-export const GetUsersRequestAsync = async (url: string): Promise<IOdataWrapper<IUserResource>> => {
+export const GetUsersRequestAsync = async (url: string): Promise<IResponseWrapper<IUserResource>> => {
 
     const result = await Axios.get(url, {
         headers: defaultHeader
     });
 
-    const Odata: IOdataWrapper<IUserResource> = {
+    const Odata: IResponseWrapper<IUserResource> = {
         Values: result.data.value,
         Context: result.data["@odata.context"],
         Count: result.data["@odata.count"],

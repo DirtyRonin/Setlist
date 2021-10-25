@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 
 import { SetlistCatalogHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/setlistHtmlAttributes";
-import { ContainerCss, Header, HeaderOptions, HeaderTitle, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
+import { ContainerCss, Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import { FilterSetlistActionProps } from "mapping";
 import { SetlistCatalogProps } from "store/containers/catalogs/SetlistCatalogContainer";
 import { INextLinkActionProps, ModalTypes } from "models";
@@ -13,9 +13,6 @@ import { SetlistFilterComponent } from "components/filters";
 import SetlistCatalogNodeComponent from "components/nodes/setlistCatalogNode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AddButton from "components/common/AddButton/addButton";
-
-
-
 
 const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
     const {
@@ -44,7 +41,7 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
     const setlistCatalogDef = SetlistCatalogHtmlAttributesConfiguration
 
     const handleScrollDown = () => {
-        const { OData } = setlistCatalog
+        const { Meta: OData } = setlistCatalog
         const actionProps: INextLinkActionProps = { nextLink: OData.NextLink }
 
         setTimeout(() => {
@@ -99,19 +96,20 @@ const SetlistCatalogComponent = (props: SetlistCatalogProps): JSX.Element => {
                         <Row>
                             <Col>
                                 <NodeListCss id={setlistCatalogDef.NodeList.ControlId} >
-                                    {setlistCatalog.OData.Count}
+                                    {setlistCatalog.Meta.Count}
                                     <InfiniteScroll
-                                        dataLength={setlistCatalog.Values.size}
+                                        dataLength={setlistCatalog.Values.length}
                                         next={handleScrollDown}
-                                        hasMore={setlistCatalog.Values.size < setlistCatalog.OData.Count}
+                                        hasMore={setlistCatalog.Values.length < setlistCatalog.Meta.Count}
                                         loader={<h4>Loading...</h4>}
                                         scrollableTarget={setlistCatalogDef.NodeList.ControlId}
+                                        style={InfinitScrollCss}
                                     >
                                         {Array.from(setlistCatalog.Values.values()).map((setlist, index) => (
                                             <SetlistCatalogNodeComponent
                                                 setSetlistIdForSetlistSong={setSetlistIdForSetlistSong}
                                                 setlist={setlist}
-                                                key={setlist.Id}
+                                                key={setlist.id}
                                                 index={index}
                                                 history={history}
                                                 setModal={setModal}

@@ -23,7 +23,7 @@ export const BandSongFilterComponent = (props: IBandSongFilterProps) => {
 
         const elements: any = (event.target as any).form.elements;
 
-        const _filter: IBandSongFilter = { ...filter, Query: elements[SearchQueryInput.ControlId].value,BandId:bandId }
+        const _filter: IBandSongFilter = { ...filter, Query: elements[SearchQueryInput.ControlId].value,bandId:bandId }
 
         const bandSongFilter = FilterBandSongActionProps.Create({ filter: _filter, refresh: true })
 

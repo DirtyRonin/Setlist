@@ -17,7 +17,7 @@ interface IConnectedDispatch {
     fetchSetlistCatalog: (props: IFilterSetlistActionProps) => void
     fetchSetlistCatalogNextLink: (props: INextLinkActionProps) => void
     setModal(props:IModalActionsProps):void
-    setSetlistIdForSetlistSong:(props:string) => void
+    setSetlistIdForSetlistSong:(props:number) => void
 }
 
 interface IProps {
@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     fetchSetlistCatalog:(props: IFilterSetlistActionProps) => dispatch(SetlistAction.fetchSetlistCatalog.request(props)),
     fetchSetlistCatalogNextLink:(props : INextLinkActionProps) => dispatch(SetlistAction.fetchSetlistCatalogNextLink.request(props)),
     setModal:(props:IModalActionsProps) => dispatch(ModalActions.setModal(props)),
-    setSetlistIdForSetlistSong:(props:string) => dispatch(setSetlistIdForSetlistSong(props))
+    setSetlistIdForSetlistSong:(props:number) => dispatch(setSetlistIdForSetlistSong(props))
 })
 
 const SetlistCatalog = (props: SetlistCatalogProps) => (

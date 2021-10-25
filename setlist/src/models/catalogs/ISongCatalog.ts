@@ -3,6 +3,8 @@ import { ISong } from "..";
 
 export interface ISongFilter {
     Query: string;
+    bandId?:number;
+    SetlistId?:number;
     Evergreen: boolean;
     Nineties: boolean;
 }

@@ -11,6 +11,8 @@ import AddBandSongToSetlistModal from "components/modals/AddItemTo/setlist/AddBa
 const AddSongToBandComponent = React.lazy(() => import("components/modals/AddItemTo/band/AddSongToBand"))
 const AddSongToSetlistModalComponent = React.lazy(() => import("components/modals/AddItemTo/setlist/AddSongToSetlistModal"))
 const SetlistSongModalComponent = React.lazy(() => import('components/modals/setlistSongModal'))
+const AddBandSongFromSongsComponent = React.lazy(() => import("components/modals/AddItemTo/band/AddBandSongFromSongs"))
+const AddSetlistSongFromSongsComponent = React.lazy(() => import("components/modals/AddItemTo/setlist/AddSetlistSongFromSongs"))
 
 const SongModalTemplate = React.lazy(() => import("components/modals/songModalTemplate"))
 const BandSongModalTemplate = React.lazy(() => import('components/modals/bandSongModalTemplate'))
@@ -49,18 +51,22 @@ const ModalWrapper = ({
         </PrivateRoute>
 
         <PrivateRoute path="/AddSongToBand">
-            <AddSongToBandComponent
-                userId={userState.id}
-                routeQuery={query}
-                handleCloseModal={handleClose}
-            />
+            <ModalTemplate handleCloseModal={handleClose} title='Add to Setlist'>
+                <AddSongToBandComponent
+                    userId={userState.id}
+                    handleClose={handleClose}
+                    history={history}
+                />
+            </ModalTemplate>
         </PrivateRoute>
 
         <PrivateRoute path="/AddSongToSetlist">
-            <AddSongToSetlistModalComponent
-               handleClose={handleClose}
-               history={history}
-            />
+            <ModalTemplate handleCloseModal={handleClose} title='Add to Setlist'>
+                <AddSongToSetlistModalComponent
+                    handleClose={handleClose}
+                    history={history}
+                />
+            </ModalTemplate>
         </PrivateRoute>
 
         <PrivateRoute path="/bandModal">
@@ -92,6 +98,27 @@ const ModalWrapper = ({
             </ModalTemplate>
         </PrivateRoute>
 
+//
+        <PrivateRoute path="/AddSetlistSongFromSongs">
+            <ModalTemplate handleCloseModal={handleClose} title='Add Band Song to Setlist'>
+                <AddSetlistSongFromSongsComponent
+                userId={userState.id}
+                    handleClose={handleClose}
+                    history={history}
+                />
+            </ModalTemplate>
+        </PrivateRoute>
+
+        <PrivateRoute path="/AddBandSongFromSongs">
+            <ModalTemplate handleCloseModal={handleClose} title='Add Band Song from Songs'>
+                <AddBandSongFromSongsComponent
+                    userId={userState.id}
+                    handleClose={handleClose}
+                    history={history}
+                />
+            </ModalTemplate>
+        </PrivateRoute>
+
         <PrivateRoute path="/setlistModal">
             <ModalTemplate handleCloseModal={handleClose} title='Setlist'>
                 <SetlistModalTemplate
@@ -107,7 +134,7 @@ const ModalWrapper = ({
                 <SetlistSongModalComponent
                     query={query}
                     setlistSongModalActionsProvider={setlistSongModalActionsProvider}
-                    handleCloseModal={handleClose}
+                    handleClose={handleClose}
                 />
             </ModalTemplate>
         </PrivateRoute>

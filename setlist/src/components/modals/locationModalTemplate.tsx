@@ -24,11 +24,11 @@ const LocationModalTemplate = ({ locationModalActionsProvider, handleClose, quer
     const [isLoading, setLoading] = useState(false)
 
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
-    const [id, setId] = useState(GUID_EMPTY)
+    const [id, setId] = useState(0)
 
     useEffect(() => {
         if (query) {
-            const mapped = mapQueryRoute(query)
+            const mapped = mapQuery(query)
 
             setType(mapped.type)
 
@@ -37,22 +37,13 @@ const LocationModalTemplate = ({ locationModalActionsProvider, handleClose, quer
 
                 fetchLocationById(mapped.id).then(result => {
                     setId(mapped.id)
-                    setName({ HasError: false, Message: '', Value: result.Name })
-                    setAddress({ HasError: false, Message: '', Value: result.Address })
+                    setName({ HasError: false, Message: '', Value: result.name })
+                    setAddress({ HasError: false, Message: '', Value: result.address })
                     setLoading(false)
                 })
             }
         }
     }, [])
-
-    const mapQueryRoute = (query: String) => {
-        const args = mapQuery(query)
-        const _type = GetModalTypeByString(args.get('type') ?? '')
-        const _id = args.get('id') ?? ''
-
-        return { type: _type, id: _id }
-    }
-
 
     const handleOnClose = () => {
         setName({ HasError: false, Message: '', Value: '' })
@@ -92,9 +83,9 @@ const LocationModalTemplate = ({ locationModalActionsProvider, handleClose, quer
             const executeLocationModalAction = locationModalActionsProvider[type]
             executeLocationModalAction({
                 value: {
-                    Name: name.Value,
-                    Address: address.Value,
-                    Id: id
+                    name: name.Value,
+                    address: address.Value,
+                    id: id
                 }
             })
             handleOnClose()

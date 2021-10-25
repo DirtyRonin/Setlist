@@ -10,15 +10,19 @@ export class FilterSongActionProps implements IFilterSongActionProps {
         this.refresh = refresh
     }
 
-    public static Default(): IFilterSongActionProps {
+    public static Default({ bandId = 0, setlistId = 0 }: { bandId?: number; setlistId?: number }): IFilterSongActionProps {
         return FilterSongActionProps.Create({
-            Query: "",
-            Evergreen: false,
-            Nineties: false
-        }, true)
+            filter: {
+                Query: "",
+                bandId: bandId,
+                SetlistId: setlistId,
+                Evergreen: false,
+                Nineties: false
+            }, refresh: true
+        })
     }
 
-    public static Create(filter: ISongFilter, refresh: boolean): IFilterSongActionProps {
+    public static Create({ filter, refresh }: { filter: ISongFilter; refresh: boolean; }): IFilterSongActionProps {
         return new FilterSongActionProps(filter, refresh)
     }
 

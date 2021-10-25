@@ -1,12 +1,12 @@
 import { CatalogBase } from "./catalogBase";
-import { IBandSong, IBandSongFilter, IBandSongCatalogOptions, IBandSongCatalog, ODataProps, CatalogTypes } from "../../models";
+import { IBandSong, IBandSongFilter, IBandSongCatalogOptions, IBandSongCatalog, MetaProps, CatalogTypes } from "../../models";
 import { FilterBandSongActionProps } from "../actionsProps";
 
 export class BandSongCatalog extends CatalogBase<IBandSong, IBandSongFilter, IBandSongCatalogOptions> implements IBandSongCatalog {
 
-    BandId: string;
+    bandId: number;
 
-    private constructor(bandId: string, filter: IBandSongFilter, oData: ODataProps, options: IBandSongCatalogOptions, refresh?: boolean, values?: Map<string, IBandSong>) {
+    private constructor(bandId: number, filter: IBandSongFilter, oData: MetaProps, options: IBandSongCatalogOptions, refresh?: boolean, values?: IBandSong[]) {
         super(
             BandSongCatalog.GetCatalogId(bandId),
             CatalogTypes["BandSong Catalog"].toString(),
@@ -17,30 +17,30 @@ export class BandSongCatalog extends CatalogBase<IBandSong, IBandSongFilter, IBa
             refresh,
             values
         )
-        this.BandId = bandId
+        this.bandId = bandId
 
     }
 
     private static Default = (
-        bandId: string,
+        bandId: number,
         refresh: boolean,
         options: IBandSongCatalogOptions = {},
     ): BandSongCatalog =>
         new BandSongCatalog(
             bandId,
             FilterBandSongActionProps.Default(bandId).filter,
-            { NextLink: "", Count: 0, Context: "" },
+            { NextLink: "", Count: 0},
             options,
             refresh,
-            new Map<string, IBandSong>()
+            []
         )
 
 
-    public static Create = (bandId: string): IBandSongCatalog => BandSongCatalog.Default(bandId, false)
+    public static Create = (bandId: number): IBandSongCatalog => BandSongCatalog.Default(bandId, false)
 
-    public static CreateAndUpdate = (bandId: string, options?: IBandSongCatalogOptions): IBandSongCatalog =>
+    public static CreateAndUpdate = (bandId: number, options?: IBandSongCatalogOptions): IBandSongCatalog =>
         BandSongCatalog.Default(bandId, true, options)
 
-    public static GetCatalogId = (bandId: string): string => `${CatalogTypes["BandSong Catalog"].toString()}_${bandId}`
+    public static GetCatalogId = (bandId: number): string => `${CatalogTypes["BandSong Catalog"].toString()}_${bandId}`
 
 }

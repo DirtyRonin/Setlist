@@ -1,91 +1,48 @@
 import { nameof } from "ts-simple-nameof"
 
-import { Setlist } from "mapping"
-import { CreateSetlistAsync, DeleteSetlistAsync, ReadSetlistAsync, UpdateSetlistAsync } from ".."
 import { IFilterSetlistActionProps, IFilterSetlistActionResult, INextLinkActionProps, ISetlist, ISetlistEntityActionProps, ISetlistSong } from "models"
 import { IsMiminumStringLength, QueryBuilder, FilterBuilder, GUID_EMPTY } from "utils"
+import { CreateSetlistRequestAsync, DeleteSetlistRequestAsync, FilterSetlistsWithPivotBySongId, GetSetlistByIdRequestAsync, GetSetlistdByQueryRequestAsync, GetSetlistsRequestAsync, GetSetlistsWithPivotBySongId, UpdateSetlistRequestAsync } from "api/setlistApi"
+import { UnwrappResponse } from "mapping/ResponseWrapper"
 
-const SETLISTSONGS = `${nameof<ISetlist>(_ => _.SetlistSongs)}`
+const SETLISTSONGS = `${nameof<ISetlist>(_ => _.setlistSongs)}`
 
-export const fetchSetlistCatalogAsync = async (props: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
+export const fetchSetlistCatalogAsync = async ({ filter }: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
 
-    const { filter: Filter } = props
-    let query = new QueryBuilder().count()
+    const response = IsMiminumStringLength(filter.Query)
+        ? await GetSetlistdByQueryRequestAsync(filter.Query)
+        : await GetSetlistsRequestAsync()
 
-    const filters: FilterBuilder[] = []
-
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISetlist>(x => x.Title), Filter.Query))
-    }
-
-    if (filters.length) {
-        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
-    }
-
-    query = query.orderBy(`${nameof<ISetlist>(x => x.Title)}`)
-
-    const filter = query.toQuery()
-
-    return await GetFilterSetlistActionResult(filter)
+    return UnwrappResponse(response)
 }
 
-export const fetchSetlistCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterSetlistActionResult> =>
-    await GetFilterSetlistActionResult(props.nextLink)
+export const fetchSetlistCatalogNextLinkAsync = async (props: INextLinkActionProps): Promise<IFilterSetlistActionResult> => {
 
-const GetFilterSetlistActionResult = async (filterQuery: string): Promise<IFilterSetlistActionResult> => {
-    const { NextLink, Values, Context, Count } = await ReadSetlistAsync(filterQuery);
-
-    return {
-        Values: Values?.reduce((map, setlist) => {
-            map.set(setlist.Id, setlist)
-            return map
-        }, new Map<string, ISetlist>()),
-        OData: { NextLink, Context, Count }
-    }
+    const response = await GetSetlistsRequestAsync(props.nextLink);
+    return UnwrappResponse(response);
 }
 
 export const addSetlistToSetlistCatalogAsync = async (props: ISetlistEntityActionProps): Promise<ISetlist> =>
-    await CreateSetlistAsync(props.value)
+    await CreateSetlistRequestAsync(props.value)
 
 export const editSetlistInCatalogAsync = async (props: ISetlistEntityActionProps): Promise<ISetlist> =>
-    await UpdateSetlistAsync(props.value)
+    await UpdateSetlistRequestAsync(props.value)
 
-export const deleteSetlistInCatalogAsync = async (props: ISetlistEntityActionProps): Promise<string> =>
-    (await (DeleteSetlistAsync(props.value.Id))).Id
+export const deleteSetlistInCatalogAsync = async (props: ISetlistEntityActionProps): Promise<number> =>
+    await (DeleteSetlistRequestAsync(props.value.id))
 
-export const fetchSetlistById = async (id: string): Promise<ISetlist> => {
-    let query = new QueryBuilder()
-    query.filter(() => new FilterBuilder().filterGuidExpression(nameof<ISetlist>(x => x.Id), 'eq', id))
-    const filter = query.toQuery()
+export const fetchSetlistById = async (id: number): Promise<ISetlist> =>
+    await GetSetlistByIdRequestAsync(id)
 
-    const setlist = (await GetFilterSetlistActionResult(filter)).Values.get(id) ?? Setlist.EmptySetlist()
-    return setlist
-}
+export const fetchSetlistsWithFilteredExpands = async ({ filter: {SongId,Query} }: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
 
-export const fetchSetlistsWithFilteredExpands = async ({ filter: Filter }: IFilterSetlistActionProps): Promise<IFilterSetlistActionResult> => {
+    if (!SongId)
+        return { Values: [], Meta: { NextLink: '', Count: 0 } }
 
-    let query = new QueryBuilder().count()
+    const response = IsMiminumStringLength(Query)
+        ? await FilterSetlistsWithPivotBySongId(SongId, Query)
+        : await GetSetlistsWithPivotBySongId(SongId)
 
-    const filters: FilterBuilder[] = []
-
-    if (IsMiminumStringLength(Filter.Query)) {
-        filters.push(new FilterBuilder().containsFilterExpression(nameof<ISetlist>(x => x.Title), Filter.Query))
-    }
-
-    if (filters.length) {
-        query.filter(() => filters.reduce((prev, current) => prev.and(() => current)))
-    }
-
-    query = query.orderBy(`${nameof<ISetlist>(x => x.Title)}`)
-
-    const BANDSONGID = `${nameof<ISetlistSong>(x => x.BandSongId)}`
-    query.expand(`${SETLISTSONGS}($filter= ${BANDSONGID} eq ${Filter.BandSongId ?? GUID_EMPTY})`)
-
-    const SONGID = `${nameof<ISetlistSong>(x => x.SongId)}`
-    query.expand(`${SETLISTSONGS}($filter= ${SONGID} eq ${Filter.SongId ?? GUID_EMPTY})`)
-
-    const filter = query.toQuery()
-
-    return await GetFilterSetlistActionResult(filter)
+    return UnwrappResponse(response);
 }
 

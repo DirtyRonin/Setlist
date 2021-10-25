@@ -1,8 +1,8 @@
 import { IBandSong, IBandUser } from "models";
+import { IEntityBase } from "./IEntityBase";
 
-export interface IBand {
-    Id: string;
-    Title: string;
-    BandSongs: Map<string, IBandSong>;
-    BandUsers: Map<string, IBandUser>;
+export interface IBand extends IEntityBase{
+    title: string;
+    bandSongs: IBandSong[];
+    bandUsers: IBandUser[];
 }

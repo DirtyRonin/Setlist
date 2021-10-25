@@ -21,11 +21,11 @@ const CustomEventFilterComponent = (props: IProps) => {
 
         const elements: any = (event.target as any).form.elements;
 
-        const _filter: ICustomEventFilter = { ...filter, Query: elements[htmlConfig.SearchQueryInput.ControlId].value, }
+        const _filter: ICustomEventFilter = { ...filter, query: elements[htmlConfig.SearchQueryInput.ControlId].value, }
 
         const customEventFilter = FilterCustomEventActionProps.Create({ filter: _filter, refresh: true })
 
-        customEventFilter.refresh = IsFilterableString(filter.Query, customEventFilter.filter.Query) ?? false
+        customEventFilter.refresh = IsFilterableString(filter.query, customEventFilter.filter.query) ?? false
 
         if (customEventFilter.refresh) {
             setCustomEventFilter(customEventFilter)
@@ -37,7 +37,7 @@ const CustomEventFilterComponent = (props: IProps) => {
         <Form onChange={handleFilter} >
             <Form.Row>
                 <Form.Group as={Col} controlId={htmlConfig.SearchQueryInput.ControlId}>
-                    <Form.Control type="search" placeholder={htmlConfig.SearchQueryInput.Placeholder} defaultValue={filter.Query} />
+                    <Form.Control type="search" placeholder={htmlConfig.SearchQueryInput.Placeholder} defaultValue={filter.query} />
                 </Form.Group>
             </Form.Row>
         </Form>

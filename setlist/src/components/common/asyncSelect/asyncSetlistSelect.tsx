@@ -23,7 +23,7 @@ const htmlConfig = CustomEventModalHtmlAttributesConfiguration;
 
 function AsyncSetlistSelect({ setlistModalActionsProvider, defaultSetlistId, setlistCatalog, fetchSetlistCatalog, setSetlistFilter, setSetlistId, isReadonly }: props) {
 
-    const [selectedSetlist, setSelectedSetlist] = useState(Setlist.EmptySetlist())
+    const [selectedSetlist, setSelectedSetlist] = useState(Setlist.CreateEmpty())
     const [isLoading, setLoading] = useState(true)
     const [query, setQuery] = useState('')
 
@@ -55,7 +55,7 @@ function AsyncSetlistSelect({ setlistModalActionsProvider, defaultSetlistId, set
 
     const handleClose = () => {
         setSetlistFilter(FilterSetlistActionProps.Create({ filter: { Query: '' }, refresh: false }))
-        setSelectedSetlist(Setlist.EmptySetlist())
+        setSelectedSetlist(Setlist.CreateEmpty())
         setQuery('')
 
         toggleOpen(false);
@@ -65,18 +65,18 @@ function AsyncSetlistSelect({ setlistModalActionsProvider, defaultSetlistId, set
         if (!newValue) {
 
             //clear this component before you leave it
-            setSelectedSetlist(Setlist.EmptySetlist())
+            setSelectedSetlist(Setlist.CreateEmpty())
             setQuery('')
 
             setSetlistId(null)
 
-        } else if (newValue.Id !== GUID_EMPTY) {
+        } else if (newValue.id !== GUID_EMPTY) {
 
             //set the values before you leave it
             setSelectedSetlist(newValue)
-            setQuery(newValue.Title)
+            setQuery(newValue.title)
 
-            setSetlistId(newValue.Id)
+            setSetlistId(newValue.id)
 
 
             setSetlistFilter(FilterSetlistActionProps.Create({ filter: { Query: '' }, refresh: true }))
@@ -85,7 +85,7 @@ function AsyncSetlistSelect({ setlistModalActionsProvider, defaultSetlistId, set
         } else {
 
 
-            setSelectedSetlist(Setlist.EmptySetlist())
+            setSelectedSetlist(Setlist.CreateEmpty())
             setQuery('')
             setSetlistFilter(FilterSetlistActionProps.Create({ filter: { Query: '' }, refresh: true }))
 
@@ -123,7 +123,7 @@ function AsyncSetlistSelect({ setlistModalActionsProvider, defaultSetlistId, set
                     if (typeof option === 'string') {
                         return option;
                     }
-                    return option.Title;
+                    return option.title;
                 }}
                 loading={isLoading || setlistCatalog.Refresh}
                 renderInput={(params) => <TextField
@@ -132,8 +132,8 @@ function AsyncSetlistSelect({ setlistModalActionsProvider, defaultSetlistId, set
                 />}
                 renderOption={(option, { inputValue }) => {
 
-                    const matches = option.Title === CONST_NEW_SETLIST ? match(option.Title, CONST_NEW_SETLIST) : match(option.Title, inputValue);
-                    const parts = parse(option.Title, matches);
+                    const matches = option.title === CONST_NEW_SETLIST ? match(option.title, CONST_NEW_SETLIST) : match(option.title, inputValue);
+                    const parts = parse(option.title, matches);
 
                     return (
                         <div>
@@ -149,8 +149,8 @@ function AsyncSetlistSelect({ setlistModalActionsProvider, defaultSetlistId, set
                     const filtered = filter(options, params) as ISetlist[];
 
                     filtered.unshift({
-                        ...Setlist.EmptySetlist(),
-                        Title: CONST_NEW_SETLIST
+                        ...Setlist.CreateEmpty(),
+                        title: CONST_NEW_SETLIST
                     });
 
                     return filtered;

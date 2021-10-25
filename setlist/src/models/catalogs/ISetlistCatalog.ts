@@ -3,8 +3,8 @@ import { ICatalog } from "./ICatalog";
 
 export interface ISetlistFilter {
     Query: string;
-    BandSongId?: string
-    SongId?: string
+    BandSongId?: number
+    SongId?: number
 }
 
 export interface ISetlistCatalogOptions { }

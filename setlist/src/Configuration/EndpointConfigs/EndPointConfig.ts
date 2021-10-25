@@ -3,13 +3,14 @@ import { BandSongsConfiguration, BandSongsEndPointDefinition } from "./BandSongs
 import { SetSongsConfiguration, SetSongsEndPointDefinition } from "./SetSongsEndPointDefinition";
 import { SetConfiguration, SetEndPointDefinition } from "./SetEndPointDefinition";
 
-const WEB_API_URL = "https://localhost:5001/odata";
+// const WEB_API_URL = "https://localhost:5001/odata";
+const WEB_API_URL = "api";
 
 export const defaultHeader = { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; charset=utf-8" };
 export const OdataPostHeader = { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json; odata.metadata=minimal ; charset=utf-8" };
 
 export const GetEndpointURL = (endpointName: string, actionName?: string): string =>
-    actionName ? `${WEB_API_URL}/${endpointName}/${actionName}` : `${WEB_API_URL}/${endpointName}`;
+    (actionName ? `${WEB_API_URL}/${endpointName}/${actionName}` : `${WEB_API_URL}/${endpointName}`).toLowerCase();
 
 export type NameDefinition = {
     Name: string;

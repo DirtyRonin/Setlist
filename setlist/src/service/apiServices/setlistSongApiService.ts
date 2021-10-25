@@ -4,9 +4,9 @@ import validator from "validator";
 import { GetSetlistSongRequestAsync, CreateSetlistSongRequestAsync, DeleteSetlistSongRequestAsync, UpdateSetlistSongRequestAsync } from "api";
 import { EndpointConfiguration } from "configuration";
 import { SetlistSong } from "mapping";
-import { IOdataWrapper, ISetlistSong } from "models";
+import { IResponseWrapper, ISetlistSong } from "models";
 
-export const ReadSetlistSongAsync = async (filterOrNextLink: string): Promise<IOdataWrapper<ISetlistSong>> => {
+export const ReadSetlistSongAsync = async (filterOrNextLink: string): Promise<IResponseWrapper<ISetlistSong>> => {
 
     const default_url_options = {
         protocols: ['http', 'https', 'ftp'],
@@ -34,7 +34,7 @@ export const ReadSetlistSongAsync = async (filterOrNextLink: string): Promise<IO
 export const CreateSetlistSongAsync = async (setlistSong: ISetlistSong): Promise<ISetlistSong> => {
     const resource = SetlistSong.ToResource(setlistSong)
 
-    const url = `${EndpointConfiguration.SetlistSong.GetEndpointUrl!()}?$expand=${nameof<ISetlistSong>(x => x.Song)}` // gibt props song gleich mit zurück
+    const url = `${EndpointConfiguration.SetlistSong.GetEndpointUrl!()}?$expand=${nameof<ISetlistSong>(x => x.song)}` // gibt props song gleich mit zurück
     const result = await CreateSetlistSongRequestAsync(url, resource)
 
     return SetlistSong.FromResource(result.data)
@@ -43,7 +43,7 @@ export const CreateSetlistSongAsync = async (setlistSong: ISetlistSong): Promise
 export const UpdateSetlistSongAsync = async (setlistSong: ISetlistSong): Promise<ISetlistSong> => {
     const resource = SetlistSong.ToResource(setlistSong)
 
-    const url = `${EndpointConfiguration.SetlistSong.GetEndpointUrl!()}/${setlistSong.Id}?$expand=${nameof<ISetlistSong>(x => x.Song)}`
+    const url = `${EndpointConfiguration.SetlistSong.GetEndpointUrl!()}/${setlistSong.id}?$expand=${nameof<ISetlistSong>(x => x.song)}`
     const result = await UpdateSetlistSongRequestAsync(url, resource)
 
     return SetlistSong.FromResource(result.data)
@@ -51,7 +51,7 @@ export const UpdateSetlistSongAsync = async (setlistSong: ISetlistSong): Promise
 
 export const DeleteSetlistSongAsync = async (setlistSongId: string): Promise<ISetlistSong> => {
 
-    const url = `${EndpointConfiguration.SetlistSong.GetEndpointUrl!()}/${setlistSongId}?$expand=${nameof<ISetlistSong>(x => x.Song)}`
+    const url = `${EndpointConfiguration.SetlistSong.GetEndpointUrl!()}/${setlistSongId}?$expand=${nameof<ISetlistSong>(x => x.song)}`
     const result = await DeleteSetlistSongRequestAsync(url);
 
     return SetlistSong.FromResource(result.data);

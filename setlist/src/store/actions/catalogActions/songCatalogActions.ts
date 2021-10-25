@@ -34,7 +34,7 @@ export const deleteSongInCatalog= createAsyncAction(
     "DELETE_SONG_SUCCESS",
     "DELETE_SONG_FAILURE",
     "DELETE_SONG_CANCEL",
-)<ISongEntityActionProps,string,Error,string>();
+)<ISongEntityActionProps,number,Error,string>();
 
 export const setSongFilter= createAction(
     "SET_SONG_FILTER",

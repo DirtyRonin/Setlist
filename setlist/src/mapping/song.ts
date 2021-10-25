@@ -1,49 +1,50 @@
-import { ISong } from "../models";
+import { IBandSong, ISetlistSong, ISong } from "../models";
 import { GUID_EMPTY } from "../utils";
-import { ISongResource } from "../resource";
 
-export class Song {
+export class Song implements ISong {
 
-    Id: string;
-    Title: string;
-    Artist: string;
-    OriginalKey: string;
-    Evergreen: boolean;
-    Nineties:boolean;
+    id: number;
+    title: string;
+    artist: string;
+    originalKey: string;
+    evergreen: boolean;
+    nineties: boolean;
     // PlayTime: string;
-    Genre: string;
-    Comment: string;
+    genre: string;
+    comment: string;
+    bandSongs: IBandSong[];
+    setlistSongs: ISetlistSong[];
 
-    constructor(title: string, artist: string, originalKey: string, evergreen: boolean,nineties:boolean, genre: string, comment: string, id: string = GUID_EMPTY) {
-        this.Title = title
-        this.Artist = artist
-        this.OriginalKey = originalKey
-        this.Evergreen = evergreen
-        this.Nineties = nineties
-        this.Genre = genre
-        this.Comment = comment
-        this.Id = id;
+    constructor({ title, artist, originalKey, evergreen, nineties, genre, comment, id = GUID_EMPTY, bandSongs = [], setlistSongs = [] }
+        : { title: string; artist: string; originalKey: string; evergreen: boolean; nineties: boolean; genre: string; comment: string; id?: number; bandSongs?: IBandSong[]; setlistSongs?: ISetlistSong[] }) {
+        this.title = title
+        this.artist = artist
+        this.originalKey = originalKey
+        this.evergreen = evergreen
+        this.nineties = nineties
+        this.genre = genre
+        this.comment = comment
+        this.id = id;
+        this.bandSongs = bandSongs
+        this.setlistSongs = setlistSongs
     }
 
-    public static Create({ title, artist, originalKey, evergreen, nineties, genre, comment, id }: { title: string; artist: string; originalKey: string; evergreen: boolean; nineties: boolean; genre: string; comment: string; id?: string; }): ISong {
-        const song = new Song(title, artist, originalKey, evergreen,nineties, genre, comment, id)
-        const { Title, Artist, OriginalKey: Key, Id } = song
-
-        return { Title, Artist, OriginalKey: Key, Id } as ISong
+    public static Create({ title, artist, originalKey, evergreen, nineties, genre, comment, id, bandSongs, setlistSongs }: { title: string; artist: string; originalKey: string; evergreen: boolean; nineties: boolean; genre: string; comment: string; id?: number; bandSongs?: IBandSong[]; setlistSongs?: ISetlistSong[]; }): ISong {
+        return new Song({ title, artist, originalKey, evergreen, nineties, genre, comment, id, bandSongs, setlistSongs })
     }
 
-    public static ToResource(song: ISong): ISongResource {
-        const { Title, Artist, OriginalKey, Evergreen,Nineties, Genre, Comment, Id } = song;
-        return { Title, Artist, OriginalKey, Evergreen,Nineties, Genre, Comment, Id } as ISongResource
-    }
+    // public static ToResource(song: ISong): ISongResource {
+    //     const { title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id } = song;
+    //     return { title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id } as ISongResource
+    // }
 
-    public static FromResource(resource: ISongResource): ISong {
-        const { Title, Artist, OriginalKey, Evergreen,Nineties, Genre, Comment, Id } = resource;
-        return Song.Create({ title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id })
-    }
+    // public static FromResource(resource: ISongResource): ISong {
+    //     const { title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id, bandSongs: BandSongs,setlistSongs: SetlistSongs } = resource;
+    //     return Song.Create({ title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id, bandSongs: BandSongs,setlistSongs:SetlistSongs })
+    // }
 
-    public static EmptySong(): ISong {
-       return Song.Create(
-           { title: "", artist: "", originalKey: "", evergreen: false, nineties: false, genre: "no genre", comment: "no comment" }        )
+    public static CreateEmpty(): ISong {
+        return Song.Create(
+            { title: "", artist: "", originalKey: "", evergreen: false, nineties: false, genre: "no genre", comment: "no comment" })
     }
 }

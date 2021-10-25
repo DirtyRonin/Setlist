@@ -23,7 +23,7 @@ export const fetchCurrentUser = async (userName: string): Promise<IUser> => {
 
     const results = await ReadUsersAsync(filter)
 
-    const user = results.Values && results.Values.length === 1 ? results.Values[0] : User.DefaultUser()
+    const user = results.Values && results.Values.length === 1 ? results.Values[0] : User.CreateEmpty()
 
     return user;
 }

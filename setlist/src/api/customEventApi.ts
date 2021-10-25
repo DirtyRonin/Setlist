@@ -1,38 +1,69 @@
-import Axios, { AxiosResponse } from "axios";
-import { defaultHeader, EndpointConfiguration } from "../Configuration";
-import { IOdataWrapper } from "../models";
-import { ICustomEventResource } from "../resource";
+import { EndpointConfiguration } from "configuration";
+import { CustomEvent } from "mapping";
+import { UnwrappPivot, WrappResponse } from "mapping/ResponseWrapper";
+import { ICustomEvent, IResponseWrapper, ISong } from "models";
+import validator from "validator";
+import api from "./baseApi";
 
 const customEventsEndpoint = EndpointConfiguration.CustomEvents;
 
-export const GetCustomEventRequestAsync = async (url: string): Promise<IOdataWrapper<ICustomEventResource>> => {
-
-    const result = await Axios.get(url, {
-        headers: defaultHeader
-    });
-
-    const Odata: IOdataWrapper<ICustomEventResource> = {
-        Values: result.data.value,
-        Context: result.data["@odata.context"],
-        Count: result.data["@odata.count"],
-        NextLink: result.data["@odata.nextLink"],
+type CustomEventPivot = ICustomEvent & {
+    "pivot": {
+        "bandId": number
+        "created_at": Date
+        "popularity": number
+        "songId": number
+        "updated_at": Date
     }
-
-    return Odata;
 }
 
-export const CreateCustomEventRequestAsync = async (customEvent: ICustomEventResource, expand:string = ''): Promise<AxiosResponse<ICustomEventResource>> => {
-    return await Axios.post<ICustomEventResource>(`${customEventsEndpoint.GetEndpointUrl!()}/${expand}`, customEvent, {
-        headers: defaultHeader
-    });
+export const GetCustomEventsRequestAsync = async (bandIdOrNextlink: string): Promise<IResponseWrapper<ICustomEvent>> => {
+
+    const url = validator.isNumeric(bandIdOrNextlink)
+        ? `${customEventsEndpoint.GetEndpointUrl()}/${bandIdOrNextlink}` // is bandId
+        : bandIdOrNextlink //ia nextlink
+
+    return await getRequest(url);
 }
 
-export const DeleteCustomEventRequestAsync = async (customEventId: string): Promise<AxiosResponse<ICustomEventResource>> =>
-    await Axios.delete<ICustomEventResource>(`${customEventsEndpoint.GetEndpointUrl!()}/${customEventId}`, {
-        headers: defaultHeader
-    });
+export const GetCustomEventdByQueryRequestAsync = async (bandId: number, query: string): Promise<IResponseWrapper<ICustomEvent>> => {
 
-export const UpdateCustomEventRequestAsync = async (customEvent: ICustomEventResource, expand:string = ''): Promise<AxiosResponse<ICustomEventResource>> =>
-    await Axios.put<ICustomEventResource>(`${customEventsEndpoint.GetEndpointUrl!()}/${customEvent.Id}${expand}`, customEvent, {
-        headers: defaultHeader
-    });
+    const url = `${customEventsEndpoint.GetEndpointUrl()}Search/${bandId}/${query}`
+
+    return await getRequest(url);
+}
+
+async function getRequest(url: string): Promise<IResponseWrapper<ICustomEvent>> {
+    const response = await api().get<CustomEventPivot>(url);
+
+    const result = UnwrappPivot(response, convertToCustomEvent);
+
+    return result;
+}
+
+export const GetCustomEventByIdRequestAsync = async (bandId: number, locationId: number, setlistId: number): Promise<ICustomEvent> => {
+    const response = await api().get(`${customEventsEndpoint.GetEndpointUrl()}/${bandId}/${locationId}/${setlistId}`)
+    const result = convertToCustomEvent(response.data);
+    return result
+}
+
+export async function CreateCustomEventRequestAsync(customEvent: ICustomEvent): Promise<ICustomEvent> {
+    const response = await api().post(customEventsEndpoint.GetEndpointUrl!(), customEvent)
+    const result = convertToCustomEvent(response.data);
+    return result
+}
+
+export async function DeleteCustomEventRequestAsync(bandId: number, locationId: number, setlistId: number): Promise<number> {
+    return (await api().delete<number>(`${customEventsEndpoint.GetEndpointUrl!()}/${bandId}/${locationId}/${setlistId}`)).data;
+}
+
+export async function UpdateCustomEventRequestAsync(customEvent: ICustomEvent): Promise<ICustomEvent> {
+    const {bandId,locationId,setlistId}=customEvent
+    const response = await api().put(`${customEventsEndpoint.GetEndpointUrl!()}/${bandId}/${locationId}/${setlistId}`, customEvent)
+    const result = convertToCustomEvent(response.data);
+    return result
+}
+
+
+const convertToCustomEvent = (response: CustomEventPivot): ICustomEvent =>
+    CustomEvent.CreateEmpty();
