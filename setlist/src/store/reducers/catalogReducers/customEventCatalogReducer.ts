@@ -41,31 +41,24 @@ export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActio
             case getType(actions.fetchCustomEventCatalogNextLink.success):
                 return {
                     ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddMap(action.payload.Values)
-                        .GetMap(),
+                    Values: [...state.Values, ...action.payload.Values],
                     Meta: action.payload.Meta
                 }
             case getType(actions.addCustomEventToCatalog.success):
                 return {
                     ...state,
-                    Values: MapHelper.Create(state.Values)
-                        .AddAsFirst(action.payload.id, action.payload)
-                        .GetMap(),
+                    Values: [action.payload, ...state.Values],
                     Meta: { ...state.Meta, Count: state.Meta.Count + 1 }
                 }
             case getType(actions.editCustomEventInCatalog.success):
                 return {
                     ...state,
-                    Values: state.Values.set(action.payload.id, action.payload)
+                    Values: state.Values.map(x => x.id != action.payload.id ? x : action.payload)
                 }
             case getType(actions.deleteCustomEventInCatalog.success): {
-                const { Values } = state
-                Values.delete(action.payload)
-
                 return {
                     ...state,
-                    Values,
+                    Values:state.Values.filter(_=> _.id !== action.payload),
                     Meta: { ...state.Meta, Count: state.Meta.Count - 1 }
                 }
             }

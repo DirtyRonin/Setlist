@@ -23,6 +23,7 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
         fetchCustomEventCatalogNextLink,
         setCustomEventFilter,
         setModal,
+        setSetlistIdForSetlistSong,
         history
     } = props;
 
@@ -99,6 +100,7 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
                                     >
                                         {customEventCatalog.Values.map((customEvent, index) => (
                                             <CustomEventCatalogNodeComponent
+                                                setSetlistIdForSetlistSong={setSetlistIdForSetlistSong}
                                                 customEvent={customEvent}
                                                 index={index}
                                                 setModal={setModal}

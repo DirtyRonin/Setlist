@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Theme, createStyles, makeStyles, useTheme } from '@material-ui/core/styles';
 
 // export const DefaultNodeWrapperStyle = styled.div`
 // min-width: 235px;
@@ -18,8 +19,12 @@ export const DefaultNodeWrapperStyle = styled.div`
   padding: 15px;
   margin: 0 5px 10px 5px;
   background: white;
-  border: 1px dashed white;
+  border: 1px solid white;
   opacity: 1;
+  transition: 0.2s;
+  &:hover {
+    background: linear-gradient(45deg, #DA4453, #89216B);
+  }
 `
 
 export const DefaultNodeImageStyle = styled.div`
@@ -38,3 +43,31 @@ export const DefaultLabelStyle = styled.label`
   text-overflow: ellipsis;
   display: block;
 `
+
+export const DefaultSongNodeStyle = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+    },
+    details: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    content: {
+      flex: '1 0 auto',
+    },
+    cover: {
+      width: 151,
+    },
+    controls: {
+      display: 'flex',
+      alignItems: 'center',
+      paddingLeft: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+    },
+    playIcon: {
+      height: 38,
+      width: 38,
+    },
+  }),
+);

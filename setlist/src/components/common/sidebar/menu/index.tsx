@@ -19,7 +19,7 @@ const Wrapper = styled.nav`
 
 const itemsData = [
   {
-    name: 'Dashboard',
+    name: 'Custom Event',
     icon: IconDashboard(),
     link: '/'
   },
@@ -49,9 +49,9 @@ const itemsData = [
     link: '/location'
   },
   {
-    name: 'Custom Event',
+    name: 'Dashboard',
     icon: IconActivity(),
-    link: '/customevent'
+    link: '/dashboard'
   },
   {
     name: 'Settings',

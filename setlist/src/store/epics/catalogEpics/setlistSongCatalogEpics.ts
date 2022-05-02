@@ -1,13 +1,15 @@
-import { isActionOf } from "typesafe-actions";
-import { combineEpics, Epic } from "redux-observable";
+import { isActionOf, PayloadAction } from "typesafe-actions";
+import { combineEpics, Epic, StateObservable } from "redux-observable";
 import { from, of } from "rxjs";
 import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 
-import { SetlistSongCatalogActions } from "store/reducers/catalogReducers/setlistSongCatalogReducer"
+import { ISetlistSongCatalogState, SetlistSongCatalogActions } from "store/reducers/catalogReducers/setlistSongCatalogReducer"
 
 import * as Action from "store/actions/catalogActions/setlistSongCatalogActions";
 
 import { deleteSetlistSongInCatalogAsync, editSetlistSongInCatalogAsync, fetchSetlistSongCatalogAsync, fetchSetlistSongCatalogNextLinkAsync, NewSetlistSong } from "service";
+import { SwapSetlistSongsRequestAsync } from "api";
+import { RootState } from "store";
 
 const fetchSetlistSongCatalogsEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogActions, any> = (action$) =>
     action$.pipe(
@@ -72,12 +74,53 @@ const deleteSetlistSongEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogA
     );
 }
 
+const swapSetlistSongEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogActions, RootState> = (action$, state$) => {
 
+    return action$.pipe(
+        filter(isActionOf(Action.swapSetlistSongInCatalog.request)),
+        switchMap(action => {
+
+            const ids = getIdsForOrders(action, state$)
+
+            return from(SwapSetlistSongsRequestAsync(ids)).pipe(
+                map(Action.swapSetlistSongInCatalog.success),
+                catchError((error: Error) => of(Action.swapSetlistSongInCatalog.failure(error))),
+                takeUntil(action$.pipe(filter(isActionOf(Action.swapSetlistSongInCatalog.cancel))))
+            )
+        }
+
+        )
+    );
+}
+
+const getIdsForOrders = (action: PayloadAction<"SWAP_SETLISTSONG_REQUEST", number[]>, state$: StateObservable<RootState>): number[] => (
+    action.payload.map(
+        _ => state$.value.setlistSongCatalogReducers.setlistSongCatalog.Values.find(
+            __ => __.order === _
+        )?.id ?? -1)
+
+
+    //     const result: number[] = []
+    // action.payload.forEach(
+    //     _ => state$.value.setlistSongCatalogReducers.setlistSongCatalog.Values.forEach(
+    //         __ => {
+    //             if (__.order === _)
+    //                 result.push(__.id)
+    //         }
+    //     )
+    // )
+
+    // return result;
+)
 
 export const setlistSongCatalogEpics = combineEpics(
     fetchSetlistSongCatalogsEpic,
     fetchSetlistSongCatalogNextLinkEpic,
-addSetlistSongEpic,
-editSetlistSongEpic,
-deleteSetlistSongEpic
+    addSetlistSongEpic,
+    editSetlistSongEpic,
+    deleteSetlistSongEpic,
+    swapSetlistSongEpic
 )
+
+
+

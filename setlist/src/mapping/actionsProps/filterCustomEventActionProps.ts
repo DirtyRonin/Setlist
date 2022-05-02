@@ -19,6 +19,7 @@ export class FilterCustomEventActionProps implements IFilterCustomEventActionPro
 
                 filter: {
                     query: '',
+                    bandId:0
                 },
                 refresh: true
             })

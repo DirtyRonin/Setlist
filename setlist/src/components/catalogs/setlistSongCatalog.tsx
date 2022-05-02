@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { MenuDivider, MenuHeader, Menu, MenuItem } from "@szhsin/react-menu";
@@ -15,6 +15,7 @@ import { INextLinkActionProps, ModalTypes } from "models";
 import AddButton from "components/common/AddButton/addButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SetlistSongFilterComponent } from "components/filters";
+import { GetSetlistByIdRequestAsync } from "api/setlistApi";
 
 
 const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Element => {
@@ -27,11 +28,13 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
         fetchSetlistSongCatalog,
         fetchSetlistSongCatalogNextLink,
         setModal,
+        setSetlistSongsOrder
     } = props
 
     useEffect(() => {
         const filter = FilterSetlistSongActionProps.CreateFromCatalog(setlistSongCatalog)
         fetchSetlistSongCatalog(filter)
+        fetchSetlist(filter.filter.SetlistId)
     }, []);
 
     useEffect(() => {
@@ -39,8 +42,20 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
             const filter = FilterSetlistSongActionProps.CreateFromCatalog(setlistSongCatalog)
             fetchSetlistSongCatalog(filter)
         }
-
     }, [setlistSongCatalog.Refresh]);
+
+    const fetchSetlist = (id: number) => {
+        GetSetlistByIdRequestAsync(id).then(
+            result => {
+                const { customEventId, title } = result;
+                setCuomstEventId(+ customEventId)
+                setSetlistTitle(title)
+            })
+    }
+
+    const [customEventId, setCuomstEventId] = useState(0)
+    const [setlistTitle, setSetlistTitle] = useState('')
+
 
     const htmlConfig = SetlistSongCatalogHtmlAttributesConfiguration
 
@@ -60,12 +75,13 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
 
         history.push({
             pathname: pathName,
-            search: `?$type=${type}&$id=${setlistSongCatalog.SetlistId}`,
+            search: `?$type=${type}&$setlistId=${setlistSongCatalog.SetlistId}&$customEventId=${customEventId}`,
             state: { background: history.location }
         })
     }
 
     const handleShowAddSetlistSong = () => createModal(ModalTypes.Add, '/AddSetlistSongFromSongs')
+    const handleShowCompareWithPriorSetlists = () => createModal(ModalTypes.Add, '/setlistEditorModal')
 
     return <div >
 
@@ -76,7 +92,7 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                         <Row>
                             <Col>
                                 <Header >
-                                    <HeaderTitle>Setlist Songs</HeaderTitle>
+                                    <HeaderTitle>{setlistTitle}</HeaderTitle>
 
                                     <HeaderOptions>
                                         <SearchFilterCss>
@@ -91,6 +107,7 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                                             <MenuDivider />
                                             <MenuHeader>Edit</MenuHeader>
                                             <MenuItem value="NewSetlistSong" onClick={handleShowAddSetlistSong}>Add Songs</MenuItem>
+                                            <MenuItem value="NewSetlistSong" onClick={handleShowCompareWithPriorSetlists}>Compare with Prior Setlists</MenuItem>
                                         </Menu>
                                     </HeaderOptions>
                                 </Header>
@@ -110,11 +127,13 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                                     >
                                         {setlistSongCatalog.Values.map((setlistSong, index) => (
                                             <SetlistSongCatalogNodeComponent
+                                                setSetlistSongsOrder={setSetlistSongsOrder}
                                                 setlistSong={setlistSong}
                                                 index={index}
                                                 key={`${setlistSongCatalog.Id}_${setlistSong.songId}`}
                                                 setModal={setModal}
                                                 history={history}
+                                                setlistSongsCount={setlistSongCatalog.Meta.Count}
                                             />
                                         ))}
                                     </InfiniteScroll>

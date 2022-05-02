@@ -3,16 +3,12 @@ import styled from "styled-components";
 
 export const ContainerCss = styled.div`
     min-height: 500px;    
-    max-height: 800px;
+    max-height: 1200px;
     display: flex;
     flex-direction: column;
     width: 100%;
     min-width: 250px;
-    background-color: #fafafa;
-    padding: 40px;
-    @media (max-width: 450px) {
-        padding: 10px;
-    }
+    background-color: white;
 `;
 
 const variables = {
@@ -46,7 +42,7 @@ export const HeaderOptions = styled.div`
 
 export const NodeListCss = styled.div`
     overflow: auto;
-    max-height: 400px;    
+    max-height: 800px;    
     display: grid;
     grid-template-columns: none;
     grid-template-rows: repeat(4, auto);
@@ -61,7 +57,7 @@ export const NodeListCss = styled.div`
 
 //min-height für die Darstellung des Optionsmenüs
 export const InfinitScrollCss: CSSProperties = {
-  minHeight: '400px'
+  minHeight: '300px'
 }
 
 

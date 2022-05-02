@@ -37,7 +37,7 @@ export const Modal = styled.div`
     display: flex;
     flex-direction: column;
     min-width: 300px;
-    width: 30%;
+    width: 70%;
     min-height: 30vh;
     background-color: ${variables.colorWhite};
     border-radius: 20px;

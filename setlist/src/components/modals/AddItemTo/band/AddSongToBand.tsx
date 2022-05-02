@@ -25,11 +25,10 @@ import { fetchBandsWithFilteredExpands } from "service/epicServices/bandCatalogS
 
 export interface IAddSongToBandComponent {
     history: History
-    userId: string
     handleClose(): void
 }
 
-const AddSongToBandComponent = ({ history, userId, handleClose }: IAddSongToBandComponent): JSX.Element => {
+const AddSongToBandComponent = ({ history, handleClose }: IAddSongToBandComponent): JSX.Element => {
 
     const [isLoading, setLoading] = useState(false)
 

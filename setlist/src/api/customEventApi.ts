@@ -7,28 +7,20 @@ import api from "./baseApi";
 
 const customEventsEndpoint = EndpointConfiguration.CustomEvents;
 
-type CustomEventPivot = ICustomEvent & {
-    "pivot": {
-        "bandId": number
-        "created_at": Date
-        "popularity": number
-        "songId": number
-        "updated_at": Date
-    }
+type CustomEventPivot = Omit<ICustomEvent, 'date'> & {
+    date: string
 }
 
-export const GetCustomEventsRequestAsync = async (bandIdOrNextlink: string): Promise<IResponseWrapper<ICustomEvent>> => {
+export const GetCustomEventsRequestAsync = async (nextlink?: string): Promise<IResponseWrapper<ICustomEvent>> => {
 
-    const url = validator.isNumeric(bandIdOrNextlink)
-        ? `${customEventsEndpoint.GetEndpointUrl()}/${bandIdOrNextlink}` // is bandId
-        : bandIdOrNextlink //ia nextlink
+    const url = nextlink ?? customEventsEndpoint.GetEndpointUrl()
 
     return await getRequest(url);
 }
 
-export const GetCustomEventdByQueryRequestAsync = async (bandId: number, query: string): Promise<IResponseWrapper<ICustomEvent>> => {
+export const GetCustomEventdByQueryRequestAsync = async (query: string): Promise<IResponseWrapper<ICustomEvent>> => {
 
-    const url = `${customEventsEndpoint.GetEndpointUrl()}Search/${bandId}/${query}`
+    const url = `${customEventsEndpoint.GetEndpointUrl()}Search/${query}`
 
     return await getRequest(url);
 }
@@ -41,8 +33,8 @@ async function getRequest(url: string): Promise<IResponseWrapper<ICustomEvent>> 
     return result;
 }
 
-export const GetCustomEventByIdRequestAsync = async (bandId: number, locationId: number, setlistId: number): Promise<ICustomEvent> => {
-    const response = await api().get(`${customEventsEndpoint.GetEndpointUrl()}/${bandId}/${locationId}/${setlistId}`)
+export const GetCustomEventByIdRequestAsync = async (id: number): Promise<ICustomEvent> => {
+    const response = await api().get(`${customEventsEndpoint.GetEndpointUrl()}/${id}`)
     const result = convertToCustomEvent(response.data);
     return result
 }
@@ -53,17 +45,22 @@ export async function CreateCustomEventRequestAsync(customEvent: ICustomEvent): 
     return result
 }
 
-export async function DeleteCustomEventRequestAsync(bandId: number, locationId: number, setlistId: number): Promise<number> {
-    return (await api().delete<number>(`${customEventsEndpoint.GetEndpointUrl!()}/${bandId}/${locationId}/${setlistId}`)).data;
+export async function DeleteCustomEventRequestAsync(id: number): Promise<number> {
+    return (await api().delete<number>(`${customEventsEndpoint.GetEndpointUrl!()}/${id}`)).data;
 }
 
 export async function UpdateCustomEventRequestAsync(customEvent: ICustomEvent): Promise<ICustomEvent> {
-    const {bandId,locationId,setlistId}=customEvent
-    const response = await api().put(`${customEventsEndpoint.GetEndpointUrl!()}/${bandId}/${locationId}/${setlistId}`, customEvent)
+
+    const {location,
+        band,
+        setlist,
+        setlistId,
+        ...rest} = customEvent
+
+    const response = await api().put(`${customEventsEndpoint.GetEndpointUrl!()}/${customEvent.id}`, rest)
     const result = convertToCustomEvent(response.data);
     return result
 }
 
 
-const convertToCustomEvent = (response: CustomEventPivot): ICustomEvent =>
-    CustomEvent.CreateEmpty();
+const convertToCustomEvent = (response: CustomEventPivot): ICustomEvent => ({ ...response, date: new Date(response.date.toString()) })

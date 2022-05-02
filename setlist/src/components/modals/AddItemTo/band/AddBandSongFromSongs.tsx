@@ -24,11 +24,10 @@ import { fetchBandById } from "service/epicServices/bandCatalogService";
 
 export interface IAddSongToBandComponent {
     history: History
-    userId: string
     handleClose(): void
 }
 
-const AddBandSongFromSongsComponent = ({ history, userId, handleClose }: IAddSongToBandComponent): JSX.Element => {
+const AddBandSongFromSongsComponent = ({ history, handleClose }: IAddSongToBandComponent): JSX.Element => {
 
     const [isLoading, setLoading] = useState(false)
 

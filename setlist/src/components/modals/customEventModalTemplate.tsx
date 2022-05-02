@@ -10,10 +10,10 @@ import { CustomEventModalHtmlAttributesConfiguration } from "configuration/HtmlA
 
 import WrapDateTimePicker from "components/common/dateTimePicker/dateTimePicker";
 import AsyncLocationSelect from "components/common/asyncSelect/asyncLocationSelect";
-import { fetchCustomEventById } from "service";
 import AsyncSetlistSelect from "components/common/asyncSelect/asyncSetlistSelect";
 import AsyncBandSelect from "components/common/asyncSelect/asyncBandSelect";
 import { ActionButton, UseModalStyles } from "styles/modalStyles";
+import { fetchCustomEventById } from "service";
 
 interface IProps {
     handleClose(): void
@@ -30,7 +30,7 @@ const CustomEventModalTemplate = (props: IProps) => {
     const [id, setId] = useState(0)
 
     const [title, setTitle] = useState('')
-    const [date, setDate] = useState<Date | null>(null);
+    const [date, setDate] = useState(new Date());
     const [locationId, setLocationId] = useState(0);
     const [setlistId, setSetlistId] = useState(0);
     const [bandId, setBandId] = useState(0);
@@ -41,7 +41,7 @@ const CustomEventModalTemplate = (props: IProps) => {
 
             setType(mapped.type)
             setId(mapped.id)
-            
+
             if (mapped.id > 0) {
 
                 setIsLoading(true)
@@ -97,22 +97,17 @@ const CustomEventModalTemplate = (props: IProps) => {
     }
 
     const handleDateChange = (value: MaterialUiPickersDate) => {
-        setDate(value)
+        if (value)
+            setDate(value)
     };
 
     const IsReadonly = IsModalReadonly(type)
 
     const Class = UseModalStyles()
 
-    return (<div>
+    return (<>
         {!isLoading && <form className={Class.root} noValidate autoComplete="off" onSubmit={handleOnClick} method="GET">
             <TextField disabled={IsReadonly} id={htmlConfig.Title.ControlId} label={htmlConfig.Title.Label} defaultValue={title} />
-            <WrapDateTimePicker
-                date={date}
-                isReadonly={IsReadonly}
-                htmlConfig={htmlConfig.Date}
-                handleDateChange={handleDateChange}
-            />
             < AsyncBandSelect
                 isReadonly={IsReadonly}
                 defaultBandId={bandId}
@@ -123,15 +118,22 @@ const CustomEventModalTemplate = (props: IProps) => {
                 defaultLocationId={locationId}
                 setLocationId={setLocationId}
             />
-            < AsyncSetlistSelect
+            <WrapDateTimePicker
+                date={date}
                 isReadonly={IsReadonly}
+                htmlConfig={htmlConfig.Date}
+                handleDateChange={handleDateChange}
+            />
+            {/* < AsyncSetlistSelect
+                isReadonly={IsReadonly}
+                defaultBandId={bandId}
                 defaultSetlistId={setlistId}
                 setSetlistId={setSetlistId}
-            />
+            /> */}
             <ActionButton type="submit">{type}</ActionButton>
         </form>
         }
-    </div>
+    </>
     )
 }
 

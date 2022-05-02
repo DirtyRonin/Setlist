@@ -4,7 +4,7 @@ import { ModalTypes } from "models"
 import validator from "validator"
 import { GetModalTypeByString } from "./modalTypesHelper"
 
-export const mapQuery = (query: String): { type: ModalTypes; id: number; bandId: number; songId: number, setlistId: number } => {
+export const mapQuery = (query: String): { type: ModalTypes; id: number; bandId: number; songId: number, setlistId: number, customEventId: number } => {
     const args = query.substring(2).split('&$').reduce((map, querySegment) => {
         const props = querySegment.split('=')
         map.set(props[0], props[1])
@@ -19,7 +19,8 @@ export const mapQuery = (query: String): { type: ModalTypes; id: number; bandId:
         type: GetModalTypeByString(getValue('type')),
         bandId: getId('bandId'),
         songId: getId('songId'),
-        setlistId: getId('setlistId')
+        setlistId: getId('setlistId'),
+        customEventId: getId('customEventId')
     }
 }
 

@@ -20,26 +20,33 @@ export const fetchSetlistSongCatalogNextLink = createAsyncAction(
     "FETCH_SETLISTSONG_NEXTLINK_CANCEL",
 )<INextLinkActionProps, IFilterSetlistSongActionResult, Error, string>();
 
-export const addSetlistSongToCatalog= createAsyncAction(
+export const addSetlistSongToCatalog = createAsyncAction(
     "NEW_SETLISTSONG_REQUEST",
     "NEW_SETLISTSONG_SUCCESS",
     "NEW_SETLISTSONG_FAILURE",
     "NEW_SETLISTSONG_CANCEL",
-)<ISetlistSongEntityActionProps,ISetlistSong,Error,string>();
+)<ISetlistSongEntityActionProps, ISetlistSong, Error, string>();
 
-export const editSetlistSongInCatalog= createAsyncAction(
+export const editSetlistSongInCatalog = createAsyncAction(
     "EDIT_SETLISTSONG_REQUEST",
     "EDIT_SETLISTSONG_SUCCESS",
     "EDIT_SETLISTSONG_FAILURE",
     "EDIT_SETLISTSONG_CANCEL",
-)<ISetlistSongEntityActionProps,ISetlistSong,Error,string>();
+)<ISetlistSongEntityActionProps, ISetlistSong, Error, string>();
 
-export const deleteSetlistSongInCatalog= createAsyncAction(
+export const deleteSetlistSongInCatalog = createAsyncAction(
     "DELETE_SETLISTSONG_REQUEST",
     "DELETE_SETLISTSONG_SUCCESS",
     "DELETE_SETLISTSONG_FAILURE",
     "DELETE_SETLISTSONG_CANCEL",
-)<ISetlistSongEntityActionProps,number,Error,string>();
+)<ISetlistSongEntityActionProps, number, Error, string>();
+
+export const swapSetlistSongInCatalog = createAsyncAction(
+    "SWAP_SETLISTSONG_REQUEST",
+    "SWAP_SETLISTSONG_SUCCESS",
+    "SWAP_SETLISTSONG_FAILURE",
+    "SWAP_SETLISTSONG_CANCEL",
+)<number[], number[], Error, string>();
 
 export const setSetlistSongFilter = createAction(
     "SET_SETLIST_SONG_FILTER",

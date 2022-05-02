@@ -68,7 +68,7 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
             setSelectedLocation(Location.CreateEmpty())
             setQuery('')
 
-            setLocationId(null)
+            setLocationId(0)
 
         } else if (newValue.id !== GUID_EMPTY) {
 
@@ -180,9 +180,9 @@ interface IConnectedDispatch {
 }
 
 interface IProps {
-    defaultLocationId: string | null
+    defaultLocationId: number
     isReadonly: boolean
-    setLocationId: (id: string | null) => void
+    setLocationId: (id: number) => void
 }
 
 interface IStateProps extends IProps {

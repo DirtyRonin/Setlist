@@ -20,6 +20,9 @@ const LocationModalTemplate = React.lazy(() => import('components/modals/locatio
 const CustomEventModalTemplate = React.lazy(() => import('components/modals/customEventModalTemplate'))
 const BandModalTemplate = React.lazy(() => import('components/modals/BandModalTemplate'))
 const SetlistModalTemplate = React.lazy(() => import('components/modals/setlistModalTemplate'))
+const SetlistEditorModal = React.lazy(() => import('components/setlistEditor'))
+
+const SetlistSongCatalog = React.lazy(() => import('store/containers/catalogs/SetlistSongCatalogContainer'))
 
 const ModalTemplate = React.lazy(() => import('components/common/Wrapper/modalTemplate'))
 
@@ -53,7 +56,6 @@ const ModalWrapper = ({
         <PrivateRoute path="/AddSongToBand">
             <ModalTemplate handleCloseModal={handleClose} title='Add to Setlist'>
                 <AddSongToBandComponent
-                    userId={userState.id}
                     handleClose={handleClose}
                     history={history}
                 />
@@ -102,7 +104,6 @@ const ModalWrapper = ({
         <PrivateRoute path="/AddSetlistSongFromSongs">
             <ModalTemplate handleCloseModal={handleClose} title='Add Band Song to Setlist'>
                 <AddSetlistSongFromSongsComponent
-                userId={userState.id}
                     handleClose={handleClose}
                     history={history}
                 />
@@ -112,7 +113,6 @@ const ModalWrapper = ({
         <PrivateRoute path="/AddBandSongFromSongs">
             <ModalTemplate handleCloseModal={handleClose} title='Add Band Song from Songs'>
                 <AddBandSongFromSongsComponent
-                    userId={userState.id}
                     handleClose={handleClose}
                     history={history}
                 />
@@ -153,6 +153,15 @@ const ModalWrapper = ({
             <ModalTemplate handleCloseModal={handleClose} title='Custom Event'>
                 <CustomEventModalTemplate
                     customEventModalActionsProvider={customEventModalActionsProvider}
+                    handleClose={handleClose}
+                    query={query}
+                />
+            </ModalTemplate>
+        </PrivateRoute>
+        <PrivateRoute path="/setlistEditorModal">
+            <ModalTemplate handleCloseModal={handleClose} title='Setlist Editor'>
+                <SetlistEditorModal
+                    // customEventModalActionsProvider={customEventModalActionsProvider}
                     handleClose={handleClose}
                     query={query}
                 />

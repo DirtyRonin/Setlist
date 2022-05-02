@@ -28,11 +28,10 @@ import { GetSongsRequestAsync } from "api/songApi";
 
 interface IProps {
     history: History
-    userId: string
     handleClose(): void
 }
 
-const AddSetlistSongFromSongsComponent = ({ history, userId, handleClose }: IProps): JSX.Element => {
+const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX.Element => {
 
     const [isLoading, setLoading] = useState(false)
 
@@ -49,14 +48,14 @@ const AddSetlistSongFromSongsComponent = ({ history, userId, handleClose }: IPro
     useEffect(() => {
         const query = history.location.search ?? ''
         if (query) {
-            const { id } = mapQuery(query)
-            if (id) {
+            const { setlistId } = mapQuery(query)
+            if (setlistId) {
 
                 setLoading(true)
-                fetchSetlistById(id).then(result => {
+                fetchSetlistById(setlistId).then(result => {
                     setSetlist(result)
 
-                    const newFilter = FilterSongActionProps.Default({ setlistId: id })
+                    const newFilter = FilterSongActionProps.Default({ setlistId })
                     setFilter(newFilter)
                     fetchSongs(newFilter)
                 })

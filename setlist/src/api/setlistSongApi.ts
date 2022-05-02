@@ -6,6 +6,7 @@ import validator from "validator";
 import { EndpointConfiguration } from "configuration";
 import { IResponseWrapper, ISetlistSong, ISong } from "models";
 import api from "./baseApi";
+import { yearsToMonths } from "date-fns/fp";
 
 const setlistSongsEndpoint = EndpointConfiguration.SetlistSong;
 
@@ -15,13 +16,16 @@ type SetlistSongPivot = ISong & {
         "created_at": Date
         "songId": number
         "updated_at": Date
+        "title": string
+        "order": number
+        'id':number
     }
 }
 
 export const GetSetlistSongsRequestAsync = async (setlistIdOrNextlink: string): Promise<IResponseWrapper<ISetlistSong>> => {
     const url = validator.isNumeric(setlistIdOrNextlink)
-        ? `${setlistSongsEndpoint.GetEndpointUrl()}/${setlistIdOrNextlink}` 
-        : setlistIdOrNextlink 
+        ? `${setlistSongsEndpoint.GetEndpointUrl()}/${setlistIdOrNextlink}`
+        : setlistIdOrNextlink
 
     return await getRequest(url);
 }
@@ -65,7 +69,15 @@ export async function UpdateSetlistSongRequestAsync(setlistSong: ISetlistSong): 
 
 export async function AddSongToSetlistRequestAsync(setlistSong: ISetlistSong): Promise<boolean> {
     const response = await api().post(`${setlistSongsEndpoint.GetEndpointUrl()}AddSong`, setlistSong)
-    
+
+    return response.data
+}
+
+
+
+export async function SwapSetlistSongsRequestAsync(props: number[]): Promise<number[]> {
+    const response = await api().get<number[]>(`${setlistSongsEndpoint.GetEndpointUrl()}Swap/${props.join('/')}`)
+
     return response.data
 }
 
@@ -74,6 +86,8 @@ const convertToSetlistSong = (response: SetlistSongPivot): ISetlistSong =>
         {
             setlistId: response.pivot.setlistId,
             songId: response.pivot.songId,
+            order: response.pivot.order,
+            id: response.pivot.id,
             song: Song.Create({
                 ...response
             })

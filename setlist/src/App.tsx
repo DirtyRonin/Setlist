@@ -9,6 +9,8 @@ import { AppProps } from "store";
 
 import '@szhsin/react-menu/dist/index.css';
 import DashBoard from "./pages/dashboard";
+import DataTable from "components/setlistEditor";
+import SetlistEditor from "components/setlistEditor";
 
 const BandCatalogContainer = React.lazy(() => import('store/containers/catalogs/BandCatalogContainer'))
 const SongCatalogContainer = React.lazy(() => import('store/containers/catalogs/SongCatalogContainer'))
@@ -21,6 +23,10 @@ const SetlistSongCatalog = React.lazy(() => import('store/containers/catalogs/Se
 const ModalWrapper = React.lazy(() => import('components/common/Wrapper/modalWrapper'))
 const Login = React.lazy(() => import('components/login'))
 const Sidebar = React.lazy(() => import('components/common/sidebar'))
+
+
+import { Tab, Tabs } from "react-bootstrap";
+
 
 export const App = (props: AppProps): JSX.Element => {
 
@@ -54,7 +60,17 @@ export const App = (props: AppProps): JSX.Element => {
                         <PrivateRoute exact path='/'>
                             <Sidebar />
                             <ContentWrapper>
-                                <DashBoard />
+                                <CustomEventCatalogContainer
+                                    history={history}
+                                />
+                            </ContentWrapper>
+                        </PrivateRoute>
+                        <PrivateRoute exact path='/customEvent_SetlistSongAsCatalog'>
+                            <Sidebar />
+                            <ContentWrapper>
+                                <SetlistSongCatalog
+                                    history={history}
+                                />
                             </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path='/songs'>
@@ -87,12 +103,10 @@ export const App = (props: AppProps): JSX.Element => {
                                 />
                             </ContentWrapper>
                         </PrivateRoute>
-                        <PrivateRoute path='/customevent'>
+                        <PrivateRoute path='/dashboard'>
                             <Sidebar />
                             <ContentWrapper>
-                                <CustomEventCatalogContainer
-                                    history={history}
-                                />
+                                <DashBoard />
                             </ContentWrapper>
                         </PrivateRoute>
                         <PrivateRoute path="/bandSongAsCatalog">

@@ -5,7 +5,7 @@ import Autocomplete, { AutocompleteChangeDetails, AutocompleteChangeReason, Auto
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 
-import { fetchBandById } from 'service';
+
 import { IFilterBandActionProps, IBand, IBandCatalog, IBandEntityActionProps, bandModalActions, ModalTypes } from 'models';
 import { FilterBandActionProps, Band } from 'mapping';
 import { GUID_EMPTY, IsFilterableString } from 'utils';
@@ -13,6 +13,7 @@ import { GUID_EMPTY, IsFilterableString } from 'utils';
 import { addBandToCatalog, deleteBandInCatalog, editBandInCatalog, fetchBandCatalog, setBandFilter } from 'store/actions/catalogActions/bandCatalogActions'
 import { RootState } from 'store';
 import { CustomEventModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/customEventHtmlAttributes';
+import { fetchBandById } from 'service/epicServices/bandCatalogService';
 
 const BandModalTemplate = React.lazy(() => import('components/modals/BandModalTemplate'))
 const DialogTemplate = React.lazy(() => import('components/common/Wrapper/dialogTemplate'))
@@ -68,7 +69,7 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
             setSelectedBand(Band.CreateEmpty())
             setQuery('')
 
-            setBandId(null)
+            setBandId(0)
 
         } else if (newValue.id !== GUID_EMPTY) {
 
@@ -182,9 +183,9 @@ interface IConnectedDispatch {
 }
 
 interface IProps {
-    defaultBandId: string | null
+    defaultBandId: number
     isReadonly: boolean
-    setBandId: (id: string | null) => void
+    setBandId: (id: number) => void
 }
 
 interface IStateProps extends IProps {

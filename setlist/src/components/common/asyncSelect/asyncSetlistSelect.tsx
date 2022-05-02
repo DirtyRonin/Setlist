@@ -68,7 +68,7 @@ function AsyncSetlistSelect({ setlistModalActionsProvider, defaultSetlistId, set
             setSelectedSetlist(Setlist.CreateEmpty())
             setQuery('')
 
-            setSetlistId(null)
+            setSetlistId(0)
 
         } else if (newValue.id !== GUID_EMPTY) {
 
@@ -179,9 +179,9 @@ interface IConnectedDispatch {
 }
 
 interface IProps {
-    defaultSetlistId: string | null
+    defaultSetlistId: number
     isReadonly: boolean
-    setSetlistId: (id: string | null) => void
+    setSetlistId: (id: number) => void
 }
 
 interface IStateProps extends IProps {

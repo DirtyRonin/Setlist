@@ -4,14 +4,14 @@ import { Location, Band, Setlist } from "mapping";
 
 export class CustomEvent implements ICustomEvent {
 
-    date: Date | null;
+    date: Date | string;
     locationId: number;
     bandId: number;
     setlistId: number;
     title: string;
-    location: ILocation | null;
-    Band: IBand | null;
-    setlist: ISetlist | null;
+    location: ILocation | undefined;
+    band: IBand | undefined;
+    setlist: ISetlist | undefined;
     id: number;
 
 
@@ -23,7 +23,7 @@ export class CustomEvent implements ICustomEvent {
         this.title = title
         this.date = date
         this.location = location
-        this.Band = band
+        this.band = band
         this.setlist = setlist
     }
 

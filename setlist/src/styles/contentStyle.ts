@@ -30,6 +30,6 @@ export const ContentWrapper = styled.div`
     flex-direction: column;
     width: 100%;
     min-width: 250px;
-    background-color: rgb(250, 250, 250);
+    background-color: white;
     padding: 40px;
 `;

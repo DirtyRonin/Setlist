@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 import { ActionType, getType } from "typesafe-actions";
-import { MapHelper } from "utils";
+import { cloneDeep } from "lodash";
 import { SetlistSongCatalog } from "../../../mapping/SongCatalog/setlistSongCatalog";
-import { ISetlistSongCatalog } from "../../../models";
+import { ISetlistSong, ISetlistSongCatalog } from "../../../models";
 
 import * as actions from "../../actions/catalogActions/setlistSongCatalogActions"
 import * as common from "../../actions/commonActions"
@@ -50,8 +50,8 @@ export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActio
                     Meta: action.payload.Meta
                 }
             case getType(actions.addSetlistSongToCatalog.success):
-                const { Values } = state
-                Values.unshift(action.payload)
+
+                const Values = cloneDeep(state.Values).unshift(action.payload)
 
                 return {
                     ...state,
@@ -60,29 +60,53 @@ export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActio
             case getType(actions.editSetlistSongInCatalog.success):
                 {
 
-                    const { Values } = state
+                    const Values = cloneDeep(state.Values)
 
                     const index = Values.findIndex(x => x.songId === action.payload.songId)
                     Values[index] = action.payload
 
                     return {
                         ...state, Values
-
                     }
                 }
-            case getType(actions.deleteSetlistSongInCatalog.success): {
+            case getType(actions.swapSetlistSongInCatalog.success): {
 
-                const { Values } = state
+                const Values = cloneDeep(state.Values)
 
-                const index = Values.findIndex(x => x.songId === action.payload)
-                Values.splice(index, 1)
+                // find indecies for the given payload
+                const oldIndices = action.payload.map(
+                    _ => Values.findIndex(
+                        __ => __.id === _
+                    ))
+
+                // reverse order of index
+                const newIndices = [...oldIndices].reverse()
+
+                // use hash as a temp ; easier filter through hash index
+                // assign the new key Value pair
+                const newHash = newIndices.reduce((hash, swapIndex, i) => {
+                    // reverse order of indices to swap the old key value pairs
+                    // swapping means recombing the pairs in reverse key/Value order
+                    hash[swapIndex] = Values[oldIndices[i]]
+
+                    // adjust the order property to match the new index
+                    hash[swapIndex].order = swapIndex + 1
+
+                    return hash
+                }, {} as { [key: number]: ISetlistSong })
+
+                //swap the values in the new array
+                newIndices.forEach(_ =>
+                    Values[_] = newHash[_]
+                )
 
                 return {
                     ...state,
                     Values
                 }
+
             }
-            
+
             default:
                 return state;
         }
