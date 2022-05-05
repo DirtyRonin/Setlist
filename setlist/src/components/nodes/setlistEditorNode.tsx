@@ -7,6 +7,8 @@ import { Song } from 'mapping/song';
 import { ICustomEvent, ISetlistSong, ISong } from "models";
 import AsyncButtonComponent from 'components/common/asyncButton';
 
+import { cloneDeep } from "lodash"
+
 export type EditorSong = Omit<ISong, 'setlists'> & {
     setlists: number[]
 }
@@ -17,8 +19,13 @@ const setlistEditorNode = (
         { events: ICustomEvent[]; setlistId: number; songs: EditorSong[]; asyncExecute: (setlistSong: ISetlistSong) => Promise<boolean>; }
 ): TableColumn<EditorSong>[] => {
 
-    const IsSetlistSongExisting = (item: EditorSong): boolean =>
-        songs.find(x => x.id === item.id)?.setlists.includes(setlistId) ?? false
+    const IsSetlistSongExisting = (item: EditorSong): boolean => {
+        const result = songs.find(x => x.id === item.id)?.setlists.includes(setlistId) ?? false
+        return result;
+    }
+
+    const clonedEvents = cloneDeep(events);
+    const currentEvent = clonedEvents.pop()
 
 
     let columns: TableColumn<EditorSong>[] = []
@@ -28,19 +35,19 @@ const setlistEditorNode = (
             name: 'Artist',
             selector: row => row.artist,
             sortable: true,
-            wrap:true,
-            compact:true
+            wrap: true,
+            compact: true
         },
         {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
-            wrap:true,
-            compact:true
+            wrap: true,
+            compact: true
         }
     )
 
-    events.forEach(event => columns.push(getAsEventColumn(event)))
+    clonedEvents.forEach(event => columns.push(getAsEventColumn(event)))
 
     columns.push(
         {
@@ -49,6 +56,9 @@ const setlistEditorNode = (
             cell: (item) => <AsyncButtonComponent asyncExecute={asyncExecute} value={CreateNewSetlistSong({ song: item, setlistId })} isExisting={IsSetlistSongExisting(item)} />,
         }
     )
+
+    if (currentEvent)
+        columns.push(getAsEventColumn(currentEvent))
 
     return columns
 
@@ -76,13 +86,13 @@ const setlistEditorNode = (
 
 const getAsEventColumn = (event: ICustomEvent): TableColumn<EditorSong> => ({
     name: event ? formatDate(event.date) : '',
-    selector: row => row.setlists.includes(event?.setlistId) ? 'X' : 'O',
+    selector: row => row.setlists.includes(event?.setlist.id) ? 'X' : 'O',
     sortable: true,
     center: true,
     omit: event === undefined ? true : false, // hide column 
     conditionalCellStyles: [
         {
-            when: row => row.setlists.includes(event?.setlistId),
+            when: row => row.setlists.includes(event?.setlist.id),
             style: {
                 backgroundColor: 'rgba(63, 195, 128, 0.9)',
                 color: 'white',
@@ -92,7 +102,7 @@ const getAsEventColumn = (event: ICustomEvent): TableColumn<EditorSong> => ({
             },
         },
     ],
-    allowOverflow:true
+    allowOverflow: true
 })
 
 const formatDate = (date: Date | string): string =>

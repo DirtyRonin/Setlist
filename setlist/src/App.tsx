@@ -26,6 +26,7 @@ const Sidebar = React.lazy(() => import('components/common/sidebar'))
 
 
 import { Tab, Tabs } from "react-bootstrap";
+import MenuAppBar from "components/appBar/appBar";
 
 
 export const App = (props: AppProps): JSX.Element => {
@@ -58,27 +59,37 @@ export const App = (props: AppProps): JSX.Element => {
                 <Wrapper>
                     <Switch location={location.state?.background}>
                         <PrivateRoute exact path='/'>
-                            <Sidebar />
-                            <ContentWrapper>
-                                <CustomEventCatalogContainer
-                                    history={history}
-                                />
-                            </ContentWrapper>
+                            <MenuAppBar />
+                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+
+                                <Sidebar />
+                                <ContentWrapper>
+                                    <CustomEventCatalogContainer
+                                        history={history}
+                                    />
+                                </ContentWrapper>
+                            </div>
                         </PrivateRoute>
                         <PrivateRoute exact path='/customEvent_SetlistSongAsCatalog'>
-                            <Sidebar />
-                            <ContentWrapper>
-                                <SetlistSongCatalog
-                                    history={history}
-                                />
-                            </ContentWrapper>
+                            <MenuAppBar />
+                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                <Sidebar />
+                                <ContentWrapper>
+                                    <SetlistSongCatalog
+                                        history={history}
+                                    />
+                                </ContentWrapper>
+                            </div>
                         </PrivateRoute>
                         <PrivateRoute path='/songs'>
-                            <Sidebar />
-                            <ContentWrapper>
-                                <SongCatalogContainer
-                                    history={history} />
-                            </ContentWrapper>
+                            <MenuAppBar />
+                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                <Sidebar />
+                                <ContentWrapper>
+                                    <SongCatalogContainer
+                                        history={history} />
+                                </ContentWrapper>
+                            </div>
                         </PrivateRoute>
                         <PrivateRoute path='/bands'>
                             <Sidebar />

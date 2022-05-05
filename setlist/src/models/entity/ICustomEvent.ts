@@ -5,7 +5,7 @@ export interface ICustomEvent extends IEntityBase {
     date: Date  ;
     locationId: number;
     bandId: number;
-    setlistId: number;
+    // setlistId: number;
     title: string;
     location:ILocation
     band:IBand

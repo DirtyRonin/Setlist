@@ -12,6 +12,8 @@ import { ModalError } from "models/error/modalError/modalError";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 
 export interface ISongModalComponent {
     handleClose(): void
@@ -27,7 +29,11 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
 
     const [artist, setArtist] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
     const [title, setTitle] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
-    const [genre, setGenre] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
+    const [genre, setGenre] = useState('')
+    const [isEvergreen, setEvergreen] = useState(false)
+    const [isNineties, setNineties] = useState(false)
+    const [originalKey, setOriginalKey] = useState('')
+    const [comment, setComment] = useState('')
 
     useEffect(() => {
         if (query) {
@@ -43,7 +49,11 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
                 fetchSongById(mapped.id).then(result => {
                     setArtist({ HasError: false, Message: '', Value: result.artist })
                     setTitle({ HasError: false, Message: '', Value: result.title })
-                    setGenre({ HasError: false, Message: '', Value: result.genre })
+                    setGenre(result.genre)
+                    setEvergreen(result.evergreen)
+                    setNineties(result.nineties)
+                    setOriginalKey(result.originalKey)
+                    setComment(result.comment)
                     setLoading(false)
                 })
             }
@@ -76,19 +86,31 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
     }
     const OnChangeGenre = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
         event.preventDefault()
-        const value = event.target.value
-
-        const newValue = isStringInvalid(value) ?
-            { HasError: true, Message: 'Please Enter an Artist', Value: value } :
-            { HasError: false, Message: '', Value: value }
-
-        setGenre(newValue)
+        setGenre(event.target.value)
+    }
+    const OnChangeOriginalKey = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        event.preventDefault()
+        setOriginalKey(event.target.value)
+    }
+    const OnChangeComment = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        event.preventDefault()
+        setComment(event.target.value)
+    }
+    const OnChangeEvergreen = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
+        setEvergreen(checked)
+    }
+    const OnChangeNineties = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
+        setNineties(checked)
     }
 
     const handleOnClose = () => {
         setTitle({ HasError: false, Message: '', Value: '' })
         setArtist({ HasError: false, Message: '', Value: '' })
-        setGenre({ HasError: false, Message: '', Value: '' })
+        setGenre('')
+        setEvergreen(false)
+        setNineties(false)
+        setOriginalKey('')
+        setComment('')
         handleClose()
     }
 
@@ -96,14 +118,18 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
 
         setLoading(true)
 
-        if (!title.HasError && !artist.HasError && !genre.HasError) {
+        if (!title.HasError && !artist.HasError) {
             const executeModalAction = songModalActionsProvider[type]
             executeModalAction({
                 value: {
                     ...Song.CreateEmpty(),
                     title: title.Value,
                     artist: artist.Value,
-                    genre: genre.Value,
+                    genre,
+                    nineties: isNineties,
+                    evergreen: isEvergreen,
+                    comment,
+                    originalKey,
                     id: id
                 }
             })
@@ -151,13 +177,56 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider }: ISo
                     disabled={IsReadonly}
                     margin="normal"
                     id={htmlConfig.Genre.ControlId}
-                    value={genre.Value}
+                    value={genre}
                     placeholder={htmlConfig.Genre.Placeholder}
                     onChange={OnChangeGenre}
                     label={htmlConfig.Genre.Label}
-                    type={genre.HasError ? 'Error' : 'text'}
-                    helperText={genre.Message ?? ''}
                 />
+
+                <TextField
+                    autoFocus
+                    fullWidth
+                    disabled={IsReadonly}
+                    margin="normal"
+                    id={htmlConfig.OriginalKey.ControlId}
+                    value={originalKey}
+                    placeholder={htmlConfig.OriginalKey.Placeholder}
+                    onChange={OnChangeOriginalKey}
+                    label={htmlConfig.OriginalKey.Label}
+                />
+                <TextField
+                    fullWidth
+                    disabled={IsReadonly}
+                    margin="normal"
+                    id={htmlConfig.Comment.ControlId}
+                    value={comment}
+                    placeholder={htmlConfig.Comment.Placeholder}
+                    onChange={OnChangeComment}
+                    label={htmlConfig.Comment.Label}
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            disabled={IsReadonly}
+                            id={htmlConfig.Evergreen.ControlId}
+                            checked={isEvergreen}
+                            onChange={OnChangeEvergreen}
+                        />
+                    }
+                    label={htmlConfig.Evergreen.Label}
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            disabled={IsReadonly}
+                            id={htmlConfig.Nineties.ControlId}
+                            checked={isNineties}
+                            onChange={OnChangeNineties}
+                        />
+                    }
+                    label={htmlConfig.Nineties.Label}
+                />
+
             </DialogContent>
             <DialogActions>
                 <ActionButton onClick={handleSubmit}>{type}</ActionButton>

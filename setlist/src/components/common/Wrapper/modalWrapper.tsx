@@ -102,7 +102,7 @@ const ModalWrapper = ({
 
 //
         <PrivateRoute path="/AddSetlistSongFromSongs">
-            <ModalTemplate handleCloseModal={handleClose} title='Add Band Song to Setlist'>
+            <ModalTemplate handleCloseModal={handleClose} title='Add Songs to Setlist'>
                 <AddSetlistSongFromSongsComponent
                     handleClose={handleClose}
                     history={history}

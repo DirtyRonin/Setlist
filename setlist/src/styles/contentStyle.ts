@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   display: flex;
   margin: 0 auto;
-  
+  flex-direction: column;
 `
 
 // export const Wrapper = styled.div`
@@ -31,5 +31,6 @@ export const ContentWrapper = styled.div`
     width: 100%;
     min-width: 250px;
     background-color: white;
-    padding: 40px;
+    padding: 15px;
+    margin-top: 25px;
 `;

@@ -25,7 +25,7 @@ export const SetlistSongFilterComponent = (props: ISetlistSongFilterProps) => {
         const _filter: ISetlistSongFilter = {
             ...filter,
             Query: elements[SearchQueryInput.ControlId].value,
-            SetlistId: setlistId
+            SetlistId: +setlistId
         }
 
         const setlistSongFilter = FilterSetlistSongActionProps.Create({ filter: _filter, refresh: true })

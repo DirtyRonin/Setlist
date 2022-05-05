@@ -40,13 +40,13 @@ const CustomEventModalTemplate = (props: IProps) => {
             const mapped = mapQuery(query)
 
             setType(mapped.type)
-            setId(mapped.id)
+            setId(mapped.customEventId)
 
-            if (mapped.id > 0) {
+            if (mapped.customEventId > 0) {
 
                 setIsLoading(true)
 
-                fetchCustomEventById(mapped.id).then(result => {
+                fetchCustomEventById(mapped.customEventId).then(result => {
                     setTitle(result.title)
                     setDate(result.date)
                     setLocationId(result.locationId)

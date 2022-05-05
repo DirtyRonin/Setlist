@@ -5,7 +5,7 @@ import { History } from "history";
 import { RootState } from 'store';
 import SetlistSongCatalogComponent from 'components/catalogs/setlistSongCatalog';
 
-import { IFilterSetlistSongActionProps, IModalActionsProps, INextLinkActionProps, ISetlistSongCatalog } from 'models';
+import { IFilterSetlistSongActionProps, IModalActionsProps, INextLinkActionProps, ISetlistSongCatalog,ISwapSetlistSongsActionProps } from 'models';
 
 import ModalActions from 'store/actions/modalActions';
 import * as SetlistSongAction from 'store/actions/catalogActions/setlistSongCatalogActions';
@@ -15,7 +15,7 @@ interface IConnectedDispatch {
     fetchSetlistSongCatalog: (props: IFilterSetlistSongActionProps) => void
     fetchSetlistSongCatalogNextLink: (props: INextLinkActionProps) => void
     setModal(props: IModalActionsProps): void
-    setSetlistSongsOrder(props: number[]): void
+    setSetlistSongsOrder(props: ISwapSetlistSongsActionProps): void
 }
 
 export interface IProps {
@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
     fetchSetlistSongCatalog: (props: IFilterSetlistSongActionProps) => dispatch(SetlistSongAction.fetchSetlistSongCatalog.request(props)),
     fetchSetlistSongCatalogNextLink: (props: INextLinkActionProps) => dispatch(SetlistSongAction.fetchSetlistSongCatalogNextLink.request(props)),
     setModal:(props:IModalActionsProps) => dispatch(ModalActions.setModal(props)),
-    setSetlistSongsOrder:(props: number[])=> dispatch(SetlistSongAction.swapSetlistSongInCatalog.request(props))
+    setSetlistSongsOrder:(props: ISwapSetlistSongsActionProps)=> dispatch(SetlistSongAction.swapSetlistSongInCatalog.request(props))
 })
 
 const SetlistSongCatalog = (props: SetlistSongCatalogProps) => (

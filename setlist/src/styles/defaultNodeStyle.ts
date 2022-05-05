@@ -24,6 +24,7 @@ export const DefaultNodeWrapperStyle = styled.div`
   transition: 0.2s;
   &:hover {
     background: linear-gradient(45deg, #DA4453, #89216B);
+    color: white;
   }
 `
 

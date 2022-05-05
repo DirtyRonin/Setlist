@@ -7,7 +7,7 @@ export class CustomEventCatalog extends CatalogBase<ICustomEvent, ICustomEventFi
     private constructor({ filter, oData, options, refresh, customEvents }: { filter: ICustomEventFilter; oData: MetaProps; options: ICustomEventCatalogOptions; refresh?: boolean; customEvents?: ICustomEvent[] }) {
         super(
             CustomEventCatalog.CatalogId,
-            CatalogTypes["CustomEvent Catalog"].toString(),
+            'Custom Event',
             CatalogTypes["CustomEvent Catalog"],
             filter,
             oData,

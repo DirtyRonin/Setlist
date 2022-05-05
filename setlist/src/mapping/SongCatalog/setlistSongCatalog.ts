@@ -5,9 +5,10 @@ import { CatalogBase } from "./catalogBase";
 export class SetlistSongCatalog extends CatalogBase<ISetlistSong, ISetlistSongFilter, ISetlistSongCatalogOptions> implements ISetlistSongCatalog {
 
     SetlistId: number;
+    totalCount: number;
 
 
-    private constructor({ setlistId, filter, oData, options, refresh, setlistSongs }: { setlistId: number, filter: ISetlistSongFilter; oData: MetaProps; options: ISetlistSongCatalogOptions; refresh?: boolean; setlistSongs?: ISetlistSong[] }) {
+    private constructor({ setlistId, filter, oData, options, refresh, setlistSongs, totalCount }: { setlistId: number, filter: ISetlistSongFilter; oData: MetaProps; options: ISetlistSongCatalogOptions; refresh?: boolean; setlistSongs?: ISetlistSong[]; totalCount: number }) {
         super(
             SetlistSongCatalog.CatalogId,
             CatalogTypes["SetlistSong Catalog"].toString(),
@@ -16,9 +17,10 @@ export class SetlistSongCatalog extends CatalogBase<ISetlistSong, ISetlistSongFi
             oData,
             options,
             refresh,
-            setlistSongs
+            setlistSongs,
         )
         this.SetlistId = setlistId
+        this.totalCount = totalCount
     }
 
     private static Default = ({ setlistId, refresh, options = {} }: { setlistId: number, refresh: boolean, options?: ISetlistSongCatalogOptions }): ISetlistSongCatalog =>
@@ -29,7 +31,8 @@ export class SetlistSongCatalog extends CatalogBase<ISetlistSong, ISetlistSongFi
                 oData: { NextLink: "", Count: 0 },
                 options,
                 refresh,
-                setlistSongs: []
+                setlistSongs: [],
+                totalCount: 0
             })
 
     public static Create = (setlistId: number): ISetlistSongCatalog => SetlistSongCatalog.Default({ setlistId, refresh: false })

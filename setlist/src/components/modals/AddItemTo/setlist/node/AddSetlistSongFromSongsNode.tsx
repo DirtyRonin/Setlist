@@ -27,14 +27,14 @@ const AddBandSongFromSongsNode = (props: IProps) => {
         bandSongId: undefined
     })
 
-    const IsSongInSetlistExisting : boolean =((song as SongtWithSetlistCount).setlists_count ?? 0) > 0
+    const IsSongInSetlistExisting: boolean = ((song as SongtWithSetlistCount).setlists_count ?? 0) > 0
 
     return (
         <DefaultNodeWrapperStyle>
             <Container>
                 <Row>
-                    <Col xs="8">
-                        <Row>
+                    <Col xs="3" >
+                        <Row >
                             <Col>
                                 <DefaultLabelStyle>{song.title}</DefaultLabelStyle>
                             </Col>
@@ -44,8 +44,40 @@ const AddBandSongFromSongsNode = (props: IProps) => {
                                 <DefaultLabelStyle>{song.artist}</DefaultLabelStyle>
                             </Col>
                         </Row>
-                    </Col >
-                    <Col xs="4">
+                    </Col>
+                    <Col xs="3" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.genre}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.originalKey}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col xs="2" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.nineties ? 'Nineties' : ''}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.evergreen ? 'Evergreen' : ''}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+
+                    </Col>
+                    <Col xs="2" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.comment}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col xs="2">
                         <AsyncButtonComponent asyncExecute={AddSongToSetlistRequestAsync} value={CreateNewSetlistSong} isExisting={IsSongInSetlistExisting} />
                     </Col>
                 </Row>

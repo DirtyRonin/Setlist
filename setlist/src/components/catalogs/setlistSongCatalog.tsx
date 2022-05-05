@@ -56,7 +56,6 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
     const [customEventId, setCuomstEventId] = useState(0)
     const [setlistTitle, setSetlistTitle] = useState('')
 
-
     const htmlConfig = SetlistSongCatalogHtmlAttributesConfiguration
 
     const handleScrollDown = () => {
@@ -92,6 +91,7 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                         <Row>
                             <Col>
                                 <Header >
+                                    <HeaderTitle>{`Current Items Count : ${setlistSongCatalog.Meta.Count}`}</HeaderTitle>
                                     <HeaderTitle>{setlistTitle}</HeaderTitle>
 
                                     <HeaderOptions>
@@ -116,7 +116,6 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                         <Row>
                             <Col>
                                 <NodeListCss id={htmlConfig.NodeList.ControlId} >
-                                    {setlistSongCatalog.Meta.Count}
                                     <InfiniteScroll
                                         dataLength={setlistSongCatalog.Values.length}
                                         next={handleScrollDown}
@@ -134,6 +133,7 @@ const SetlistSongCatalogComponent = (props: SetlistSongCatalogProps): JSX.Elemen
                                                 setModal={setModal}
                                                 history={history}
                                                 setlistSongsCount={setlistSongCatalog.Meta.Count}
+                                                totalCount={setlistSongCatalog.totalCount}
                                             />
                                         ))}
                                     </InfiniteScroll>

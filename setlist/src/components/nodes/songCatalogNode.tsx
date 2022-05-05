@@ -50,25 +50,50 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
         <DefaultNodeWrapperStyle >
             <Container>
                 <Row>
-                    <Col xs="10" >
-                        <Row>
-                            <Col xs="3">
-                                <DefaultNodeImageStyle />
-                            </Col>
-                            <Col xs="9">
-                                <Row>
-                                    <Col>
-                                        <DefaultLabelStyle>{song.title}</DefaultLabelStyle>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <DefaultLabelStyle>{song.artist}</DefaultLabelStyle>
-                                    </Col>
-                                </Row>
+                    <Col xs="3" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.title}</DefaultLabelStyle>
                             </Col>
                         </Row>
-                    </Col >
+                        <Row>
+                            <Col>
+                                <DefaultLabelStyle>{song.artist}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col xs="3" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.genre}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.originalKey}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col xs="2" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.nineties ? 'Nineties' : ''}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.evergreen ? 'Evergreen' : ''}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+
+                    </Col>
+                    <Col xs="2" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{song.comment}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                    </Col>
                     <Col xs='2' >
                         <Menu menuButton={<div><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
                             <MenuItem value="AddToBand" onClick={handleAddSongToBand} >Add to Band Song</MenuItem>

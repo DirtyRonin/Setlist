@@ -37,7 +37,6 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
 
     const [setlist, setSetlist] = useState(Setlist.CreateEmpty());
 
-
     const [songs, setSongs] = useState<ISong[]>([]);
     const [count, setCount] = useState(0);
     const [nextLink, setNextLink] = useState('');
@@ -109,10 +108,12 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
     const Class = UseModalStyles()
 
     return (
-        <div className={Class.root}>
+        // <div className={Class.root}>
+        <>
             <DialogContent>
                 <Header >
-                    <HeaderTitle>`Add To '{setlist.title}' to...`</HeaderTitle>
+                    <HeaderTitle>{`Current Items Count : ${count}`}</HeaderTitle>
+                    <HeaderTitle>{setlist.title}</HeaderTitle>
                     <HeaderOptions>
                         <SearchFilterCss>
                             <TextField
@@ -137,8 +138,7 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
                         </Menu>
                     </HeaderOptions>
                 </Header>
-                <NodeListCss id={htmlConfig.NodeList.ControlId} >
-                    {count?.toString()}
+                <NodeListCss id={htmlConfig.NodeList.ControlId} style={{ height:'800px' }} >
                     <InfiniteScroll
                         dataLength={songs.length}
                         next={handleScrollDown}
@@ -147,7 +147,7 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
                         scrollableTarget={htmlConfig.NodeList.ControlId}
                         style={InfinitScrollCss}
                     >
-                        {!isLoading && Array.from(songs.values()).map((song, index) => (
+                        {Array.from(songs.values()).map((song, index) => (
                             <Node
                                 setlist={setlist}
                                 song={song}
@@ -162,7 +162,8 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
             <DialogActions>
                 <ActionButton onClick={handleClose}>Done</ActionButton>
             </DialogActions>
-        </div>
+        </>
+        // </div>
     )
 
 

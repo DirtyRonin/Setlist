@@ -62,15 +62,17 @@ export interface IFilterActionResultBase<T> {
     Meta: MetaProps;
 }
 
-// export interface ISwapSetlistSongsActionProps {
-//     setlistId: number,
-//     x: number,
-//     y: number
-// }
-// export interface ISwapSetlistSongsActionResult {
-//     x: number,
-//     y: number
-// }
+
+
+export interface ISwapSetlistSongsActionProps {
+    // setlistId: number,
+    // x: {id:number,order:number},
+    // y: {id:number,order:number}
+    setlistSong: ISetlistSong
+}
+export interface ISwapSetlistSongsActionResult {
+    setlistSongs: ISetlistSong[]
+}
 
 export interface IFilterSongActionResult extends IFilterActionResultBase<ISong> { }
 export interface IFilterBandActionResult extends IFilterActionResultBase<IBand> { }

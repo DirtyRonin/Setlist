@@ -4,9 +4,8 @@ import { Song } from "mapping/song";
 import validator from "validator";
 
 import { EndpointConfiguration } from "configuration";
-import { IResponseWrapper, ISetlistSong, ISong } from "models";
+import { IResponseWrapper, ISetlistSong, ISong, setlistSongModalActions } from "models";
 import api from "./baseApi";
-import { yearsToMonths } from "date-fns/fp";
 
 const setlistSongsEndpoint = EndpointConfiguration.SetlistSong;
 
@@ -18,7 +17,7 @@ type SetlistSongPivot = ISong & {
         "updated_at": Date
         "title": string
         "order": number
-        'id':number
+        'id': number
     }
 }
 
@@ -75,10 +74,12 @@ export async function AddSongToSetlistRequestAsync(setlistSong: ISetlistSong): P
 
 
 
-export async function SwapSetlistSongsRequestAsync(props: number[]): Promise<number[]> {
-    const response = await api().get<number[]>(`${setlistSongsEndpoint.GetEndpointUrl()}Swap/${props.join('/')}`)
+export async function SwapSetlistSongsRequestAsync(setlistSong: ISetlistSong): Promise<ISetlistSong[]> {
+    const response = await api().put<SetlistSongPivot[]>(`${setlistSongsEndpoint.GetEndpointUrl()}Swap`, setlistSong)
 
-    return response.data
+    const result = response.data.map(x => convertToSetlistSong(x))
+
+    return result;
 }
 
 const convertToSetlistSong = (response: SetlistSongPivot): ISetlistSong =>

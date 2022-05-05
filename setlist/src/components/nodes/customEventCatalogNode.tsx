@@ -36,13 +36,12 @@ const CustomEventCatalogNodeComponent = (props: IProps): JSX.Element => {
     const createModal = (type: ModalTypes, pathName: string = '/', isModal: boolean = true) => {
 
         setModal({ showModal: true })
-
-        // if (type === ModalTypes.ShowCatalog)
+        
         setSetlistIdForSetlistSong(customEvent.setlist.id)
 
         history.push({
             pathname: pathName,
-            search: `?$type=${type}&$id=${customEvent.id}&$setlistId=${customEvent.setlist.id}`,
+            search: `?$type=${type}&$customEventId=${customEvent.id}&$setlistId=${customEvent.setlist.id}`,
             state: isModal ? { background: history.location } : undefined
         })
 

@@ -1,6 +1,6 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
 
-import { IFilterSetlistSongActionProps, IFilterSetlistSongActionResult, INextLinkActionProps, ISetlistSong, ISetlistSongEntityActionProps } from "models";
+import { IFilterSetlistSongActionProps, IFilterSetlistSongActionResult, INextLinkActionProps, ISetlistSong, ISetlistSongEntityActionProps, ISwapSetlistSongsActionProps , ISwapSetlistSongsActionResult} from "models";
 
 export const setSetlistIdForSetlistSong = createAction(
     'SET_SETLISTID_FOR_SETLISTSONG'
@@ -46,7 +46,7 @@ export const swapSetlistSongInCatalog = createAsyncAction(
     "SWAP_SETLISTSONG_SUCCESS",
     "SWAP_SETLISTSONG_FAILURE",
     "SWAP_SETLISTSONG_CANCEL",
-)<number[], number[], Error, string>();
+)<ISwapSetlistSongsActionProps, ISwapSetlistSongsActionResult, Error, string>();
 
 export const setSetlistSongFilter = createAction(
     "SET_SETLIST_SONG_FILTER",

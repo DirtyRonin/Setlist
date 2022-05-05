@@ -1,36 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Dropdown } from "react-bootstrap";
 import { History } from "history";
 
-import { IModalActionsProps, ISetlistSong, ModalTypes } from "models";
-import { DefaultLabelStyle, DefaultNodeImageStyle, DefaultNodeWrapperStyle, DefaultSongNodeStyle } from "styles";
-
-import {
-    Menu,
-    MenuItem,
-    MenuDivider,
-    MenuHeader
-} from '@szhsin/react-menu';
+import { Menu, MenuItem, MenuDivider, MenuHeader } from '@szhsin/react-menu';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { cloneDeep } from 'lodash'
 
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import useTheme from "@material-ui/core/styles/useTheme";
-
-
+import { IModalActionsProps, ISetlistSong, ISwapSetlistSongsActionProps, ModalTypes } from "models";
+import { DefaultLabelStyle, DefaultNodeImageStyle, DefaultNodeWrapperStyle, DefaultSongNodeStyle } from "styles";
 export interface ISetlistSongNodeProps {
     setlistSong: ISetlistSong;
     index: number;
     setlistSongsCount: number;
     history: History
     setModal(props: IModalActionsProps): void
-    setSetlistSongsOrder(props: number[]): void
+    setSetlistSongsOrder(props: ISwapSetlistSongsActionProps): void
+    totalCount:number;
 }
 
 
@@ -41,8 +26,11 @@ const SetlistSongCatalogNodeComponent = (props: ISetlistSongNodeProps): JSX.Elem
         setlistSongsCount,
         setModal,
         setSetlistSongsOrder,
-        history
+        history,
+        totalCount
     } = props;
+
+    const [isHover, setHover] = useState(false)
 
     const createModal = (type: ModalTypes, pathName: string = '/') => {
 
@@ -60,7 +48,7 @@ const SetlistSongCatalogNodeComponent = (props: ISetlistSongNodeProps): JSX.Elem
     const handleShowDeleteSetlistSong = () => createModal(ModalTypes.Remove, '/setlistSongModal')
 
     const swapOrder = (): JSX.Element[] => {
-        return Array.from(Array(setlistSongsCount), (e, i) => i + 1).map(order =>
+        return Array.from(Array(totalCount), (e, i) => i + 1).map(order =>
             <Dropdown.Item eventKey={order} active={order === setlistSong.order} onSelect={onDropDownSelect}>{order}</Dropdown.Item>
 
         )
@@ -68,90 +56,78 @@ const SetlistSongCatalogNodeComponent = (props: ISetlistSongNodeProps): JSX.Elem
 
     const onDropDownSelect = (e: string | null) => {
         if (e !== null && e !== String(setlistSong.order)) {
-            setSetlistSongsOrder([+e, setlistSong.order])
+            const newSetlistSong: ISetlistSong = cloneDeep(setlistSong)
+            newSetlistSong.order = +e
+            setSetlistSongsOrder({ setlistSong: newSetlistSong })
         }
     }
 
-    const classes = DefaultSongNodeStyle();
-    const theme = useTheme();
-
     return (
-
-        // <Card className={classes.root}>
-        //     <div className={classes.details}>
-        //         <CardContent className={classes.content}>
-        //             <Typography component="h5" variant="h5">
-        //                 Live From Space
-        //             </Typography>
-        //             <Typography variant="subtitle1" color="textSecondary">
-        //                 Mac Miller
-        //             </Typography>
-        //         </CardContent>
-        //         <div className={classes.controls}>
-        //             <IconButton aria-label="previous">
-        //                 {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
-        //             </IconButton>
-        //             <IconButton aria-label="play/pause">
-        //                 <PlayArrowIcon className={classes.playIcon} />
-        //             </IconButton>
-        //             <IconButton aria-label="next">
-        //                 {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
-        //             </IconButton>
-        //         </div>
-        //     </div>
-        //     <CardMedia
-        //         className={classes.cover}
-        //         image="/static/images/cards/live-from-space.jpg"
-        //         title="Live from space album cover"
-        //     />
-        // </Card>
-
-
-
-        <DefaultNodeWrapperStyle >
+        <DefaultNodeWrapperStyle
+            onMouseEnter={e => {
+                setHover(true);
+            }}
+            onMouseLeave={e => {
+                setHover(false)
+            }}>
             <Container>
-                <Row>
-                    <Col xs="10" >
-                        <Row>
-                            <Col xs="3">
-                                {setlistSong.order ?? 0}
-                                {/* <DefaultNodeImageStyle /> */}
-                            </Col>
-                            <Col xs="7">
-                                <Row>
-                                    <Col>
-                                        <DefaultLabelStyle>{setlistSong.song.title}</DefaultLabelStyle>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <DefaultLabelStyle>{setlistSong.song.artist}</DefaultLabelStyle>
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Row>
-                    </Col >
-                    <Col xs='1' >
-                        <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
-                            <MenuDivider />
-                            <MenuHeader>Edit</MenuHeader>
-                            <MenuItem value="Read" onClick={handleShowReadSetlistSong} >{ModalTypes.Read}</MenuItem>
-                            <MenuItem value="Edit" onClick={handleShowEditSetlistSong} >{ModalTypes.Edit}</MenuItem>
-                            <MenuItem value="Remove" onClick={handleShowDeleteSetlistSong} >{ModalTypes.Remove}</MenuItem>
-                        </Menu>
-                    </Col>
-                    <Col xs='1' >
-                        <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                <Row className="justify-content-xs-center">
+                    <Col xs="1">
+                        {!isHover ? setlistSong.order : <Dropdown>
+                            <Dropdown.Toggle variant="warning" id="dropdown-basic">
                                 {setlistSong.order}
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
                                 {swapOrder()}
                             </Dropdown.Menu>
-                        </Dropdown>
+                        </Dropdown>}
+                        {/* <DefaultNodeImageStyle /> */}
+                    </Col>
+                    <Col xs="3" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{setlistSong.song.title}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <DefaultLabelStyle>{setlistSong.song.artist}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col xs="3" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{setlistSong.song.genre}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                        
+                    </Col>
+                    <Col xs="3" >
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{setlistSong.song.nineties ? 'Nineties' : ''}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                        <Row >
+                            <Col>
+                                <DefaultLabelStyle>{setlistSong.song.evergreen ? 'Evergreen' : ''}</DefaultLabelStyle>
+                            </Col>
+                        </Row>
+                        
+                    </Col>
+                    <Col xs='2' >
+                        {isHover && <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
+                            <MenuDivider />
+                            <MenuHeader>Edit</MenuHeader>
+                            <MenuItem value="Read" onClick={handleShowReadSetlistSong} >{ModalTypes.Read}</MenuItem>
+                            <MenuItem value="Edit" onClick={handleShowEditSetlistSong} >{ModalTypes.Edit}</MenuItem>
+                            <MenuItem value="Remove" onClick={handleShowDeleteSetlistSong} >{ModalTypes.Remove}</MenuItem>
+                        </Menu>}
                     </Col>
                 </Row>
+
             </Container>
         </DefaultNodeWrapperStyle >
     );

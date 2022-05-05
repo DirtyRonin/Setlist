@@ -7,8 +7,7 @@ import { ISetlistSongCatalogState, SetlistSongCatalogActions } from "store/reduc
 
 import * as Action from "store/actions/catalogActions/setlistSongCatalogActions";
 
-import { deleteSetlistSongInCatalogAsync, editSetlistSongInCatalogAsync, fetchSetlistSongCatalogAsync, fetchSetlistSongCatalogNextLinkAsync, NewSetlistSong } from "service";
-import { SwapSetlistSongsRequestAsync } from "api";
+import { deleteSetlistSongInCatalogAsync, editSetlistSongInCatalogAsync, fetchSetlistSongCatalogAsync, fetchSetlistSongCatalogNextLinkAsync, NewSetlistSong, swapSetlistSongs } from "service";
 import { RootState } from "store";
 
 const fetchSetlistSongCatalogsEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogActions, any> = (action$) =>
@@ -80,9 +79,9 @@ const swapSetlistSongEpic: Epic<SetlistSongCatalogActions, SetlistSongCatalogAct
         filter(isActionOf(Action.swapSetlistSongInCatalog.request)),
         switchMap(action => {
 
-            const ids = getIdsForOrders(action, state$)
+            // const ids = getIdsForOrders(action, state$)
 
-            return from(SwapSetlistSongsRequestAsync(ids)).pipe(
+            return from(swapSetlistSongs(action.payload)).pipe(
                 map(Action.swapSetlistSongInCatalog.success),
                 catchError((error: Error) => of(Action.swapSetlistSongInCatalog.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(Action.swapSetlistSongInCatalog.cancel))))
