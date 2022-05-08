@@ -12,7 +12,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     publicPath: './'
   },
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
     alias: {
