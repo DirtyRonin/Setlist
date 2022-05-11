@@ -38,12 +38,18 @@ export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActio
                     Refresh: false
                 }
             case getType(actions.fetchSetlistSongCatalog.success):
+
+                let { totalCount } = state
+                if (action.payload.Meta.Count > state.totalCount)
+                    totalCount = action.payload.Meta.Count
+
                 return {
                     ...state,
                     Values: action.payload.Values,
                     Meta: action.payload.Meta,
-                    totalCount: action.payload.Meta.Count
+                    totalCount
                 }
+
             case getType(actions.fetchSetlistSongCatalogNextLink.success):
                 return {
                     ...state,

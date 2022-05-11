@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default function api() {
     const api = axios.create({
-        baseURL: 'http://localhost:8080',
+        baseURL: process.env.REACT_APP_BASE_URL, //'http://localhost:8080',
         withCredentials: true,
         headers:{ 'Accept': 'application/json' } 
     })

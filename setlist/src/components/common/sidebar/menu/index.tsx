@@ -33,31 +33,31 @@ const itemsData = [
     icon: IconTasks(),
     link: '/songs'
   },
-  {
-    name: 'Bands',
-    icon: IconTasks(),
-    link: '/bands'
-  },
-  {
-    name: 'Setlist',
-    icon: IconTasks(),
-    link: '/setlist'
-  },
-  {
-    name: 'Location',
-    icon: IconSchedule(),
-    link: '/location'
-  },
-  {
-    name: 'Dashboard',
-    icon: IconActivity(),
-    link: '/dashboard'
-  },
-  {
-    name: 'Settings',
-    icon: IconSettings(),
-    link: '/settings'
-  }
+  // {
+  //   name: 'Bands',
+  //   icon: IconTasks(),
+  //   link: '/bands'
+  // },
+  // {
+  //   name: 'Setlist',
+  //   icon: IconTasks(),
+  //   link: '/setlist'
+  // },
+  // {
+  //   name: 'Location',
+  //   icon: IconSchedule(),
+  //   link: '/location'
+  // },
+  // {
+  //   name: 'Dashboard',
+  //   icon: IconActivity(),
+  //   link: '/dashboard'
+  // },
+  // {
+  //   name: 'Settings',
+  //   icon: IconSettings(),
+  //   link: '/settings'
+  // }
 ]
 
 interface IItemProps {

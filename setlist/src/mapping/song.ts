@@ -1,5 +1,6 @@
 import { IBandSong, ISetlistSong, ISong } from "../models";
 import { GUID_EMPTY } from "../utils";
+import { ISongResource } from "resource";
 
 export class Song implements ISong {
 
@@ -29,22 +30,24 @@ export class Song implements ISong {
         this.setlistSongs = setlistSongs
     }
 
-    public static Create({ title, artist, originalKey, evergreen, nineties, genre, comment, id, bandSongs, setlistSongs }: { title: string; artist: string; originalKey: string; evergreen: boolean; nineties: boolean; genre: string; comment: string; id?: number; bandSongs?: IBandSong[]; setlistSongs?: ISetlistSong[]; }): ISong {
-        return new Song({ title, artist, originalKey, evergreen, nineties, genre, comment, id, bandSongs, setlistSongs })
+    public static Create({ title, artist, originalKey, evergreen, nineties, genre, comment, id, bandSongs, setlistSongs }: { title: string; artist: string; originalKey: string; evergreen: boolean | number; nineties: boolean | number; genre: string; comment: string; id?: number; bandSongs?: IBandSong[]; setlistSongs?: ISetlistSong[]; }): ISong {
+        return new Song({ title, artist, originalKey, evergreen: this.convertToBoolean(evergreen), nineties: this.convertToBoolean(nineties), genre, comment, id, bandSongs, setlistSongs })
     }
 
-    // public static ToResource(song: ISong): ISongResource {
-    //     const { title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id } = song;
-    //     return { title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id } as ISongResource
-    // }
+    private static convertToBoolean = (value: boolean | number): boolean =>
+        typeof value === 'boolean' ? value : !!value
 
-    // public static FromResource(resource: ISongResource): ISong {
-    //     const { title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id, bandSongs: BandSongs,setlistSongs: SetlistSongs } = resource;
-    //     return Song.Create({ title: Title, artist: Artist, originalKey: OriginalKey, evergreen: Evergreen, nineties: Nineties, genre: Genre, comment: Comment, id: Id, bandSongs: BandSongs,setlistSongs:SetlistSongs })
-    // }
+    public static ToResource({ title, artist, originalKey, evergreen, nineties, genre, comment, id }: { title: string; artist: string; originalKey: string; evergreen: boolean; nineties: boolean; genre: string; comment: string; id?: number; bandSongs?: IBandSong[]; setlistSongs?: ISetlistSong[]; }): ISongResource {
+        return { title, artist, originalKey, evergreen: +evergreen, nineties: +nineties, genre, comment, id }
+    }
+    public static FromResource({ title, artist, originalKey, evergreen, nineties, genre, comment, id, bandSongs = [], setlistSongs = [] }: { title: string; artist: string; originalKey: string; evergreen: number; nineties: number; genre: string; comment: string; id: number; bandSongs?: IBandSong[]; setlistSongs?: ISetlistSong[]; }): ISong {
+        return { title, artist, originalKey, evergreen: this.convertToBoolean(evergreen), nineties: this.convertToBoolean(nineties), genre, comment, id, bandSongs, setlistSongs }
+    }
 
     public static CreateEmpty(): ISong {
         return Song.Create(
             { title: "", artist: "", originalKey: "", evergreen: false, nineties: false, genre: "no genre", comment: "no comment" })
     }
+
+
 }

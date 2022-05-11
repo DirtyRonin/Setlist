@@ -54,7 +54,6 @@ export async function UpdateCustomEventRequestAsync(customEvent: ICustomEvent): 
     const {location,
         band,
         setlist,
-        setlistId,
         ...rest} = customEvent
 
     const response = await api().put(`${customEventsEndpoint.GetEndpointUrl!()}/${customEvent.id}`, rest)
