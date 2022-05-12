@@ -62,7 +62,7 @@
     "hot": "webpack-dev-server",
     "dev": "npx webpack serve --env ENVIRONMENT=development.local --config webpack.dev.js --mode development",
     "start": "npx webpack serve  --config webpack.dev.js",
-    "build": "npx webpack --env ENVIRONMENT=production --config webpack.prod.js",
+    "build": "npx webpack --env ENVIRONMENT=prod --config webpack.prod.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
