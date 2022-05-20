@@ -7,6 +7,7 @@ import { BandSongCatalogActions } from "store/reducers/catalogReducers/bandSongC
 
 import {  fetchBandSongCatalog, fetchBandSongCatalogNextLink, addBandSongToCatalog, editBandSongInCatalog, deleteBandSongInCatalog } from "store/actions/catalogActions/bandSongCatalogActions";
 import { deleteBandSongInCatalogAsync, editBandSongInCatalogAsync, fetchBandSongCatalogAsync, fetchBandSongCatalogNextLinkAsync, NewBandSong } from "service";
+import * as snacks from "./snackbarHelper";
 
 const fetchBandSongCatalogsEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any> = (action$, state$) =>
     action$.pipe(
@@ -14,7 +15,9 @@ const fetchBandSongCatalogsEpic: Epic<BandSongCatalogActions, BandSongCatalogAct
         switchMap(action =>
             from(fetchBandSongCatalogAsync(action.payload)).pipe(
                 map(fetchBandSongCatalog.success),
-                catchError((error: Error) => of(fetchBandSongCatalog.failure(error))),
+                catchError((error: Error) => of(fetchBandSongCatalog.failure(error)).pipe(
+                    map(x => snacks.fetchingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(fetchBandSongCatalog.cancel))))
             )
         )
@@ -26,7 +29,9 @@ const fetchBandSongCatalogNextLinkEpic: Epic<BandSongCatalogActions, BandSongCat
         switchMap(action =>
             from(fetchBandSongCatalogNextLinkAsync(action.payload)).pipe(
                 map(fetchBandSongCatalogNextLink.success),
-                catchError((error: Error) => of(fetchBandSongCatalogNextLink.failure(error))),
+                catchError((error: Error) => of(fetchBandSongCatalogNextLink.failure(error)).pipe(
+                    map(x => snacks.fetchingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(fetchBandSongCatalogNextLink.cancel))))
             )
         )
@@ -37,8 +42,11 @@ const addBandSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any>
         filter(isActionOf(addBandSongToCatalog.request)),
         switchMap(action =>
             from(NewBandSong(action.payload)).pipe(
-                map(addBandSongToCatalog.success),
-                catchError((error: Error) => of(addBandSongToCatalog.failure(error))),
+                switchMap(x => [addBandSongToCatalog.success(x), snacks.creatingCompleted]),
+                // map(addBandSongToCatalog.success),
+                catchError((error: Error) => of(addBandSongToCatalog.failure(error)).pipe(
+                    map(x => snacks.creatingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(addBandSongToCatalog.cancel))))
             )
         )
@@ -50,8 +58,11 @@ const editBandSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, any
         filter(isActionOf(editBandSongInCatalog.request)),
         switchMap(action =>
             from(editBandSongInCatalogAsync(action.payload)).pipe(
-                map(editBandSongInCatalog.success),
-                catchError((error: Error) => of(editBandSongInCatalog.failure(error))),
+                switchMap(x => [editBandSongInCatalog.success(x), snacks.updatingCompleted]),
+                // map(editBandSongInCatalog.success),
+                catchError((error: Error) => of(editBandSongInCatalog.failure(error)).pipe(
+                    map(x => snacks.updatingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(editBandSongInCatalog.cancel))))
             )
         )
@@ -64,7 +75,9 @@ const deleteBandSongEpic: Epic<BandSongCatalogActions, BandSongCatalogActions, a
         switchMap(action =>
             from(deleteBandSongInCatalogAsync(action.payload)).pipe(
                 map(deleteBandSongInCatalog.success),
-                catchError((error: Error) => of(deleteBandSongInCatalog.failure(error))),
+                catchError((error: Error) => of(deleteBandSongInCatalog.failure(error)).pipe(
+                    map(x => snacks.deletingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(deleteBandSongInCatalog.cancel))))
             )
         )

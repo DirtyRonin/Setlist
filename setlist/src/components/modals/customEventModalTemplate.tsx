@@ -32,7 +32,6 @@ const CustomEventModalTemplate = (props: IProps) => {
     const [title, setTitle] = useState('')
     const [date, setDate] = useState(new Date());
     const [locationId, setLocationId] = useState(0);
-    const [setlistId, setSetlistId] = useState(0);
     const [bandId, setBandId] = useState(0);
 
     useEffect(() => {
@@ -50,7 +49,6 @@ const CustomEventModalTemplate = (props: IProps) => {
                     setTitle(result.title)
                     setDate(result.date)
                     setLocationId(result.locationId)
-                    setSetlistId(result.setlistId)
                     setBandId(result.bandId)
 
                     setIsLoading(false)
@@ -84,7 +82,6 @@ const CustomEventModalTemplate = (props: IProps) => {
             id: id,
             date: date,
             title: elements[htmlConfig.Title.ControlId].value,
-            setlistId: setlistId,
             locationId: locationId,
             bandId: bandId,
         }
@@ -124,12 +121,6 @@ const CustomEventModalTemplate = (props: IProps) => {
                 htmlConfig={htmlConfig.Date}
                 handleDateChange={handleDateChange}
             />
-            {/* < AsyncSetlistSelect
-                isReadonly={IsReadonly}
-                defaultBandId={bandId}
-                defaultSetlistId={setlistId}
-                setSetlistId={setSetlistId}
-            /> */}
             <ActionButton type="submit">{type}</ActionButton>
         </form>
         }

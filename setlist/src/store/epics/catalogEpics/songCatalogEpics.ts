@@ -8,13 +8,17 @@ import { SongCatalogActions } from "store/reducers/catalogReducers/songCatalogRe
 import { addSongToCatalog, fetchSongCatalog, fetchSongCatalogNextLink, editSongInCatalog, deleteSongInCatalog } from "store/actions";
 import { addSongToSongCatalogAsync, fetchSongCatalogAsync, fetchSongCatalogNextLinkAsync, editSongInCatalogAsync, deleteSongInCatalogAsync } from "service";
 
+import * as snacks from "./snackbarHelper";
+
 const fetchSongCatalogsEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (action$) =>
     action$.pipe(
         filter(isActionOf(fetchSongCatalog.request)),
         switchMap(action =>
             from(fetchSongCatalogAsync(action.payload)).pipe(
                 map(fetchSongCatalog.success),
-                catchError((error: Error) => of(fetchSongCatalog.failure(error))),
+                catchError((error: Error) => of(fetchSongCatalog.failure(error)).pipe(
+                    map(x => snacks.creatingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(fetchSongCatalog.cancel))))
             )
         )
@@ -26,7 +30,9 @@ const fetchSongCatalogNextLinkEpic: Epic<SongCatalogActions, SongCatalogActions,
         switchMap(action =>
             from(fetchSongCatalogNextLinkAsync(action.payload)).pipe(
                 map(fetchSongCatalogNextLink.success),
-                catchError((error: Error) => of(fetchSongCatalogNextLink.failure(error))),
+                catchError((error: Error) => of(fetchSongCatalogNextLink.failure(error)).pipe(
+                    map(x => snacks.fetchingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(fetchSongCatalogNextLink.cancel))))
             )
         )
@@ -37,8 +43,11 @@ const addSongEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (action$)
         filter(isActionOf(addSongToCatalog.request)),
         switchMap(action =>
             from(addSongToSongCatalogAsync(action.payload)).pipe(
-                map(addSongToCatalog.success),
-                catchError((error: Error) => of(addSongToCatalog.failure(error))),
+                switchMap(x => [addSongToCatalog.success(x), snacks.creatingCompleted]),
+                // map(addSongToCatalog.success),
+                catchError((error: Error) => of(addSongToCatalog.failure(error)).pipe(
+                    map(x => snacks.creatingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(addSongToCatalog.cancel))))
             )
         )
@@ -50,8 +59,11 @@ const editSongEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (action$
         filter(isActionOf(editSongInCatalog.request)),
         switchMap(action =>
             from(editSongInCatalogAsync(action.payload)).pipe(
-                map(editSongInCatalog.success),
-                catchError((error: Error) => of(editSongInCatalog.failure(error))),
+                switchMap(x => [editSongInCatalog.success(x), snacks.updatingCompleted]),
+                // map(editSongInCatalog.success),
+                catchError((error: Error) => of(editSongInCatalog.failure(error)).pipe(
+                    map(x => snacks.updatingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(editSongInCatalog.cancel))))
             )
         )
@@ -63,8 +75,11 @@ const deleteSongEpic: Epic<SongCatalogActions, SongCatalogActions, any> = (actio
         filter(isActionOf(deleteSongInCatalog.request)),
         switchMap(action =>
             from(deleteSongInCatalogAsync(action.payload,)).pipe(
-                map(deleteSongInCatalog.success),
-                catchError((error: Error) => of(deleteSongInCatalog.failure(error))),
+                switchMap(x => [deleteSongInCatalog.success(x), snacks.deletingCompleted]),
+                // map(deleteSongInCatalog.success),
+                catchError((error: Error) => of(deleteSongInCatalog.failure(error)).pipe(
+                    map(x => snacks.deletingFailed)
+                )),
                 takeUntil(action$.pipe(filter(isActionOf(deleteSongInCatalog.cancel))))
             )
         )

@@ -8,6 +8,8 @@ import Fab from "@material-ui/core/Fab";
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import ErrorIcon from '@material-ui/icons/Error';
+import { creatingCompleted } from "store/epics/catalogEpics/snackbarHelper";
+import { ISnackbarActionProps } from "models/actions";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,14 +53,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface IAsyncButtonProps<T> {
     asyncExecute(value: T): Promise<T> | Promise<boolean>
-    value: T
     isExisting: boolean
+    value: T
+    successMessage: string
+    errorMessage: string
+    pushToSnackbar: (props: ISnackbarActionProps) => void
+
 
 }
 
 export const AsyncButtonComponent = <T extends {}>(props: IAsyncButtonProps<T>) => {
-
-    const { asyncExecute, value, isExisting } = props
+    const { asyncExecute, value, isExisting, pushToSnackbar, successMessage, errorMessage } = props
 
     const [loading, setLoading] = React.useState(false);
     const [success, setSuccess] = React.useState(isExisting);
@@ -72,18 +77,25 @@ export const AsyncButtonComponent = <T extends {}>(props: IAsyncButtonProps<T>) 
             asyncExecute(value)
                 .then(
                     (result) => {
+                        if (typeof pushToSnackbar === 'function') {
+                            pushToSnackbar({ message: successMessage })
+                        }
                         setSuccess(true);
                         setLoading(false);
                     }
                 )
                 .catch(
                     (e) => {
+                        if (typeof pushToSnackbar === 'function') {
+                            pushToSnackbar({ message: errorMessage, severity: "error" })
+                        }
                         console.log(e)
                         setSuccess(false);
                         setLoading(false);
                         setError(true)
                     })
         }
+        creatingCompleted;
     }
 
     const classes = useStyles();

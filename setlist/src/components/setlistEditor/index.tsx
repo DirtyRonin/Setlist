@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { ICustomEvent, ISetlistSong, ModalTypes } from 'models';
+import { ICustomEvent, ISetlistSong, ISnackbarActionProps, ModalTypes } from 'models';
 import DataTable from "react-data-table-component";
 import api from 'api/baseApi';
 import { AddSongToSetlistRequestAsync } from "api/setlistSongApi"
 import { mapQuery } from 'utils/routeQueryHelper';
 import setlistEditorNode, { EditorSong } from 'components/nodes/setlistEditorNode';
+import { fetchingFailed } from 'store/epics/catalogEpics/snackbarHelper';
 
 interface IProps {
     handleClose(): void
     query: string
+    pushToSnackbar: (props: ISnackbarActionProps) => void
 }
 
 type SetlistEditor = {
@@ -16,7 +18,7 @@ type SetlistEditor = {
     songs: EditorSong[]
 }
 
-const SetlistEditor = ({ query, handleClose }: IProps): JSX.Element => {
+const SetlistEditor = ({ query, handleClose, pushToSnackbar }: IProps): JSX.Element => {
 
 
     const [isLoading, setLoading] = useState(true);
@@ -44,9 +46,9 @@ const SetlistEditor = ({ query, handleClose }: IProps): JSX.Element => {
                             setEvents(events)
 
                     }
-                ).finally(
-                    () => setLoading(false)
                 )
+                    .catch(error => fetchingFailed)
+                    .finally(() => setLoading(false))
             }
         }
     }, [])
@@ -54,7 +56,7 @@ const SetlistEditor = ({ query, handleClose }: IProps): JSX.Element => {
 
 
     const asyncExecute = async (setlistSong: ISetlistSong): Promise<boolean> => {
-        const result = await AddSongToSetlistRequestAsync(setlistSong);
+        const result = await AddSongToSetlistRequestAsync(setlistSong)
 
         if (result) {
             const newSongs = [...songs];
@@ -63,15 +65,16 @@ const SetlistEditor = ({ query, handleClose }: IProps): JSX.Element => {
                 newSong.setlists.push(setlistSong.setlistId)
                 setSongs(newSongs)
             }
-        }
 
+
+        }
         return result;
     }
 
     return <div>
         <DataTable
             title="Movie List - Custom Cells"
-            columns={setlistEditorNode({ events, setlistId: id, songs, asyncExecute })}
+            columns={setlistEditorNode({ events, setlistId: id, songs, asyncExecute, pushToSnackbar })}
             data={songs}
             pagination
             progressPending={isLoading}

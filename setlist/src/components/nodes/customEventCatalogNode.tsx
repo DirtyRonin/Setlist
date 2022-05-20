@@ -36,7 +36,7 @@ const CustomEventCatalogNodeComponent = (props: IProps): JSX.Element => {
     const createModal = (type: ModalTypes, pathName: string = '/', isModal: boolean = true) => {
 
         setModal({ showModal: true })
-        
+
         setSetlistIdForSetlistSong(customEvent.setlist.id)
 
         history.push({
@@ -57,36 +57,32 @@ const CustomEventCatalogNodeComponent = (props: IProps): JSX.Element => {
         <DefaultNodeWrapperStyle >
             <Container>
                 <Row>
-                    <Col xs="10" >
+                    <Col xs="10">
                         <Row>
-                            <Col xs="3">
-                                <DefaultNodeImageStyle />
+                            <Col xs='3'>
+                                <DefaultLabelStyle>{customEvent.title}</DefaultLabelStyle>
                             </Col>
-                            <Col xs="9">
+                            <Col xs='3'>
+                                <DefaultLabelStyle>{customEvent.band.title}</DefaultLabelStyle>
+                            </Col>
+                            <Col xs='3'>
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>{customEvent.title}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{customEvent.location.name}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <DefaultLabelStyle>Band : {customEvent.band.title}</DefaultLabelStyle>
+                                        <DefaultLabelStyle>{customEvent.location.address}</DefaultLabelStyle>
                                     </Col>
                                 </Row>
-                                <Row>
-                                    <Col>
-                                        <DefaultLabelStyle>Location : {customEvent.location.name}</DefaultLabelStyle>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <DefaultLabelStyle>{customEvent.date.toLocaleDateString()}</DefaultLabelStyle>
-                                    </Col>
-                                </Row>
+                            </Col>
+                            <Col xs='2'>
+                                <DefaultLabelStyle>{customEvent.date.toLocaleDateString()}</DefaultLabelStyle>
                             </Col>
                         </Row>
-                    </Col >
-                    <Col xs='2' >
+                    </Col>
+                    <Col xs='1' >
                         <Menu menuButton={<div ><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
                             <MenuItem value="openSetlist" onClick={handleShowSetlistSongsCatalog}  >Open Setlist</MenuItem>
                             <MenuItem value="compareSetlist" onClick={handleShowSetlistEditor}  >Compare Setlists</MenuItem>

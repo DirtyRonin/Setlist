@@ -1,6 +1,6 @@
 import { Epic, combineEpics } from "redux-observable";
 import { isActionOf } from "typesafe-actions";
-import { of, from } from "rxjs";
+import { of } from "rxjs";
 import { filter, switchMap, map, catchError, takeUntil } from "rxjs/operators";
 
 import * as Action from "../actions/commonActions"
@@ -13,7 +13,7 @@ const pushComponentOrder: Epic<CatalogActions, CatalogActions, any> = (action$, 
     return action$.pipe(
         filter(isActionOf(Action.pushComponentOrder.request)),
         switchMap((action) =>
-            of(pushComponentsOrderService(action.payload,(state$.value as RootState).catalogReducers.catalogState)).pipe(
+            of(pushComponentsOrderService(action.payload, (state$.value as RootState).catalogReducers.catalogState)).pipe(
                 map(Action.pushComponentOrder.success),
                 catchError((error: Error) => of(Action.pushComponentOrder.failure(error))),
                 takeUntil(action$.pipe(filter(isActionOf(Action.pushComponentOrder.cancel))))

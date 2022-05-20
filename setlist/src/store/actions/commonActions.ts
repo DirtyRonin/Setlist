@@ -1,6 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { ICatalogState } from "..";
-import { IModal, IComponentOrder, IComponentOrderActionProps } from "../../models";
+import { IComponentOrder, IComponentOrderActionProps, ISnackbarActionProps } from "models";
 
 // export const setModal = createAction(
 //     "SET_MODAL"
@@ -30,5 +29,13 @@ export const popComponentOrder = createAsyncAction(
     "POP_COMMON_COMPONENTORDER_FAILURE",
     "POP_COMMON_COMPONENTORDER_CANCEL",
 )<void,IComponentOrder[],Error,string>();
+
+export const pushToSnackbar = createAction(
+    "PUSH_TO_SNACKBAR"
+)<ISnackbarActionProps>();
+
+export const closeSnackbar = createAction(
+    "CLOSE_THE_SNACKBAR"
+)<void>();
 
 

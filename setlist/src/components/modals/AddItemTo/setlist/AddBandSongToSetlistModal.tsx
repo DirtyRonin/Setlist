@@ -9,7 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 
 import { AddBandSongToSetlistHtmlAttributesConfiguration } from "configuration";
-import { IFilterSetlistActionProps, ISetlist, ModalTypes } from "models";
+import { IFilterSetlistActionProps, ISetlist, ISnackbarActionProps, ModalTypes } from "models";
 import { fetchBandSongById, fetchSetlistsWithFilteredExpands, ReadSetlistAsync } from "service";
 import { Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import { IsFilterableString, mapQuery } from "utils";
@@ -21,9 +21,10 @@ import Node from "./node/AddBandSongToSetlistModalNode"
 interface IProps {
     history: History
     handleClose: () => void
+    pushToSnackbar: (props: ISnackbarActionProps) => void
 }
 
-const AddBandSongToSetlistModalComponent = ({ history, handleClose }: IProps): JSX.Element => {
+const AddBandSongToSetlistModalComponent = ({ history, handleClose, pushToSnackbar }: IProps): JSX.Element => {
 
     const [isLoading, setLoading] = useState(false)
 
@@ -164,6 +165,7 @@ const AddBandSongToSetlistModalComponent = ({ history, handleClose }: IProps): J
                     >
                         {Array.from(setlists.values()).map((setlist, index) => (
                             <Node
+                                pushToSnackbar={pushToSnackbar}
                                 setlist={setlist}
                                 bandSong={bandSong}
                                 key={index}

@@ -14,6 +14,7 @@ import setlistSongCatalogReducers from "./catalogReducers/setlistSongCatalogRedu
 import locationCatalogReducers from "./catalogReducers/locationCatalogReducer"
 import customEventCatalogReducers from "./catalogReducers/customEventCatalogReducer"
 import modalReducers from "store/reducers/modalReducers"
+import snackbarReducer from "store/reducers/snackbarReducer"
 
 import dropDownFilterReducer from "./layoutReducers/GlobalBandFilterReducers"
 import { songCatalogEpics, bandCatalogEpics, bandSongCatalogEpics, userEpics, setlistCatalogEpics, setlistSongCatalogEpics, locationCatalogEpics, customEventCatalogEpics } from "store/epics"
@@ -44,7 +45,8 @@ const reducers = {
   dropDownFilterReducer,
   auth,
   userReducers,
-  modalReducers
+  modalReducers,
+  snackbarReducer,
 }
 
 export type RootState = StateType<typeof reducers>;

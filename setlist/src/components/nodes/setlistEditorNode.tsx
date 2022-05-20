@@ -1,13 +1,14 @@
 import React from 'react';
 import { TableColumn } from "react-data-table-component";
+import { cloneDeep } from "lodash"
 
 import { SetlistSong } from 'mapping/setlistSong';
 import { Song } from 'mapping/song';
 
-import { ICustomEvent, ISetlistSong, ISong } from "models";
+import { ICustomEvent, ISetlistSong, ISnackbarActionProps, ISong } from "models";
 import AsyncButtonComponent from 'components/common/asyncButton';
+import {CREATING_COMPLETED,CREATING_FAILED} from "store/epics/catalogEpics/snackbarHelper"
 
-import { cloneDeep } from "lodash"
 
 export type EditorSong = Omit<ISong, 'setlists'> & {
     setlists: number[]
@@ -15,8 +16,8 @@ export type EditorSong = Omit<ISong, 'setlists'> & {
 
 
 const setlistEditorNode = (
-    { events, setlistId, songs, asyncExecute }:
-        { events: ICustomEvent[]; setlistId: number; songs: EditorSong[]; asyncExecute: (setlistSong: ISetlistSong) => Promise<boolean>; }
+    { events, setlistId, songs, asyncExecute ,pushToSnackbar}:
+        { events: ICustomEvent[]; setlistId: number; songs: EditorSong[]; asyncExecute: (setlistSong: ISetlistSong) => Promise<boolean>; pushToSnackbar: (pushToSnackbar: ISnackbarActionProps) => void }
 ): TableColumn<EditorSong>[] => {
 
     const IsSetlistSongExisting = (item: EditorSong): boolean => {
@@ -53,7 +54,7 @@ const setlistEditorNode = (
         {
             name: 'Current Setlist',
             button: true,
-            cell: (item) => <AsyncButtonComponent asyncExecute={asyncExecute} value={CreateNewSetlistSong({ song: item, setlistId })} isExisting={IsSetlistSongExisting(item)} />,
+            cell: (item) => <AsyncButtonComponent asyncExecute={asyncExecute} value={CreateNewSetlistSong({ song: item, setlistId })} isExisting={IsSetlistSongExisting(item)} pushToSnackbar={pushToSnackbar} successMessage={CREATING_COMPLETED} errorMessage={CREATING_FAILED} />,
         }
     )
 

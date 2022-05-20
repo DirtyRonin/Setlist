@@ -68,7 +68,7 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
                             <Col>
                                 <Header >
                                     <HeaderTitle>{`Current Items Count : ${customEventCatalog.Meta.Count}`}</HeaderTitle>
-                                    <HeaderTitle>Custom Events</HeaderTitle>
+                                    <HeaderTitle>Your Events</HeaderTitle>
 
                                     <HeaderOptions>
                                         <SearchFilterCss>
@@ -90,7 +90,6 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
                         <Row>
                             <Col>
                                 <NodeListCss id={customEventCatalogDef.NodeList.ControlId} >
-                                    {customEventCatalog.Meta.Count}
                                     <InfiniteScroll
                                         dataLength={customEventCatalog.Values.length}
                                         next={handleScrollDown}

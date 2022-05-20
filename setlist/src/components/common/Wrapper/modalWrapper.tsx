@@ -4,7 +4,7 @@ import { History } from 'history';
 
 import { IModelState, RootState } from 'store'
 import PrivateRoute from "components/common/privateRoute"
-import { bandModalActions, bandSongModalActions, customEventModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ICustomEventEntityActionProps, IFilterCustomEventActionProps, ILocationCatalog, ILocationEntityActionProps, ISetlistEntityActionProps, ISetlistSongEntityActionProps, ISongEntityActionProps, IUser, locationModalActions, setlistModalActions, setlistSongModalActions, songModalActions } from "models"
+import { bandModalActions, bandSongModalActions, customEventModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ICustomEventEntityActionProps, IFilterCustomEventActionProps, ILocationCatalog, ILocationEntityActionProps, ISetlistEntityActionProps, ISetlistSongEntityActionProps, ISnackbarActionProps, ISongEntityActionProps, IUser, locationModalActions, setlistModalActions, setlistSongModalActions, songModalActions } from "models"
 import * as Action from 'store/actions';
 import AddBandSongToSetlistModal from "components/modals/AddItemTo/setlist/AddBandSongToSetlistModal";
 
@@ -37,6 +37,7 @@ const ModalWrapper = ({
     setlistSongModalActionsProvider,
     locationModalActionsProvider,
     customEventModalActionsProvider,
+    pushToSnackbar
 }: ModalWrapperProps) => {
 
     const query = history.location.search ?? ''
@@ -57,6 +58,7 @@ const ModalWrapper = ({
             <ModalTemplate handleCloseModal={handleClose} title='Add to Setlist'>
                 <AddSongToBandComponent
                     handleClose={handleClose}
+                    pushToSnackbar={pushToSnackbar}
                     history={history}
                 />
             </ModalTemplate>
@@ -65,9 +67,10 @@ const ModalWrapper = ({
         <PrivateRoute path="/AddSongToSetlist">
             <ModalTemplate handleCloseModal={handleClose} title='Add to Setlist'>
                 <AddSongToSetlistModalComponent
+                    pushToSnackbar={pushToSnackbar}
                     handleClose={handleClose}
                     history={history}
-                />
+                    />
             </ModalTemplate>
         </PrivateRoute>
 
@@ -94,6 +97,7 @@ const ModalWrapper = ({
         <PrivateRoute path="/AddBandSongToSetlist">
             <ModalTemplate handleCloseModal={handleClose} title='Add Band Song to Setlist'>
                 <AddBandSongToSetlistModal
+                    pushToSnackbar={pushToSnackbar}
                     handleClose={handleClose}
                     history={history}
                 />
@@ -104,6 +108,7 @@ const ModalWrapper = ({
         <PrivateRoute path="/AddSetlistSongFromSongs">
             <ModalTemplate handleCloseModal={handleClose} title='Add Songs to Setlist'>
                 <AddSetlistSongFromSongsComponent
+                    pushToSnackbar={pushToSnackbar}
                     handleClose={handleClose}
                     history={history}
                 />
@@ -113,6 +118,7 @@ const ModalWrapper = ({
         <PrivateRoute path="/AddBandSongFromSongs">
             <ModalTemplate handleCloseModal={handleClose} title='Add Band Song from Songs'>
                 <AddBandSongFromSongsComponent
+                    pushToSnackbar={pushToSnackbar}
                     handleClose={handleClose}
                     history={history}
                 />
@@ -125,6 +131,7 @@ const ModalWrapper = ({
                     query={query}
                     setlistModalActionsProvider={setlistModalActionsProvider}
                     handleClose={handleClose}
+
                 />
             </ModalTemplate>
         </PrivateRoute>
@@ -164,6 +171,7 @@ const ModalWrapper = ({
                     // customEventModalActionsProvider={customEventModalActionsProvider}
                     handleClose={handleClose}
                     query={query}
+                    pushToSnackbar={pushToSnackbar}
                 />
             </ModalTemplate>
         </PrivateRoute>
@@ -179,6 +187,7 @@ interface IConnectedDispatch {
     setlistSongModalActionsProvider: setlistSongModalActions
     locationModalActionsProvider: locationModalActions
     customEventModalActionsProvider: customEventModalActions
+    pushToSnackbar: (props: ISnackbarActionProps) => void
 }
 
 interface IProps {
@@ -266,6 +275,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<any>): IConnectedDispatch =
         Add: () => { },
         ShowCatalog: () => { }
     },
+    pushToSnackbar: (props: ISnackbarActionProps) => dispatch(Action.pushToSnackbar(props))
 })
 
 const DefaultWrapper = (props: ModalWrapperProps) =>

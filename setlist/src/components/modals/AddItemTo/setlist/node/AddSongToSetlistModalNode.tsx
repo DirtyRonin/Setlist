@@ -3,13 +3,16 @@ import { Container, Row, Col } from "react-bootstrap";
 
 import AsyncButtonComponent from "components/common/asyncButton";
 import { Song, SetlistSong } from "mapping";
-import { ISetlist, ISetlistSong, ISong } from "models";
+import { ISetlist, ISetlistSong, ISnackbarActionProps, ISong } from "models";
 import { SongNodeContainer } from "styles/songStyle";
 import { AddSongToSetlistRequestAsync } from "api/setlistSongApi"
+import { pushToSnackbar } from "store";
+import { CREATING_COMPLETED, CREATING_FAILED } from "store/epics/catalogEpics/snackbarHelper";
 
 export interface IAddSongToSetlistModalNode {
     setlist: ISetlist
     song: ISong
+    pushToSnackbar: (props: ISnackbarActionProps) => void
 }
 
 type SetlistWithSongCount = ISetlist & {
@@ -39,7 +42,7 @@ const AddSongToSetlistModalNode = (props: IAddSongToSetlistModalNode) => {
                     <Col xs="4">
                         <div>
                             <Col>
-                                <AsyncButtonComponent asyncExecute={AddSongToSetlistRequestAsync} value={CreateNewSetlistSong} isExisting={IsSetlistSongExisting} />
+                                <AsyncButtonComponent asyncExecute={AddSongToSetlistRequestAsync} value={CreateNewSetlistSong} isExisting={IsSetlistSongExisting} pushToSnackbar={pushToSnackbar} successMessage={CREATING_COMPLETED} errorMessage={CREATING_FAILED} />
                             </Col>
                         </div>
                     </Col>

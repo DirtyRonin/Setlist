@@ -11,7 +11,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 
 import { AddBandSongFromSongsHtmlAttributesConfiguration } from "configuration";
-import { IFilterSongActionProps, ISong } from "models";
+import { IFilterSongActionProps, ISnackbarActionProps, ISong } from "models";
 import { fetchSetlistById, fetchSongsWithFilteredExpands } from "service";
 import { Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import { UseModalStyles, ActionButton } from 'styles/modalStyles';
@@ -25,13 +25,15 @@ import Node from "./node/AddSetlistSongFromSongsNode"
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { GetSongsRequestAsync } from "api/songApi";
+import { fetchingFailed } from "store/epics/catalogEpics/snackbarHelper";
 
 interface IProps {
     history: History
     handleClose(): void
+    pushToSnackbar: (props: ISnackbarActionProps) => void
 }
 
-const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX.Element => {
+const AddSetlistSongFromSongsComponent = ({ history, handleClose, pushToSnackbar }: IProps): JSX.Element => {
 
     const [isLoading, setLoading] = useState(false)
 
@@ -57,7 +59,7 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
                     const newFilter = FilterSongActionProps.Default({ setlistId })
                     setFilter(newFilter)
                     fetchSongs(newFilter)
-                })
+                }).catch(error => fetchingFailed)
             }
         }
     }, []);
@@ -70,7 +72,7 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
                 setNextLink(resolve.Meta.NextLink);
                 setLoading(false)
             }
-        ).catch().finally()
+        ).catch(error => fetchingFailed)
     }
 
     const handleScrollDown = () => {
@@ -82,7 +84,7 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
                 setNextLink(resolve.NextLink);
                 setLoading(false)
             }
-        );
+        ).catch(error => fetchingFailed);
     }
 
     const OnChangeQuery = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
@@ -138,7 +140,7 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
                         </Menu>
                     </HeaderOptions>
                 </Header>
-                <NodeListCss id={htmlConfig.NodeList.ControlId} style={{ height:'800px' }} >
+                <NodeListCss id={htmlConfig.NodeList.ControlId} style={{ height: '800px' }} >
                     <InfiniteScroll
                         dataLength={songs.length}
                         next={handleScrollDown}
@@ -149,6 +151,7 @@ const AddSetlistSongFromSongsComponent = ({ history, handleClose }: IProps): JSX
                     >
                         {Array.from(songs.values()).map((song, index) => (
                             <Node
+                                pushToSnackbar={pushToSnackbar}
                                 setlist={setlist}
                                 song={song}
                                 key={index}

@@ -3,13 +3,15 @@ import { Container, Row, Col } from "react-bootstrap";
 
 import AsyncButtonComponent from "components/common/asyncButton";
 import { SetlistSong, Song } from "mapping";
-import { ISetlist, ISetlistSong, ISong } from "models";
+import { ISetlist, ISetlistSong, ISnackbarActionProps, ISong } from "models";
 import { AddSongToSetlistRequestAsync } from "api/setlistSongApi";
 import { DefaultLabelStyle, DefaultNodeWrapperStyle } from "styles/defaultNodeStyle";
+import { CREATING_COMPLETED, CREATING_FAILED } from "store/epics/catalogEpics/snackbarHelper"
 
 interface IProps {
     setlist: ISetlist
     song: ISong
+    pushToSnackbar: (props: ISnackbarActionProps) => void
 }
 
 type SongtWithSetlistCount = ISong & {
@@ -18,7 +20,7 @@ type SongtWithSetlistCount = ISong & {
 
 const AddBandSongFromSongsNode = (props: IProps) => {
 
-    const { setlist, song } = props
+    const { setlist, song, pushToSnackbar } = props
 
     const CreateNewSetlistSong: ISetlistSong = SetlistSong.Create({
         setlistId: setlist.id,
@@ -78,7 +80,7 @@ const AddBandSongFromSongsNode = (props: IProps) => {
                         </Row>
                     </Col>
                     <Col xs="2">
-                        <AsyncButtonComponent asyncExecute={AddSongToSetlistRequestAsync} value={CreateNewSetlistSong} isExisting={IsSongInSetlistExisting} />
+                        <AsyncButtonComponent asyncExecute={AddSongToSetlistRequestAsync} value={CreateNewSetlistSong} isExisting={IsSongInSetlistExisting} pushToSnackbar={pushToSnackbar} successMessage={CREATING_COMPLETED} errorMessage={CREATING_FAILED} />
                     </Col>
                 </Row>
             </Container>

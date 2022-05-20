@@ -1,3 +1,4 @@
+import { Color } from "@material-ui/lab/Alert";
 import { IComponentOrder } from "..";
 
 export interface IComponentOrderActionProps {
@@ -6,4 +7,9 @@ export interface IComponentOrderActionProps {
 
 export interface IModalActionsProps{
     showModal:boolean
+}
+
+export interface ISnackbarActionProps{
+    message:string
+    severity?:Color
 }

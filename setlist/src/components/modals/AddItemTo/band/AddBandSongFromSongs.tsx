@@ -9,7 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 
 import { AddBandSongFromSongsHtmlAttributesConfiguration } from "configuration";
-import { IFilterSongActionProps, ISong } from "models";
+import { IFilterSongActionProps, ISnackbarActionProps, ISong } from "models";
 import { Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import { UseModalStyles, ActionButton } from 'styles/modalStyles';
 
@@ -25,9 +25,10 @@ import { fetchBandById } from "service/epicServices/bandCatalogService";
 export interface IAddSongToBandComponent {
     history: History
     handleClose(): void
+    pushToSnackbar: (props: ISnackbarActionProps) => void
 }
 
-const AddBandSongFromSongsComponent = ({ history, handleClose }: IAddSongToBandComponent): JSX.Element => {
+const AddBandSongFromSongsComponent = ({ history, handleClose, pushToSnackbar }: IAddSongToBandComponent): JSX.Element => {
 
     const [isLoading, setLoading] = useState(false)
 
@@ -142,6 +143,7 @@ const AddBandSongFromSongsComponent = ({ history, handleClose }: IAddSongToBandC
                     >
                         {!isLoading && songs.map((song, index) => (
                             <Node
+                                pushToSnackbar={pushToSnackbar}
                                 band={band}
                                 song={song}
                                 key={index}

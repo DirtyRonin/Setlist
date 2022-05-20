@@ -9,8 +9,6 @@ import { AppProps } from "store";
 
 import '@szhsin/react-menu/dist/index.css';
 import DashBoard from "./pages/dashboard";
-import DataTable from "components/setlistEditor";
-import SetlistEditor from "components/setlistEditor";
 
 const BandCatalogContainer = React.lazy(() => import('store/containers/catalogs/BandCatalogContainer'))
 const SongCatalogContainer = React.lazy(() => import('store/containers/catalogs/SongCatalogContainer'))
@@ -25,7 +23,6 @@ const Login = React.lazy(() => import('components/login'))
 const Sidebar = React.lazy(() => import('components/common/sidebar'))
 
 
-import { Tab, Tabs } from "react-bootstrap";
 import MenuAppBar from "components/appBar/appBar";
 
 
