@@ -13,6 +13,7 @@ import { GUID_EMPTY, IsFilterableString } from 'utils';
 import { addLocationToCatalog, deleteLocationInCatalog, editLocationInCatalog, fetchLocationCatalog, setLocationFilter } from 'store/actions/catalogActions/locationCatalogActions'
 import { RootState } from 'store';
 import { CustomEventModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/customEventHtmlAttributes';
+import { ModalError } from 'models/error/modalError/modalError';
 
 const LocationModalTemplate = React.lazy(() => import('components/modals/locationModalTemplate'))
 const DialogTemplate = React.lazy(() => import('components/common/Wrapper/dialogTemplate'))
@@ -21,24 +22,38 @@ const DialogTemplate = React.lazy(() => import('components/common/Wrapper/dialog
 const CONST_NEW_LOCATION = 'CREATE A NEW LOCATION'
 const htmlConfig = CustomEventModalHtmlAttributesConfiguration;
 
+const SELECT_LOCATION = 'Please Select a Location'
+const UNFETCHED_LOCATION = 'Could not fetch the Location'
+
 function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, locationCatalog, fetchLocationCatalog, setLocationFilter, setLocationId, isReadonly }: props) {
 
-    const [selectedLocation, setSelectedLocation] = useState(Location.CreateEmpty())
+    const defaultModalError: ModalError<ILocation> = { HasError: false, Message: '', Value: Location.CreateEmpty() }
+    const modalErrorMessage = (message: string): ModalError<ILocation> => ({ ...defaultModalError, HasError: true, Message: message })
+
+    const [selectedLocation, setSelectedLocation] = useState<ModalError<ILocation>>(defaultModalError)
     const [isLoading, setLoading] = useState(true)
     const [query, setQuery] = useState('')
 
     const [open, toggleOpen] = useState(false);
 
     useEffect(() => {
-        if (defaultLocationId) {
-            setLoading(true)
-            fetchLocationById(defaultLocationId).then(
-                result => {
-                    setSelectedLocation(result)
-                    setLoading(false)
-                }
-            )
+        if (!defaultLocationId) {
+            setSelectedLocation(modalErrorMessage(SELECT_LOCATION))
+            return
         }
+
+        setLoading(true)
+        fetchLocationById(defaultLocationId).then(
+            result => {
+                setSelectedLocation({ ...defaultModalError, Value: result })
+                setLoading(false)
+            }
+        ).catch(
+            error => {
+                setSelectedLocation(modalErrorMessage(UNFETCHED_LOCATION))
+                setLoading(false)
+            }
+        )
     }, [])
 
     useEffect(() => {
@@ -55,7 +70,7 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
 
     const handleClose = () => {
         setLocationFilter(FilterLocationActionProps.Create({ filter: { Query: '' }, refresh: false }))
-        setSelectedLocation(Location.CreateEmpty())
+        setSelectedLocation(defaultModalError)
         setQuery('')
 
         toggleOpen(false);
@@ -65,14 +80,14 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
         if (!newValue) {
 
             //clear this component before you leave it
-            setSelectedLocation(Location.CreateEmpty())
+            setSelectedLocation(modalErrorMessage(SELECT_LOCATION))
             setQuery('')
 
-            setLocationId(0)
+            // setLocationId(0)
 
         } else if (newValue.id !== GUID_EMPTY) {
 
-            setSelectedLocation(newValue)
+            setSelectedLocation({ ...defaultModalError, Value: newValue })
             setQuery(newValue.name)
 
             setLocationId(newValue.id)
@@ -83,7 +98,7 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
 
         } else {
 
-            setSelectedLocation(Location.CreateEmpty())
+            setSelectedLocation(defaultModalError)
             setQuery('')
             setLocationFilter(FilterLocationActionProps.Create({ filter: { Query: '' }, refresh: true }))
 
@@ -95,14 +110,11 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
     const handleOnInputChange = (event: React.ChangeEvent<{}>, value: string, reason: AutocompleteInputChangeReason): void => {
         setQuery(value)
 
-        const refresh = reason === "input" && IsFilterableString(locationCatalog.Filter.Query, value) ? true : false
-        if (refresh) {
-            setLocationFilter(FilterLocationActionProps.Create({ filter: { Query: value }, refresh }))
+        if (IsFilterableString(locationCatalog.Filter.Query, value)) {
+            setLocationFilter(FilterLocationActionProps.Create({ filter: { Query: value }, refresh: true }))
         }
     }
-    // const handleOnOpen = (event: React.ChangeEvent<{}>): void => {
-    //     setLoading(true)
-    // }
+   
 
     const filter = createFilterOptions<ILocation>();
 
@@ -110,10 +122,11 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
         <Fragment>
             <Autocomplete
                 disabled={isReadonly}
+                disableClearable
                 selectOnFocus
                 clearOnBlur
                 handleHomeEndKeys
-                value={selectedLocation}
+                value={selectedLocation.Value}
                 onChange={handleOnChange}
                 inputValue={query}
                 onInputChange={handleOnInputChange}
@@ -130,6 +143,9 @@ function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, 
                 renderInput={(params) => <TextField
                     {...params}
                     label={htmlConfig.Location.Label}
+                    error={selectedLocation.HasError}
+                    type={selectedLocation.HasError ? "Error" : 'text'}
+                    helperText={selectedLocation.Message ?? ''}
                 />}
                 renderOption={(option, { inputValue }) => {
 

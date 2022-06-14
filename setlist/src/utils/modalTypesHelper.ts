@@ -1,6 +1,7 @@
 import { ModalTypes } from "../models";
 
-export const IsModalReadonly = (modal: ModalTypes) => modal === ModalTypes.Remove || modal === ModalTypes.Read || modal === ModalTypes.None
+export const IsModalDisabled = (modal: ModalTypes) => modal === ModalTypes.Remove || modal === ModalTypes.Read || modal === ModalTypes.None
+
 export const IsCatalog = (modal: ModalTypes) => modal === ModalTypes.Add
 
 export const GetModalTypeByString = (type: string): ModalTypes =>

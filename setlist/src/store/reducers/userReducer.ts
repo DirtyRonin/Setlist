@@ -13,7 +13,7 @@ export type UserState = {
 
 export const defaultUser: UserState = {
     user:{
-        name:'admin',
+        name:'',
         id:GUID_EMPTY
     }
 }

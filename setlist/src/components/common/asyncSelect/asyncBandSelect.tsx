@@ -8,12 +8,13 @@ import match from 'autosuggest-highlight/match';
 
 import { IFilterBandActionProps, IBand, IBandCatalog, IBandEntityActionProps, bandModalActions, ModalTypes } from 'models';
 import { FilterBandActionProps, Band } from 'mapping';
-import { GUID_EMPTY, IsFilterableString } from 'utils';
+import { GUID_EMPTY, IsFilterableString, IsValidFilterableString } from 'utils';
 
 import { addBandToCatalog, deleteBandInCatalog, editBandInCatalog, fetchBandCatalog, setBandFilter } from 'store/actions/catalogActions/bandCatalogActions'
 import { RootState } from 'store';
 import { CustomEventModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/customEventHtmlAttributes';
 import { fetchBandById } from 'service/epicServices/bandCatalogService';
+import { ModalError } from 'models/error/modalError/modalError';
 
 const BandModalTemplate = React.lazy(() => import('components/modals/BandModalTemplate'))
 const DialogTemplate = React.lazy(() => import('components/common/Wrapper/dialogTemplate'))
@@ -24,22 +25,32 @@ const htmlConfig = CustomEventModalHtmlAttributesConfiguration;
 
 function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog, fetchBandCatalog, setBandFilter, setBandId, isReadonly }: props) {
 
-    const [selectedBand, setSelectedBand] = useState(Band.CreateEmpty())
+    const defaultModalError: ModalError<IBand> = { HasError: false, Message: '', Value: Band.CreateEmpty() }
+
+    const [selectedBand, setSelectedBand] = useState<ModalError<IBand>>(defaultModalError)
     const [isLoading, setLoading] = useState(true)
     const [query, setQuery] = useState('')
 
     const [open, toggleOpen] = useState(false);
 
     useEffect(() => {
-        if (defaultBandId) {
-            setLoading(true)
-            fetchBandById(defaultBandId).then(
-                result => {
-                    setSelectedBand(result)
-                    setLoading(false)
-                }
-            )
+        if (!defaultBandId) {
+            setSelectedBand({ ...defaultModalError, HasError: true, Message: 'Please Select a Band' })
+            return
         }
+
+        setLoading(true)
+        fetchBandById(defaultBandId).then(
+            result => {
+                setSelectedBand({ ...defaultModalError, Value: result })
+                setLoading(false)
+            }
+        ).catch(
+            error=>{
+                setSelectedBand({ ...defaultModalError, HasError: true, Message: 'Could not fetch the Band' })
+                setLoading(false)
+            }
+        )
     }, [])
 
     useEffect(() => {
@@ -56,7 +67,7 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
 
     const handleClose = () => {
         setBandFilter(FilterBandActionProps.Create({ filter: { Query: '' }, refresh: false }))
-        setSelectedBand(Band.CreateEmpty())
+        setSelectedBand(defaultModalError)
         setQuery('')
 
         toggleOpen(false);
@@ -66,15 +77,15 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
         if (!newValue) {
 
             //clear this component before you leave it
-            setSelectedBand(Band.CreateEmpty())
+            setSelectedBand({ ...defaultModalError, HasError: true, Message: 'Please Select a Band' })
             setQuery('')
 
-            setBandId(0)
+            // setBandId(0)
 
         } else if (newValue.id !== GUID_EMPTY) {
 
             //set the values before you leave it
-            setSelectedBand(newValue)
+            setSelectedBand({ ...defaultModalError, Value: newValue })
             setQuery(newValue.title)
 
             setBandId(newValue.id)
@@ -86,7 +97,7 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
         } else {
 
 
-            setSelectedBand(Band.CreateEmpty())
+            setSelectedBand(defaultModalError)
             setQuery('')
             setBandFilter(FilterBandActionProps.Create({ filter: { Query: '' }, refresh: true }))
 
@@ -98,14 +109,10 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
     const handleOnInputChange = (event: React.ChangeEvent<{}>, value: string, reason: AutocompleteInputChangeReason): void => {
         setQuery(value)
 
-        const refresh = reason === "input" && IsFilterableString(bandCatalog.Filter.Query, value) ? true : false
-        if (refresh) {
-            setBandFilter(FilterBandActionProps.Create({ filter: { Query: value }, refresh }))
+        if (IsFilterableString(bandCatalog.Filter.Query, value)) {
+            setBandFilter(FilterBandActionProps.Create({ filter: { Query: value }, refresh: true }))
         }
     }
-    // const handleOnOpen = (event: React.ChangeEvent<{}>): void => {
-    //     setLoading(true)
-    // }
 
     const filter = createFilterOptions<IBand>();
 
@@ -113,10 +120,11 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
         <Fragment>
             <Autocomplete
                 disabled={isReadonly}
+                disableClearable
                 selectOnFocus
-                clearOnBlur
+                // clearOnBlur
                 handleHomeEndKeys
-                value={selectedBand}
+                value={selectedBand.Value}
                 onChange={handleOnChange}
                 inputValue={query}
                 onInputChange={handleOnInputChange}
@@ -133,6 +141,9 @@ function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog,
                 renderInput={(params) => <TextField
                     {...params}
                     label={htmlConfig.Band.Label}
+                    error={selectedBand.HasError}
+                    type={selectedBand.HasError ? "Error" : 'text'}
+                    helperText={selectedBand.Message ?? ''}
                 />}
                 renderOption={(option, { inputValue }) => {
 

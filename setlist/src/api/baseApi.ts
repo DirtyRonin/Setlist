@@ -2,6 +2,7 @@ import axios from 'axios'
 // import {logOut} from '@/util/auth'
 
 export default function api() {
+    console.log(process.env.REACT_APP_BASE_URL)
     const api = axios.create({
         baseURL: process.env.REACT_APP_BASE_URL, //'http://localhost:8080',
         withCredentials: true,

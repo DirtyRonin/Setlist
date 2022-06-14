@@ -25,7 +25,7 @@ const logoProps = {
   title: {
     size: 26,
     color: 'white',
-    text: 'Square'
+    text: 'StageHand'
   },
   image: {
     size: 50,

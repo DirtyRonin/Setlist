@@ -2,12 +2,8 @@ export const AUTH = 'AUTH'
 export const LOGOUT = 'LOGOUT'
 
 export interface IUserInfo {
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  }
-  token: string;
+  name:string
+  isAdmin:boolean
 }
 
 export interface IAuthState extends IUserInfo {

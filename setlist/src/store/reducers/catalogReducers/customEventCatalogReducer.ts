@@ -7,6 +7,7 @@ import { ICustomEventCatalog } from "models";
 import * as actions from "store/actions/catalogActions/customEventCatalogActions"
 import * as common from "store/actions/commonActions"
 import { MapHelper } from "utils";
+import { ILogoutAction, LOGOUT } from "store/auth/types";
 
 export type CustomEventCatalogActions = ActionType<typeof common & typeof actions>;
 
@@ -18,7 +19,7 @@ const initial: ICustomEventCatalogState = {
     customEventCatalog: CustomEventCatalog.Create()
 }
 
-export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActions>({
+export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActions | ILogoutAction>({
     customEventCatalog: (state = initial.customEventCatalog, action) => {
         switch (action.type) {
             case getType(actions.setCustomEventFilter):
@@ -58,9 +59,12 @@ export default combineReducers<ICustomEventCatalogState, CustomEventCatalogActio
             case getType(actions.deleteCustomEventInCatalog.success): {
                 return {
                     ...state,
-                    Values:state.Values.filter(_=> _.id !== action.payload),
+                    Values: state.Values.filter(_ => _.id !== action.payload),
                     Meta: { ...state.Meta, Count: state.Meta.Count - 1 }
                 }
+            }
+            case LOGOUT: {
+                return initial.customEventCatalog
             }
             default:
                 return state;

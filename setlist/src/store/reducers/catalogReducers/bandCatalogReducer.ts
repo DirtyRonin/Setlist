@@ -1,10 +1,11 @@
 import { combineReducers } from "redux";
-import { ActionType, getType } from "typesafe-actions";
+import { ActionType, getType, PayloadAction } from "typesafe-actions";
 import * as actions from "store/actions/catalogActions/bandCatalogActions"
 import * as common from "store/actions/commonActions"
 import { IBandCatalog } from "models";
 import { BandCatalog } from "mapping";
 import { MapHelper } from "utils";
+import { ILogoutAction, LOGOUT } from "store/auth/types";
 
 export type BandCatalogActions = ActionType<typeof common & typeof actions>;
 
@@ -16,7 +17,7 @@ const initial: IBandCatalogState = {
     bandCatalog: BandCatalog.Create()
 }
 
-export default combineReducers<IBandCatalogState, BandCatalogActions>({
+export default combineReducers<IBandCatalogState, BandCatalogActions | ILogoutAction>({
     bandCatalog: (state = initial.bandCatalog, action) => {
         switch (action.type) {
             case getType(actions.setBandFilter):
@@ -77,6 +78,9 @@ export default combineReducers<IBandCatalogState, BandCatalogActions>({
                         Values
                     }
                 }
+            case LOGOUT: {
+                return initial.bandCatalog
+            }
             default:
                 return state;
         }

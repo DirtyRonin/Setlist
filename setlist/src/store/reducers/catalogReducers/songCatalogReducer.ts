@@ -8,6 +8,7 @@ import { ISongCatalog } from "../../../models";
 import { SongCatalog } from "../../../mapping";
 
 import { MapHelper } from "../../../utils"
+import { ILogoutAction, LOGOUT } from "store/auth/types";
 
 export type SongCatalogActions = ActionType<typeof actions>;
 
@@ -19,7 +20,7 @@ const initial: ISongCatalogState = {
     songCatalog: SongCatalog.Create()
 }
 
-export default combineReducers<ISongCatalogState, SongCatalogActions>({
+export default combineReducers<ISongCatalogState, SongCatalogActions | ILogoutAction>({
     songCatalog: (state = initial.songCatalog, action) => {
         switch (action.type) {
             case getType(actions.setSongFilter):
@@ -79,6 +80,9 @@ export default combineReducers<ISongCatalogState, SongCatalogActions>({
                         Values
                     }
                 }
+            case LOGOUT: {
+                return initial.songCatalog
+            }
 
             default:
                 return state;

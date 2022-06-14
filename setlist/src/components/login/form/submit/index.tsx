@@ -1,8 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Axios, { AxiosResponse } from "axios";
-
-
 
 import styled from 'styled-components'
 import { Redirect } from 'react-router-dom'
@@ -66,6 +63,45 @@ const InputSubmit = styled.input`
   }
 `
 
+const WrapperVisitor = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const TextVisitor = styled.span`
+  margin: 15px 0;
+  color: #92929d;
+  font-size: 12px;
+  text-transform: uppercase;
+`
+const ButtonVisitor = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 38px;
+  border: none;
+  background: #fc5a5a;
+  border-radius: 10px;
+  cursor: not-allowed;
+  :focus {
+    outline: none;
+  }
+  span {
+    margin-left: 10px;
+    color: white;
+    font-size: 12px;
+  }
+`
+
+const InputLabelVisitor = styled.label`
+  padding: 0 0 1px 20px;
+  opacity: 1;
+  font-size: 75%;
+  color: #fc5a5a;
+`
+
 interface IFormSubmitProps {
   checkAuth: typeof checkAuth
 }
@@ -80,6 +116,7 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
 
   const [redirect, setRedirect] = React.useState<boolean>(false)
   const [error, setError] = React.useState('')
+  const [errorVisitor, setErrorVisitor] = React.useState('')
 
   const renderRedirect = (): object | void => {
     if (redirect) {
@@ -97,45 +134,66 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
     const email = target.email.value; // typechecks!
     const password = target.password.value; // typechecks!
 
+    request(email, password);
+  }
+
+  const handleVisitorSubmit = () => {
+    request('visitor@visitor.de', 'visitor')
+  }
+
+  const request = (email: string, password: string): void => {
     api().get('/sanctum/csrf-cookie').then(() =>
       api().post<IUserInfo>('/login', { email, password })
         .then((response) => {
           setError('');
-          checkAuth(response.data)
+          setErrorVisitor('');
+          checkAuth({ name: response.data.name, isAdmin: response.data.isAdmin })
           setRedirect(true)
         }
         ).catch(
-          response => setError(response)
+          response => setErrorVisitor(response.response.data.message)
         ))
   }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <Wrapper>
-        <InputText
-          type='email'
-          placeholder='Your login'
-          name='email'
-          value='admin@admin.de'
+    <>
+      <form onSubmit={handleSubmit}>
+        <Wrapper>
+          <InputText
+            type='email'
+            placeholder='Your login'
+            name='email'
+            value='admin@admin.de'
+          />
+        </Wrapper>
+        <Wrapper>
+          <InputText
+            type='password'
+            placeholder='Your password'
+            name='password'
+            value='admin'
+          />
+          <InputLabel>
+            {error}
+          </InputLabel>
+        </Wrapper>
+        <InputSubmit
+          type='submit'
+          value='Sign in'
+          disabled={false}
         />
-      </Wrapper>
-      <Wrapper>
-        <InputText
-          type='password'
-          placeholder='Your password'
-          name='password'
-          value='admin'
-        />
-        <InputLabel>
-          {error}
-        </InputLabel>
-      </Wrapper>
-      <InputSubmit
-        type='submit'
-        value='Sign in'
-        disabled={false}
-      />
-      {renderRedirect()}
-    </form>
+        {renderRedirect()}
+      </form>
+      <WrapperVisitor>
+        <TextVisitor>or</TextVisitor>
+        <ButtonVisitor onClick={handleVisitorSubmit}>
+          <span>Continue as Visitor</span>
+        </ButtonVisitor>
+        <InputLabelVisitor>
+          {errorVisitor}
+        </InputLabelVisitor>
+      </WrapperVisitor>
+    </>
   )
 }
 

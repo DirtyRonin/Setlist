@@ -1,5 +1,6 @@
 
 import { combineReducers } from "redux";
+import { ILogoutAction, LOGOUT } from "store/auth/types";
 import { ActionType, getType } from "typesafe-actions";
 import { BandSongCatalog } from "../../../mapping";
 import { IBandSongCatalog,IBandSong } from "../../../models";
@@ -16,7 +17,7 @@ const initial: IBandSongCatalogState = {
     bandSongCatalog: BandSongCatalog.Create(0)
 }
 
-export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
+export default combineReducers<IBandSongCatalogState, BandSongCatalogActions| ILogoutAction>({
     bandSongCatalog: (state = initial.bandSongCatalog, action) => {
         switch (action.type) {
             case getType(actions.setBandIdForBandSong):
@@ -77,6 +78,9 @@ export default combineReducers<IBandSongCatalogState, BandSongCatalogActions>({
                     ...state,
                     Values
                 }
+            }
+            case LOGOUT: {
+                return initial.bandSongCatalog
             }
 
             default:

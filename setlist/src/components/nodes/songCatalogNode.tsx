@@ -96,8 +96,8 @@ const SongCatalogNodeComponent = (props: ISongNodeProps): JSX.Element => {
                     </Col>
                     <Col xs='2' >
                         <Menu menuButton={<div><FontAwesomeIcon icon={['fas', "ellipsis-h"]} size="1x" /></div>}>
-                            <MenuItem value="AddToBand" onClick={handleAddSongToBand} >Add to Band Song</MenuItem>
-                            <MenuItem value="AddToSetlist" onClick={handleAddSongToSetlist}  >Add to Setlist</MenuItem>
+                            {/* <MenuItem value="AddToBand" onClick={handleAddSongToBand} >Add to Favorites / Band Song</MenuItem> */}
+                            {/* <MenuItem value="AddToSetlist" onClick={handleAddSongToSetlist}  >Add to Setlist</MenuItem> */}
                             <MenuDivider />
                             <MenuHeader>Edit</MenuHeader>
                             <MenuItem value="Read" onClick={handleShowReadSong} >{ModalTypes.Read}</MenuItem>

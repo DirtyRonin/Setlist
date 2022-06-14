@@ -4,7 +4,7 @@ import { DialogActions, DialogContent, DialogContentText, TextField } from '@mat
 
 import { ModalError } from 'models/error/modalError/modalError';
 import { bandModalActions, ModalTypes } from 'models';
-import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly, mapQuery } from 'utils';
+import { GetModalTypeByString, GUID_EMPTY, IsModalDisabled, mapQuery } from 'utils';
 import { BandModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/bandHtmlAttributes';
 import { ActionButton, UseModalStyles } from 'styles/modalStyles';
 import { Band } from 'mapping';
@@ -77,7 +77,7 @@ const BandModalTemplate = ({ bandModalActionsProvider, handleClose, query }: IPr
         }
     }
 
-    const IsReadonly = IsModalReadonly(type)
+    const IsReadonly = IsModalDisabled(type)
     const Class = UseModalStyles()
     return (
         <div className={Class.root}>

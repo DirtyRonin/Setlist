@@ -16,8 +16,8 @@ const fetchCustomEventCatalogsEpic: Epic<CustomEventCatalogActions, CustomEventC
         switchMap(action =>
             from(fetchCustomEventCatalogAsync(action.payload)).pipe(
                 switchMap(x => [Action.fetchCustomEventCatalog.success(x)]),
-                catchError((error: Error) => of(Action.fetchCustomEventCatalog.failure(error)).pipe(
-                    map(x => snacks.fetchingFailed)
+                catchError((error) => of(Action.fetchCustomEventCatalog.failure(error)).pipe(
+                    map(x => snacks.fetchingFailed(error.response.status,error.response.data.message))
                 )),
                 takeUntil(action$.pipe(filter(isActionOf(Action.fetchCustomEventCatalog.cancel))))
             )
@@ -32,8 +32,8 @@ const fetchCustomEventCatalogNextLinkEpic: Epic<CustomEventCatalogActions, Custo
             from(fetchCustomEventCatalogNextLinkAsync(action.payload)).pipe(
                 map(Action.fetchCustomEventCatalogNextLink.success),
                 // map(x => snacks.fetchingCompleted),
-                catchError((error: Error) => of(Action.fetchCustomEventCatalogNextLink.failure(error)).pipe(
-                    map(x => snacks.fetchingFailed)
+                catchError((error) => of(Action.fetchCustomEventCatalogNextLink.failure(error)).pipe(
+                    map(x => snacks.fetchingFailed(error.response.status,error.response.data.message))
                 )),
                 takeUntil(action$.pipe(filter(isActionOf(Action.fetchCustomEventCatalogNextLink.cancel))))
             )
@@ -46,8 +46,8 @@ const addCustomEventEpic: Epic<CustomEventCatalogActions, CustomEventCatalogActi
         switchMap(action =>
             from(addCustomEventToCustomEventCatalogAsync(action.payload)).pipe(
                 switchMap(x => [Action.addCustomEventToCatalog.success(x), snacks.creatingCompleted]),
-                catchError((error: Error) => of(Action.addCustomEventToCatalog.failure(error)).pipe(
-                    map(x => snacks.creatingFailed)
+                catchError((error) => of(Action.addCustomEventToCatalog.failure(error)).pipe(
+                    map(x => snacks.creatingFailed(error.response.status,error.response.data.message))
                 )),
                 takeUntil(action$.pipe(filter(isActionOf(Action.addCustomEventToCatalog.cancel))))
             )
@@ -61,9 +61,9 @@ const editCustomEventEpic: Epic<CustomEventCatalogActions, CustomEventCatalogAct
         switchMap(action =>
             from(editCustomEventInCatalogAsync(action.payload)).pipe(
                 switchMap(x => [Action.editCustomEventInCatalog.success(x), snacks.updatingCompleted]),
-                catchError((error: Error) => {
+                catchError((error) => {
                     return of(map(x => Action.editCustomEventInCatalog.failure(error))).pipe(
-                        map(x => snacks.updatingFailed)
+                        map(x => snacks.updatingFailed(error.response.status,error.response.data.message))
                     )
                 }),
                 takeUntil(action$.pipe(filter(isActionOf(Action.editCustomEventInCatalog.cancel))))
@@ -78,8 +78,8 @@ const deleteCustomEventEpic: Epic<CustomEventCatalogActions, CustomEventCatalogA
         switchMap(action =>
             from(deleteCustomEventInCatalogAsync(action.payload,)).pipe(
                 switchMap(x => [Action.deleteCustomEventInCatalog.success(x), snacks.deletingCompleted]),
-                catchError((error: Error) => of(Action.deleteCustomEventInCatalog.failure(error)).pipe(
-                    map(x => snacks.deletingFailed)
+                catchError((error) => of(Action.deleteCustomEventInCatalog.failure(error)).pipe(
+                    map(x => snacks.deletingFailed(error.response.status,error.response.data.message))
                 )),
                 takeUntil(action$.pipe(filter(isActionOf(Action.deleteCustomEventInCatalog.cancel))))
             )
@@ -93,7 +93,7 @@ const deleteCustomEventEpic: Epic<CustomEventCatalogActions, CustomEventCatalogA
 //         switchMap(action =>
 //             from(editCustomEventInCatalogAsync(action.payload)).pipe(
 //                 map(Action.editCustomEventInCatalog.success),
-//                 catchError((error: Error) => of(Action.editCustomEventInCatalog.failure(error))),
+//                 catchError((error) => of(Action.editCustomEventInCatalog.failure(error))),
 //                 takeUntil(action$.pipe(filter(isActionOf(Action.editCustomEventInCatalog.cancel))))
 //             )
 //         )

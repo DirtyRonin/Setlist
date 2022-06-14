@@ -68,7 +68,7 @@ const CustomEventCatalogComponent = (props: CustomEventCatalogProps): JSX.Elemen
                             <Col>
                                 <Header >
                                     <HeaderTitle>{`Current Items Count : ${customEventCatalog.Meta.Count}`}</HeaderTitle>
-                                    <HeaderTitle>Your Events</HeaderTitle>
+                                    <HeaderTitle>Your Concerts</HeaderTitle>
 
                                     <HeaderOptions>
                                         <SearchFilterCss>

@@ -32,14 +32,9 @@ export const App = (props: AppProps): JSX.Element => {
         location,
         history,
         userState,
+        isLoggedIn,
         modalState: { showModal },
-
-        getUser,
     } = props;
-
-    useEffect(() => {
-        getUser(userState.name)
-    }, []);
 
     //only set Switch.location when you want to render a background
     //otherwise pass undefined to render main component
@@ -50,105 +45,94 @@ export const App = (props: AppProps): JSX.Element => {
     return (<ConnectedRouter history={history} >
         <React.Suspense fallback={<Loader />}>
             <Router history={history}>
-                <Route path='/login'>
-                    <Login />
-                </Route>
-                <Wrapper>
-                    <Switch location={location.state?.background}>
-                        <PrivateRoute exact path='/'>
-                            <MenuAppBar />
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-
-                                <Sidebar />
+                <MenuAppBar history={history} />
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <Sidebar
+                        user={userState}
+                        isLoggedIn={isLoggedIn} />
+                    <Wrapper >
+                        <Route path='/login'>
+                            <Login />
+                        </Route>
+                        <Switch location={location.state?.background}>
+                            <PrivateRoute exact path='/'>
                                 <ContentWrapper>
                                     <CustomEventCatalogContainer
                                         history={history}
                                     />
                                 </ContentWrapper>
-                            </div>
-                        </PrivateRoute>
-                        <PrivateRoute exact path='/customEvent_SetlistSongAsCatalog'>
-                            <MenuAppBar />
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <Sidebar />
+                            </PrivateRoute>
+                            <PrivateRoute exact path='/customEvent_SetlistSongAsCatalog'>
                                 <ContentWrapper>
                                     <SetlistSongCatalog
                                         history={history}
                                     />
                                 </ContentWrapper>
-                            </div>
-                        </PrivateRoute>
-                        <PrivateRoute path='/songs'>
-                            <MenuAppBar />
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <Sidebar />
+                            </PrivateRoute>
+                            <PrivateRoute path="/setlistSongAsCatalog">
                                 <ContentWrapper>
-                                    <SongCatalogContainer
-                                        history={history} />
+                                    <SetlistCatalogContainer
+                                        history={history}
+                                    />
+                                    <SetlistSongCatalog
+                                        history={history}
+                                    />
                                 </ContentWrapper>
-                            </div>
-                        </PrivateRoute>
-                        <PrivateRoute path='/bands'>
-                            <Sidebar />
-                            <ContentWrapper>
-                                <BandCatalogContainer
-                                    history={history} />
-                            </ContentWrapper>
-                        </PrivateRoute>
-                        <PrivateRoute path='/setlist'>
-                            <Sidebar />
-                            <ContentWrapper>
-                                <SetlistCatalogContainer
-                                    history={history}
-                                />
-                            </ContentWrapper>
-                        </PrivateRoute>
-                        <PrivateRoute path='/location'>
-                            <Sidebar />
-                            <ContentWrapper>
-                                <LocationCatalogContainer
-                                    history={history}
-                                />
-                            </ContentWrapper>
-                        </PrivateRoute>
-                        <PrivateRoute path='/dashboard'>
-                            <Sidebar />
-                            <ContentWrapper>
-                                <DashBoard />
-                            </ContentWrapper>
-                        </PrivateRoute>
-                        <PrivateRoute path="/bandSongAsCatalog">
-                            <Sidebar />
-                            <ContentWrapper>
-                                <BandCatalogContainer
-                                    history={history} />
-                                <BandSongCatalogComponent
-                                    history={history}
-                                />
-                            </ContentWrapper>
-                        </PrivateRoute>
-                        <PrivateRoute path="/setlistSongAsCatalog">
-                            <Sidebar />
-                            <ContentWrapper>
-                                <SetlistCatalogContainer
-                                    history={history}
-                                />
-                                <SetlistSongCatalog
-                                    history={history}
-                                />
-                            </ContentWrapper>
-                        </PrivateRoute>
-                        <PrivateRoute path='/settings'>
-                            <Sidebar />
-                            <ContentWrapper>
-                            </ContentWrapper>
-                        </PrivateRoute>
-                    </Switch>
-                    {showModal && <Switch>
-                        <ModalWrapper history={history} />
-                    </Switch>}
+                            </PrivateRoute>
 
-                </Wrapper>
+                            {userState.isAdmin && <>
+                                <PrivateRoute path='/setlist'>
+                                    <ContentWrapper>
+                                        <SetlistCatalogContainer
+                                            history={history}
+                                        />
+                                    </ContentWrapper>
+                                </PrivateRoute>
+                                <PrivateRoute path='/songs'>
+                                    <ContentWrapper>
+                                        <SongCatalogContainer
+                                            history={history} />
+                                    </ContentWrapper>
+                                </PrivateRoute>
+                                <PrivateRoute path='/bands'>
+                                    <ContentWrapper>
+                                        <BandCatalogContainer
+                                            history={history} />
+                                    </ContentWrapper>
+                                </PrivateRoute>
+                                <PrivateRoute path='/location'>
+                                    <ContentWrapper>
+                                        <LocationCatalogContainer
+                                            history={history}
+                                        />
+                                    </ContentWrapper>
+                                </PrivateRoute>
+                                <PrivateRoute path='/dashboard'>
+                                    <ContentWrapper>
+                                        <DashBoard />
+                                    </ContentWrapper>
+                                </PrivateRoute>
+                                <PrivateRoute path="/bandSongAsCatalog">
+                                    <ContentWrapper>
+                                        <BandCatalogContainer
+                                            history={history} />
+                                        <BandSongCatalogComponent
+                                            history={history}
+                                        />
+                                    </ContentWrapper>
+                                </PrivateRoute>
+                                <PrivateRoute path='/settings'>
+                                    <ContentWrapper>
+                                    </ContentWrapper>
+                                </PrivateRoute>
+                            </>}
+                        </Switch>
+                        {showModal && <Switch>
+                            <ModalWrapper history={history} />
+                        </Switch>}
+
+                    </Wrapper>
+                </div>
             </Router>
 
         </React.Suspense>

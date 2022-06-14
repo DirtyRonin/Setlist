@@ -2,9 +2,10 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   display: flex;
-  margin: 0 auto;
   flex-direction: column;
-`
+  width: 95%;
+  margin: 0 auto;
+  `
 
 // export const Wrapper = styled.div`
 // margin: 0 auto;
@@ -29,8 +30,8 @@ export const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-width: 250px;
     background-color: white;
     padding: 15px;
     margin-top: 25px;
+    min-width: 250px;
 `;

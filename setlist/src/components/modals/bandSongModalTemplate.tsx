@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react"
 
 import { ModalTypes, bandSongModalActions } from "models";
 import { BandSong } from "mapping";
-import { mapQuery, GetModalTypeByString, IsModalReadonly, GUID_EMPTY } from "utils";
+import { mapQuery, GetModalTypeByString, IsModalDisabled, GUID_EMPTY } from "utils";
 import { fetchBandSongById } from "service";
 import { BandSongModalHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/bandSongHtmlAttributes";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -90,7 +90,7 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
         }
     }
 
-    const IsReadonly = IsModalReadonly(type)
+    const IsReadonly = IsModalDisabled(type)
     const Class = UseModalStyles()
 
     return (

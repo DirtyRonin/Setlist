@@ -6,6 +6,7 @@ import { ISetlistSong, ISetlistSongCatalog } from "../../../models";
 
 import * as actions from "../../actions/catalogActions/setlistSongCatalogActions"
 import * as common from "../../actions/commonActions"
+import { ILogoutAction, LOGOUT } from "store/auth/types";
 
 export type SetlistSongCatalogActions = ActionType<typeof common & typeof actions>;
 
@@ -17,7 +18,7 @@ const initial: ISetlistSongCatalogState = {
     setlistSongCatalog: SetlistSongCatalog.Create(0)
 }
 
-export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActions>({
+export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActions | ILogoutAction>({
     setlistSongCatalog: (state = initial.setlistSongCatalog, action) => {
         switch (action.type) {
             case getType(actions.setSetlistIdForSetlistSong):
@@ -121,6 +122,9 @@ export default combineReducers<ISetlistSongCatalogState, SetlistSongCatalogActio
                 }
                 else
                     return state
+            }
+            case LOGOUT: {
+                return initial.setlistSongCatalog
             }
 
             default:

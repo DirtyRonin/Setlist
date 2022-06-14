@@ -6,6 +6,7 @@ import { ISetlistCatalog } from "models";
 import { MapHelper } from "utils";
 
 import * as actions from "store/actions/catalogActions/setlistCatalogActions"
+import { ILogoutAction, LOGOUT } from "store/auth/types";
 
 export type SetlistCatalogActions = ActionType<typeof actions>;
 
@@ -17,7 +18,7 @@ const initial: ISetlistCatalogState = {
     setlistCatalog: SetlistCatalog.Create()
 }
 
-export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
+export default combineReducers<ISetlistCatalogState, SetlistCatalogActions | ILogoutAction>({
     setlistCatalog: (state = initial.setlistCatalog, action) => {
         switch (action.type) {
             case getType(actions.setSetlistFilter):
@@ -87,6 +88,9 @@ export default combineReducers<ISetlistCatalogState, SetlistCatalogActions>({
                         Values
                     }
                 }
+            case LOGOUT: {
+                return initial.setlistCatalog
+            }
             default:
                 return state;
         }

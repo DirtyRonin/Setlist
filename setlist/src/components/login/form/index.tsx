@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import LoginSocial from '../social'
+import LoginVisitor from '../visitor'
 import LoginFormSubmit from './submit'
 
 const Section = styled.section`
@@ -21,7 +21,7 @@ const Form = () => {
     <Section>
       <h3>Login to your account</h3>
       <LoginFormSubmit />
-      <LoginSocial />
+      {/* <LoginVisitor /> */}
     </Section>
   )
 }

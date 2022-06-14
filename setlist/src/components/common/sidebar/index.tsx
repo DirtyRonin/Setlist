@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { PropsWithoutRef } from 'react'
+import { IUserInfo } from 'store/auth/types'
 import styled from 'styled-components'
 import Menu from '../sidebar/menu'
 
@@ -11,12 +12,25 @@ const Wrapper = styled.section`
   padding-top:40px;
 `
 
-const Sidebar = () => {
-  return (
-    <Wrapper>
-      <Menu />
-    </Wrapper>
-  )
+interface IProps {
+  user: IUserInfo
+  isLoggedIn: boolean
+}
+
+const Sidebar = (props: IProps) => {
+
+
+  const renderSidebar = () =>
+    props.isLoggedIn ? <>
+      <Wrapper id="sidebarWrapper">
+        <Menu 
+          user={props.user} />
+      </Wrapper>
+    </> : <></>
+
+
+  return renderSidebar()
+  
 }
 
 export default Sidebar

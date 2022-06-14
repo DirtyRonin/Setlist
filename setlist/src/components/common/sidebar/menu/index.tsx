@@ -8,6 +8,7 @@ import IconSchedule from '../../icons/menu/schedule'
 import IconActivity from '../../icons/menu/activity'
 import IconSettings from '../../icons/menu/settings'
 import IconDashboard from '../../icons/menu/dashboard'
+import { IUserInfo } from 'store/auth/types'
 
 const Wrapper = styled.nav`
   display: flex;
@@ -17,46 +18,54 @@ const Wrapper = styled.nav`
   }
 `
 
-const itemsData = [
+const itemsData: IItemProps[] = [
   {
-    name: 'Custom Event',
+    name: 'Concerts',
     icon: IconDashboard(),
-    link: '/'
+    link: '/',
+    needPermission: false
   },
   // {
   //   name: 'Messages',
   //   icon: IconMessages(),
-  //   link: '/messages'
+  //   link: '/messages',
+  //   needPermission:true
   // },
   {
     name: 'Songs',
     icon: IconTasks(),
-    link: '/songs'
+    link: '/songs',
+    needPermission: true
   },
-  // {
-  //   name: 'Bands',
-  //   icon: IconTasks(),
-  //   link: '/bands'
-  // },
+  {
+    name: 'Bands',
+    icon: IconTasks(),
+    link: '/bands',
+    needPermission:true
+  },
   // {
   //   name: 'Setlist',
   //   icon: IconTasks(),
-  //   link: '/setlist'
+  //   link: '/setlist',
+  //   needPermission:false
   // },
-  // {
-  //   name: 'Location',
-  //   icon: IconSchedule(),
-  //   link: '/location'
-  // },
+  {
+    name: 'Location',
+    icon: IconSchedule(),
+    link: '/location',
+    needPermission:true
+  },
   // {
   //   name: 'Dashboard',
   //   icon: IconActivity(),
-  //   link: '/dashboard'
+  //   link: '/dashboard',
+  //   needPermission:true
   // },
   // {
   //   name: 'Settings',
   //   icon: IconSettings(),
-  //   link: '/settings'
+  //   link: '/settings',
+  //   needPermission:true
   // }
 ]
 
@@ -64,16 +73,26 @@ interface IItemProps {
   name: string
   icon: object | string
   link: string
+  needPermission: boolean
 }
 
-const items = itemsData.map((item: IItemProps, idx: number): object => (
-  <Item key={idx} {...item} />
-))
+interface IMenuProps {
+  user: IUserInfo
+}
 
-const Menu = () => {
+const generateMenuItems = (user: IUserInfo) => itemsData.map((item: IItemProps, index: number) => {
+  if (item.needPermission && !user.isAdmin)
+    return
+
+  return <Item key={index} {...item} />
+})
+
+
+
+const Menu = (props: IMenuProps) => {
   return (
     // <ErrorBoundary>
-      <Wrapper>{items}</Wrapper>
+    <Wrapper>{generateMenuItems(props.user)}</Wrapper>
     // </ErrorBoundary>
   )
 }

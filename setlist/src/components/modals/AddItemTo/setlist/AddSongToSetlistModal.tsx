@@ -9,8 +9,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 
 import { AddSongToSetlistHtmlAttributesConfiguration } from "configuration";
-import { ISetlist, IFilterSetlistActionProps, ModalTypes, setlistModalActions, ISnackbarActionProps } from "models";
-import { fetchSetlistsWithFilteredExpands, fetchSongById, ReadSetlistAsync } from "service";
+import { ISetlist, IFilterSetlistActionProps, ModalTypes, ISnackbarActionProps } from "models";
+import { fetchSetlistsWithFilteredExpands, fetchSongById } from "service";
 import { Header, HeaderOptions, HeaderTitle, InfinitScrollCss, NodeListCss, SearchFilterCss } from "styles/catalogStyle";
 import { UseModalStyles, ActionButton } from 'styles/modalStyles';
 

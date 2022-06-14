@@ -4,7 +4,7 @@ import { DialogActions, DialogContent, DialogContentText, TextField } from '@mat
 
 import { ModalError } from 'models/error/modalError/modalError';
 import { setlistModalActions, ModalTypes } from 'models';
-import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly, mapQuery } from 'utils';
+import { GetModalTypeByString, GUID_EMPTY, IsModalDisabled, mapQuery } from 'utils';
 import { fetchSetlistById } from 'service';
 import { SetlistModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/setlistHtmlAttributes';
 import { ActionButton, UseModalStyles } from 'styles/modalStyles';
@@ -90,7 +90,7 @@ const SetlistModalTemplate = ({ setlistModalActionsProvider, handleClose, query 
         }
     }
 
-    const IsReadonly = IsModalReadonly(type)
+    const IsReadonly = IsModalDisabled(type)
     const Class = UseModalStyles()
     return (
         <div className={Class.root}>

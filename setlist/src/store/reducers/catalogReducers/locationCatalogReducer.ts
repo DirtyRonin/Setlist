@@ -6,6 +6,7 @@ import { LocationCatalog, Location } from "mapping";
 import { ILocationCatalog } from "models";
 import * as actions from "store/actions/catalogActions/locationCatalogActions"
 import * as common from "store/actions/commonActions"
+import { ILogoutAction, LOGOUT } from "store/auth/types";
 
 export type LocationCatalogActions = ActionType<typeof common & typeof actions>;
 
@@ -17,7 +18,7 @@ const initial: ILocationCatalogState = {
     locationCatalog: LocationCatalog.Create()
 }
 
-export default combineReducers<ILocationCatalogState, LocationCatalogActions>({
+export default combineReducers<ILocationCatalogState, LocationCatalogActions | ILogoutAction>({
     locationCatalog: (state = initial.locationCatalog, action) => {
         switch (action.type) {
             case getType(actions.setLocationFilter):
@@ -76,6 +77,9 @@ export default combineReducers<ILocationCatalogState, LocationCatalogActions>({
                         Values
                     }
                 }
+            case LOGOUT: {
+                return initial.locationCatalog
+            }
 
 
             default:

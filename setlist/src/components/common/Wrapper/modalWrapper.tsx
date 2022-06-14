@@ -7,6 +7,7 @@ import PrivateRoute from "components/common/privateRoute"
 import { bandModalActions, bandSongModalActions, customEventModalActions, IBandEntityActionProps, IBandSongEntityActionProps, ICustomEventEntityActionProps, IFilterCustomEventActionProps, ILocationCatalog, ILocationEntityActionProps, ISetlistEntityActionProps, ISetlistSongEntityActionProps, ISnackbarActionProps, ISongEntityActionProps, IUser, locationModalActions, setlistModalActions, setlistSongModalActions, songModalActions } from "models"
 import * as Action from 'store/actions';
 import AddBandSongToSetlistModal from "components/modals/AddItemTo/setlist/AddBandSongToSetlistModal";
+import { IUserInfo } from "store/auth/types";
 
 const AddSongToBandComponent = React.lazy(() => import("components/modals/AddItemTo/band/AddSongToBand"))
 const AddSongToSetlistModalComponent = React.lazy(() => import("components/modals/AddItemTo/setlist/AddSongToSetlistModal"))
@@ -50,6 +51,8 @@ const ModalWrapper = ({
                     songModalActionsProvider={songModalActionsProvider}
                     handleClose={handleClose}
                     query={query}
+                    user={userState}
+                    pushToSnackbar={pushToSnackbar}
                 />
             </ModalTemplate>
         </PrivateRoute>
@@ -70,7 +73,7 @@ const ModalWrapper = ({
                     pushToSnackbar={pushToSnackbar}
                     handleClose={handleClose}
                     history={history}
-                    />
+                />
             </ModalTemplate>
         </PrivateRoute>
 
@@ -103,8 +106,6 @@ const ModalWrapper = ({
                 />
             </ModalTemplate>
         </PrivateRoute>
-
-//
         <PrivateRoute path="/AddSetlistSongFromSongs">
             <ModalTemplate handleCloseModal={handleClose} title='Add Songs to Setlist'>
                 <AddSetlistSongFromSongsComponent
@@ -162,6 +163,8 @@ const ModalWrapper = ({
                     customEventModalActionsProvider={customEventModalActionsProvider}
                     handleClose={handleClose}
                     query={query}
+                    user={userState}
+                    pushToSnackbar={pushToSnackbar}
                 />
             </ModalTemplate>
         </PrivateRoute>
@@ -196,7 +199,7 @@ interface IProps {
 
 interface IStateProps extends IProps {
     modalState: IModelState;
-    userState: IUser
+    userState: IUserInfo
     locationCatalog: ILocationCatalog
 }
 
@@ -206,7 +209,7 @@ const mapStateToProps = (state: RootState, props: IProps): IStateProps =>
 ({
     modalState: state.modalReducers.modalState,
     history: props.history,
-    userState: state.userReducers.user,
+    userState: { name: state.auth.name, isAdmin: state.auth.isAdmin },
     locationCatalog: state.locationCatalogReducers.locationCatalog
 })
 

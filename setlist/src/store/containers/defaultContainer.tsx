@@ -8,40 +8,43 @@ import { App } from '../../App';
 import * as Action from '../actions';
 import { IUser } from '../../models';
 
-import {IModelState} from "store/reducers/modalReducers"
+import { IModelState } from "store/reducers/modalReducers"
+import { IUserInfo } from 'store/auth/types';
 
 interface IAppConnectedDispatch {
-    getUser(props: string): void
+    // getUser(props: string): void
 }
 interface IProps {
     history: History
 }
 
 interface IStateProps extends IProps {
-    userState: IUser;
+    userState: IUserInfo;
     modalState: IModelState
-    location: Location<LocationState| undefined>
+    location: Location<LocationState | undefined>
+    isLoggedIn:boolean
 }
 
-type LocationState ={
-    background : Location | undefined
+type LocationState = {
+    background: Location | undefined
 }
 
 export type AppProps = IStateProps & IAppConnectedDispatch;
 
 const mapStateToProps = (state: RootState, props: IProps): IStateProps => {
     return ({
-        userState: state.userReducers.user,
+        userState: { name: state.auth.name, isAdmin: state.auth.isAdmin },
+        isLoggedIn: state.auth.isAuth,
         // i need modalstate here so the whole component will be updated - otherwise, only the modal withou the background will be rendered
-        modalState:state.modalReducers.modalState,
+        modalState: state.modalReducers.modalState,
         history: props.history,
-        location : props.history.location
+        location: props.history.location
     } as IStateProps)
 };
 
 const mapDispatchToProps = (dispatch: React.Dispatch<any>): IAppConnectedDispatch => {
     return {
-        getUser: (props: string) => dispatch(Action.getUser.request(props)),
+        // getUser: (props: string) => dispatch(Action.getUser.request(props)),
     };
 };
 

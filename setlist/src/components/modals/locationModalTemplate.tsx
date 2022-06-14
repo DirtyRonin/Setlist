@@ -4,7 +4,7 @@ import { DialogActions, DialogContent, DialogContentText, TextField } from '@mat
 
 import { ModalError } from 'models/error/modalError/modalError';
 import { locationModalActions, ModalTypes } from 'models';
-import { GetModalTypeByString, GUID_EMPTY, IsModalReadonly, mapQuery } from 'utils';
+import { GetModalTypeByString, GUID_EMPTY, IsModalDisabled, mapQuery } from 'utils';
 import { fetchLocationById } from 'service';
 import { LocationModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/locationHtmlAttributes';
 import { ActionButton, UseModalStyles } from 'styles/modalStyles';
@@ -92,7 +92,7 @@ const LocationModalTemplate = ({ locationModalActionsProvider, handleClose, quer
         }
     }
 
-    const IsReadonly = IsModalReadonly(type)
+    const IsReadonly = IsModalDisabled(type)
     const Class = UseModalStyles()
     return (
         <div className={Class.root}>

@@ -7,7 +7,8 @@ export const ContainerCss = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-width: 250px;
+    min-width: 650px;
+    flex-grow: 4;
     background-color: white;
 `;
 
