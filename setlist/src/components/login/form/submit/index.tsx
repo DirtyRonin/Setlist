@@ -163,7 +163,7 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
             type='email'
             placeholder='Your login'
             name='email'
-            value='admin@admin.de'
+            value=''
           />
         </Wrapper>
         <Wrapper>
@@ -171,7 +171,7 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
             type='password'
             placeholder='Your password'
             name='password'
-            value='admin'
+            value=''
           />
           <InputLabel>
             {error}
