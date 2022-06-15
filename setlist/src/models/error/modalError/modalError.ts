@@ -1,4 +1,4 @@
-export type ModalError<T> = {
+export type InputWrapper<T> = {
     HasError:boolean
     Message:string
     Value:T

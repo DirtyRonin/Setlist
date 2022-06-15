@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 
 import styled from 'styled-components'
@@ -6,6 +6,9 @@ import { Redirect } from 'react-router-dom'
 import { IUserInfo } from '../../../../store/auth/types'
 import { checkAuth } from '../../../../store/auth/actions'
 import api from 'api/baseApi';
+import { InputWrapper } from 'models/error/modalError/modalError'
+import TextField from '@material-ui/core/TextField'
+import { UseModalStyles } from 'styles/modalStyles'
 
 const Wrapper = styled.div`
   display: flex;
@@ -106,17 +109,21 @@ interface IFormSubmitProps {
   checkAuth: typeof checkAuth
 }
 
-interface ILogin {
-  email: string
-  password: string
-}
+const INSERT_EMAIL = 'Please Insert an Email'
+const INSERT_PASSWORD = 'Please Insert a Password'
 
 const Sumbit: React.FC<IFormSubmitProps> = props => {
+
+  const defaultTextWrapper: InputWrapper<string> = { HasError: false, Message: '', Value: '' }
+  const errorTextWrapper = (message: string): InputWrapper<string> => ({ ...defaultTextWrapper, HasError: true, Message: message })
+
   const { checkAuth } = props
 
   const [redirect, setRedirect] = React.useState<boolean>(false)
   const [error, setError] = React.useState('')
   const [errorVisitor, setErrorVisitor] = React.useState('')
+  const [password, setPassword] = React.useState(defaultTextWrapper)
+  const [email, setEmail] = React.useState(defaultTextWrapper)
 
   const renderRedirect = (): object | void => {
     if (redirect) {
@@ -127,14 +134,19 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
 
-    const target = e.target as typeof e.target & {
-      email: { value: string };
-      password: { value: string };
-    };
-    const email = target.email.value; // typechecks!
-    const password = target.password.value; // typechecks!
+    let hasError = false
 
-    request(email, password);
+    if (isStringInvalid(email.Value)) {
+      setPassword({ ...errorTextWrapper(INSERT_EMAIL), Value: ({ ...email }).Value })
+      hasError = true
+    }
+    if (isStringInvalid(password.Value)) {
+      setPassword({ ...errorTextWrapper(INSERT_PASSWORD), Value: ({ ...password }).Value })
+      hasError = true
+    }
+
+    if (!hasError)
+      request(email.Value, password.Value);
   }
 
   const handleVisitorSubmit = () => {
@@ -155,23 +167,59 @@ const Sumbit: React.FC<IFormSubmitProps> = props => {
         ))
   }
 
+  const isStringInvalid = (value: string): boolean => !value
+
+  const OnChangeEmail = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    event.preventDefault()
+    const value = event.target.value
+
+    const newValue = isStringInvalid(value)
+      ? { ...errorTextWrapper(INSERT_EMAIL), Value: value }
+      : { ...defaultTextWrapper, Value: value }
+
+    setEmail(newValue)
+  }
+
+  const OnChangePassword = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    event.preventDefault()
+    const value = event.target.value
+
+    const newValue = isStringInvalid(value)
+      ? { ...errorTextWrapper(INSERT_PASSWORD), Value: value }
+      : { ...defaultTextWrapper, Value: value }
+
+    setPassword(newValue)
+  }
+
+  const Class = UseModalStyles()
+
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form className={Class.root} autoComplete="off" onSubmit={handleSubmit}>
         <Wrapper>
-          <InputText
-            type='email'
-            placeholder='Your login'
-            name='email'
-            value=''
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            value={email.Value}
+            onChange={OnChangeEmail}
+            error={email.HasError}
+            label="Email"
+            type={email.HasError ? 'error' :'email'}
+            helperText={email.Message ?? ''}
           />
         </Wrapper>
         <Wrapper>
-          <InputText
-            type='password'
-            placeholder='Your password'
-            name='password'
-            value=''
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            value={password.Value}
+            onChange={OnChangePassword}
+            error={password.HasError}
+            label="Password"
+            type={password.HasError ? 'error' :'password'}
+            helperText={password.Message ?? ''}
           />
           <InputLabel>
             {error}

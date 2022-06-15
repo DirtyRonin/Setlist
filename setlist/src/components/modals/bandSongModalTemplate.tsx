@@ -10,7 +10,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import { ActionButton, UseModalStyles } from "styles/modalStyles";
-import { ModalError } from "models/error/modalError/modalError";
+import { InputWrapper } from "models/error/modalError/modalError";
 
 export interface IBandSongModalComponent {
     handleClose(): void
@@ -28,7 +28,7 @@ const BandSongModalTemplate = (props: IBandSongModalComponent) => {
     const [bandId, setBandId] = useState(0)
     const [songId, setSongId] = useState(0)
 
-    const [popularity, setPopularity] = useState<ModalError<number>>({ HasError: false, Message: '', Value: 0 })
+    const [popularity, setPopularity] = useState<InputWrapper<number>>({ HasError: false, Message: '', Value: 0 })
 
 
     useEffect(() => {

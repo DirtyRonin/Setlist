@@ -14,7 +14,7 @@ import { addBandToCatalog, deleteBandInCatalog, editBandInCatalog, fetchBandCata
 import { RootState } from 'store';
 import { CustomEventModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/customEventHtmlAttributes';
 import { fetchBandById } from 'service/epicServices/bandCatalogService';
-import { ModalError } from 'models/error/modalError/modalError';
+import { InputWrapper } from 'models/error/modalError/modalError';
 
 const BandModalTemplate = React.lazy(() => import('components/modals/BandModalTemplate'))
 const DialogTemplate = React.lazy(() => import('components/common/Wrapper/dialogTemplate'))
@@ -25,9 +25,9 @@ const htmlConfig = CustomEventModalHtmlAttributesConfiguration;
 
 function AsyncBandSelect({ bandModalActionsProvider, defaultBandId, bandCatalog, fetchBandCatalog, setBandFilter, setBandId, isReadonly }: props) {
 
-    const defaultModalError: ModalError<IBand> = { HasError: false, Message: '', Value: Band.CreateEmpty() }
+    const defaultModalError: InputWrapper<IBand> = { HasError: false, Message: '', Value: Band.CreateEmpty() }
 
-    const [selectedBand, setSelectedBand] = useState<ModalError<IBand>>(defaultModalError)
+    const [selectedBand, setSelectedBand] = useState<InputWrapper<IBand>>(defaultModalError)
     const [isLoading, setLoading] = useState(true)
     const [query, setQuery] = useState('')
 

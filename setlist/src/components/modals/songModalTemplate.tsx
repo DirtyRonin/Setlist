@@ -8,7 +8,7 @@ import { GetModalTypeByString, GUID_EMPTY, IsModalDisabled } from "utils";
 import { SongModalHtmlAttributesConfiguration } from "configuration/HtmlAttributesConfigs/songHtmlAttributes";
 import { ActionButton, UseModalStyles } from "styles/modalStyles";
 import TextField from "@material-ui/core/TextField";
-import { ModalError } from "models/error/modalError/modalError";
+import { InputWrapper } from "models/error/modalError/modalError";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -31,9 +31,9 @@ const SongModalTemplate = ({ query, handleClose, songModalActionsProvider, user,
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
     const [id, setId] = useState(0)
 
-    const [artist, setArtist] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
-    const [title, setTitle] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
-    const [genre, setGenre] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
+    const [artist, setArtist] = useState<InputWrapper<string>>({ HasError: false, Message: '', Value: '' })
+    const [title, setTitle] = useState<InputWrapper<string>>({ HasError: false, Message: '', Value: '' })
+    const [genre, setGenre] = useState<InputWrapper<string>>({ HasError: false, Message: '', Value: '' })
     const [isEvergreen, setEvergreen] = useState(false)
     const [isNineties, setNineties] = useState(false)
     const [originalKey, setOriginalKey] = useState('')

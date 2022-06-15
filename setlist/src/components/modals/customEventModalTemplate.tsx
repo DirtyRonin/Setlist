@@ -15,7 +15,7 @@ import { ActionButton, UseModalStyles } from "styles/modalStyles";
 import { fetchCustomEventById } from "service";
 import { IUserInfo } from "store/auth/types";
 import { NO_ADMIN_RIGHTS } from "store/epics/catalogEpics/snackbarHelper"
-import { ModalError } from "models/error/modalError/modalError";
+import { InputWrapper } from "models/error/modalError/modalError";
 
 interface IProps {
     handleClose(): void
@@ -30,8 +30,8 @@ const UNFETCHED_CONCERT = 'Could not fetch the concert'
 
 const CustomEventModalTemplate = (props: IProps) => {
 
-    const defaultModalError: ModalError<string> = { HasError: false, Message: '', Value: '' }
-    const modalErrorMessage = (message: string): ModalError<string> => ({ ...defaultModalError, HasError: true, Message: message })
+    const defaultModalError: InputWrapper<string> = { HasError: false, Message: '', Value: '' }
+    const modalErrorMessage = (message: string): InputWrapper<string> => ({ ...defaultModalError, HasError: true, Message: message })
 
     const { query, handleClose, customEventModalActionsProvider, user, pushToSnackbar } = props
 
@@ -39,7 +39,7 @@ const CustomEventModalTemplate = (props: IProps) => {
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)
     const [id, setId] = useState(0)
 
-    const [title, setTitle] = useState<ModalError<string>>(defaultModalError)
+    const [title, setTitle] = useState<InputWrapper<string>>(defaultModalError)
     const [date, setDate] = useState(new Date());
     const [locationId, setLocationId] = useState(0);
     const [bandId, setBandId] = useState(0);

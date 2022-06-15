@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { DialogActions, DialogContent, DialogContentText, TextField } from '@material-ui/core'
 
 
-import { ModalError } from 'models/error/modalError/modalError';
+import { InputWrapper } from 'models/error/modalError/modalError';
 import { bandModalActions, ModalTypes } from 'models';
 import { GetModalTypeByString, GUID_EMPTY, IsModalDisabled, mapQuery } from 'utils';
 import { BandModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/bandHtmlAttributes';
@@ -20,7 +20,7 @@ const htmlConfig = BandModalHtmlAttributesConfiguration;
 
 const BandModalTemplate = ({ bandModalActionsProvider, handleClose, query }: IProps) => {
 
-    const [title, setTitle] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
+    const [title, setTitle] = useState<InputWrapper<string>>({ HasError: false, Message: '', Value: '' })
     const [isLoading, setLoading] = useState(false)
 
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)

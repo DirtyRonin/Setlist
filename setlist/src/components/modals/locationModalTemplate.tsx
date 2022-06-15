@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { DialogActions, DialogContent, DialogContentText, TextField } from '@material-ui/core'
 
 
-import { ModalError } from 'models/error/modalError/modalError';
+import { InputWrapper } from 'models/error/modalError/modalError';
 import { locationModalActions, ModalTypes } from 'models';
 import { GetModalTypeByString, GUID_EMPTY, IsModalDisabled, mapQuery } from 'utils';
 import { fetchLocationById } from 'service';
@@ -19,8 +19,8 @@ const htmlConfig = LocationModalHtmlAttributesConfiguration;
 
 const LocationModalTemplate = ({ locationModalActionsProvider, handleClose, query }: IProps) => {
 
-    const [name, setName] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
-    const [address, setAddress] = useState<ModalError<string>>({ HasError: false, Message: '', Value: '' })
+    const [name, setName] = useState<InputWrapper<string>>({ HasError: false, Message: '', Value: '' })
+    const [address, setAddress] = useState<InputWrapper<string>>({ HasError: false, Message: '', Value: '' })
     const [isLoading, setLoading] = useState(false)
 
     const [type, setType] = useState<ModalTypes>(ModalTypes.None)

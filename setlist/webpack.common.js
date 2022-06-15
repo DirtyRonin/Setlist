@@ -101,7 +101,7 @@ module.exports = (env) => {
                 favicon: './public/favicon.ico',
                 hash: true, // This is useful for cache busting,
             }),
-            new webpack.HotModuleReplacementPlugin(),
+            // new webpack.HotModuleReplacementPlugin(),
             new webpack.DefinePlugin(envKeys)
         ]
     }

@@ -13,7 +13,7 @@ import { GUID_EMPTY, IsFilterableString } from 'utils';
 import { addLocationToCatalog, deleteLocationInCatalog, editLocationInCatalog, fetchLocationCatalog, setLocationFilter } from 'store/actions/catalogActions/locationCatalogActions'
 import { RootState } from 'store';
 import { CustomEventModalHtmlAttributesConfiguration } from 'configuration/HtmlAttributesConfigs/customEventHtmlAttributes';
-import { ModalError } from 'models/error/modalError/modalError';
+import { InputWrapper } from 'models/error/modalError/modalError';
 
 const LocationModalTemplate = React.lazy(() => import('components/modals/locationModalTemplate'))
 const DialogTemplate = React.lazy(() => import('components/common/Wrapper/dialogTemplate'))
@@ -27,10 +27,10 @@ const UNFETCHED_LOCATION = 'Could not fetch the Location'
 
 function AsyncLocationSelect({ locationModalActionsProvider, defaultLocationId, locationCatalog, fetchLocationCatalog, setLocationFilter, setLocationId, isReadonly }: props) {
 
-    const defaultModalError: ModalError<ILocation> = { HasError: false, Message: '', Value: Location.CreateEmpty() }
-    const modalErrorMessage = (message: string): ModalError<ILocation> => ({ ...defaultModalError, HasError: true, Message: message })
+    const defaultModalError: InputWrapper<ILocation> = { HasError: false, Message: '', Value: Location.CreateEmpty() }
+    const modalErrorMessage = (message: string): InputWrapper<ILocation> => ({ ...defaultModalError, HasError: true, Message: message })
 
-    const [selectedLocation, setSelectedLocation] = useState<ModalError<ILocation>>(defaultModalError)
+    const [selectedLocation, setSelectedLocation] = useState<InputWrapper<ILocation>>(defaultModalError)
     const [isLoading, setLoading] = useState(true)
     const [query, setQuery] = useState('')
 
